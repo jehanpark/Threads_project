@@ -2,11 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import Logo from "./Logo";
 import MyProfileImgs from "./MyProfileImgs";
+import GlobalStyles from "../styles/GlobalStyles.styles";
 
 const Wrapper = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  
 `;
 
 const Ul = styled.ul`
@@ -17,6 +19,7 @@ const Ul = styled.ul`
   align-items: center;
   justify-content: space-around;
   border-radius: 50px;
+  
 `;
 
 const Li = styled.li`
