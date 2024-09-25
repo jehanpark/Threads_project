@@ -6,12 +6,12 @@ const StyledLogo = styled.svg`
   height: ${(props) => props.height || "46px"};
 `;
 
-const Logo = ({ width, fill }) => {
+const Logo = ({ width, height, fill }) => {
   return (
     <StyledLogo
       width={width}
       height={width * 1.15}
-      viewBox={`0 0 40 46`} // viewBox를 동적으로 설정
+      viewBox={`0 0 ${width} ${height}`} // viewBox를 동적으로 설정
       // preserveAspectRatio="none" // 왜곡 없이 꽉 채우도록 설정
       xmlns="http://www.w3.org/2000/svg"
     >

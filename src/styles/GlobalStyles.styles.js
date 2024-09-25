@@ -1,4 +1,11 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
+
+const lightTheme = {
+  bodyBg: "#fff",
+};
+const darkTheme = {
+  bodyBg: "#000",
+};
 
 const GlobalStyles = createGlobalStyle`
 
@@ -28,8 +35,9 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 body {
+	background-color: ${(props) => props.theme.bodyBg};
 	line-height: 1;
-	background-color: #000;
+	/* background-color: #F2F2F2; */
 }
 ol, ul {
 	list-style: none;
@@ -48,5 +56,7 @@ table {
 }
 
 `;
+
+export { lightTheme, darkTheme };
 
 export default GlobalStyles;
