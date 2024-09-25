@@ -66,7 +66,7 @@ const Nav = ({ toggleTheme }) => {
 
   return (
     <Wrapper>
-      <Logo width={40} heigt={46} fill={"#000"} />
+      <Logo width={40} fill={"#000"} />
       <Ul>
         {menuItems.map((menu, index) => (
           <Li
