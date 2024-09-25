@@ -1,10 +1,7 @@
 import styled, { createGlobalStyle } from "styled-components";
 
 
-
 const GlobalStyles = createGlobalStyle`
-
-
 
 
 html, body, div, span, applet, object, iframe,
@@ -83,8 +80,5 @@ table {
   --font-medium: 500;
 }
 `;
-
-
-
 
 export default GlobalStyles;

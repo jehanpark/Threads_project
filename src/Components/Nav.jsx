@@ -23,13 +23,14 @@ const Li = styled.li`
   color: #000;
 `;
 
+
 const UserMenu = styled.div``;
 const Nav = () => {
   const menuItems = ["Home", "About", "Services", "Contact", "User", "level"];
 
   return (
     <Wrapper>
-      <Logo width={40} fill={"#fff"} />
+      <Logo width={0} fill={"#fff"} />
       <Ul>
         {menuItems.map((menu, index) => (
           <Li key={index}>{menu}</Li>
