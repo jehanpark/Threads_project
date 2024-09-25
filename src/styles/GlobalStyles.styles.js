@@ -1,5 +1,23 @@
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 
+const lightTheme = {
+  bodyBg: "#f2f2f2",
+  fontcolor: "#000",
+  bordercolor: "#fff",
+		borderWrapper: "#F5F5F5",
+		bordershadow: "0 0 15px #c9c9c9",
+		selecticoncolor: "#000000",
+		borderstrock: "#e9e9e9"
+};
+const darkTheme = {
+  bodyBg: "#000000",
+  fontcolor: "#fff",
+  bordercolor: "#1e1e1e",
+		borderWrapper: "#252525",
+		bordershadow: "0 0 15px #000",
+		selecticoncolor: "#f3f5f7",
+		borderstrock: "#343535"
+};
 
 const GlobalStyles = createGlobalStyle`
 
@@ -32,8 +50,15 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 body {
+	background-color: ${(props) => props.theme.bodyBg};
+	color: ${(props) => props.theme.fontcolor};
+	border-color: ${(props) => props.theme.bordercolor};
+	background-color: ${(props) => props.theme.borderWrapper};
+	box-shadow: ${(props) => props.theme.bordershadow};
+	color: ${(props) => props.theme.selecticoncolor};
+	border: ${(props) => props.theme.borderstrock};
 	line-height: 1;
-	background-color: #000;
+	/* background-color: #F2F2F2; */
 }
 ol, ul {
 	list-style: none;
@@ -50,7 +75,6 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-
 :root {
 	//light
 	--tag-color: #0396f6;
@@ -80,5 +104,7 @@ table {
   --font-medium: 500;
 }
 `;
+
+export { lightTheme, darkTheme };
 
 export default GlobalStyles;
