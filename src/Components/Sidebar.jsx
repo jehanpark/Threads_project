@@ -42,7 +42,7 @@ const ModalContainer = styled.div`
   width: 258px;
   height: 298px;
   /* border-color: ${(props) => props.theme.bordercolor}; */
-	background-color: ${(props) => props.theme.modalcolor};
+	background-color: ${(props) => props.theme.borderColor};
   color: ${({ theme }) => theme.textColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   /* color: ${(props) => props.theme.fontcolor}; */
