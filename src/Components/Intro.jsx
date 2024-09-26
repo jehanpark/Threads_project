@@ -42,7 +42,7 @@ const Svg = styled.svg`
 
 // Styled Path 컴포넌트 정의
 const Path = styled.path`
-  stroke: #000000;
+  stroke: ${(props)=>props.theme.logoColor};
   stroke-width: 4;
   stroke-dasharray: 200;
   stroke-dashoffset: 200;

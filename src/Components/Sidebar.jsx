@@ -41,12 +41,12 @@ const ModalContainer = styled.div`
   padding: 10px;
   width: 258px;
   height: 298px;
-	background-color: ${(props) => props.theme.bordercolor};
-  /* background-color: ${({ theme }) => theme.backgroundColor};
-  color: ${({ theme }) => theme.textColor}; */
-  color: ${(props) => props.theme.fontcolor};
+  /* border-color: ${(props) => props.theme.bordercolor}; */
+	background-color: ${(props) => props.theme.modalcolor};
+  color: ${({ theme }) => theme.textColor};
+  box-shadow: ${(props) => props.theme.bordershadow};
+  /* color: ${(props) => props.theme.fontcolor}; */
   border-radius: 10px;
-	box-shadow: ${(props) => props.theme.bordershadow};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -76,7 +76,9 @@ const Li = styled.li`
   border-radius: 16px;
   transition: background 0.4s;
   &:hover {
-    background-color: #f4f4f4;
+    background-color:${({ theme }) => theme.mouseHoverBg};
+    color:${({ theme }) => theme.mouseHoverFontcolor};
+    font-weight: 700;
   }
 `;
 

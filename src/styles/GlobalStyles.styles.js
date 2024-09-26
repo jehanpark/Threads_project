@@ -1,22 +1,38 @@
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 
 const lightTheme = {
+	 logoColor:"#000",
   bodyBg: "#f2f2f2",
   fontcolor: "#000",
-  bordercolor: "#fff",
+  modalcolor: "#fff",
 		borderWrapper: "#F5F5F5",
+		borderinner: "#fff",
 		bordershadow: "0 0 15px #c9c9c9",
 		selecticoncolor: "#000000",
-		borderstrock: "#e9e9e9"
+		borderstrock: "#e9e9e9",
+		mouseHoverBg: "#ececec",
+		mouseHoverFontcolor: "#000",
+		headerBg:"#fff",
+		selecticoncolor:"#fff",
+		btnBgColor: "#000",
+		btnBgColor: "#fff",
 };
 const darkTheme = {
+	 logoColor:"#fff",
   bodyBg: "#000000",
   fontcolor: "#fff",
-  bordercolor: "#1e1e1e",
+  modalcolor: "#181818",
 		borderWrapper: "#252525",
+		borderinner: "#1e1e1e",
 		bordershadow: "0 0 15px #000",
 		selecticoncolor: "#f3f5f7",
-		borderstrock: "#343535"
+		borderstrock: "#343535",
+		mouseHoverBg: "#1f1f1f",
+		mouseHoverFontcolor: "#fff",
+		headerBg:"#1e1e1e",
+		selecticoncolor:"#262626",
+		btnBgColor: "#f3f5f7",
+		btnBgColor: "#000",
 };
 
 const GlobalStyles = createGlobalStyle`
@@ -52,11 +68,6 @@ footer, header, hgroup, menu, nav, section {
 body {
 	background-color: ${(props) => props.theme.bodyBg};
 	color: ${(props) => props.theme.fontcolor};
-	border-color: ${(props) => props.theme.bordercolor};
-	background-color: ${(props) => props.theme.borderWrapper};
-	box-shadow: ${(props) => props.theme.bordershadow};
-	color: ${(props) => props.theme.selecticoncolor};
-	border: ${(props) => props.theme.borderstrock};
 	line-height: 1;
 	/* background-color: #F2F2F2; */
 }
