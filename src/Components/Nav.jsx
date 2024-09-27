@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Logo from "./Logo";
 import MyProfileImgs from "./MyProfileImgs";
+import { Logo } from "./Icon";
 
 const Wrapper = styled.nav`
   display: flex;
@@ -29,7 +30,7 @@ const Nav = () => {
 
   return (
     <Wrapper>
-      <Logo width={40} fill={"#fff"} />
+      <RetweetIcon width={40} fill={"#fff"} />
       <Ul>
         {menuItems.map((menu, index) => (
           <Li key={index}>{menu}</Li>
