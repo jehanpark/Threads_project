@@ -16,7 +16,9 @@ const BtnWrapper = styled.div`
 const SetBtn = styled.button`
   width: 80px;
   height: 80px;
-  border: 1px solid #c9c9c9;
+  box-shadow: ${(props) => props.theme.bordershadow};
+  border-color: ${(props) => props.theme.bordercolor};
+  border-style: none;
   border-radius: 50%;
   cursor: pointer;
   background-color: ${(props) => props.theme.bodyBg};
@@ -26,7 +28,9 @@ const SetBtn = styled.button`
 const PinBtn = styled.button`
   width: 80px;
   height: 80px;
-  border: 1px solid #c9c9c9;
+  box-shadow: ${(props) => props.theme.bordershadow};
+  border-color: ${(props) => props.theme.bordercolor};
+  border-style: none;
   border-radius: 50%;
   cursor: pointer;
   background-color: ${(props) => props.theme.bodyBg};
@@ -68,11 +72,19 @@ const ModalContainer = styled.div.withConfig({
   left: 0px;
   padding: 10px;
   width: 258px;
+
+  height: 298px;
+  /* border-color: ${(props) => props.theme.bordercolor}; */
+	background-color: ${(props) => props.theme.borderColor};
+  color: ${({ theme }) => theme.textColor};
+  box-shadow: ${(props) => props.theme.bordershadow};
+  /* color: ${(props) => props.theme.fontcolor}; */
+
   height: ${(props) => (props.isThemeModal ? "220px" : "298px")};
   background-color: ${(props) => props.theme.bodyBg};
   color: ${(props) => props.theme.fontcolor};
+
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -105,7 +117,9 @@ const Li = styled.li`
   border-radius: 16px;
   transition: background 0.4s;
   &:hover {
-    background-color: #f4f4f4;
+    background-color:${({ theme }) => theme.mouseHoverBg};
+    color:${({ theme }) => theme.mouseHoverFontcolor};
+    font-weight: 700;
   }
 `;
 

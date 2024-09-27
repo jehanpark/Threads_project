@@ -37,7 +37,7 @@ const Ul = styled.ul`
 `;
 
 const Li = styled.li`
-  color: #000;
+  color: #000000;
   cursor: pointer;
   border-radius: 50px;
   width: ${(props) => 100 / props.$itemCount}%; /* $itemCount로 변경 */
