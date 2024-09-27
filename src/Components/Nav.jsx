@@ -2,12 +2,28 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./Logo";
-import MyProfileImgs from "./MyProfileImgs";
+// import MyProfileImgs from "./MyProfileImgs";
 
 const Wrapper = styled.nav`
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* padding: 0px 20px; */
+`;
+
+const LogoWrapper = styled.div`
+  width: 40px; /* 고정 크기 설정 */
+`;
+
+const MyProfileImgs = styled.div`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+`;
+const Img = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 const Ul = styled.ul`
@@ -16,7 +32,7 @@ const Ul = styled.ul`
   height: 60px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   border-radius: 50px;
 `;
 
@@ -38,17 +54,8 @@ const Li = styled.li`
       background-color: #000;
     `}
 `;
-const ThemeToggleButton = styled.button`
-  background-color: ${(props) => props.theme.navBg};
-  color: ${(props) => props.theme.navTextColor};
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 10px;
-  margin-left: 20px;
-`;
 
-const Nav = ({ toggleTheme }) => {
+const Nav = () => {
   const menuItems = [
     { name: "Home", icon: "/nav-icons/home.svg", path: "/" },
     { name: "Heart", icon: "/nav-icons/heart.svg", path: "/activity" },
@@ -66,7 +73,9 @@ const Nav = ({ toggleTheme }) => {
 
   return (
     <Wrapper>
-      <Logo width={40} fill={"#000"} />
+      <LogoWrapper>
+        <Logo width={40} />
+      </LogoWrapper>
       <Ul>
         {menuItems.map((menu, index) => (
           <Li
@@ -79,8 +88,9 @@ const Nav = ({ toggleTheme }) => {
           </Li>
         ))}
       </Ul>
-      <MyProfileImgs />
-      <ThemeToggleButton onClick={toggleTheme}>Toggle Theme</ThemeToggleButton>
+      <MyProfileImgs>
+        <Img src="./profile.png" />
+      </MyProfileImgs>
     </Wrapper>
   );
 };

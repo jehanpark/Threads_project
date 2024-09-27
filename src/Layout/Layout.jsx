@@ -9,7 +9,9 @@ import { lightTheme, darkTheme } from "../styles/GlobalStyles.styles"; // 테마
 
 // 레이아웃 스타일
 const LayoutWrapper = styled.div`
-  padding: 20px;
+  width: 100%;
+  overflow: hidden;
+  padding: 20px 20px;
 `;
 
 const Layout = () => {
@@ -22,8 +24,8 @@ const Layout = () => {
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <GlobalStyles />
       <LayoutWrapper>
-        <Nav toggleTheme={toggleTheme} />
-        <Sidebar />
+        <Nav />
+        <Sidebar toggleTheme={toggleTheme} />
         <Outlet />
       </LayoutWrapper>
     </ThemeProvider>
