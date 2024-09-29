@@ -1,74 +1,38 @@
-
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 
-const lightTheme = {
-	 logoColor:"#000",
-  bodyBg: "#f2f2f2",
-  fontcolor: "#000",
-		borderWrapper: "#F5F5F5",
-		borderColor: "#fff",
-		bordershadow: "0 0 15px #c9c9c9",
-		selecticoncolor: "#000000",
-		borderstroke: "#e9e9e9",
-		mouseHoverBg: "#ececec",
-		mouseHoverFontcolor: "#000",
-		headerBg:"#fff",
-		headerselect:"151515",
-		selecticoncolor:"#fff",
-		btnBgColor: "#000",
-		btnBgColor: "#fff",
-};
-const darkTheme = {
-	 logoColor:"#fff",
-  bodyBg: "#000000",
-  fontcolor: "#fff",
-		borderWrapper: "#252525",
-		borderColor: "#181818",
-		bordershadow: "0 0 15px #000",
-		selecticoncolor: "#f3f5f7",
-		borderstroke: "#343535",
-		mouseHoverBg: "#1f1f1f",
-		mouseHoverFontcolor: "#fff",
-		headerBg:"#1e1e1e",
-		headerselect:"fff",
-		selecticoncolor:"#262626",
-		btnBgColor: "#f3f5f7",
-		btnBgColor: "#000",
-
-import { createGlobalStyle } from "styled-components";
-
-const lightTheme = {
+export const lightTheme = {
   logoColor: "#000",
-  bodyBg: "#F2F2F2",
+  bodyBg: "#f2f2f2",
   fontcolor: "#000",
   borderWrapper: "#F5F5F5",
   borderColor: "#fff",
-  bordershadow: "0 0 15px #C9C9C9",
+  bordershadow: "0 0 15px #c9c9c9",
   selecticoncolor: "#000000",
-  borderstroke: "#E9E9E9",
-  mouseHoverBg: "#ECECEC",
+  borderstroke: "#e9e9e9",
+  mouseHoverBg: "#ececec",
   mouseHoverFontcolor: "#000",
   headerBg: "#fff",
+  headerselect: "151515",
   selecticoncolor: "#fff",
   btnBgColor: "#000",
   btnBgColor: "#fff",
 };
-const darkTheme = {
+export const darkTheme = {
   logoColor: "#fff",
   bodyBg: "#000000",
   fontcolor: "#fff",
   borderWrapper: "#252525",
   borderColor: "#181818",
   bordershadow: "0 0 15px #000",
-  selecticoncolor: "#F3F5F7",
+  selecticoncolor: "#f3f5f7",
   borderstroke: "#343535",
-  mouseHoverBg: "#1F1F1F",
+  mouseHoverBg: "#1f1f1f",
   mouseHoverFontcolor: "#fff",
-  headerBg: "#1E1E1E",
+  headerBg: "#1e1e1e",
+  headerselect: "fff",
   selecticoncolor: "#262626",
-  btnBgColor: "#F3F5F7",
+  btnBgColor: "#f3f5f7",
   btnBgColor: "#000",
-
 };
 
 const GlobalStyles = createGlobalStyle`
@@ -159,7 +123,5 @@ table {
   --font-medium: 500;
 }
 `;
-
-export { lightTheme, darkTheme };
 
 export default GlobalStyles;
