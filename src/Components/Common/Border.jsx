@@ -3,9 +3,9 @@ import styled from "styled-components";
 
 const BorderItem = styled.div`
   ${({ type }) =>
-    type === "borderwrapper" &&
+    type === "borderWrapper" &&
     `
-    position: absolute;
+    margin: 0 auto;
     width: 680px;
     height: 898px;
     border-radius: 40px 40px 0px 0px;

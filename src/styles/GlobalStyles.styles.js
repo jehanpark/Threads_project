@@ -15,6 +15,7 @@ const lightTheme = {
   selecticoncolor: "#fff",
   btnBgColor: "#000",
   btnBgColor: "#fff",
+  loginInputSelectColor: "#5987DC",
 };
 const darkTheme = {
   logoColor: "#fff",
@@ -31,6 +32,7 @@ const darkTheme = {
   selecticoncolor: "#262626",
   btnBgColor: "#F3F5F7",
   btnBgColor: "#000",
+  loginInputSelectColor: "#488EE3",
 };
 
 const GlobalStyles = createGlobalStyle`
@@ -47,7 +49,7 @@ table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed, 
 figure, figcaption, footer, header, hgroup, 
 menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+time, mark, audio, video, input {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -69,6 +71,10 @@ body {
 }
 ol, ul {
 	list-style: none;
+}
+a {
+  text-decoration: none;
+  color: inherit;
 }
 blockquote, q {
 	quotes: none;

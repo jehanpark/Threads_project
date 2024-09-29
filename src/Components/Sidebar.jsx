@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import styled, { keyframes } from "styled-components";
+import { ThemeContext } from "../Contexts/ThemeProvider";
 
 const Aside = styled.aside`
   position: absolute;
@@ -136,7 +137,9 @@ const BackButton = styled.button`
   cursor: pointer;
 `;
 
-const Sidebar = ({ toggleTheme }) => {
+const Sidebar = () => {
+  const { toggleTheme } = useContext(ThemeContext);
+
   const [isOpen, setIsOpen] = useState(false);
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
