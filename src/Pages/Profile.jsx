@@ -1,7 +1,8 @@
 import React from "react";
+import Border from "../Components/Common/Border";
 
 const Profile = () => {
-  return <div>Profile</div>;
+  return <Border type="borderWrapper"></Border>;
 };
 
 export default Profile;

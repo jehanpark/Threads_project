@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { lightTheme } from "../../styles/GlobalStyles.styles";
 
 const BorderItem = styled.div`
   ${({ type }) =>
@@ -12,6 +13,7 @@ const BorderItem = styled.div`
     border: #C9C9C9;
     background:  #F5F5F5;
     border-filter: blur(4px);
+    box-shadow: ${lightTheme.bordershadow}
     `}
   ${({ type }) =>
     type === "borderinner" &&
@@ -26,7 +28,6 @@ const BorderItem = styled.div`
     background: #fff;
     `}
 `;
-
 const BorderTextItem = styled.div`
   position: ${({ type }) => (type === "borderinner" ? "absolute" : "relative")};
   top: ${({ type }) => (type === "borderinner" ? "30px" : "20px")};
@@ -36,7 +37,6 @@ const BorderTextItem = styled.div`
   text-align: center;
   color: ${({ type }) => (type === "borderinner" ? "#000" : "#888")};
 `;
-
 const Border = ({ type, text }) => {
   return (
     <BorderItem type={type}>
@@ -46,5 +46,4 @@ const Border = ({ type, text }) => {
     </BorderItem>
   );
 };
-
 export default Border;
