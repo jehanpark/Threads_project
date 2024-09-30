@@ -5,11 +5,7 @@ import Intro from "../Components/Intro";
 import styled from "styled-components";
 
 const Home = () => {
-  return (
-    <div>
-      <Nav />
-    </div>
-  );
+  return <div></div>;
 };
 
 export default Home;

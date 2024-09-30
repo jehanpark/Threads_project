@@ -9,6 +9,7 @@ const Wrapper = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 20px;
   /* padding: 0px 20px; */
 `;
 

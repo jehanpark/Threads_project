@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout/Layout";
 import Home from "../Pages/Home";
@@ -26,14 +28,6 @@ export const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "Login",
-        element: <Login />,
-      },
-      {
-        path: "LoginInsta",
-        element: <LoginInsta />,
-      },
-      {
         path: "Follow",
         element: <Follow />,
       },
@@ -42,5 +36,13 @@ export const router = createBrowserRouter([
         element: <Activity />,
       },
     ],
+  },
+  {
+    path: "Login", // 이 라우트는 Layout 바깥에 있음
+    element: <Login />,
+  },
+  {
+    path: "LoginInsta", // 이 라우트도 Layout 바깥에 있음
+    element: <LoginInsta />,
   },
 ]);
