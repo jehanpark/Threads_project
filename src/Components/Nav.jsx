@@ -25,11 +25,13 @@ const MyProfileImgs = styled.div`
 const Img = styled.img`
   width: 100%;
   height: 100%;
+
 `;
 
 const Ul = styled.ul`
   width: 620px;
-  background-color: #fff;
+  background-color: ${(props) => props.theme.headerBg};
+  box-shadow: ${(props) => props.theme.bordershadow};
   height: 60px;
   display: flex;
   align-items: center;
@@ -38,7 +40,7 @@ const Ul = styled.ul`
 `;
 
 const Li = styled.li`
-  color: #000000;
+  color: #c95c5c;
   cursor: pointer;
   border-radius: 50px;
   width: ${(props) => 100 / props.$itemCount}%; /* $itemCount로 변경 */
@@ -47,14 +49,21 @@ const Li = styled.li`
   align-items: center;
   justify-content: center;
   transition: all 0.4s;
-
   ${(props) =>
     props.$isSelected /* $isSelected로 변경 */ &&
     css`
-      color: #fff;
-      background-color: #000;
+      color: ${(props) => props.theme.headerselect};
+      background-color: ${(props) => props.theme.logoColor};
     `}
+    
 `;
+const menuItems = styled.img`
+  ${(props) =>
+    props.$isSelected /* $isSelected로 변경 */ &&
+    css`
+    color: ${(props) => props.theme.selectIconColor};
+    `}
+`
 
 const Nav = () => {
   const menuItems = [
