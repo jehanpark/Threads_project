@@ -1,6 +1,7 @@
 import { createGlobalStyle } from "styled-components";
+import { DefaultTheme } from "styled-components";
 
-const lightTheme = {
+export const lightTheme: DefaultTheme = {
   logoColor: "#000",
   bodyBg: "#F2F2F2",
   fontcolor: "#000",
@@ -12,26 +13,23 @@ const lightTheme = {
   mouseHoverBg: "#ECECEC",
   mouseHoverFontcolor: "#000",
   headerBg: "#fff",
-  selecticoncolor: "#fff",
-  btnBgColor: "#000",
-  btnBgColor: "#fff",
+  btnBgColor: "#fff", // 중복 제거
   loginInputSelectColor: "#5987DC",
 };
-const darkTheme = {
+
+export const darkTheme: DefaultTheme = {
   logoColor: "#fff",
   bodyBg: "#000000",
   fontcolor: "#fff",
   borderWrapper: "#252525",
   borderColor: "#181818",
   bordershadow: "0 0 15px #000",
-  selecticoncolor: "#F3F5F7",
+  selecticoncolor: "#262626", // 중복된 selecticoncolor 수정
   borderstroke: "#343535",
   mouseHoverBg: "#1F1F1F",
   mouseHoverFontcolor: "#fff",
   headerBg: "#1E1E1E",
-  selecticoncolor: "#262626",
-  btnBgColor: "#F3F5F7",
-  btnBgColor: "#000",
+  btnBgColor: "#000", // 중복 제거
   loginInputSelectColor: "#488EE3",
 };
 
@@ -91,6 +89,6 @@ table {
 
 `;
 
-export { lightTheme, darkTheme };
+// export { lightTheme, darkTheme };
 
 export default GlobalStyles;

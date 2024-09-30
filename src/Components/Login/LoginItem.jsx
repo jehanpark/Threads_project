@@ -18,11 +18,15 @@ import {
 } from "./RecycleStyles/login";
 
 const LoginItem = () => {
-  const [emailPlaceholder, setEmailPlaceholder] = useState(
-    "사용자 이름, 전화번호 또는 이메일 주소"
-  );
-  const [passwordPlaceholder, setPasswordPlaceholder] = useState("비밀번호");
-
+  // const [emailPlaceholder, setEmailPlaceholder] = useState(
+  //   "사용자 이름, 전화번호 또는 이메일 주소"
+  // );
+  // const [passwordPlaceholder, setPasswordPlaceholder] = useState("비밀번호");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const onChange = () => {};
   return (
     <Wrapper>
       <BgImg src="/login/thread_login_bg.png" />
@@ -36,22 +40,34 @@ const LoginItem = () => {
         </LoginP>
         <Form>
           <InputWrapper>
-            <StyledInput type="email" id="email" placeholder=" " required />
-            <StyledLabel htmlFor="email">
+            <StyledInput
+              onChange={onChange}
+              type="id"
+              id="id"
+              placeholder=""
+              required
+              value={id}
+            />
+            <StyledLabel htmlFor="id">
               사용자 이름, 전화번호 또는 이메일 주소
             </StyledLabel>
           </InputWrapper>
           <InputWrapper>
             <StyledInput
+              onChange={onChange}
               type="password"
               id="password"
-              placeholder=" "
+              placeholder=""
               required
+              value={password}
             />
             <StyledLabel htmlFor="password">비밀번호</StyledLabel>
           </InputWrapper>
           <InputWrapper>
-            <StyledInput type="submit" value="로그인" />
+            <StyledInput
+              type="submit"
+              value={isLoading ? "Loading.." : "Login!"}
+            />
           </InputWrapper>
           <Link>
             <SingnUpText>회원가입</SingnUpText>
