@@ -2,18 +2,19 @@ import React from "react";
 import styled from "styled-components";
 
 const StyledLogo = styled.svg`
-  width: ${(props) => props.width || "40px"};
-  height: ${(props) => props.height || "46px"};
+  width: ${(props) => (props.width ? `${props.width}px` : "40px")};
+  height: ${(props) => (props.height ? `${props.height}px` : "46px")};
   path {
-    fill: ${(props) => props.theme.logoFill}; /* 테마에서 로고 색상을 적용 */
+    fill: ${(props) => props.theme.logoColor};
   }
 `;
 
 const Logo = ({ width }) => {
+  const numericWidth = Number(width);
   return (
     <StyledLogo
-      width={width}
-      height={width * 1.15}
+      width={numericWidth}
+      height={numericWidth * 1.15}
       viewBox={`0 0 40 46`} // viewBox를 동적으로 설정
       // preserveAspectRatio="none" // 왜곡 없이 꽉 채우도록 설정
       xmlns="http://www.w3.org/2000/svg"

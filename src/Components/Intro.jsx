@@ -48,12 +48,11 @@ const Svg = styled.svg`
 
 // Styled Path 컴포넌트 정의
 const Path = styled.path`
-  stroke: ${(props)=>props.theme.logoColor};
+  stroke: #000;
   stroke-width: 4;
   stroke-dasharray: 200;
   stroke-dashoffset: 200;
   animation: ${draw} 2.2s ease-in-out ;
-
   &:hover {
     transform: scale(1.1) rotate(5deg); /* 마우스를 올렸을 때 확대 및 회전 효과 */
   }
