@@ -18,7 +18,7 @@ const Form = styled.form`
 
 const TextArea = styled.textarea`
   background: #fff;
-  color: #fff;
+  color: #000;
   border: 2px solid #fff;
   border-radius: 20px;
   padding: 20px;
@@ -49,8 +49,11 @@ display: flex;
 margin: 20px 0;
 margin-left: 20px;
 gap:20px;
-
 `;
+
+const CameraWrapper = styled.div`
+  
+`
 
 const Buttons = styled.div`
 display: flex;
@@ -166,12 +169,16 @@ const PostForm = () => {
         required
       ></TextArea>
       <Icons>
+        <CameraWrapper onChange={onFileChange}
+        type="file"
+        id="file"
+        accept="video/*, image/*" >  
         <CameraIcon width={50} />
+        </CameraWrapper>
         <PictureIcon width={36} />
         <MicIcon width={36}/>
         <HashtagIcon width={36}/>
       </Icons>
-      <div></div>
       <Buttons>
         <Button text="팔로워에게만 허용" type="bigupload"/>
         <Button text="스레드 업로드" type="bigupload"/>
