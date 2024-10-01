@@ -4,35 +4,46 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import Button from "../Components/Common/Button"
-import {CameraIcon,PictureIcon,MicIcon,HashtagIcon} from "../Components/Common/Icon"
+import Button from "../Components/Common/Button";
+import {
+  CameraIcon,
+  PictureIcon,
+  MicIcon,
+  HashtagIcon,
+} from "../Components/Common/Icon";
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-
   margin: 0 auto;
   width: 680px;
   gap: 10px;
+  background: #fff;
+  border-radius: 20px;
+`;
+
+const PlusImage = styled.div`
+  display: flex;
+  margin: 10px 20px;
 `;
 
 const TextArea = styled.textarea`
   background: #fff;
   color: #000;
   border: 2px solid #fff;
-  border-radius: 20px;
+  border-left: 1px solid #bababa;
   padding: 20px;
+  padding-left: 10px;
   font-size: 16px;
   margin: 0 auto;
-  width: 620px;
-  height: 250px;
+  margin-top: 40px;
+  width: 600px;
+  height: 200px;
   resize: none;
   &::placeholder {
+    color: #bababa;
     opacity: 1;
-    font-size: 20px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-      Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-      sans-serif;
+    font-size: 16px;
     transition: opacity 0.3s;
   }
   &:focus {
@@ -40,63 +51,51 @@ const TextArea = styled.textarea`
       opacity: 0;
     }
     outline: none;
-    border-color: #1d9bf9;
   }
 `;
 
 const Icons = styled.div`
-display: flex;
-margin: 20px 0;
-margin-left: 20px;
-gap:20px;
+  display: flex;
+  margin: 20px 0;
+  margin-left: 20px;
+  gap: 20px;
 `;
 
-const CameraWrapper = styled.div`
-  
-`
-
-const Buttons = styled.div`
-display: flex;
-justify-content: center;
-margin: 0 auto;
-gap: 20px;
-`;
-
-const AttachFileButton = styled.label`
-  width: 100%;
-  color: #1d9bf9;
-  font-size: 16px;
-  font-weight: 600;
-  border: 1px solid #1d9bf9;
-  border-radius: 20px;
-  padding: 10px 0;
-  text-align: center;
+const CameraButton = styled.label`
   cursor: pointer;
-  transition: all 0.3s;
-  &:hover {
-    border: 1px solid transparent;
-    background: #1d9bf9;
-    color: #fff;
-  }
 `;
-
-const AttachFileInput = styled.input`
+const CameraInput = styled.input`
   display: none;
 `;
 
-const SubmitBtn = styled.input`
-  background: #fff;
-  color: #1d9bf9;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 0;
-  font-size: 16px;
-  font-weight: 600;
+const PictureButton = styled.label`
   cursor: pointer;
-  transition: opacity 0.3s;
-  &:hover,
-  &:active {
-    opacity: 0.9;
+`;
+const PictureInput = styled.input`
+  display: none;
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  gap: 20px;
+  border-top: 1px solid #ddd;
+  padding: 20px;
+`;
+
+const SubmitBtn = styled.input`
+  width: 300px;
+  height: 80px;
+  background: #1c1c1c;
+  color: #fff;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 30px;
+  transition: all 0.3s;
+  &:hover {
+    background: #fff;
+    color: #1c1c1c;
   }
 `;
 
@@ -112,6 +111,7 @@ const PostForm = () => {
   };
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e);
     const { files } = e.target;
     if (files && files.length === 1) {
       if (files[0].size > maxFileSize) {
@@ -168,31 +168,45 @@ const PostForm = () => {
         placeholder="내용을 작성하세요.."
         required
       ></TextArea>
+      <PlusImage>
+        {file && (
+          <img
+            src={URL.createObjectURL(file)}
+            alt="Uploaded Preview"
+            style={{ width: "180px", height: "auto", borderRadius: "10px" }}
+          />
+        )}
+      </PlusImage>
       <Icons>
-        <CameraWrapper onChange={onFileChange}
-        type="file"
-        id="file"
-        accept="video/*, image/*" >  
-        <CameraIcon width={50} />
-        </CameraWrapper>
-        <PictureIcon width={36} />
-        <MicIcon width={36}/>
-        <HashtagIcon width={36}/>
+        <CameraButton htmlFor="camera">
+          <CameraIcon width={50} />
+          <CameraInput
+            onChange={onFileChange}
+            id="camera"
+            type="file"
+            accept="video/*, image/*"
+          />
+        </CameraButton>
+        <PictureButton htmlFor="picture">
+          <PictureIcon width={36} />
+        </PictureButton>
+        <PictureInput
+          onChange={onFileChange}
+          id="picture"
+          type="file"
+          accept="video/*, image/*"
+        />
+        <MicIcon width={36} />
+        <HashtagIcon width={36} />
       </Icons>
       <Buttons>
-        <Button text="팔로워에게만 허용" type="bigupload"/>
-        <Button text="스레드 업로드" type="bigupload"/>
+        <Button text="팔로워에게만 허용" type="bigupload" />
+        <SubmitBtn
+          text="스레드 업로드"
+          type="submit"
+          value={isLoading ? "Posting..." : "Post"}
+        />
       </Buttons>
-      <AttachFileButton htmlFor="file">
-        {file ? "Content Added✅" : "Add 💨"}
-      </AttachFileButton>
-      <AttachFileInput
-        onChange={onFileChange}
-        type="file"
-        id="file"
-        accept="video/*, image/*"
-      />
-      {/* <SubmitBtn type="submit" value={isLoading ? "Posting..." : "Post"} /> */}
     </Form>
   );
 };
