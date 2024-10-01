@@ -76,7 +76,7 @@ const ModalContainer = styled.div.withConfig({
 
   height: 298px;
   /* border-color: ${(props) => props.theme.bordercolor}; */
-	background-color: ${(props) => props.theme.borderColor};
+  background-color: ${(props) => props.theme.borderColor};
   color: ${({ theme }) => theme.textColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   /* color: ${(props) => props.theme.fontcolor}; */
@@ -118,8 +118,8 @@ const Li = styled.li`
   border-radius: 16px;
   transition: background 0.4s;
   &:hover {
-    background-color:${({ theme }) => theme.mouseHoverBg};
-    color:${({ theme }) => theme.mouseHoverFontcolor};
+    background-color: ${({ theme }) => theme.mouseHoverBg};
+    color: ${({ theme }) => theme.mouseHoverFontcolor};
     font-weight: 700;
   }
 `;

@@ -9,6 +9,7 @@ import LoginInsta from "../Pages/LoginInsta";
 import Follow from "../Pages/Follow";
 import Activity from "../Pages/Activity";
 import Profile from "../Pages/Profile";
+import CreateAccount from "../Pages/CreateAccount";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
   {
     path: "Login", // 이 라우트는 Layout 바깥에 있음
     element: <Login />,
+  },
+  {
+    path: "Create-account", // 이 라우트는 Layout 바깥에 있음
+    element: <CreateAccount />,
   },
   {
     path: "LoginInsta", // 이 라우트도 Layout 바깥에 있음

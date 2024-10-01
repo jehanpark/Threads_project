@@ -42,9 +42,6 @@ export const LoginP = styled.p`
   align-items: center;
   gap: 3px;
   margin-bottom: 16px;
-  span {
-    padding-top: 3px;
-  }
 `;
 
 export const Form = styled.form`
