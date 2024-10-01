@@ -16,11 +16,11 @@ const ModalOverlay = styled.div`
 
 const ModalContainer = styled.div`
   width: 450px;
-  height: 471px;
+  height: ${(props) => props.height || "471px"};
   border-radius: 12px;
-  background: #545454;
-  padding: 20px;
-  color: white;
+  background: #fff;
+  padding: 64px 11px 0 11px;
+  color: #000;
   position: relative;
 `;
 
@@ -30,12 +30,12 @@ const CloseButton = styled.button`
   right: 10px;
   background: none;
   border: none;
-  color: white;
+  color: #000;
   font-size: 18px;
   cursor: pointer;
 `;
 
-const Modal = ({ isOpen, onClose }) => {
+const Modal = ({ isOpen, onClose, children, height }) => {
   if (!isOpen) return null; // 모달이 열리지 않으면 렌더링하지 않음
 
   return (
@@ -43,8 +43,7 @@ const Modal = ({ isOpen, onClose }) => {
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>X</CloseButton>
         {/* 모달 내부 내용 */}
-        <h2>Threads</h2>
-        <p>쓰레드 팀 프로젝트 화이팅!</p>
+        {children}
       </ModalContainer>
     </ModalOverlay>
   );

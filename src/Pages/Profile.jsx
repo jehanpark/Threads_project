@@ -138,24 +138,38 @@ const TextInput = styled.div`
   background: ${(props) => props.theme.borderColor};
 `;
 
+const ModalItemLine = styled.div`
+  padding: 55px 11px 0px 11px;
+  width: 100%;
+  border: 1px solid ${(props) => props.theme.borderstroke};
+  border-radius: 15px;
+  height: 87px;
+`;
+
+const ModalMainText = styled.div``;
+
 const Profile = () => {
   const data = useContext(ThreadDataContext);
   const { createThread, updateThread, deleteThread, updateProfile } =
     useContext(ThreadDispatchContext);
 
+  const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
-  const [followModal, setFollowModal] = useState(false);
+
+  const onfollow = () => {
+    setFollowModal((prev) => !prev);
+    //팔로우 클릭
+  };
 
   const onLinkPlus = () => {
     setLinkModal((prev) => !prev);
+    //아이콘추가
   };
 
   const onProfileEdite = () => {
     setEditModal((prev) => !prev);
-  };
-  const onfollow = () => {
-    setFollowModal((prev) => !prev);
+    //프로필수정
   };
 
   return (
@@ -173,11 +187,23 @@ const Profile = () => {
         <BottomWrap>
           <Desk>확인용 문구</Desk>
           <FollowLink>
+            {followModal ? (
+              <Modal isOpen={true} onClose={onfollow}></Modal>
+            ) : (
+              <Modal isOpen={false} onClose={onfollow}></Modal>
+            )}
             <Follow onClick={onfollow}>팔로워 00</Follow>
             <Links>
-              {linkmodal ? <Modal isOpen /> : <Modal onClose />}
+              {linkmodal ? (
+                <Modal isOpen={true} onClose={onLinkPlus} height={"100px"}>
+                  <ModalItemLine>
+                    <ModalMainText>링크 추가</ModalMainText>
+                  </ModalItemLine>
+                </Modal>
+              ) : (
+                <Modal isOpen={false} onClose={onLinkPlus}></Modal>
+              )}
               <LinkPlus onClick={onLinkPlus}>
-                {editmodal ? <Modal isOpen /> : <Modal onClose />}
                 <PlusIcon width="16px" />
               </LinkPlus>
               <PulsLinkIcon>
@@ -189,7 +215,11 @@ const Profile = () => {
               </PulsLinkIcon>
             </Links>
           </FollowLink>
-          {followModal ? <Modal isOpen /> : <Modal onClose />}
+          {editmodal ? (
+            <Modal isOpen={true} onClose={onProfileEdite}></Modal>
+          ) : (
+            <Modal isOpen={false} onClose={onProfileEdite}></Modal>
+          )}
           <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
         </BottomWrap>
       </ProfileInnner>
