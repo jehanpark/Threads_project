@@ -21,7 +21,7 @@ import {
   ForgotPasswordText,
 } from "./RecycleStyles/login_dk";
 
-const CreateAccountItem = () => {
+const CreateAccountItemDk = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -118,4 +118,4 @@ const CreateAccountItem = () => {
   );
 };
 
-export default CreateAccountItem;
+export default CreateAccountItemDk;

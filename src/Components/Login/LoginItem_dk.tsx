@@ -1,9 +1,13 @@
+// src/Components/Login/LoginItemDk.tsx
+
 import React, { useState } from "react";
 import Logo from "../Logo";
 import LogoTextMark from "../LogoTextMark";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { FirebaseError } from "firebase/app";
+import { useMediaQuery } from "react-responsive";
+import Border from "../Common/Border";
 
 import {
   Wrapper,
@@ -17,14 +21,14 @@ import {
   StyledLabel,
   SingnUpText,
   ForgotPasswordText,
+  Hr,
+  Or,
+  Linebreak,
+  StyledSpan,
 } from "./RecycleStyles/login_dk";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-const LoginItem = () => {
-  // const [emailPlaceholder, setEmailPlaceholder] = useState(
-  //   "사용자 이름, 전화번호 또는 이메일 주소"
-  // );
-  // const [passwordPlaceholder, setPasswordPlaceholder] = useState("비밀번호");
+const LoginItemDk: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [id, setId] = useState("");
@@ -32,12 +36,13 @@ const LoginItem = () => {
 
   const navigate = useNavigate();
 
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name, value },
     } = e;
 
-    // if (name === "name") setName(value);
     if (name === "id") setId(value);
     if (name === "password") setPassword(value);
   };
@@ -48,20 +53,8 @@ const LoginItem = () => {
     try {
       setIsLoading(true);
       await signInWithEmailAndPassword(auth, id, password);
-      // console.log(credentials.user);
-      // await updateProfile(credentials.user, {
-      //   displayName: name,
-      // });
-
       navigate("/");
-
-      // create an account
-      // set the name of the user
-      // redirect to the home page
-      // 왜 비동기 처리가 필요한가?
-      // => 너 되면, 너 되고, 너 되면 너 되자. 이렇게
     } catch (e) {
-      // console.log(e);
       if (e instanceof FirebaseError) {
         setError(e.message);
       }
@@ -73,20 +66,22 @@ const LoginItem = () => {
 
   return (
     <Wrapper>
-      <BgImg src="/login/thread_login_bg.png" />
+      <BgImg $isSmallScreen={isSmallScreen} src="/login/thread_login_bg.png" />
       <LoginInner>
-        <LogoWrapper>
+        <LogoWrapper $isSmallScreen={isSmallScreen}>
           <Logo width={40} />
         </LogoWrapper>
         <LoginP>
           <LogoTextMark width={62} />
-          <span>계정으로 로그인</span>
+          <StyledSpan $isSmallScreen={isSmallScreen}>
+            계정으로 로그인
+          </StyledSpan>
         </LoginP>
         <Form onSubmit={onSubmit}>
           <InputWrapper>
             <StyledInput
               onChange={onChange}
-              type="id"
+              type="text" // 'id'는 유효한 input 타입이 아니므로 'text'로 수정
               id="id"
               name="id"
               placeholder=""
@@ -121,10 +116,16 @@ const LoginItem = () => {
           <Link to="/">
             <ForgotPasswordText>비밀번호를 잊으셨나요?</ForgotPasswordText>
           </Link>
+          <Linebreak $isSmallScreen={isSmallScreen}>
+            <Hr $isSmallScreen={isSmallScreen} />
+            <Or $isSmallScreen={isSmallScreen}>또는</Or>
+            <Hr $isSmallScreen={isSmallScreen} />
+          </Linebreak>
+          <Border type="loginborder" text="instagram으로 계속"></Border>
         </Form>
       </LoginInner>
     </Wrapper>
   );
 };
 
-export default LoginItem;
+export default LoginItemDk;
