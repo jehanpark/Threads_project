@@ -17,7 +17,7 @@ import {
   StyledLabel,
   SingnUpText,
   ForgotPasswordText,
-} from "./RecycleStyles/login";
+} from "./RecycleStyles/login_dk";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginItem = () => {

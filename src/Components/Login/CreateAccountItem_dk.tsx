@@ -19,7 +19,7 @@ import {
   Error,
   SingnUpText,
   ForgotPasswordText,
-} from "./RecycleStyles/login";
+} from "./RecycleStyles/login_dk";
 
 const CreateAccountItem = () => {
   const [isLoading, setIsLoading] = useState(false);
