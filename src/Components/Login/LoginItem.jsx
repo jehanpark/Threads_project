@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Logo from "../Logo";
 import LogoTextMark from "../LogoTextMark";
 import { Link } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
+import Border from "../Common/Border";
 
 import {
   Wrapper,
@@ -15,6 +17,9 @@ import {
   StyledLabel,
   SingnUpText,
   ForgotPasswordText,
+  Hr,
+  Or,
+  Linebreak,
 } from "./RecycleStyles/login";
 
 const LoginItem = () => {
@@ -27,16 +32,17 @@ const LoginItem = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const onChange = () => {};
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
   return (
     <Wrapper>
-      <BgImg src="/login/thread_login_bg.png" />
+      <BgImg isSmallScreen={isSmallScreen} src="/login/thread_login_bg.png" />
       <LoginInner>
-        <LogoWrapper>
+        <LogoWrapper isSmallScreen={isSmallScreen}>
           <Logo width={40} />
         </LogoWrapper>
         <LoginP>
           <LogoTextMark width={62} />
-          <span>계정으로 로그인</span>
+          <span isSmallScreen={isSmallScreen}>계정으로 로그인</span>
         </LoginP>
         <Form>
           <InputWrapper>
@@ -75,6 +81,12 @@ const LoginItem = () => {
           <Link>
             <ForgotPasswordText>비밀번호를 잊으셨나요?</ForgotPasswordText>
           </Link>
+          <Linebreak isSmallScreen={isSmallScreen}>
+            <Hr isSmallScreen={isSmallScreen} />
+            <Or isSmallScreen={isSmallScreen}>또는</Or>
+            <Hr isSmallScreen={isSmallScreen} />
+          </Linebreak>
+          <Border type="loginborder" text="instagram으로 계속"></Border>
         </Form>
       </LoginInner>
     </Wrapper>

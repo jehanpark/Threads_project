@@ -1,7 +1,8 @@
 import React from "react";
+import Border from "../Components/Common/Border";
 
 const Search = () => {
-  return <div>Search</div>;
+  return <Border type="borderWrapper">Search</Border>;
 };
 
 export default Search;

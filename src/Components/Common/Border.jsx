@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
+import LogoImg from "../../images/insta.png";
+import RightArrow from "../../images/rightarrow.svg";
 
 const BorderItem = styled.div`
   ${({ type }) =>
@@ -25,24 +28,56 @@ const BorderItem = styled.div`
     border-radius: 30px;
     background: #fff;
     `}
+  ${({ type }) =>
+    type === "loginborder" &&
+    `
+    width: 370px;
+    height: 74px;
+    border: 1px solid #D0D0D0;
+    border-radius: 12px;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 17px 11px;
+    margin-top: 16px;
+    `}
 `;
 
 const BorderTextItem = styled.div`
   position: ${({ type }) => (type === "borderinner" ? "absolute" : "relative")};
-  top: ${({ type }) => (type === "borderinner" ? "30px" : "20px")};
+  top: ${({ type }) => (type === "borderinner" ? "30px" : "0px")};
   padding: 20px;
   display: flex;
-  justify-content: start;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  color: ${({ type }) => (type === "borderinner" ? "#000" : "#888")};
+  gap: 35px;
+
+  /* 텍스트 색상 수정 부분 */
+  color: ${({ type }) => (type === "loginborder" ? "#000" : "#888")};
+`;
+
+const ArrowImage = styled.img`
+  width: 16px; /* 화살표 이미지 크기 설정 */
+  height: 16px;
+`;
+
+// 이미지 스타일 컴포넌트 추가
+const LogoImage = styled.img`
+  width: 40px; /* 원하는 크기로 이미지 조정 */
+  height: 40px;
 `;
 
 const Border = ({ type, text }) => {
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
   return (
-    <BorderItem type={type}>
-      {type === "borderinner" && (
-        <BorderTextItem type={type}>{text || "이너 아이템"}</BorderTextItem>
-      )}
+    <BorderItem type={type} isSmallScreen={isSmallScreen}>
+      <BorderTextItem type={type}>
+        <LogoImage src={LogoImg} alt="Instagram Logo" />
+        {text}
+        <ArrowImage src={RightArrow} alt="Right Arrow" />
+      </BorderTextItem>
     </BorderItem>
   );
 };
