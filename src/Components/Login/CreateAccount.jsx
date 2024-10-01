@@ -80,9 +80,9 @@ const CreateAccount = () => {
   const onChange = () => {};
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
   return (
-    <Wrapper>
-      <JoinContainer>
-        <LoginInner>
+    <Wrapper isSmallScreen={isSmallScreen}>
+      <JoinContainer isSmallScreen={isSmallScreen}>
+        <LoginInner isSmallScreen={isSmallScreen}>
           <LogoWrapper isSmallScreen={isSmallScreen}>
             <Logo width={40} />
           </LogoWrapper>

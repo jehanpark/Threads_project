@@ -5,6 +5,7 @@ export const Wrapper = styled.div`
   width: 100%;
   // dan 하이 수정했습니다.
   height: ${(props) => props.height || "calc(100vh - 15%)"};
+  height: ${(props) => (props.$isSmallScreen ? "100%" : "calc(100vh - 15%)")};
   margin: 0 auto;
   color: ${(props) => props.theme.fontcolor};
   /* background: ${(props) => props.bgColor || "#fff"}; */
@@ -21,13 +22,13 @@ export const BgImg = styled.img`
   height: 533px;
   object-fit: cover;
   pointer-events: none;
-  display: ${({ isSmallScreen }) => (isSmallScreen ? "none" : "block")};
+  display: ${(props) => (props.$isSmallScreen ? "none" : "block")};
 `;
 
 export const LoginInner = styled.div`
   position: relative;
   margin: 0 auto;
-  margin-top: 15%;
+  margin-top: ${(props) => (props.$isSmallScreen ? "0" : "15%")};
   width: 370px;
   height: 407px;
   display: flex;
@@ -38,7 +39,7 @@ export const LoginInner = styled.div`
 
 export const LogoWrapper = styled.div`
   margin-bottom: 18px;
-  margin-top: ${({ isSmallScreen }) => (isSmallScreen ? "137px" : "0")};
+  margin-top: ${(props) => (props.$isSmallScreen ? "137px" : "0")};
 `;
 
 export const LoginP = styled.p`
@@ -48,7 +49,7 @@ export const LoginP = styled.p`
   margin-bottom: 16px;
   span {
     padding-top: 3px;
-    margin-bottom: ${({ isSmallScreen }) => (isSmallScreen ? "16px" : "0")};
+    margin-bottom: ${(props) => (props.$isSmallScreen ? "16px" : "0")};
   }
 `;
 
@@ -63,7 +64,7 @@ export const InputWrapper = styled.div`
   position: relative;
   width: 100%;
   // dan 기본값 10px 이었는데 0으로 설정 -> 전달받는 사람이 값 설정하도록
-  margin-bottom: ${(props) => props.mb || "0"};
+  margin-bottom: ${(props) => props.mb || "10px"};
 `;
 
 export const StyledInput = styled.input`
@@ -162,7 +163,7 @@ export const Hr = styled.div`
   width: 122px;
   height: 2px;
   border: 1px solid #e5e5e5;
-  display: ${({ isSmallScreen }) => (isSmallScreen ? "flex" : "none")};
+  display: ${(props) => (props.$isSmallScreen ? "flex" : "none")};
   justify-content: center;
   align-content: center;
 `;
@@ -171,14 +172,14 @@ export const Or = styled.span`
   width: 55px;
   font-size: 14px;
   color: #7e7e7e;
-  display: ${({ isSmallScreen }) => (isSmallScreen ? "flex" : "none")};
+  display: ${(props) => (props.$isSmallScreen ? "block" : "flex")};
   justify-content: center;
   align-items: center;
   text-align: center;
 `;
 
 export const Linebreak = styled.div`
-  display: ${({ isSmallScreen }) => (isSmallScreen ? "flex" : "none")};
+  display: ${(props) => (props.$isSmallScreen ? "block" : "flex")};
   justify-content: center;
   align-items: center;
   margin-top: 41.5px;

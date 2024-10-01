@@ -41,6 +41,14 @@ const BorderItem = styled.div`
     align-items: center;
     padding: 17px 11px;
     margin-top: 16px;
+
+    /* 모바일에서는 flex로, 데스크탑에서는 none으로 설정 */
+    @media (max-width: 768px) {
+      display: flex;
+    }
+    @media (min-width: 769px) {
+      display: none;
+    }
     `}
 `;
 

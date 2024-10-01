@@ -75,7 +75,8 @@ const LoginItem = () => {
               value={isLoading ? "Loading.." : "Login!"}
             />
           </InputWrapper>
-          <Link>
+          {/* 회원가입 링크 설정 */}
+          <Link to="/createaccount">
             <SingnUpText>회원가입</SingnUpText>
           </Link>
           <Link>
@@ -86,7 +87,11 @@ const LoginItem = () => {
             <Or isSmallScreen={isSmallScreen}>또는</Or>
             <Hr isSmallScreen={isSmallScreen} />
           </Linebreak>
-          <Border type="loginborder" text="instagram으로 계속"></Border>
+          <Border
+            type="loginborder"
+            text="instagram으로 계속"
+            isSmallScreen={isSmallScreen}
+          ></Border>
         </Form>
       </LoginInner>
     </Wrapper>
