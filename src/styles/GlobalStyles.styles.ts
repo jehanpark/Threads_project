@@ -3,6 +3,7 @@ import { DefaultTheme } from "styled-components";
 
 export const lightTheme: DefaultTheme = {
   logoColor: "#000",
+  nomalIconColor: "#BABABA",
   bodyBg: "#F2F2F2",
   fontcolor: "#000",
   borderWrapper: "#F5F5F5",
@@ -19,6 +20,7 @@ export const lightTheme: DefaultTheme = {
 
 export const darkTheme: DefaultTheme = {
   logoColor: "#fff",
+  nomalIconColor: "#4D4D4D",
   bodyBg: "#000000",
   fontcolor: "#fff",
   borderWrapper: "#252525",
