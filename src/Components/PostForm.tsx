@@ -85,6 +85,7 @@ const Icons = styled.div`
 
 const CameraButton = styled.label`
   cursor: pointer;
+  fill: none;
 `;
 const CameraInput = styled.input`
   display: none;
@@ -110,7 +111,7 @@ const DelteButton = styled.button`
   position: absolute;
   top: 5px;
   right: 5px;
-  background: #000;
+  background: #d6d6d6;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -241,7 +242,7 @@ const PostForm = () => {
         </PlusImage>
         <Icons>
           <CameraButton htmlFor="camera">
-            <CameraIcon width={50} />
+            <CameraIcon width={34} />
             <CameraInput
               onChange={onFileChange}
               id="camera"
@@ -250,7 +251,7 @@ const PostForm = () => {
             />
           </CameraButton>
           <PictureButton htmlFor="picture">
-            <PictureIcon width={36} />
+            <PictureIcon width={24} />
           </PictureButton>
           <PictureInput
             onChange={onFileChange}
@@ -258,8 +259,8 @@ const PostForm = () => {
             type="file"
             accept="video/*, image/*"
           />
-          <MicIcon width={36} />
-          <HashtagIcon width={36} />
+          <MicIcon width={24} />
+          <HashtagIcon width={24} />
         </Icons>
         <Buttons>
           <Button text="팔로워에게만 허용" type="bigupload" />
