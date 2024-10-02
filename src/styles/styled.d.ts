@@ -15,6 +15,8 @@ declare module "styled-components" {
     headerBg: string;
     btnBgColor: string;
     loginInputSelectColor: string;
+    navIconColor: string;
+
     // 필요에 따라 추가 속성 정의
   }
 }
