@@ -2,16 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import { lightTheme } from "../../styles/GlobalStyles.styles";
 
-console.log(lightTheme);
-
 const BorderItem = styled.div`
   ${({ type }) =>
     type === "borderWrapper" &&
     `
     margin: 0 auto;
-    width: 680px;
+    padding:10px 10px 0 10px; 
+    width:${(isSmallScreen) => (isSmallScreen ? " 100%" : "680px")};
     height: 898px;
-    
+    border-radius: 40px 40px 0px 0px;
     border: #C9C9C9;
     background:  #F5F5F5;
     border-filter: blur(4px);
@@ -30,7 +29,6 @@ const BorderItem = styled.div`
     background: #fff;
     `}
 `;
-
 const BorderTextItem = styled.div`
   position: ${({ type }) => (type === "borderinner" ? "absolute" : "relative")};
   top: ${({ type }) => (type === "borderinner" ? "30px" : "20px")};
@@ -40,12 +38,23 @@ const BorderTextItem = styled.div`
   text-align: center;
   color: ${({ type }) => (type === "borderinner" ? "#000" : "#888")};
 `;
+// const Border = ({ type, text }) => {
+//   return (
+//     <BorderItem type={type}>
+//       {type === "borderinner" && (
+//         <BorderTextItem type={type}>{text || "이너 아이템"}</BorderTextItem>
+//       )}
+//     </BorderItem>
+//   );
+// };
 
-const Border = ({ type, text }) => {
+const Border = ({ type, text, children }) => {
   return (
     <BorderItem type={type}>
-      {type === "borderinner" && (
+      {type === "borderinner" ? (
         <BorderTextItem type={type}>{text || "이너 아이템"}</BorderTextItem>
+      ) : (
+        children
       )}
     </BorderItem>
   );

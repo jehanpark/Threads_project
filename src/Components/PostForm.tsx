@@ -15,10 +15,10 @@ import {
 } from "../Components/Common/Icon";
 
 const BoederWrapper = styled.div`
-position: absolute;
-left: 50%;
-transform: translate(-50%);
-bottom: 0;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  bottom: 0;
   margin: 0 auto;
   width: 680px;
   height: 800px;
@@ -28,19 +28,20 @@ bottom: 0;
 `;
 
 const Form = styled.form`
-position: absolute;
-left: 50%;
-height: 50%;
-bottom: 0;
-transform: translate(-50%);
+  position: absolute;
+  left: 50%;
+  height: 50%;
+  bottom: 0;
+  transform: translate(-50%);
   display: flex;
   flex-direction: column;
-  margin: 0 auto ; 
+  margin: 0 auto;
   width: 660px;
   height: 790px;
   gap: 10px;
-  background: #fff;
+  background: ${(props) => props.theme.borderColor};
   border-radius: 30px 30px 0 0;
+
 `;
 
 const PlusImage = styled.div`
@@ -50,10 +51,9 @@ const PlusImage = styled.div`
 `;
 
 const TextArea = styled.textarea`
-  background: #fff;
-  color: #000;
-  border: 2px solid #fff;
-  border-left: 1px solid #bababa;
+  background: ${(props) => props.theme.borderColor};
+  color: ${(props) => props.theme.fontcolor};
+  border: none;
   padding: 20px;
   padding-left: 10px;
   font-size: 16px;
@@ -62,6 +62,8 @@ const TextArea = styled.textarea`
   width: 600px;
   height: 600px;
   resize: none;
+  font-family: var(--pretendard-font);
+  font-weight: 300;
   &::placeholder {
     color: #bababa;
     opacity: 1;
@@ -103,7 +105,7 @@ const Buttons = styled.div`
   justify-content: center;
   margin: 0 auto;
   gap: 20px;
-  border-top: 1px solid #ddd;
+  border-top: ${(props) => props.theme.borderstroke};
   padding: 20px;
 `;
 
@@ -218,7 +220,7 @@ const PostForm = () => {
     }
   };
   return (
-<BoederWrapper>
+    <BoederWrapper>
       <Form onSubmit={onSubmit}>
         <TextArea
           onChange={onChange}
@@ -234,7 +236,14 @@ const PostForm = () => {
               <img
                 src={URL.createObjectURL(file)}
                 alt={`Uploaded Preview ${index + 1}`}
-                style={{ width: "180px", height: "240px", borderRadius: "10px" ,objectFit:"contain" }}
+                style={{
+                  width: "180px",
+                  height: "180px",
+                  borderRadius: "10px",
+                  objectFit: "cover",
+                  background: "none"
+                  
+                }}
               />
               <DelteButton onClick={() => removeFile(index)}>X</DelteButton>
             </div>
@@ -271,7 +280,7 @@ const PostForm = () => {
           />
         </Buttons>
       </Form>
-</BoederWrapper>
+    </BoederWrapper>
   );
 };
 
