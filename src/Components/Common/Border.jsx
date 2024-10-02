@@ -52,10 +52,7 @@ const Border = ({ type, text, children }) => {
   return (
     <BorderItem type={type}>
       {type === "borderinner" ? (
-      {type === "borderinner" ? (
         <BorderTextItem type={type}>{text || "이너 아이템"}</BorderTextItem>
-      ) : (
-        children
       ) : (
         children
       )}
