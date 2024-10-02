@@ -188,10 +188,15 @@ const Profile = () => {
     //아이콘추가
   };
 
-  const onProfileEdite = async (e) => {
+  const onProfileEdite = () => {
     setEditModal((prev) => !prev);
     //프로필수정
+  };
+
+  const onimgchange = async (e) => {
+    //모달 완성후 이미지 클릭시 연결할 함수
     const { file } = e.target;
+    if (!user) return;
   };
 
   return (
