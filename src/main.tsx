@@ -5,6 +5,7 @@ import { router } from "./Routes";
 import ThreadProvider from "./Contexts/ThreadProvider";
 import ThemeProvider from "./Contexts/ThemeProvider";
 import GlobalStyles from "./styles/GlobalStyles.styles";
+import Intro from "./Components/Intro";
 
 createRoot(document.getElementById("root")).render(
   <ThemeProvider>

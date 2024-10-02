@@ -86,7 +86,7 @@ const ModalContainer = styled.div.withConfig({
   /* color: ${(props) => props.theme.fontcolor}; */
 
   height: ${(props) => (props.isThemeModal ? "220px" : "298px")};
-  background-color: ${(props) => props.theme.bodyBg};
+  background-color: ${(props) => props.theme.borderColor};
   color: ${(props) => props.theme.fontcolor};
 
   border-radius: 10px;

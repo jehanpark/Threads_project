@@ -25,11 +25,14 @@ const MyProfileImgs = styled.div`
 const Img = styled.img`
   width: 100%;
   height: 100%;
+
 `;
 
 const Ul = styled.ul`
   width: 620px;
   background-color: ${(props) => props.theme.borderColor};
+  background-color: ${(props) => props.theme.headerBg};
+  box-shadow: ${(props) => props.theme.bordershadow};
   height: 60px;
   display: flex;
   align-items: center;
@@ -40,6 +43,8 @@ const Ul = styled.ul`
 `;
 
 const Li = styled.li`
+
+  color: #c95c5c;
   cursor: pointer;
   border-radius: 50px;
   width: ${(props) => 100 / props.$itemCount}%;
@@ -56,7 +61,6 @@ const Li = styled.li`
       : props.theme.bordeborderColorrshadow};
   color: ${(props) =>
     props.$isSelected ? props.theme.bodyBg : props.theme.navIconColor};
-
   &:hover {
     background-color: ${(props) => props.theme.fontcolor};
     color: ${(props) => props.theme.bodyBg};
@@ -64,7 +68,6 @@ const Li = styled.li`
     /* background-color: ${(props) =>
       props.$isSelected ? props.theme.fontcolor : "#f0f0f0"}; */
   }
-
   svg {
     width: 24px;
     height: 24px;
@@ -72,7 +75,21 @@ const Li = styled.li`
     fill: none; /* fill을 없애거나 필요에 따라 조정 */
     transition: stroke 0.4s;
   }
+  ${(props) =>
+    props.$isSelected /* $isSelected로 변경 */ &&
+    css`
+      color: ${(props) => props.theme.headerselect};
+      background-color: ${(props) => props.theme.logoColor};
+    `}
+    
 `;
+const menuItems = styled.img`
+  ${(props) =>
+    props.$isSelected /* $isSelected로 변경 */ &&
+    css`
+    color: ${(props) => props.theme.selectIconColor};
+    `}
+`
 
 const Nav = () => {
   const menuItems = [
