@@ -12,6 +12,7 @@ const Wrapper = styled.div`
 `;
 
 const Home = () => {
+
   return (
     <Wrapper>
       <Intro />
@@ -19,6 +20,7 @@ const Home = () => {
       <Border type={"borderWrapper"} />
     </Wrapper>
   );
+
 };
 
 export default Home;

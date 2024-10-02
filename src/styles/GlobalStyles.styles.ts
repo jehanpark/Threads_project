@@ -35,7 +35,6 @@ export const darkTheme: DefaultTheme = {
 
 const GlobalStyles = createGlobalStyle`
 
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -60,7 +59,6 @@ time, mark, audio, video, input {
 	font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 
 	box-sizing: border-box;
-
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
@@ -96,6 +94,7 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
 :root {
 	//light
 	--tag-color: #0396f6;
