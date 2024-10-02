@@ -16,14 +16,14 @@ const ModalOverlay = styled.div`
 
 const ModalContainer = styled.div`
   width: 450px;
-  height: ${(props) => props.height || "471px"};
+
   border-radius: 12px;
   background: #fff;
   padding: 64px 11px 0 11px;
   color: #000;
   position: relative;
 `;
-
+// height: ${(props) => props.height || "471px"};
 const CloseButton = styled.button`
   position: absolute;
   top: 10px;
@@ -36,13 +36,13 @@ const CloseButton = styled.button`
 `;
 
 const Modal = ({ isOpen, onClose, children, height }) => {
-  if (!isOpen) return null; // 모달이 열리지 않으면 렌더링하지 않음
+  if (!isOpen) return null;
 
   return (
     <ModalOverlay onClick={onClose}>
-      <ModalContainer onClick={(e) => e.stopPropagation()}>
+      <ModalContainer style={{ height }} onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>X</CloseButton>
-        {/* 모달 내부 내용 */}
+
         {children}
       </ModalContainer>
     </ModalOverlay>

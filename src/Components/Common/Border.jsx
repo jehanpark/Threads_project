@@ -8,7 +8,7 @@ const BorderItem = styled.div`
     `
     margin: 0 auto;
     padding:10px 10px 0 10px; 
-    width: 680px;
+    width:${(isSmallScreen) => (isSmallScreen ? " 100%" : "680px")};
     height: 898px;
     border-radius: 40px 40px 0px 0px;
     border: #C9C9C9;

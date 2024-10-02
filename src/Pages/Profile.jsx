@@ -2,30 +2,33 @@ import React, { useState, useContext } from "react";
 import { ThreadDispatchContext } from "../Contexts/ThreadProvider";
 import { ThreadDataContext } from "../Contexts/ThreadProvider";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 import Profileimg from "../../public/profile.png";
 import Border from "../Components/Common/Border";
 import Button from "../Components/Common/Button";
 import Modal from "../Components/Common/Modal";
 import { PlusIcon, InstaIcon, FacebookIcon } from "../Components/Common/Icon";
+import {
+  ProfileInnner,
+  IdWrap,
+  IdText,
+  Tap,
+  TextInput,
+  Desk,
+} from "../styles/MobileProfile";
 
-const ProfileInnner = styled.div`
-  padding: 40px 40px 0 40px;
-  width: 100%;
-  height: 320px;
-  border-radius: 40px 40px 18px 18px;
-  background: ${(props) => props.theme.borderColor};
-  margin-bottom: 8px;
-`;
+// const ProfileInnner = styled.div`
+//   padding: 40px 40px 0 40px;
+//   width: 100%;
+//   height: 320px;
+//   border-radius: 40px 40px 18px 18px;
+//   background: ${(props) => props.theme.borderColor};
+//   margin-bottom: 8px;
+// `;
 const ProfileWrap = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
-`;
-
-const IdWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 `;
 
 const ImgWrap = styled.div`
@@ -46,12 +49,6 @@ const Nick = styled.h1`
   color: ${(props) => props.theme.fontcolor};
 `;
 
-const IdText = styled.h3`
-  font-size: 15px;
-  font-weight: 400;
-  color: ${(props) => props.theme.nomalIconColor};
-`;
-
 const BottomWrap = styled.div`
   width: 100%;
   height: calc(100% - 80px);
@@ -59,10 +56,10 @@ const BottomWrap = styled.div`
   flex-direction: column;
   gap: 25px;
 `;
-const Desk = styled.div`
-  height: 83px;
-  color: ${(props) => props.theme.fontcolor};
-`;
+// const Desk = styled.div`
+//   height: 83px;
+//   color: ${(props) => props.theme.fontcolor};
+// `;
 
 const FollowLink = styled.div`
   display: flex;
@@ -113,46 +110,63 @@ const Circle = styled.div`
   background: ${(props) => props.theme.nomalIconColor};
 `;
 
-const Tap = styled.div`
+const ThreadInner = styled.div`
   width: 100%;
-  height: 48px;
-  border-radius: 18px;
-  background: ${(props) => props.theme.borderColor};
-  display: flex;
-  justify-content: space-between;
-  text-align: center;
-  line-height: 3;
-  margin-bottom: 8px;
-  div {
-    height: 100%;
-    width: 168px;
-    color: ${(props) => props.theme.nomalIconColor};
-  }
 `;
 
-const TextInput = styled.div`
-  padding: 40px 40px 0 40px;
-  width: 100%;
-  height: 68px;
-  border-radius: 18px;
-  background: ${(props) => props.theme.borderColor};
-`;
+// const Tap = styled.div`
+//   width: 100%;
+//   height: 48px;
+//   border-radius: 18px;
+//   background: ${(props) => props.theme.borderColor};
+//   display: flex;
+//   justify-content: space-between;
+//   text-align: center;
+//   line-height: 3;
+//   margin-bottom: 8px;
+//   div {
+//     height: 100%;
+//     width: 168px;
+//     color: ${(props) => props.theme.nomalIconColor};
+//   }
+// `;
+
+// const TextInput = styled.div`
+//   padding: 40px 40px 0 40px;
+//   width: 100%;
+//   height: 68px;
+//   border-radius: 18px;
+//   background: ${(props) => props.theme.borderColor};
+// `;
 
 const ModalItemLine = styled.div`
-  padding: 55px 11px 0px 11px;
+  padding: 20px;
   width: 100%;
   border: 1px solid ${(props) => props.theme.borderstroke};
   border-radius: 15px;
   height: 87px;
 `;
 
-const ModalMainText = styled.div``;
+const ModalMainText = styled.h3`
+  margin-bottom: 6px;
+`;
+
+const Tdiv = styled.div`
+  padding: 40px 40px 0 40px;
+  width: 654px;
+  margin: 0 auto 8px;
+  height: 200px;
+  border-radius: 18px;
+  background: ${(props) => props.theme.borderColor};
+  color: #000;
+`;
 
 const Profile = () => {
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
   const data = useContext(ThreadDataContext);
+
   const { createThread, updateThread, deleteThread, updateProfile } =
     useContext(ThreadDispatchContext);
-
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
@@ -173,19 +187,20 @@ const Profile = () => {
   };
 
   return (
-    <Border type="borderWrapper">
-      <ProfileInnner>
+    // <Border type="borderWrapper">
+    <>
+      <ProfileInnner isSmallScreen={isSmallScreen}>
         <ProfileWrap>
-          <IdWrap>
+          <IdWrap isSmallScreen={isSmallScreen}>
             <Nick>이과사</Nick>
-            <IdText>Prince</IdText>
+            <IdText isSmallScreen={isSmallScreen}>Prince</IdText>
           </IdWrap>
-          <ImgWrap>
+          <ImgWrap isSmallScreen={isSmallScreen}>
             <Img src={Profileimg} />
           </ImgWrap>
         </ProfileWrap>
         <BottomWrap>
-          <Desk>확인용 문구</Desk>
+          <Desk isSmallScreen={isSmallScreen}>확인용 문구</Desk>
           <FollowLink>
             {followModal ? (
               <Modal isOpen={true} onClose={onfollow}></Modal>
@@ -195,9 +210,17 @@ const Profile = () => {
             <Follow onClick={onfollow}>팔로워 00</Follow>
             <Links>
               {linkmodal ? (
-                <Modal isOpen={true} onClose={onLinkPlus} height={"100px"}>
+                <Modal isOpen={true} onClose={onLinkPlus} height={"200px"}>
                   <ModalItemLine>
                     <ModalMainText>링크 추가</ModalMainText>
+                    <input
+                      style={{
+                        width: "100%",
+                        borderBottom: ` 1px solid ${(props) =>
+                          props.theme.borderstroke}`,
+                        outline: "none",
+                      }}
+                    />
                   </ModalItemLine>
                 </Modal>
               ) : (
@@ -223,14 +246,20 @@ const Profile = () => {
           <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
         </BottomWrap>
       </ProfileInnner>
-      <Tap>
-        <div>스레드</div>
-        <div>답글</div>
-        <div>리포트</div>
-        <div>인스타</div>
-      </Tap>
-      <TextInput />
-    </Border>
+      <ThreadInner>
+        <Tap isSmallScreen={isSmallScreen}>
+          <li>스레드</li>
+          <li>답글</li>
+          <li>리포트</li>
+          <li>인스타</li>
+        </Tap>
+        <TextInput isSmallScreen={isSmallScreen} />
+        <Tdiv>
+          {data[0].userId} {data[0].nickname} {data[0].desc}
+        </Tdiv>
+      </ThreadInner>
+    </>
+    //</Border>
   );
 };
 
