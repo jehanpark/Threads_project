@@ -26,7 +26,7 @@ const SearchBar = styled.input`
 //   color: #545454;
 // `;
 
-const Search = ({ onClick }) => {
+const Search = ({ onClick, type }) => {
   const [placeholder, setPlaceholder] = useState("검색");
 
   const handleFocus = () => setPlaceholder("");

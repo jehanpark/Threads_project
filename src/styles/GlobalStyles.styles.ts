@@ -15,6 +15,7 @@ export const lightTheme: DefaultTheme = {
   headerBg: "#fff",
   btnBgColor: "#fff", // 중복 제거
   loginInputSelectColor: "#5987DC",
+  navIconColor: "#bababa",
 };
 
 export const darkTheme: DefaultTheme = {
@@ -31,6 +32,7 @@ export const darkTheme: DefaultTheme = {
   headerBg: "#1E1E1E",
   btnBgColor: "#000", // 중복 제거
   loginInputSelectColor: "#488EE3",
+  navIconColor: "#bababa",
 };
 
 const GlobalStyles = createGlobalStyle`
@@ -71,7 +73,6 @@ body {
 	background-color: ${(props) => props.theme.bodyBg};
 
 	color: ${(props) => props.theme.fontcolor};
-
 	color: ${(props) => props.theme.bodyColor};
 
 	line-height: 1;
