@@ -16,6 +16,10 @@ export const lightTheme: DefaultTheme = {
   headerBg: "#fff",
   btnBgColor: "#fff", // 중복 제거
   loginInputSelectColor: "#5987DC",
+  searchBar: "#e9e9e9",
+  userIcon: "595959",
+  followerfont: "#737373",
+  searchColor: "#595959",
 };
 
 export const darkTheme: DefaultTheme = {
@@ -33,6 +37,10 @@ export const darkTheme: DefaultTheme = {
   headerBg: "#1E1E1E",
   btnBgColor: "#000", // 중복 제거
   loginInputSelectColor: "#488EE3",
+  searchBar: "#BABABA",
+  userIcon: "#7373",
+  followerfont: "#bababa",
+  searchColor: "#1D1D1D",
 };
 
 const GlobalStyles = createGlobalStyle`
