@@ -3,6 +3,8 @@ import Logo from "../Logo";
 import LogoTextMark from "../LogoTextMark";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
+import { useMediaQuery } from "react-responsive";
+
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 
@@ -17,11 +19,11 @@ import {
   StyledInput,
   StyledLabel,
   Error,
-  SingnUpText,
-  ForgotPasswordText,
+  // SingnUpText,
+  // ForgotPasswordText,
 } from "./RecycleStyles/login_dk";
 
-const CreateAccountItemDk = () => {
+const CreateAccountItemDk: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,6 +31,8 @@ const CreateAccountItemDk = () => {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
 
   // 제너릭 정의
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,9 +73,9 @@ const CreateAccountItemDk = () => {
 
   return (
     <Wrapper>
-      <BgImg src="/login/thread_login_bg.png" />
+      <BgImg $isSmallScreen={isSmallScreen} src="/login/thread_login_bg.png" />
       <LoginInner>
-        <LogoWrapper>
+        <LogoWrapper $isSmallScreen={isSmallScreen}>
           <Logo width={40} />
         </LogoWrapper>
         <LoginP>

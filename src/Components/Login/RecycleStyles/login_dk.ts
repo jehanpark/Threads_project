@@ -209,7 +209,7 @@ export const LogoWrapper = styled.div<ResponsiveProps>`
 export const LoginP = styled.p`
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 1px;
   margin-bottom: 16px;
 `;
 
@@ -251,6 +251,19 @@ export const StyledInput = styled.input`
     color: #fff;
     border: 1px solid ${(props) => props.theme.mouseHoverFontcolor};
     margin-bottom: 27px;
+  }
+  &.facebook-btn {
+    width: 100%;
+    height: 37px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #67b5fa;
+    outline: none;
+    border: none;
+    padding: 0px;
+    color: #fff;
+    border-radius: 12px;
   }
 `;
 
