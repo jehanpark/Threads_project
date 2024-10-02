@@ -11,6 +11,9 @@ const Wrapper = styled.nav`
   justify-content: space-between;
   margin-bottom: 20px;
   /* padding: 0px 20px; */
+  @media (max-width: 768px) {
+    display: none; // 768px 이상의 화면에서는 숨기기
+  }
 `;
 
 const LogoWrapper = styled.div`

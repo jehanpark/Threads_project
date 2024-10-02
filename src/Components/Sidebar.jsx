@@ -12,6 +12,9 @@ const BtnWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  @media (max-width: 768px) {
+    display: none; // 768px 이상의 화면에서는 숨기기
+  }
 `;
 
 const SetBtn = styled.button`
