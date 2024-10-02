@@ -1,4 +1,5 @@
 // src/Components/Login/LoginItemDk.tsx
+// @ts-nocheck
 
 import React, { useState } from "react";
 import Logo from "../Logo";
@@ -8,7 +9,7 @@ import { auth } from "../../firebase";
 import { FirebaseError } from "firebase/app";
 import { useMediaQuery } from "react-responsive";
 import Border from "../Common/Border";
-
+import { InstaIcon } from "../Common/Icon";
 import {
   Wrapper,
   BgImg,
@@ -29,7 +30,7 @@ import {
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-const LoginItemDk: React.FC = () => {
+const LoginItemInstaDk: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [id, setId] = useState("");
@@ -70,13 +71,11 @@ const LoginItemDk: React.FC = () => {
       <BgImg $isSmallScreen={isSmallScreen} src="/login/thread_login_bg.png" />
       <LoginInner>
         <LogoWrapper $isSmallScreen={isSmallScreen}>
-          <Logo width={40} />
+          {/* <Logo width={40} /> */}
         </LogoWrapper>
         <LoginP>
           <LogoTextMark width={62} />
-          <StyledSpan $isSmallScreen={isSmallScreen}>
-            계정으로 로그인
-          </StyledSpan>
+          <StyledSpan $isSmallScreen={isSmallScreen}>로 이동</StyledSpan>
         </LoginP>
         <Form onSubmit={onSubmit}>
           <InputWrapper>
@@ -107,10 +106,12 @@ const LoginItemDk: React.FC = () => {
           </InputWrapper>
           <InputWrapper>
             <StyledInput
+              className="facebook-btn"
               type="submit"
               value={isLoading ? "Loading.." : "로그인"}
             />
           </InputWrapper>
+
           <Link to="/create-account">
             <SingnUpText>회원가입</SingnUpText>
           </Link>
@@ -122,13 +123,10 @@ const LoginItemDk: React.FC = () => {
             <Or $isSmallScreen={isSmallScreen}>또는</Or>
             <Hr $isSmallScreen={isSmallScreen} />
           </Linebreak>
-          <Link to="/login-insta">
-            <Border type="loginborder" text="instagram으로 계속"></Border>
-          </Link>
         </Form>
       </LoginInner>
     </Wrapper>
   );
 };
 
-export default LoginItemDk;
+export default LoginItemInstaDk;

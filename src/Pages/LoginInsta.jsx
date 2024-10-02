@@ -1,7 +1,12 @@
 import React from "react";
+import LoginItemInstaDk from "../Components/Login/LoginItemInsta_dk";
 
 const LoginInsta = () => {
-  return <div>LoginInsta</div>;
+  return (
+    <>
+      <LoginItemInstaDk />
+    </>
+  );
 };
 
 export default LoginInsta;
