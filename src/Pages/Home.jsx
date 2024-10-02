@@ -6,6 +6,7 @@ import styled from "styled-components";
 import PostForm from "../Components/PostForm";
 import TimeLine from "../Components/TimeLine";
 
+
 const Home = () => {
   return (
     <div>

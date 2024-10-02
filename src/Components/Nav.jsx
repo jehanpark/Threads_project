@@ -25,6 +25,7 @@ const MyProfileImgs = styled.div`
 const Img = styled.img`
   width: 100%;
   height: 100%;
+
 `;
 
 const Ul = styled.ul`
@@ -40,6 +41,8 @@ const Ul = styled.ul`
 `;
 
 const Li = styled.li`
+
+  color: #c95c5c;
   cursor: pointer;
   border-radius: 50px;
   width: ${(props) => 100 / props.$itemCount}%;
@@ -72,7 +75,21 @@ const Li = styled.li`
     fill: none; /* fill을 없애거나 필요에 따라 조정 */
     transition: stroke 0.4s;
   }
+  ${(props) =>
+    props.$isSelected /* $isSelected로 변경 */ &&
+    css`
+      color: ${(props) => props.theme.headerselect};
+      background-color: ${(props) => props.theme.logoColor};
+    `}
+    
 `;
+const menuItems = styled.img`
+  ${(props) =>
+    props.$isSelected /* $isSelected로 변경 */ &&
+    css`
+    color: ${(props) => props.theme.selectIconColor};
+    `}
+`
 
 const Nav = () => {
   const menuItems = [

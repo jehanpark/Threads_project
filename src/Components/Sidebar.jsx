@@ -79,14 +79,14 @@ const ModalContainer = styled.div.withConfig({
   width: 258px;
 
   height: 298px;
-  /* border-color: ${(props) => props.theme.bordercolor}; */
-  background-color: ${(props) => props.theme.borderColor};
+
+	background-color: ${(props) => props.theme.borderColor};
   color: ${({ theme }) => theme.textColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   /* color: ${(props) => props.theme.fontcolor}; */
 
   height: ${(props) => (props.isThemeModal ? "220px" : "298px")};
-  background-color: ${(props) => props.theme.bodyBg};
+  background-color: ${(props) => props.theme.borderColor};
   color: ${(props) => props.theme.fontcolor};
 
   border-radius: 10px;
