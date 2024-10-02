@@ -4,6 +4,7 @@ import Nav from "../Components/Nav";
 import Intro from "../Components/Intro";
 import styled from "styled-components";
 import Border from "../Components/Common/Border";
+import PostList from "../Components/PostList";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -14,6 +15,7 @@ const Home = () => {
   return (
     <Wrapper>
       <Intro />
+      <PostList />
       <Border type={"borderWrapper"} />
     </Wrapper>
   );
