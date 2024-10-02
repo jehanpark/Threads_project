@@ -11,12 +11,11 @@ const BorderItem = styled.div`
     margin: 0 auto;
     width: 680px;
     height: 898px;
-    border-radius: 40px 40px 0px 0px;
+    
     border: #C9C9C9;
     background:  #F5F5F5;
     border-filter: blur(4px);
     box-shadow: ${lightTheme.bordershadow}
-    
     `}
   ${({ type }) =>
     type === "borderinner" &&

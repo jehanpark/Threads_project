@@ -93,57 +93,7 @@ const PostBookmark = styled.p`
 
 // PostList 컴포넌트
 const PostList = () => {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    // public 폴더에 있는 threads.json 파일을 fetch로 불러오기
-    fetch("/threads.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setPosts(data);
-      })
-      .catch((error) => console.error("데이터를 불러오는 중 오류 발생:", error));
-  }, []);
-
-  return (
-    <PostListContainer>
-      {posts.length === 0 ? (
-        <p>게시글을 불러오는 중입니다...</p>
-      ) : (
-        posts.map((post) => (
-          <PostItem key={post.threadId}>
-            <PostHeader>
-              <ProfileImg src={post.threadUserImg} alt={`${post.threadUserName}의 프로필`} />
-              <PostInfo>
-                <PostUserName>{post.threadUserName}</PostUserName>
-                <PostTime>{post.threadTime}</PostTime>
-              </PostInfo>
-            </PostHeader>
-            <PostContent>
-              <PostText>{post.threadContents.text}</PostText>
-              {post.threadContents.images.length > 0 && (
-                <PostImages>
-                  {post.threadContents.images.map((image, index) => (
-                    <PostImage key={index} src={image} alt={`post-image-${index}`} />
-                  ))}
-                </PostImages>
-              )}
-            </PostContent>
-            <PostFooter>
-              <PostHeart>❤️ {post.threadHeart}</PostHeart>
-              {post.threadBookMark ? <PostBookmark>🔖 북마크됨</PostBookmark> : <PostBookmark>북마크 안됨</PostBookmark>}
-              <PostLink href={post.threadShareLink}>게시글 보기</PostLink>
-            </PostFooter>
-          </PostItem>
-        ))
-      )}
-    </PostListContainer>
-  );
+  return <div></div>;
 };
 
 export default PostList;
