@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { ThreadDispatchContext } from "../Contexts/ThreadProvider";
 import { ThreadDataContext } from "../Contexts/ThreadProvider";
+import { auth, storage, db } from "../firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import Profileimg from "../../public/profile.png";
@@ -162,9 +164,14 @@ const Tdiv = styled.div`
 `;
 
 const Profile = () => {
+  const user = auth.currentUser; //유저정보
+  const [avatar, setAvarta] = useState(user?.photoURL || null || undefined); //이미지관리목적
+  const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
+  const [name, setName] = useState(user?.displayName ?? "Anonymouse"); // 이름 state관리
+  const [editMode, setEditMode] = useState(false); //프로필수정기능 끄고키기
+
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
   const data = useContext(ThreadDataContext);
-
   const { createThread, updateThread, deleteThread, updateProfile } =
     useContext(ThreadDispatchContext);
   const [followModal, setFollowModal] = useState(false);
@@ -181,9 +188,10 @@ const Profile = () => {
     //아이콘추가
   };
 
-  const onProfileEdite = () => {
+  const onProfileEdite = async (e) => {
     setEditModal((prev) => !prev);
     //프로필수정
+    const { file } = e.target;
   };
 
   return (
