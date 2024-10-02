@@ -65,7 +65,7 @@ const ButtonItem = styled.button`
       width: 64px;
       height: 36px;
       background: #fff;
-      color: #000;
+      color: #000; 
       font-size: 15px;
       font-weight: Medium;
       border-radius: 6px;

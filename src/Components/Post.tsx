@@ -21,7 +21,9 @@ const Wrapper = styled.div`
   padding: 20px;
 `;
 
-const Column = styled.div``;
+const Column = styled.div`
+display: flex;
+`;
 
 const Photo = styled.img`
   width: 200px;
@@ -133,10 +135,12 @@ const SetContentInputButton = styled.input`
   display: none;
 `;
 
-const Post = ({ username, post, photo, video, userId, id }: IPost) => {
+const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
   const [editedPhoto, setEditedPhoto] = useState<File | null>(null);
+
+  const user = auth.currentUser;
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditedPost(e.target.value);
@@ -155,19 +159,17 @@ const Post = ({ username, post, photo, video, userId, id }: IPost) => {
     if (files && files.length === 1) setEditedPhoto(files[0]);
   };
 
-  const user = auth.currentUser;
   const onDelete = async () => {
     const ok = confirm("Are you sure you want to delete this post?");
     if (!ok || user?.uid !== userId) return;
     try {
       await deleteDoc(doc(db, `contents`, id));
-      if (photo) {
+      if (photos.length > 0) {
         const photoRef = ref(storage, `contents/${user.uid}/${id}`);
         await deleteObject(photoRef);
       }
     } catch (e) {
       console.error(e);
-    } finally {
     }
   };
 
@@ -180,36 +182,34 @@ const Post = ({ username, post, photo, video, userId, id }: IPost) => {
       const postData = postDoc.data();
 
       if (postData) {
-        if (postData.photo) postData.fileType = "image";
+        if (postData.photos) postData.fileType = "image";
         if (postData.video) postData.fileType = "video";
       }
 
-      const exsitingFileType = postData?.fileType || null;
+      const existingFileType = postData?.fileType || null;
 
       if (editedPhoto) {
-        const newFileType = editedPhoto.type.startsWith("image/")
-          ? "image"
-          : "video";
+        const newFileType = editedPhoto.type.startsWith("image/") ? "image" : "video";
 
-        if (exsitingFileType && exsitingFileType !== newFileType) {
-          alert("You can only upload the same type of contents");
+        if (existingFileType && existingFileType !== newFileType) {
+          alert("You can only upload the same type of content");
           return;
         }
+
         const locationRef = ref(storage, `contents/${user.uid}/${id}`);
         const uploadTask = uploadBytesResumable(locationRef, editedPhoto);
         if (editedPhoto.size >= 5 * 1024 * 1024) {
           uploadTask.cancel();
-          throw new StorageError(
-            StorageErrorCode.CANCELED,
-            "File Size is over 5MB"
-          );
+          throw new Error("File Size is over 5MB");
         }
+
         const result = await uploadBytes(locationRef, editedPhoto);
         const url = await getDownloadURL(result.ref);
+
         await updateDoc(doc(db, "contents", id), {
           post: editedPost,
-          photo: newFileType === "image" ? url : "",
-          video: newFileType === "video" ? url : "",
+          photos: newFileType === "image" ? [...photos, url] : photos,
+          video: newFileType === "video" ? url : video,
           fileType: newFileType,
         });
       } else {
@@ -221,22 +221,18 @@ const Post = ({ username, post, photo, video, userId, id }: IPost) => {
       setIsEditing(false);
     }
   };
+
   return (
     <Wrapper>
       <Column>
         <Username>{username}</Username>
         {isEditing ? (
-          <EditPostFormTextArea
-            onChange={onChange}
-            value={editedPost}
-            placeholder={post}
-          ></EditPostFormTextArea>
+          <EditPostFormTextArea onChange={onChange} value={editedPost} placeholder={post} />
         ) : (
           <Payload>{post}</Payload>
         )}
 
         <EditorColumns>
-          {}
           {user?.uid === userId ? (
             <>
               {isEditing ? (
@@ -244,14 +240,7 @@ const Post = ({ username, post, photo, video, userId, id }: IPost) => {
                   <CancelButton onClick={handleCancel}>Cancel</CancelButton>
                   <UpdateButton onClick={onUpdate}>Update</UpdateButton>
                   <SetContentButton htmlFor="edit-content">
-                    <svg
-                      fill="none"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                    >
+                    <svg fill="none" strokeWidth={1.5} stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -275,16 +264,21 @@ const Post = ({ username, post, photo, video, userId, id }: IPost) => {
           ) : null}
         </EditorColumns>
       </Column>
-      {photo ? (
+
+      {/* 여러 장의 사진을 배열로 렌더링 */}
+      {photos && photos.length > 0 && (
         <Column>
-          <Photo src={photo} />
+          {photos.map((photoUrl, index) => (
+            <Photo key={index} src={photoUrl} alt={`Post Image ${index + 1}`} />
+          ))}
         </Column>
-      ) : null}
-      {video ? (
+      )}
+
+      {video && (
         <Column>
           <Video src={video} autoPlay loop />
         </Column>
-      ) : null}
+      )}
     </Wrapper>
   );
 };
