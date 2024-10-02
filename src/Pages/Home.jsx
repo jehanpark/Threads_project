@@ -9,7 +9,7 @@ import TimeLine from "../Components/TimeLine";
 const Home = () => {
   return (
     <div>
-      <PostForm />
+      {/* <PostForm /> */}
       <TimeLine />
     </div>
   );

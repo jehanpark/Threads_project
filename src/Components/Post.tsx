@@ -12,13 +12,21 @@ import {
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
+import {
+  HeartIcon,
+  DmIcon,
+  MagnifyingGlassIcon,
+  BellOffIcon,
+} from "../Components/Common/Icon";
 
 const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 3fr 1fr;
+  display: flex;
+  flex-direction: column;
   border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 15px;
+  border-radius: 30px;
   padding: 20px;
+  width: 660px;
+  background: #fff;
 `;
 
 const Column = styled.div`
@@ -26,9 +34,10 @@ display: flex;
 `;
 
 const Photo = styled.img`
-  width: 200px;
-  height: 100%;
-  border-radius: 15px;
+  width: 160px;
+  height: 140px;
+  object-fit: contain;
+  margin-left: 40px;
 `;
 
 const Video = styled.video`
@@ -37,15 +46,48 @@ const Video = styled.video`
   border-radius: 15px;
 `;
 
+const Header = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: start;
+  align-items: center;
+`
+
+const UserImage =styled.img`
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+`
+
 const Username = styled.span`
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: normal;
 `;
 
+const Timer = styled.span`
+  font-size: 10px;
+  color: #9a9a9a;
+`
+
 const Payload = styled.p`
-  font-size: 18px;
-  margin: 10px 0;
+  font-size: 15px;
+  font-weight: 600;
+  margin-left: 50px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  
 `;
+
+const Icons = styled.div`
+  display: flex;
+  gap: 18px;
+  justify-content: start;
+  align-items: center;
+  margin-left: 50px;
+  margin-top: 20px;
+
+`
 
 const DeleteButton = styled.button`
   background: #ff6347;
@@ -224,15 +266,20 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
 
   return (
     <Wrapper>
+        <Header>
+          <UserImage src="http://localhost:5173/profile.png"></UserImage>
+          <Username>{username}</Username>
+          <Timer>2시간전</Timer>
+      </Header>
+      <Payload>{post}</Payload>
       <Column>
-        <Username>{username}</Username>
         {isEditing ? (
           <EditPostFormTextArea onChange={onChange} value={editedPost} placeholder={post} />
         ) : (
           <Payload>{post}</Payload>
         )}
 
-        <EditorColumns>
+        {/* <EditorColumns>
           {user?.uid === userId ? (
             <>
               {isEditing ? (
@@ -262,7 +309,7 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
               <DeleteButton onClick={onDelete}>Delete</DeleteButton>
             </>
           ) : null}
-        </EditorColumns>
+        </EditorColumns> */}
       </Column>
 
       {/* 여러 장의 사진을 배열로 렌더링 */}
@@ -279,6 +326,12 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
           <Video src={video} autoPlay loop />
         </Column>
       )}
+      <Icons>
+        <HeartIcon width={30}/>2
+        <DmIcon width={30}/>2
+        <MagnifyingGlassIcon width={30}/>2
+        <BellOffIcon width={30}/>2
+      </Icons>
     </Wrapper>
   );
 };

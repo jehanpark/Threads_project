@@ -27,6 +27,13 @@ const Wrapper = styled.div`
   gap: 10px;
   overflow-y: scroll;
   padding: 0 10px;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5;
+  width: 680px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 20px;
 `;
 
 const TimeLine = () => {
