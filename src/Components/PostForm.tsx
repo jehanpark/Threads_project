@@ -25,6 +25,7 @@ const Form = styled.form`
 const PlusImage = styled.div`
   display: flex;
   margin: 10px 20px;
+  gap: 10px;
 `;
 
 const TextArea = styled.textarea`
@@ -84,6 +85,17 @@ const Buttons = styled.div`
   padding: 20px;
 `;
 
+const DelteButton = styled.button`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+`;
+
 const SubmitBtn = styled.input`
   width: 300px;
   height: 80px;
@@ -102,24 +114,37 @@ const SubmitBtn = styled.input`
 const PostForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
 
   const maxFileSize = 5 * 1024 * 1024;
+  const maxFilesCount = 3;
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPost(e.target.value);
   };
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e);
-    const { files } = e.target;
-    if (files && files.length === 1) {
-      if (files[0].size > maxFileSize) {
-        alert("The Maximum Capacity that can be uploaded is 5MB");
+    const { files: selectedFiles } = e.target;
+    if (selectedFiles) {
+      const newFiles = Array.from(selectedFiles).filter((file) => {
+        if (file.size > maxFileSize) {
+          alert(
+            "The Maximum Capacity that can be uploaded is 5MB for each file"
+          );
+          return false;
+        }
+        return true;
+      });
+      if (files.length + newFiles.length > maxFilesCount) {
+        alert(`You can upload a maximum of ${maxFilesCount} files.`);
         return;
       }
-      setFile(files[0]);
+      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
     }
+  };
+
+  const removeFile = (index: number) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -134,24 +159,31 @@ const PostForm = () => {
         username: user?.displayName || "Anonymous",
         userId: user.uid,
       });
-      if (file) {
-        const locationRef = ref(storage, `contents/${user.uid}/${doc.id}`);
-        const result = await uploadBytes(locationRef, file);
-        const url = await getDownloadURL(result.ref);
-        const fileType = file.type;
-        if (fileType.startsWith("image/")) {
-          await updateDoc(doc, {
-            photo: url,
-          });
-        }
-        if (fileType.startsWith("video/")) {
-          await updateDoc(doc, {
-            video: url,
-          });
-        }
-      }
+
+      await Promise.all(
+        files.map(async (file) => {
+          const locationRef = ref(
+            storage,
+            `contents/${user.uid}/${doc.id}/${file.name}`
+          );
+          const result = await uploadBytes(locationRef, file);
+          const url = await getDownloadURL(result.ref);
+          const fileType = file.type;
+          if (fileType.startsWith("image/")) {
+            await updateDoc(doc, {
+              photo: url,
+            });
+          }
+          if (fileType.startsWith("video/")) {
+            await updateDoc(doc, {
+              video: url,
+            });
+          }
+        })
+      );
+
       setPost("");
-      setFile(null);
+      setFile([]);
     } catch (e) {
       console.error(e);
     } finally {
@@ -169,13 +201,16 @@ const PostForm = () => {
         required
       ></TextArea>
       <PlusImage>
-        {file && (
-          <img
-            src={URL.createObjectURL(file)}
-            alt="Uploaded Preview"
-            style={{ width: "180px", height: "auto", borderRadius: "10px" }}
-          />
-        )}
+        {files.map((file, index) => (
+          <div key={index} style={{ position: "relative", margin: "5px" }}>
+            <img
+              src={URL.createObjectURL(file)}
+              alt={`Uploaded Preview ${index + 1}`}
+              style={{ width: "180px", height: "240px", borderRadius: "10px" }}
+            />
+            <DelteButton onClick={() => removeFile(index)}>X</DelteButton>
+          </div>
+        ))}
       </PlusImage>
       <Icons>
         <CameraButton htmlFor="camera">
