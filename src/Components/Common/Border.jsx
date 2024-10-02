@@ -5,14 +5,17 @@ const BorderItem = styled.div`
   ${({ type }) =>
     type === "borderWrapper" &&
     `
-    margin: 0 auto;
-    width: 680px;
-    height: 898px;
-    border-radius: 40px 40px 0px 0px;
-    border: #C9C9C9;
-    background:  #F5F5F5;
-    border-filter: blur(4px);
-    `}
+  margin: 0 auto;
+  padding:10px 10px 0 10px; 
+  width: 680px;
+  height: 898px;
+  border-radius: 40px 40px 0px 0px;
+  border: #C9C9C9;
+  background:  #F5F5F5;
+  border-filter: blur(4px);
+
+  `}
+
   ${({ type }) =>
     type === "borderinner" &&
     `
@@ -37,11 +40,13 @@ const BorderTextItem = styled.div`
   color: ${({ type }) => (type === "borderinner" ? "#000" : "#888")};
 `;
 
-const Border = ({ type, text }) => {
+const Border = ({ type, text, children }) => {
   return (
     <BorderItem type={type}>
-      {type === "borderinner" && (
+      {type === "borderinner" ? (
         <BorderTextItem type={type}>{text || "이너 아이템"}</BorderTextItem>
+      ) : (
+        children
       )}
     </BorderItem>
   );
