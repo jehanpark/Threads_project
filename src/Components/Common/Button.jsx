@@ -30,16 +30,16 @@ const ButtonItem = styled.button`
   ${({ type }) =>
     type === "follow" &&
     `
-      width: 80px;
-      height: 30px;
+      width: 90px;
+      height: 34px;
       background: #fff;
       color: #000;
-      font-size: 12px;
-      font-weight: 500;
+      font-size: 14px;
+      font-weight: 800;
       border-radius: 8px;
       transition: all 0.3s;
       &:hover {
-        background: #0396F6; 
+        background: #000; 
         color: #fff; 
       }
     `}

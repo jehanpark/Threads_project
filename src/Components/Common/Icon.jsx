@@ -7,7 +7,7 @@ const StyledSvg = styled.svg`
   height: ${(props) => props.height || props.defaultHeight};
 `;
 
-//Password-eye-open
+///Password-eye-open
 export const EyeOpenIcon = ({ width, fill }) => {
   const height = width ? width * 1 : "29px";
 
@@ -20,30 +20,28 @@ export const EyeOpenIcon = ({ width, fill }) => {
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        stroke={fill}
-        viewBox="0 0 24 24"
+      <path
+        stroke={fill || "currentColor"}
+        fill="none"
         stroke-width="1.5"
-        class="size-6"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-        />
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-        />
-      </svg>
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+      />
+      <path
+        stroke={fill || "currentColor"}
+        fill="none"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+      />
     </StyledSvg>
   );
 };
 
 //Password-eye-close
-export const EyeCloseIco = ({ width, fill }) => {
+export const EyeCloseIcon = ({ width, fill }) => {
   const height = width ? width * 1 : "29px";
 
   return (
@@ -87,6 +85,7 @@ export const ClapIcon = ({ width, fill }) => {
 //Camera
 export const CameraIcon = ({ width, fill }) => {
   const height = width ? `${(width / 22) * 18}px` : "18px";
+
   return (
     <StyledSvg
       width={width || "22px"}
@@ -99,6 +98,7 @@ export const CameraIcon = ({ width, fill }) => {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none"
         d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
         stroke={fill || "#BABABA"}
         strokeWidth="1.5"
@@ -106,6 +106,7 @@ export const CameraIcon = ({ width, fill }) => {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none"
         d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
         stroke={fill || "#BABABA"}
         strokeWidth="1.5"
@@ -143,22 +144,20 @@ export const MicIcon = ({ width, fill }) => {
     <StyledSvg
       width={width || "24px"}
       height={height}
-      defaultWidth="24px"
-      defaultHeight="24px"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none" // 내부를 비우도록 fill="none" 유지
         d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z"
-        stroke={fill || "#BABABA"}
+        stroke={fill || "#BABABA"} // 테마의 fill 값 사용
         strokeWidth="1.5"
       />
     </StyledSvg>
   );
 };
-
 //Hashtag
 export const HashtagIcon = ({ width, fill }) => {
   const height = width ? `${(width / 24) * 24}px` : "24px";
@@ -217,9 +216,18 @@ export const UserIcon1 = ({ width, fill }) => {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+        fill="none"
+        d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
         stroke={fill || "#BABABA"}
-        strokeWidth="1.5"
+        strokeWidth="2"
+      />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+        d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"
+        stroke={fill || "#BABABA"}
+        strokeWidth="2"
       />
     </StyledSvg>
   );
@@ -227,21 +235,22 @@ export const UserIcon1 = ({ width, fill }) => {
 
 //Heart
 export const HeartIcon = ({ width, fill }) => {
-  const height = width ? `${(width / 20) * 17.444}px` : "17.444px";
+  const height = width ? `${(width / 24) * 24}px` : "24px";
 
   return (
     <StyledSvg
-      width={width || "20px"}
+      width={width || "24px"}
       height={height}
-      viewBox="0 0 22 20"
+      viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M19.4578 2.54219C18.9691 2.05327 18.3889 1.66542 17.7503 1.40081C17.1117 1.1362 16.4272 1 15.7359 1C15.0446 1 14.3601 1.1362 13.7215 1.40081C13.0829 1.66542 12.5026 2.05327 12.0139 2.54219L10.9997 3.55639L9.98554 2.54219C8.99842 1.55507 7.6596 1.00051 6.26361 1.00051C4.86761 1.00051 3.52879 1.55507 2.54168 2.54219C1.55456 3.52931 1 4.86812 1 6.26412C1 7.66012 1.55456 8.99894 2.54168 9.98605L3.55588 11.0003L10.9997 18.4441L18.4436 11.0003L19.4578 9.98605C19.9467 9.49737 20.3346 8.91714 20.5992 8.27851C20.8638 7.63989 21 6.95539 21 6.26412C21 5.57285 20.8638 4.88835 20.5992 4.24973C20.3346 3.6111 19.9467 3.03088 19.4578 2.54219Z"
+        d="M20.8401 4.60999C20.3294 4.099 19.7229 3.69364 19.0555 3.41708C18.388 3.14052 17.6726 2.99817 16.9501 2.99817C16.2276 2.99817 15.5122 3.14052 14.8448 3.41708C14.1773 3.69364 13.5709 4.099 13.0601 4.60999L12.0001 5.66999L10.9401 4.60999C9.90843 3.5783 8.50915 2.9987 7.05012 2.9987C5.59109 2.9987 4.19181 3.5783 3.16012 4.60999C2.12843 5.64169 1.54883 7.04096 1.54883 8.49999C1.54883 9.95903 2.12843 11.3583 3.16012 12.39L4.22012 13.45L12.0001 21.23L19.7801 13.45L20.8401 12.39C21.3511 11.8792 21.7565 11.2728 22.033 10.6053C22.3096 9.93789 22.4519 9.22248 22.4519 8.49999C22.4519 7.77751 22.3096 7.0621 22.033 6.39464C21.7565 5.72718 21.3511 5.12075 20.8401 4.60999Z"
         stroke={fill || "#BABABA"}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none"
       />
     </StyledSvg>
   );
@@ -264,6 +273,7 @@ export const DmIcon = ({ width, fill }) => {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none"
       />
     </StyledSvg>
   );
@@ -284,6 +294,7 @@ export const SpeechBubbleIcon = ({ width, fill }) => {
         strokeWidth="2px"
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none"
       />
     </StyledSvg>
   );
@@ -293,8 +304,8 @@ export const SpeechBubbleIcon = ({ width, fill }) => {
 export const PlusIcon = ({ width, fill }) => {
   return (
     <StyledSvg
-      width={width || "14px"}
-      height={width ? `${(width / 24) * 24}px` : "14px"}
+      width={width || "24px"}
+      height={width ? `${(width / 24) * 24}px` : "24px"}
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -304,6 +315,7 @@ export const PlusIcon = ({ width, fill }) => {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none"
       />
       <path
         d="M5 12H19"
@@ -311,6 +323,7 @@ export const PlusIcon = ({ width, fill }) => {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none"
       />
     </StyledSvg>
   );
@@ -328,11 +341,20 @@ export const MagnifyingGlassIcon = ({ width, fill }) => {
       viewBox="0 0 24 24"
     >
       <path
+        d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z"
+        stroke={fill || "#BABABA"}
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.5"
-        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-        stroke={fill || "#545454"}
+        fill="none"
+      />
+      <path
+        d="M20.9999 21L16.6499 16.65"
+        stroke={fill || "#BABABA"}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
       />
     </StyledSvg>
   );
@@ -353,6 +375,7 @@ export const BellOffIcon = ({ width, fill }) => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
+        fill="none"
         d="M9.143 17.082a24.248 24.248 0 0 0 3.844.148m-3.844-.148a23.856 23.856 0 0 1-5.455-1.31 8.964 8.964 0 0 0 2.3-5.542m3.155 6.852a3 3 0 0 0 5.667 1.97m1.965-2.277L21 21m-4.225-4.225a23.81 23.81 0 0 0 3.536-1.003A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6.53 6.53m10.245 10.245L6.53 6.53M3 3l3.53 3.53"
         stroke={fill || "#1D1D1D"}
       />
@@ -362,24 +385,24 @@ export const BellOffIcon = ({ width, fill }) => {
 
 //Star
 export const StarIcon = ({ width, fill }) => {
+  const height = width ? `${(width / 24) * 24}px` : "24px";
+
   return (
     <StyledSvg
-      width={width || "10px"}
-      height={width ? `${(width / 10) * 10}px` : "10px"}
-      viewBox="0 0 10 10"
+      width={width || "24px"}
+      height={height}
+      viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      fill="none"
     >
-      <g clipPath="url(#clip0_609_3283)">
-        <path
-          d="M5.00065 0.833374L6.28815 3.44171L9.16732 3.86254L7.08398 5.89171L7.57565 8.75837L5.00065 7.40421L2.42565 8.75837L2.91732 5.89171L0.833984 3.86254L3.71315 3.44171L5.00065 0.833374Z"
-          fill={fill || "white"}
-        />
-      </g>
-      <defs>
-        <clipPath id="clip0_609_3283">
-          <rect width="10" height="10" fill="white" />
-        </clipPath>
-      </defs>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+        fill="none"
+        d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+        stroke={fill || "currentColor"}
+      />
     </StyledSvg>
   );
 };
@@ -752,7 +775,6 @@ export const BellIcon = ({ width, fill }) => {
       height={height}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 12 12"
-      fill="none"
     >
       <path
         fill-rule="evenodd"
