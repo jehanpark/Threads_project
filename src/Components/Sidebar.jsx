@@ -18,8 +18,10 @@ const SetBtn = styled.button`
   width: 80px;
   height: 80px;
   box-shadow: ${(props) => props.theme.bordershadow};
-  border-color: ${(props) => props.theme.bordercolor};
+  border: 2px solid ${(props) => props.theme.borderstroke};
+  /* border-color: ${(props) => props.theme.borderstroke};
   border-style: none;
+  border-width: 1px; */
   border-radius: 50%;
   cursor: pointer;
   background-color: ${(props) => props.theme.bodyBg};
@@ -30,8 +32,10 @@ const PinBtn = styled.button`
   width: 80px;
   height: 80px;
   box-shadow: ${(props) => props.theme.bordershadow};
-  border-color: ${(props) => props.theme.bordercolor};
-  border-style: none;
+  border: 2px solid ${(props) => props.theme.borderstroke};
+
+  /* border-color: ${(props) => props.theme.borderstroke};
+  border-style: none; */
   border-radius: 50%;
   cursor: pointer;
   background-color: ${(props) => props.theme.bodyBg};

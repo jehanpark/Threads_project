@@ -48,7 +48,7 @@ export const router = createBrowserRouter([
     element: <CreateAccount />,
   },
   {
-    path: "LoginInsta", // 이 라우트도 Layout 바깥에 있음
+    path: "Login-insta", // 이 라우트도 Layout 바깥에 있음
     element: <LoginInsta />,
   },
   // {

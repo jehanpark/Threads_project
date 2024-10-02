@@ -121,7 +121,9 @@ const LoginItemDk: React.FC = () => {
             <Or $isSmallScreen={isSmallScreen}>또는</Or>
             <Hr $isSmallScreen={isSmallScreen} />
           </Linebreak>
-          <Border type="loginborder" text="instagram으로 계속"></Border>
+          <Link to="/login-insta">
+            <Border type="loginborder" text="instagram으로 계속"></Border>
+          </Link>
         </Form>
       </LoginInner>
     </Wrapper>
