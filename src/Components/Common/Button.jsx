@@ -77,9 +77,13 @@ const ButtonItem = styled.button`
     `}
 `;
 
-const Button = ({ text, type, onClick }) => {
+const Button = ({ text, type, onClick, width, heith }) => {
   return (
-    <ButtonItem type={type} onClick={onClick}>
+    <ButtonItem
+      type={type}
+      onClick={onClick}
+      style={{ width: `${width}`, height: `${heith}` }}
+    >
       {text || "button"}
     </ButtonItem>
   );

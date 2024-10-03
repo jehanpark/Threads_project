@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 `;
 
 const Column = styled.div`
-display: flex;
+  display: flex;
 `;
 
 const Photo = styled.img`
@@ -189,7 +189,9 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
       const existingFileType = postData?.fileType || null;
 
       if (editedPhoto) {
-        const newFileType = editedPhoto.type.startsWith("image/") ? "image" : "video";
+        const newFileType = editedPhoto.type.startsWith("image/")
+          ? "image"
+          : "video";
 
         if (existingFileType && existingFileType !== newFileType) {
           alert("You can only upload the same type of content");
@@ -227,7 +229,11 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
       <Column>
         <Username>{username}</Username>
         {isEditing ? (
-          <EditPostFormTextArea onChange={onChange} value={editedPost} placeholder={post} />
+          <EditPostFormTextArea
+            onChange={onChange}
+            value={editedPost}
+            placeholder={post}
+          />
         ) : (
           <Payload>{post}</Payload>
         )}
@@ -240,7 +246,12 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
                   <CancelButton onClick={handleCancel}>Cancel</CancelButton>
                   <UpdateButton onClick={onUpdate}>Update</UpdateButton>
                   <SetContentButton htmlFor="edit-content">
-                    <svg fill="none" strokeWidth={1.5} stroke="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      fill="none"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
