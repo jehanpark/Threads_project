@@ -1,5 +1,3 @@
-import React from "react";
-import Border from "../Components/Common/Border";
 import React, { useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Border from "../Components/Common/Border";
@@ -41,7 +39,6 @@ const FollowerRecommendation = styled.p`
   font-weight: 800;
 `;
 
-const Search = () => {};
 const Search = () => {
   return (
     <div>

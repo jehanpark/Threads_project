@@ -158,6 +158,7 @@ export const MicIcon = ({ width, fill }) => {
     </StyledSvg>
   );
 };
+
 //Hashtag
 export const HashtagIcon = ({ width, fill }) => {
   const height = width ? `${(width / 24) * 24}px` : "24px";
@@ -419,6 +420,29 @@ export const RetweetIcon = ({ width, fill }) => {
       <path
         d="M7.10773 0.189636C6.40124 0.189636 5.7237 0.470285 5.22414 0.969843C4.72458 1.4694 4.44393 2.14695 4.44393 2.85343V10.8448H0.448242L5.77583 16.1724L11.1034 10.8448H7.10773V2.85343H16.431L19.0948 0.189636H7.10773ZM20.4267 5.51722H16.431L21.7586 0.189636L27.0862 5.51722H23.0905V13.5086C23.0905 14.2151 22.8098 14.8926 22.3103 15.3922C21.8107 15.8917 21.1332 16.1724 20.4267 16.1724H8.43962L11.1034 13.5086H20.4267V5.51722Z"
         fill={fill || "#BABABA"}
+      />
+    </StyledSvg>
+  );
+};
+
+//SoundIcon
+export const SoundIcon = ({ width, fill }) => {
+  const height = width ? width * 1 : "29px";
+
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={height}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        stroke={fill || "currentColor"}
+        fill="none"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z"
       />
     </StyledSvg>
   );
