@@ -1,15 +1,13 @@
-// src/Components/Login/LoginItemDk.tsx
-// @ts-nocheck
-
 import React, { useState } from "react";
 import Logo from "../Logo";
 import LogoTextMark from "../LogoTextMark";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
-import { FirebaseError } from "firebase/app";
 import { useMediaQuery } from "react-responsive";
-import Border from "../Common/Border";
-import { InstaIcon } from "../Common/Icon";
+
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
+
 import {
   Wrapper,
   BgImg,
@@ -20,19 +18,15 @@ import {
   InputWrapper,
   StyledInput,
   StyledLabel,
-  SingnUpText,
-  ForgotPasswordText,
-  Hr,
-  Or,
-  Linebreak,
-  StyledSpan,
+  Error,
+  // SingnUpText,
+  // ForgotPasswordText,
 } from "./RecycleStyles/login_dk";
 
-import { signInWithEmailAndPassword } from "firebase/auth";
-
-const LoginItemInstaDk: React.FC = () => {
+const CreateAccountItemDk = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
@@ -40,27 +34,38 @@ const LoginItemInstaDk: React.FC = () => {
 
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // 제너릭 정의
+  const onChange = (e) => {
+    console.log(e.target.name);
+
     const {
       target: { name, value },
     } = e;
 
     if (name === "id") setId(value);
-    if (name === "password") setPassword(value);
+    else if (name === "password") setPassword(value);
   };
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (isLoading || id === "" || password === "") return;
+
     try {
       setIsLoading(true);
-      await signInWithEmailAndPassword(auth, id, password);
+      const credentials = await createUserWithEmailAndPassword(
+        auth,
+        id,
+        password
+      );
+
+      await updateProfile(credentials.user, {
+        displayName: id,
+      });
       navigate("/");
     } catch (e) {
       if (e instanceof FirebaseError) {
         setError(e.message);
       }
-      console.log(e);
     } finally {
       setIsLoading(false);
     }
@@ -71,17 +76,17 @@ const LoginItemInstaDk: React.FC = () => {
       <BgImg $isSmallScreen={isSmallScreen} src="/login/thread_login_bg.png" />
       <LoginInner>
         <LogoWrapper $isSmallScreen={isSmallScreen}>
-          {/* <Logo width={40} /> */}
+          <Logo width={40} />
         </LogoWrapper>
         <LoginP>
           <LogoTextMark width={62} />
-          <StyledSpan $isSmallScreen={isSmallScreen}>로 이동</StyledSpan>
+          <span>계정 생성하기</span>
         </LoginP>
         <Form onSubmit={onSubmit}>
           <InputWrapper>
             <StyledInput
               onChange={onChange}
-              type="text" // 'id'는 유효한 input 타입이 아니므로 'text'로 수정
+              type="id"
               id="id"
               name="id"
               placeholder=""
@@ -97,36 +102,24 @@ const LoginItemInstaDk: React.FC = () => {
               onChange={onChange}
               type="password"
               id="password"
-              name="password"
               placeholder=""
               required
+              name="password"
               value={password}
             />
             <StyledLabel htmlFor="password">비밀번호</StyledLabel>
           </InputWrapper>
           <InputWrapper>
             <StyledInput
-              className="facebook-btn"
               type="submit"
-              value={isLoading ? "Loading.." : "로그인"}
+              value={isLoading ? "Loading.." : "회원가입 하기"}
             />
           </InputWrapper>
-
-          <Link to="/create-account">
-            <SingnUpText>회원가입</SingnUpText>
-          </Link>
-          <Link to="/">
-            <ForgotPasswordText>비밀번호를 잊으셨나요?</ForgotPasswordText>
-          </Link>
-          <Linebreak $isSmallScreen={isSmallScreen}>
-            <Hr $isSmallScreen={isSmallScreen} />
-            <Or $isSmallScreen={isSmallScreen}>또는</Or>
-            <Hr $isSmallScreen={isSmallScreen} />
-          </Linebreak>
         </Form>
+        {error !== "" ? <Error>{error}</Error> : null}
       </LoginInner>
     </Wrapper>
   );
 };
 
-export default LoginItemInstaDk;
+export default CreateAccountItemDk;

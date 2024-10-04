@@ -1,7 +1,6 @@
 import { createGlobalStyle } from "styled-components";
-import { DefaultTheme } from "styled-components";
 
-export const lightTheme: DefaultTheme = {
+export const lightTheme = {
   logoColor: "#000",
   nomalIconColor: "#BABABA",
   bodyBg: "#F2F2F2",
@@ -23,7 +22,7 @@ export const lightTheme: DefaultTheme = {
   navIconColor: undefined,
 };
 
-export const darkTheme: DefaultTheme = {
+export const darkTheme = {
   logoColor: "#fff",
   nomalIconColor: "#4D4D4D",
   bodyBg: "#000000",

@@ -1,4 +1,4 @@
-import Border from "../Components/Common/Border";
+import React, { useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Searchhistory from "../Components/Search/Searchhistory";
 import FollowerItem from "../Components/Search/FollowerItem";

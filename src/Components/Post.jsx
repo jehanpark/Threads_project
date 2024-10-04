@@ -1,35 +1,43 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { IPost } from "./TimeLine";
+// import { IPost } from "./TimeLine";
 import { auth, db, storage } from "../firebase";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import {
   deleteObject,
   ref,
   getDownloadURL,
-  StorageError,
-  StorageErrorCode,
-  uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
+import {
+  HeartIcon,
+  DmIcon,
+  MagnifyingGlassIcon,
+  BellOffIcon,
+} from "../Components/Common/Icon";
+// Styled Components
 
 const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 3fr 1fr;
+  display: flex;
+  flex-direction: column;
   border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 15px;
+  border-radius: 30px;
   padding: 20px;
+  width: 660px;
+  background: #fff;
 `;
 
 const Column = styled.div`
-display: flex;
+  display: flex;
 `;
 
 const Photo = styled.img`
-  width: 200px;
-  height: 100%;
-  border-radius: 15px;
+  width: 160px;
+  height: 140px;
+  object-fit: contain;
+  margin-left: 40px;
 `;
+
 
 const Video = styled.video`
   width: 250px;
@@ -37,16 +45,43 @@ const Video = styled.video`
   border-radius: 15px;
 `;
 
+const Header = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: start;
+  align-items: center;
+`
+const UserImage =styled.img`
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+`
 const Username = styled.span`
+  font-size: 14px;
+  font-weight: normal;
+`;
+const Timer = styled.span`
+  font-size: 10px;
+  color: #9a9a9a;
+`
+const Payload = styled.p`
   font-size: 15px;
   font-weight: 600;
+  margin-left: 50px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  
 `;
+const Icons = styled.div`
+  display: flex;
+  gap: 18px;
+  justify-content: start;
+  align-items: center;
+  margin-left: 50px;
+  margin-top: 20px;
 
-const Payload = styled.p`
-  font-size: 18px;
-  margin: 10px 0;
-`;
-
+`
 const DeleteButton = styled.button`
   background: #ff6347;
   color: #fff;
@@ -64,7 +99,6 @@ const EditorColumns = styled.div`
   align-items: center;
   gap: 10px;
 `;
-
 const EditButton = styled.button`
   background: #7f8689;
   color: #fff;
@@ -72,6 +106,18 @@ const EditButton = styled.button`
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+`;
+
+const Button = styled.button`
+  background: ${(props) => props.bg || "#7f8689"};
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
 `;
@@ -98,7 +144,6 @@ const EditPostFormTextArea = styled.textarea`
     border: 1px solid #1d9bf0;
   }
 `;
-
 const CancelButton = styled.button`
   background: #7f8689;
   color: #fff;
@@ -108,7 +153,6 @@ const CancelButton = styled.button`
   text-transform: uppercase;
   cursor: pointer;
 `;
-
 const UpdateButton = styled.button`
   background: #1d9bf0;
   color: #fff;
@@ -122,9 +166,11 @@ const UpdateButton = styled.button`
 const SetContentButton = styled.label`
   color: #fff;
   transition: color 0.3s;
+
   &:hover {
     color: #1d9bf0;
   }
+
   svg {
     width: 24px;
     cursor: pointer;
@@ -135,14 +181,14 @@ const SetContentInputButton = styled.input`
   display: none;
 `;
 
-const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
+const Post = ({ post, userId, photos, video, username, id }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
-  const [editedPhoto, setEditedPhoto] = useState<File | null>(null);
+  const [editedPhoto, setEditedPhoto] = useState(null);
 
   const user = auth.currentUser;
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onChange = (e) => {
     setEditedPost(e.target.value);
   };
 
@@ -150,47 +196,48 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
     setIsEditing(false);
   };
 
-  const handleEdit = async () => {
+  const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const onClickSetContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onClickSetContent = (e) => {
     const { files } = e.target;
-    if (files && files.length === 1) setEditedPhoto(files[0]);
+    if (files && files.length === 1) {
+      setEditedPhoto(files[0]);
+    }
   };
 
   const onDelete = async () => {
-    const ok = confirm("Are you sure you want to delete this post?");
-    if (!ok || user?.uid !== userId) return;
-    try {
-      await deleteDoc(doc(db, `contents`, id));
-      if (photos.length > 0) {
-        const photoRef = ref(storage, `contents/${user.uid}/${id}`);
-        await deleteObject(photoRef);
+    if (
+      confirm("Are you sure you want to delete this post?") &&
+      user?.uid === userId
+    ) {
+      try {
+        await deleteDoc(doc(db, "contents", id));
+        if (photos.length > 0) {
+          const photoRef = ref(storage, `contents/${user.uid}/${id}`);
+          await deleteObject(photoRef);
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (e) {
-      console.error(e);
     }
   };
 
   const onUpdate = async () => {
+    if (user?.uid !== userId) return;
+
     try {
-      if (user?.uid !== userId) return;
-
       const postDoc = await getDoc(doc(db, "contents", id));
-      if (!postDoc.exists()) throw new Error("Documents does not exist");
+      if (!postDoc.exists()) throw new Error("Document does not exist");
+
       const postData = postDoc.data();
-
-      if (postData) {
-        if (postData.photos) postData.fileType = "image";
-        if (postData.video) postData.fileType = "video";
-      }
-
       const existingFileType = postData?.fileType || null;
+      const newFileType = editedPhoto?.type.startsWith("image/")
+        ? "image"
+        : "video";
 
       if (editedPhoto) {
-        const newFileType = editedPhoto.type.startsWith("image/") ? "image" : "video";
-
         if (existingFileType && existingFileType !== newFileType) {
           alert("You can only upload the same type of content");
           return;
@@ -198,12 +245,13 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
 
         const locationRef = ref(storage, `contents/${user.uid}/${id}`);
         const uploadTask = uploadBytesResumable(locationRef, editedPhoto);
+
         if (editedPhoto.size >= 5 * 1024 * 1024) {
           uploadTask.cancel();
           throw new Error("File Size is over 5MB");
         }
 
-        const result = await uploadBytes(locationRef, editedPhoto);
+        const result = await uploadTask;
         const url = await getDownloadURL(result.ref);
 
         await updateDoc(doc(db, "contents", id), {
@@ -215,8 +263,8 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
       } else {
         await updateDoc(doc(db, "contents", id), { post: editedPost });
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     } finally {
       setIsEditing(false);
     }
@@ -224,15 +272,20 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
 
   return (
     <Wrapper>
+        <Header>
+          <UserImage src="http://localhost:5173/profile.png"></UserImage>
+          <Username>{username}</Username>
+          <Timer>2시간전</Timer>
+      </Header>
+      <Payload>{post}</Payload>
       <Column>
-        <Username>{username}</Username>
         {isEditing ? (
           <EditPostFormTextArea onChange={onChange} value={editedPost} placeholder={post} />
         ) : (
           <Payload>{post}</Payload>
         )}
 
-        <EditorColumns>
+        {/* <EditorColumns>
           {user?.uid === userId ? (
             <>
               {isEditing ? (
@@ -262,10 +315,10 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
               <DeleteButton onClick={onDelete}>Delete</DeleteButton>
             </>
           ) : null}
-        </EditorColumns>
+        </EditorColumns> */}
       </Column>
 
-      {/* 여러 장의 사진을 배열로 렌더링 */}
+      {/* Render multiple photos */}
       {photos && photos.length > 0 && (
         <Column>
           {photos.map((photoUrl, index) => (
@@ -279,6 +332,12 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
           <Video src={video} autoPlay loop />
         </Column>
       )}
+      <Icons>
+        <HeartIcon width={30}/>2
+        <DmIcon width={30}/>2
+        <MagnifyingGlassIcon width={30}/>2
+        <BellOffIcon width={30}/>2
+      </Icons>
     </Wrapper>
   );
 };

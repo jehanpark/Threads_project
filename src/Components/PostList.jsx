@@ -93,7 +93,7 @@ const PostBookmark = styled.p`
 
 // PostList 컴포넌트
 const PostList = () => {
-  return <div></div>;
+  return <div>PostList</div>;
 };
 
 export default PostList;

@@ -10,6 +10,7 @@ const LayoutWrapper = styled.div`
   width: 100%;
   overflow: hidden;
   padding: 20px 20px;
+  position: relative;
 `;
 
 const Layout = () => {
@@ -17,7 +18,7 @@ const Layout = () => {
     <LayoutWrapper>
       <Nav />
       <Sidebar />
-      <BottomNav/>
+      {/* <BottomNav /> */}
       <Outlet />
     </LayoutWrapper>
   );

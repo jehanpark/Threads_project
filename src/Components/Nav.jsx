@@ -1,6 +1,6 @@
 // src/components/Nav.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./Logo";
 
@@ -18,6 +18,7 @@ const Wrapper = styled.nav`
 
 const LogoWrapper = styled.div`
   width: 40px; /* 고정 크기 설정 */
+  cursor: pointer;
 `;
 
 const MyProfileImgs = styled.div`
@@ -29,7 +30,6 @@ const MyProfileImgs = styled.div`
 const Img = styled.img`
   width: 100%;
   height: 100%;
-
 `;
 
 const Ul = styled.ul`
@@ -85,15 +85,14 @@ const Li = styled.li`
       color: ${(props) => props.theme.headerselect};
       background-color: ${(props) => props.theme.logoColor};
     `}
-    
 `;
 const menuItems = styled.img`
   ${(props) =>
     props.$isSelected /* $isSelected로 변경 */ &&
     css`
-    color: ${(props) => props.theme.selectIconColor};
+      color: ${(props) => props.theme.selectIconColor};
     `}
-`
+`;
 
 const Nav = () => {
   const menuItems = [
@@ -242,9 +241,12 @@ const Nav = () => {
 
   return (
     <Wrapper>
-      <LogoWrapper>
-        <Logo width={40} />
-      </LogoWrapper>
+      <Link to="/">
+        <LogoWrapper>
+          <Logo width={40} />
+        </LogoWrapper>
+      </Link>
+
       <Ul>
         {menuItems.map((menu, index) => (
           <Li
@@ -259,7 +261,7 @@ const Nav = () => {
         ))}
       </Ul>
       <MyProfileImgs>
-        <Img src="./profile.png" alt="Profile" />
+        <Img src="/profile.png" alt="Profile" />
       </MyProfileImgs>
     </Wrapper>
   );

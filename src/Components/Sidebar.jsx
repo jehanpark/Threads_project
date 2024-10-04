@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import styled, { keyframes } from "styled-components";
-import { ThemeContext } from "../Contexts/ThemeProvider";
+import { ThemeContext } from "../Contexts/ThemeContext";
 
 const Aside = styled.aside`
-  position: absolute;
+  position: fixed;
   bottom: 20px;
   left: 20px;
 `;
@@ -85,13 +85,13 @@ const ModalContainer = styled.div.withConfig({
 
   height: 298px;
 
-	background-color: ${(props) => props.theme.borderColor};
+  background-color: ${(props) => props.theme.borderColor};
   color: ${({ theme }) => theme.textColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   /* color: ${(props) => props.theme.fontcolor}; */
 
   height: ${(props) => (props.isThemeModal ? "220px" : "298px")};
-  background-color: ${(props) => props.theme.borderColor};
+  background-color: ${(props) => props.theme.bodyBg};
   color: ${(props) => props.theme.fontcolor};
 
   border-radius: 10px;
