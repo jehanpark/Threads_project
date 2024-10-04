@@ -224,7 +224,7 @@ const Nav = () => {
           />
         </svg>
       ),
-      path: "/profile",
+      path: "",
     },
   ];
 
@@ -258,7 +258,7 @@ const Nav = () => {
         ))}
       </Ul>
       <MyProfileImgs>
-        <Img src="/profile.png" alt="Profile" />
+        {/* <Img src="/profile.png" alt="Profile" /> */}
       </MyProfileImgs>
     </Wrapper>
   );

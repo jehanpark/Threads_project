@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import styled from "styled-components";
-import { addDoc, collection, updateDoc } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp, updateDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
@@ -85,16 +85,16 @@ const Buttons = styled.div`
   padding: 20px;
 `;
 
-const DelteButton = styled.button`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: #000;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-`;
+// const DelteButton = styled.button`
+//   position: absolute;
+//   top: 5px;
+//   right: 5px;
+//   background: #000;
+//   color: #fff;
+//   border: none;
+//   border-radius: 50%;
+//   cursor: pointer;
+// `;
 
 const SubmitBtn = styled.input`
   width: 300px;
@@ -156,9 +156,12 @@ const PostForm = () => {
       setIsLoading(true);
       const docRef = await addDoc(collection(db, "contents"), {
         post,
-        createdAt: Date.now(),
+        createdAt: serverTimestamp(),
         username: user?.displayName || "Anonymous",
         userId: user.uid,
+        followers: 0,  
+        likes: 0,      
+        comments: 0, 
       });
 
       const photoUrls = [];
@@ -215,10 +218,10 @@ const PostForm = () => {
                 width: "180px",
                 height: "240px",
                 borderRadius: "10px",
-                objectFit: "contain",
+                objectFit: "cover",
               }}
             />
-            <DeleteButton onClick={() => removeFile(index)}>X</DeleteButton>
+            {/* <DeleteButton onClick={() => removeFile(index)}>X</DeleteButton> */}
           </div>
         ))}
       </PlusImage>

@@ -16,6 +16,7 @@ import {
   BellOffIcon,
 } from "../Components/Common/Icon";
 // Styled Components
+import { formatDistanceToNow } from 'date-fns';
 
 const Wrapper = styled.div`
   display: flex;
@@ -29,13 +30,16 @@ const Wrapper = styled.div`
 
 const Column = styled.div`
   display: flex;
+  gap: 10px;
 `;
 
 const Photo = styled.img`
   width: 160px;
   height: 140px;
-  object-fit: contain;
-  margin-left: 40px;
+  object-fit: cover;
+  &:first-child {
+    margin-left: 40px;
+  }
 `;
 
 
@@ -181,12 +185,18 @@ const SetContentInputButton = styled.input`
   display: none;
 `;
 
-const Post = ({ post, userId, photos, video, username, id }) => {
+const Post = ({ post, userId, photos, video, username, id,createdAt  }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
   const [editedPhoto, setEditedPhoto] = useState(null);
 
   const user = auth.currentUser;
+
+  const renderTimeAgo = () => {
+    if (!createdAt || !createdAt.seconds) return "방금 전"; // createdAt가 유효하지 않을 때 처리
+    const date = new Date(createdAt.seconds * 1000);
+    return formatDistanceToNow(date, { addSuffix: true });
+  };
 
   const onChange = (e) => {
     setEditedPost(e.target.value);
@@ -206,6 +216,8 @@ const Post = ({ post, userId, photos, video, username, id }) => {
       setEditedPhoto(files[0]);
     }
   };
+
+
 
   const onDelete = async () => {
     if (
@@ -275,9 +287,8 @@ const Post = ({ post, userId, photos, video, username, id }) => {
         <Header>
           <UserImage src="http://localhost:5173/profile.png"></UserImage>
           <Username>{username}</Username>
-          <Timer>2시간전</Timer>
+          <Timer>{renderTimeAgo()}</Timer>
       </Header>
-      <Payload>{post}</Payload>
       <Column>
         {isEditing ? (
           <EditPostFormTextArea onChange={onChange} value={editedPost} placeholder={post} />
@@ -333,10 +344,10 @@ const Post = ({ post, userId, photos, video, username, id }) => {
         </Column>
       )}
       <Icons>
-        <HeartIcon width={30}/>2
-        <DmIcon width={30}/>2
-        <MagnifyingGlassIcon width={30}/>2
-        <BellOffIcon width={30}/>2
+        <HeartIcon width={20}/>{Math.floor(Math.random() * 100)} 
+        <DmIcon width={20}/>{Math.floor(Math.random() * 50)}  
+        <MagnifyingGlassIcon width={20}/>{Math.floor(Math.random() * 500)} 
+        <BellOffIcon width={20}/>{2} 
       </Icons>
     </Wrapper>
   );
