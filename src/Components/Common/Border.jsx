@@ -14,6 +14,7 @@ const BorderItem = styled.div`
     border: #C9C9C9;
     background:  #F5F5F5;
     border-filter: blur(4px);
+    box-shadow: 0px 0px 30px  ${(props) => props.theme.borderWrapper};
     `}
   ${({ type }) =>
     type === "borderinner" &&
@@ -78,7 +79,7 @@ const Border = ({ type, text }) => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
 
   return (
-    <BorderItem type={type}>
+    <BorderItem type={type} isSmallScreen={isSmallScreen}>
       <BorderTextItem type={type}>
         <LogoImage src={LogoImg} alt="Instagram Logo" />
         {text}

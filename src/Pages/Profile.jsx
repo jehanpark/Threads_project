@@ -37,6 +37,7 @@ import FollowModal from "../Components/profile/FollowModal";
 import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
 import TimeLine from "../Components/TimeLine";
+import Border from "../Components/Common/Border";
 
 const ProfileWrap = styled.div`
   display: flex;
@@ -213,76 +214,76 @@ const Profile = () => {
   }, []);
 
   return (
-    // <Border type="borderWrapper">
-    <>
-      <ProfileInnner isSmallScreen={isSmallScreen}>
-        <ProfileWrap>
-          <IdWrap isSmallScreen={isSmallScreen}>
-            <Nick> {user?.displayName ?? "이과사의 친구"}</Nick>
-            <IdText isSmallScreen={isSmallScreen}>
-              {user?.email ? lastemail : "임시"}
-            </IdText>
-          </IdWrap>
-          <ImgWrap isSmallScreen={isSmallScreen}>
-            {Boolean(avatar) ? (
-              <Img src={avatar} />
-            ) : (
-              <UserIcon2 width="54" fill="#BABABA" />
-            )}
-          </ImgWrap>
-        </ProfileWrap>
-        <BottomWrap>
-          <Desk isSmallScreen={isSmallScreen}>확인용 문구</Desk>
-          <FollowLink>
-            {followModal ? (
-              <FollowModal open={true} close={onfollow} />
-            ) : (
-              <FollowModal open={false} close={onfollow} />
-            )}
-            <Follow onClick={onfollow}>팔로워 1234</Follow>
-            <Links>
-              {linkmodal ? (
-                <LinkPluse open={true} close={onLinkPlus} />
+    <Border type="borderWrapper">
+      <>
+        <ProfileInnner isSmallScreen={isSmallScreen}>
+          <ProfileWrap>
+            <IdWrap isSmallScreen={isSmallScreen}>
+              <Nick> {user?.displayName ?? "이과사의 친구"}</Nick>
+              <IdText isSmallScreen={isSmallScreen}>
+                {user?.email ? lastemail : "임시"}
+              </IdText>
+            </IdWrap>
+            <ImgWrap isSmallScreen={isSmallScreen}>
+              {Boolean(avatar) ? (
+                <Img src={avatar} />
               ) : (
-                <LinkPluse open={false} close={onLinkPlus} />
+                <UserIcon2 width="54" fill="#BABABA" />
               )}
-              <LinkPlus onClick={onLinkPlus}>
-                <PlusIcon width="16px" />
-              </LinkPlus>
-              <PulsLinkIcon>
-                <Circle />
-                <Circle />
-                <Circle />
-                <InstaIcon />
-                <FacebookIcon />
-              </PulsLinkIcon>
-            </Links>
-          </FollowLink>
-          {editmodal ? (
-            <ProfileEdit open={true} close={onProfileEdite} />
-          ) : (
-            <ProfileEdit open={false} close={onProfileEdite} />
-          )}
-          <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
-        </BottomWrap>
-      </ProfileInnner>
-      <ThreadInner>
-        <Tap isSmallScreen={isSmallScreen}>
-          <li>스레드</li>
-          <li>답글</li>
-          <li>리포트</li>
-          <li>인스타</li>
-        </Tap>
-        <TextInput isSmallScreen={isSmallScreen} />
-        {/* <PostWrap>
+            </ImgWrap>
+          </ProfileWrap>
+          <BottomWrap>
+            <Desk isSmallScreen={isSmallScreen}>확인용 문구</Desk>
+            <FollowLink>
+              {followModal ? (
+                <FollowModal open={true} close={onfollow} />
+              ) : (
+                <FollowModal open={false} close={onfollow} />
+              )}
+              <Follow onClick={onfollow}>팔로워 1234</Follow>
+              <Links>
+                {linkmodal ? (
+                  <LinkPluse open={true} close={onLinkPlus} />
+                ) : (
+                  <LinkPluse open={false} close={onLinkPlus} />
+                )}
+                <LinkPlus onClick={onLinkPlus}>
+                  <PlusIcon width="16px" />
+                </LinkPlus>
+                <PulsLinkIcon>
+                  <Circle />
+                  <Circle />
+                  <Circle />
+                  <InstaIcon />
+                  <FacebookIcon />
+                </PulsLinkIcon>
+              </Links>
+            </FollowLink>
+            {editmodal ? (
+              <ProfileEdit open={true} close={onProfileEdite} />
+            ) : (
+              <ProfileEdit open={false} close={onProfileEdite} />
+            )}
+            <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
+          </BottomWrap>
+        </ProfileInnner>
+        <ThreadInner>
+          <Tap isSmallScreen={isSmallScreen}>
+            <li>스레드</li>
+            <li>답글</li>
+            <li>리포트</li>
+            <li>인스타</li>
+          </Tap>
+          <TextInput isSmallScreen={isSmallScreen} />
+          {/* <PostWrap>
           {posts.map((post) => (
             <Post key={post.id} {...post} />
           ))}
         </PostWrap> */}
-        <TimeLine />
-      </ThreadInner>
-    </>
-    //</Border>
+          <TimeLine />
+        </ThreadInner>
+      </>
+    </Border>
   );
 };
 
