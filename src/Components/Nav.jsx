@@ -1,6 +1,6 @@
 // src/components/Nav.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./Logo";
 
@@ -10,10 +10,12 @@ const Wrapper = styled.nav`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+  /* padding: 0px 20px; */
 `;
 
 const LogoWrapper = styled.div`
   width: 40px; /* 고정 크기 설정 */
+  cursor: pointer;
 `;
 
 const MyProfileImgs = styled.div`
@@ -40,6 +42,7 @@ const Ul = styled.ul`
 `;
 
 const Li = styled.li`
+  color: #c95c5c;
   cursor: pointer;
   border-radius: 50px;
   width: ${(props) => 100 / props.$itemCount}%;
@@ -72,6 +75,19 @@ const Li = styled.li`
     fill: none; /* fill을 없애거나 필요에 따라 조정 */
     transition: stroke 0.4s;
   }
+  ${(props) =>
+    props.$isSelected /* $isSelected로 변경 */ &&
+    css`
+      color: ${(props) => props.theme.headerselect};
+      background-color: ${(props) => props.theme.logoColor};
+    `}
+`;
+const menuItems = styled.img`
+  ${(props) =>
+    props.$isSelected /* $isSelected로 변경 */ &&
+    css`
+      color: ${(props) => props.theme.selectIconColor};
+    `}
 `;
 
 const Nav = () => {
@@ -221,9 +237,12 @@ const Nav = () => {
 
   return (
     <Wrapper>
-      <LogoWrapper>
-        <Logo width={40} />
-      </LogoWrapper>
+      <Link to="/">
+        <LogoWrapper>
+          <Logo width={40} />
+        </LogoWrapper>
+      </Link>
+
       <Ul>
         {menuItems.map((menu, index) => (
           <Li
@@ -238,7 +257,7 @@ const Nav = () => {
         ))}
       </Ul>
       <MyProfileImgs>
-        <Img src="./profile.png" alt="Profile" />
+        <Img src="/profile.png" alt="Profile" />
       </MyProfileImgs>
     </Wrapper>
   );

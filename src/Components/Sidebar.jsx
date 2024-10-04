@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import styled, { keyframes } from "styled-components";
-import { ThemeContext } from "../Contexts/ThemeProvider";
+import { ThemeContext } from "../Contexts/ThemeContext";
 
 const Aside = styled.aside`
-  position: absolute;
+  position: fixed;
   bottom: 20px;
   left: 20px;
 `;
@@ -12,6 +12,9 @@ const BtnWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  @media (max-width: 768px) {
+    display: none; // 768px 이상의 화면에서는 숨기기
+  }
 `;
 
 const SetBtn = styled.button`
@@ -79,14 +82,14 @@ const ModalContainer = styled.div.withConfig({
   width: 258px;
 
   height: 298px;
-  /* border-color: ${(props) => props.theme.bordercolor}; */
+
   background-color: ${(props) => props.theme.borderColor};
   color: ${({ theme }) => theme.textColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   /* color: ${(props) => props.theme.fontcolor}; */
 
   height: ${(props) => (props.isThemeModal ? "220px" : "298px")};
-  background-color: ${(props) => props.theme.bodyBg};
+  background-color: ${(props) => props.theme.borderColor};
   color: ${(props) => props.theme.fontcolor};
 
   border-radius: 10px;
