@@ -12,6 +12,7 @@ import {
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   display: grid;
@@ -224,6 +225,11 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
     }
   };
 
+  // const navigate = useNavigate();
+  // const onUserCurrent = (e) => {
+  //   console.log(e.target.innerHTML);
+  //   navigate(`/Profile/${e.target.innerHTML}`);
+  // };
   return (
     <Wrapper>
       <Column>

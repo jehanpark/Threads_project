@@ -39,7 +39,6 @@ import {
 import FollowModal from "../Components/profile/FollowModal";
 import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
-import TimeLine from "../Components/TimeLine";
 
 const ProfileWrap = styled.div`
   display: flex;
@@ -143,8 +142,13 @@ const PostWrap = styled.div`
   border: 1px solid #f00;
 `;
 
-const Profile = () => {
+const OtherProfile = () => {
   const user = auth.currentUser; //유저정보
+
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const userName = useDiary(id);
+
   const [avatar, setAvarta] = useState(user?.photoURL || null || undefined); //이미지관리목적
   const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
   const [name, setName] = useState(user?.displayName ?? "Anonymouse"); // 이름 state관리
@@ -277,16 +281,15 @@ const Profile = () => {
           <li>인스타</li>
         </Tap>
         <TextInput isSmallScreen={isSmallScreen} />
-        {/* <PostWrap>
+        <PostWrap>
           {posts.map((post) => (
             <Post key={post.id} {...post} />
           ))}
-        </PostWrap> */}
-        <TimeLine />
+        </PostWrap>
       </ThreadInner>
     </>
     //</Border>
   );
 };
 
-export default Profile;
+export default OtherProfile;
