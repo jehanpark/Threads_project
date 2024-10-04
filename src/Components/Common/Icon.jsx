@@ -394,7 +394,6 @@ export const Like = ({ width, fill }) => {
 //bottomNavHome
 export const Home = ({ width, fill }) => {
   const height = width ? `${(width / 24) * 24}px` : "24px";
-
   return (
     <StyledSvg
       width={width || "24px"}
@@ -416,6 +415,22 @@ export const Home = ({ width, fill }) => {
           fill="#bababa"
         />
       </svg>
+    </StyledSvg>
+  );
+};
+export const GoBack = ({ width, fill }) => {
+  const height = width ? `${(width / 24) * 24}px` : "24px";
+
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={height}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 26 22"
+    >
+<svg width="18" height="18" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 13L1 7L7 1" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
     </StyledSvg>
   );
 };
@@ -938,6 +953,7 @@ export const UserPlusIcon = ({ width, fill }) => {
     </svg>
   );
 };
+
 
 export const ShareIcon = ({ width, fill }) => {
   const height = width ? (width * 23) / 19 : "22px";

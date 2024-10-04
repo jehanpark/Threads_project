@@ -25,6 +25,14 @@ const BoederWrapper = styled.div`
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
+  @media (max-width: 768px) {
+    position: absolute;
+    top:70px;
+    height: calc(100% - 140px);
+    border-radius: 0;
+    width: 100%;
+    box-shadow: none;
+  }
 `;
 
 const Form = styled.form`
@@ -41,7 +49,12 @@ const Form = styled.form`
   gap: 10px;
   background: ${(props) => props.theme.borderColor};
   border-radius: 30px 30px 0 0;
-
+  @media (max-width: 768px) {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const PlusImage = styled.div`

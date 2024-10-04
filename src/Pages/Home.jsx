@@ -15,8 +15,8 @@ const Wrapper = styled.div`
 const Home = () => {
   return (
     <Wrapper>
-      <PostForm />
-      <TimeLine />
+      <PostForm/>
+      <TimeLine/>
       <Intro />
     </Wrapper>
   );
