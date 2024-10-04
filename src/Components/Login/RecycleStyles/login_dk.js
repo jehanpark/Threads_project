@@ -166,10 +166,6 @@
 
 import styled from "styled-components";
 
-interface ResponsiveProps {
-  $isSmallScreen: boolean;
-}
-
 export const Wrapper = styled.div`
   width: 100%;
   height: calc(100vh - 15%);
@@ -177,7 +173,7 @@ export const Wrapper = styled.div`
   color: ${(props) => props.theme.fontcolor};
 `;
 
-export const BgImg = styled.img<ResponsiveProps>`
+export const BgImg = styled.img`
   position: absolute;
   left: 0px;
   top: 0px;
@@ -199,7 +195,7 @@ export const LoginInner = styled.div`
   flex-direction: column;
 `;
 
-export const LogoWrapper = styled.div<ResponsiveProps>`
+export const LogoWrapper = styled.div`
   margin-bottom: 18px;
   display: flex;
   justify-content: ${({ $isSmallScreen }) =>
@@ -252,7 +248,7 @@ export const StyledInput = styled.input`
     border: 1px solid ${(props) => props.theme.mouseHoverFontcolor};
     margin-bottom: 27px;
   }
-  &.facebook-btn {
+  &.insta-btn {
     width: 100%;
     height: 37px;
     display: flex;
@@ -307,7 +303,7 @@ export const Switcher = styled.span`
 `;
 
 // 추가된 컴포넌트들
-export const Hr = styled.div<ResponsiveProps>`
+export const Hr = styled.div`
   width: 122px;
   height: 2px;
   border: 1px solid #e5e5e5;
@@ -316,7 +312,7 @@ export const Hr = styled.div<ResponsiveProps>`
   align-content: center;
 `;
 
-export const Or = styled.span<ResponsiveProps>`
+export const Or = styled.span`
   width: 55px;
   font-size: 14px;
   color: #7e7e7e;
@@ -326,7 +322,7 @@ export const Or = styled.span<ResponsiveProps>`
   text-align: center;
 `;
 
-export const Linebreak = styled.div<ResponsiveProps>`
+export const Linebreak = styled.div`
   display: ${({ $isSmallScreen }) => ($isSmallScreen ? "flex" : "none")};
   justify-content: center;
   align-items: center;
@@ -334,9 +330,10 @@ export const Linebreak = styled.div<ResponsiveProps>`
   margin-bottom: 46px;
 `;
 
-export const StyledSpan = styled.span<ResponsiveProps>`
+export const StyledSpan = styled.span`
   font-size: ${(props) => (props.$isSmallScreen ? "14px" : "16px")};
   color: ${(props) => props.theme.fontcolor};
   display: ${(props) => (props.$isSmallScreen ? "block" : "inline")};
   text-align: center;
+  padding-top: 3px;
 `;

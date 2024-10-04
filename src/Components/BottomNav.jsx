@@ -1,6 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
-
+import React from "react";
+import styled from "styled-components";
 
 // BottomNav 스타일 정의
 const BottomNavWrapper = styled.div`
@@ -37,15 +36,21 @@ const BottomNav = () => {
   return (
     <BottomNavWrapper>
       <NavItem>
-        <span role="img" aria-label="home">🏠</span>
+        <span role="img" aria-label="home">
+          🏠
+        </span>
         <span>Home</span>
       </NavItem>
       <NavItem>
-        <span role="img" aria-label="search">🔍</span>
+        <span role="img" aria-label="search">
+          🔍
+        </span>
         <span>Search</span>
       </NavItem>
       <NavItem>
-        <span role="img" aria-label="profile">👤</span>
+        <span role="img" aria-label="profile">
+          👤
+        </span>
         <span>Profile</span>
       </NavItem>
     </BottomNavWrapper>

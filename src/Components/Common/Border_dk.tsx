@@ -182,7 +182,7 @@ interface BorderProps {
   text: string;
 }
 
-const Border: React.FC<BorderProps> = ({ type, text }) => {
+const BorderDk: React.FC<BorderProps> = ({ type, text }) => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
   return (
     <BorderItem type={type} $isSmallScreen={isSmallScreen}>
@@ -195,4 +195,4 @@ const Border: React.FC<BorderProps> = ({ type, text }) => {
   );
 };
 
-export default Border;
+export default BorderDk;
