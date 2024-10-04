@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <div>
       <PostForm />
-      {/* <TimeLine /> */}
+      <TimeLine />
     </div>
   );
 };

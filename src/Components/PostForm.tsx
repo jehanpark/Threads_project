@@ -153,13 +153,17 @@ const PostForm = () => {
     if (!user || isLoading || post === "" || post.length > 180) return;
     try {
       setIsLoading(true);
+      // Firestore에 기본적인 문서를 추가합니다.
       const doc = await addDoc(collection(db, "contents"), {
         post,
         createdAt: Date.now(),
         username: user?.displayName || "Anonymous",
         userId: user.uid,
       });
-
+      // 사진이나 비디오 URL들을 저장할 배열
+      const photoUrls: string[] = [];
+      const videoUrls: string[] = [];
+      // 각 파일을 업로드하고 URL을 가져옵니다.
       await Promise.all(
         files.map(async (file) => {
           const locationRef = ref(
@@ -168,28 +172,30 @@ const PostForm = () => {
           );
           const result = await uploadBytes(locationRef, file);
           const url = await getDownloadURL(result.ref);
+          // 파일 타입에 따라 배열에 URL을 추가합니다.
           const fileType = file.type;
           if (fileType.startsWith("image/")) {
-            await updateDoc(doc, {
-              photo: url,
-            });
+            photoUrls.push(url);
           }
           if (fileType.startsWith("video/")) {
-            await updateDoc(doc, {
-              video: url,
-            });
+            videoUrls.push(url);
           }
         })
       );
-
+      // Firestore 문서에 사진 및 비디오 URL 배열을 저장합니다.
+      await updateDoc(doc, {
+        photos: photoUrls,
+        videos: videoUrls,
+      });
       setPost("");
-      setFile([]);
+      setFiles([]); // 업로드 후 파일 초기화
     } catch (e) {
       console.error(e);
     } finally {
       setIsLoading(false);
     }
   };
+
   return (
     <Form onSubmit={onSubmit}>
       <TextArea
