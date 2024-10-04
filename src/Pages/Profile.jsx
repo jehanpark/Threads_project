@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { ThreadDispatchContext } from "../Contexts/ThreadProvider";
-import { ThreadDataContext } from "../Contexts/ThreadProvider";
+import { ThreadDispatchContext } from "../Contexts/ThreadContext";
+import { ThreadDataContext } from "../Contexts/ThreadContext";
 import { auth, storage, db } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
@@ -13,19 +13,14 @@ import {
   where,
 } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
-
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
-import Profileimg from "../../public/profile.png";
-import Border from "../Components/Common/Border";
 import Button from "../Components/Common/Button";
-import Modal from "../Components/Common/Modal";
 import Post from "../Components/Post";
 import {
   PlusIcon,
   InstaIcon,
   FacebookIcon,
-  UserIcon1,
   UserIcon2,
 } from "../Components/Common/Icon";
 import {
@@ -39,6 +34,7 @@ import {
 import FollowModal from "../Components/profile/FollowModal";
 import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
+import TimeLine from "../Components/TimeLine";
 
 const ProfileWrap = styled.div`
   display: flex;
@@ -82,6 +78,10 @@ const FollowLink = styled.div`
 const Follow = styled.div`
   font-size: 14px;
   color: ${(props) => props.theme.nomalIconColor};
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const Links = styled.div`
@@ -126,31 +126,6 @@ const Circle = styled.div`
 const ThreadInner = styled.div`
   width: 100%;
 `;
-
-// const Tap = styled.div`
-//   width: 100%;
-//   height: 48px;
-//   border-radius: 18px;
-//   background: ${(props) => props.theme.borderColor};
-//   display: flex;
-//   justify-content: space-between;
-//   text-align: center;
-//   line-height: 3;
-//   margin-bottom: 8px;
-//   div {
-//     height: 100%;
-//     width: 168px;
-//     color: ${(props) => props.theme.nomalIconColor};
-//   }
-// `;
-
-// const TextInput = styled.div`
-//   padding: 40px 40px 0 40px;
-//   width: 100%;
-//   height: 68px;
-//   border-radius: 18px;
-//   background: ${(props) => props.theme.borderColor};
-// `;
 
 const PostWrap = styled.div`
   display: flex;
@@ -262,7 +237,7 @@ const Profile = () => {
             ) : (
               <FollowModal open={false} close={onfollow} />
             )}
-            <Follow onClick={onfollow}>팔로워 00</Follow>
+            <Follow onClick={onfollow}>팔로워 1234</Follow>
             <Links>
               {linkmodal ? (
                 <LinkPluse open={true} close={onLinkPlus} />
@@ -297,11 +272,12 @@ const Profile = () => {
           <li>인스타</li>
         </Tap>
         <TextInput isSmallScreen={isSmallScreen} />
-        <PostWrap>
+        {/* <PostWrap>
           {posts.map((post) => (
             <Post key={post.id} {...post} />
           ))}
-        </PostWrap>
+        </PostWrap> */}
+        <TimeLine />
       </ThreadInner>
     </>
     //</Border>

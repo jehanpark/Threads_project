@@ -1,5 +1,3 @@
-// src/Components/Login/LoginItemDk.tsx
-
 import React, { useState } from "react";
 import Logo from "../Logo";
 import LogoTextMark from "../LogoTextMark";
@@ -29,7 +27,7 @@ import {
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-const LoginItemDk: React.FC = () => {
+const LoginItemDk = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [id, setId] = useState("");
@@ -39,7 +37,7 @@ const LoginItemDk: React.FC = () => {
 
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e) => {
     const {
       target: { name, value },
     } = e;
@@ -48,7 +46,7 @@ const LoginItemDk: React.FC = () => {
     if (name === "password") setPassword(value);
   };
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (isLoading || id === "" || password === "") return;
     try {

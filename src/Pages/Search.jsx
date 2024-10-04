@@ -1,4 +1,3 @@
-import Border from "../Components/Common/Border";
 import React, { useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Searchhistory from "../Components/Search/Searchhistory";
