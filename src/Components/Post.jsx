@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { IPost } from "./TimeLine";
+// import { IPost } from "./TimeLine";
 import { auth, db, storage } from "../firebase";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import {
