@@ -1,8 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import {
-  ThreadDispatchContext,
-  ThreadDataContext,
-} from "../Contexts/ThreadContext";
+import { ThreadDispatchContext } from "../Contexts/ThreadProvider";
+import { ThreadDataContext } from "../Contexts/ThreadProvider";
 import { auth, storage, db } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
@@ -15,14 +13,19 @@ import {
   where,
 } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
+
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
+import Profileimg from "../../public/profile.png";
+import Border from "../Components/Common/Border";
 import Button from "../Components/Common/Button";
+import Modal from "../Components/Common/Modal";
 import Post from "../Components/Post";
 import {
   PlusIcon,
   InstaIcon,
   FacebookIcon,
+  UserIcon1,
   UserIcon2,
 } from "../Components/Common/Icon";
 import {
@@ -36,7 +39,6 @@ import {
 import FollowModal from "../Components/profile/FollowModal";
 import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
-import TimeLine from "../Components/TimeLine";
 
 const ProfileWrap = styled.div`
   display: flex;
@@ -140,8 +142,13 @@ const PostWrap = styled.div`
   border: 1px solid #f00;
 `;
 
-const Profile = () => {
+const OtherProfile = () => {
   const user = auth.currentUser; //유저정보
+
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const userName = useDiary(id);
+
   const [avatar, setAvarta] = useState(user?.photoURL || null || undefined); //이미지관리목적
   const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
   const [name, setName] = useState(user?.displayName ?? "Anonymouse"); // 이름 state관리
@@ -239,7 +246,7 @@ const Profile = () => {
             ) : (
               <FollowModal open={false} close={onfollow} />
             )}
-            <Follow onClick={onfollow}>팔로워 1234</Follow>
+            <Follow onClick={onfollow}>팔로워 00</Follow>
             <Links>
               {linkmodal ? (
                 <LinkPluse open={true} close={onLinkPlus} />
@@ -274,16 +281,15 @@ const Profile = () => {
           <li>인스타</li>
         </Tap>
         <TextInput isSmallScreen={isSmallScreen} />
-        {/* <PostWrap>
+        <PostWrap>
           {posts.map((post) => (
             <Post key={post.id} {...post} />
           ))}
-        </PostWrap> */}
-        <TimeLine />
+        </PostWrap>
       </ThreadInner>
     </>
     //</Border>
   );
 };
 
-export default Profile;
+export default OtherProfile;
