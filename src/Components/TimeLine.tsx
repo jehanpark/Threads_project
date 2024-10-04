@@ -14,7 +14,7 @@ import Post from "./Post";
 export interface IPost {
   id: string;
   createdAt: number;
-  photo?: string;
+  photo?: string[];
   video?: string;
   post: string;
   userId: string;
@@ -42,12 +42,12 @@ const TimeLine = () => {
       );
       unsubscribe = await onSnapshot(postsQuery, (snapshot) => {
         const posts = snapshot.docs.map((doc) => {
-          const { createdAt, photo, video, post, userId, username } =
+          const { createdAt, photos, video, post, userId, username } =
             doc.data();
           return {
             id: doc.id,
             createdAt,
-            photo,
+            photos: photos || [],
             video,
             post,
             userId,

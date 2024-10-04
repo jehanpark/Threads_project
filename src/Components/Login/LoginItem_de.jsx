@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Logo from "../Logo";
 import LogoTextMark from "../LogoTextMark";
 import { Link } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
+import Border from "../Common/Border";
 
 import {
   Wrapper,
@@ -15,9 +17,13 @@ import {
   StyledLabel,
   SingnUpText,
   ForgotPasswordText,
-} from "./RecycleStyles/login";
+  Hr,
+  Or,
+  Linebreak,
+} from "./RecycleStyles/login_de";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-const LoginItem = () => {
+const LoginItemDe = () => {
   // const [emailPlaceholder, setEmailPlaceholder] = useState(
   //   "사용자 이름, 전화번호 또는 이메일 주소"
   // );
@@ -27,23 +33,26 @@ const LoginItem = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const onChange = () => {};
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+  const onSubmit = () => {};
   return (
     <Wrapper>
-      <BgImg src="/login/thread_login_bg.png" />
+      <BgImg isSmallScreen={isSmallScreen} src="/login/thread_login_bg.png" />
       <LoginInner>
-        <LogoWrapper>
+        <LogoWrapper isSmallScreen={isSmallScreen}>
           <Logo width={40} />
         </LogoWrapper>
         <LoginP>
           <LogoTextMark width={62} />
-          <span>계정으로 로그인</span>
+          <span isSmallScreen={isSmallScreen}>계정으로 로그인</span>
         </LoginP>
-        <Form>
+        <Form onSubmit={onSubmit}>
           <InputWrapper>
             <StyledInput
               onChange={onChange}
               type="id"
               id="id"
+              name="id"
               placeholder=""
               required
               value={id}
@@ -57,6 +66,7 @@ const LoginItem = () => {
               onChange={onChange}
               type="password"
               id="password"
+              name="password"
               placeholder=""
               required
               value={password}
@@ -66,19 +76,25 @@ const LoginItem = () => {
           <InputWrapper>
             <StyledInput
               type="submit"
-              value={isLoading ? "Loading.." : "Login!"}
+              value={isLoading ? "Loading.." : "로그인"}
             />
           </InputWrapper>
-          <Link>
+          <Link to="/create-account">
             <SingnUpText>회원가입</SingnUpText>
           </Link>
-          <Link>
+          <Link to="/">
             <ForgotPasswordText>비밀번호를 잊으셨나요?</ForgotPasswordText>
           </Link>
+          <Linebreak isSmallScreen={isSmallScreen}>
+            <Hr isSmallScreen={isSmallScreen} />
+            <Or isSmallScreen={isSmallScreen}>또는</Or>
+            <Hr isSmallScreen={isSmallScreen} />
+          </Linebreak>
+          <Border type="loginborder" text="instagram으로 계속"></Border>
         </Form>
       </LoginInner>
     </Wrapper>
   );
 };
 
-export default LoginItem;
+export default LoginItemDe;

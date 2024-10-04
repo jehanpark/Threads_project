@@ -1,5 +1,3 @@
-// src/components/Loading/Loading.js
-
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
@@ -48,43 +46,57 @@ const Svg = styled.svg`
 
 // Styled Path 컴포넌트 정의
 const Path = styled.path`
-  stroke: ${(props)=>props.theme.logoColor};
+  stroke: #000;
   stroke-width: 4;
   stroke-dasharray: 200;
   stroke-dashoffset: 200;
   animation: ${draw} 2.2s ease-in-out ;
-
   &:hover {
     transform: scale(1.1) rotate(5deg); /* 마우스를 올렸을 때 확대 및 회전 효과 */
   }
 `;
 
 const GrayLogo = styled.img`
-    position: absolute;
+  position: absolute;
   width: 60px;
   height: 66px;
   opacity: 0.2;
   stroke-width: 4px;
-`
+`;
 
 const MetaLogo = styled.img`
   position: absolute;
   left: 50%;
   bottom: 40px;
   transform: translateX(-50%);
-`
+`;
 
 const Intro = () => {
   const [isAnimationFinished, setIsAnimationFinished] = useState(false);
+  const [isIntroVisible, setIsIntroVisible] = useState(true); // 인트로 표시 여부 상태
 
   useEffect(() => {
-    // 3초 후 애니메이션 완료 처리
-    const timer = setTimeout(() => {
-      setIsAnimationFinished(true);
-    }, 2300); // SVG 애니메이션 시간과 맞춤 (3초)
+    const hasVisited = sessionStorage.getItem('hasVisited'); // sessionStorage 사용
 
-    return () => clearTimeout(timer); // 클린업 타이머
+    if (hasVisited) {
+      // 세션에서 이미 방문한 적이 있다면 인트로 표시하지 않음
+      setIsIntroVisible(false);
+    } else {
+      // 세션에 방문 기록이 없으면 인트로를 표시하고 세션에 기록
+      sessionStorage.setItem('hasVisited', 'true');
+      
+      const timer = setTimeout(() => {
+        setIsAnimationFinished(true);
+        setTimeout(() => setIsIntroVisible(false), 300); // 페이드아웃 시간에 맞추어 숨김 처리
+      }, 2300); // SVG 애니메이션 시간과 맞춤 (2.3초)
+
+      return () => clearTimeout(timer);
+    }
   }, []);
+
+  if (!isIntroVisible) {
+    return null; // 인트로를 더 이상 표시하지 않음
+  }
 
   return (
     <Background animate={isAnimationFinished}>

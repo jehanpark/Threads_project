@@ -2,19 +2,23 @@ import "styled-components";
 
 declare module "styled-components" {
   export interface DefaultTheme {
-    logoColor: string;
-    bodyBg: string;
-    fontcolor: string;
-    borderWrapper: string;
-    borderColor: string;
-    bordershadow: string;
-    selecticoncolor: string;
-    borderstroke: string;
-    mouseHoverBg: string;
-    mouseHoverFontcolor: string;
-    headerBg: string;
-    btnBgColor: string;
-    loginInputSelectColor: string;
-    // 필요에 따라 추가 속성 정의
+    logoColor: String;
+    nomalIconColor: String;
+    bodyBg: String;
+    fontcolor: String;
+    borderWrapper: String;
+    borderColor: String;
+    bordershadow: String;
+    selecticoncolor: String;
+    borderstroke: String;
+    mouseHoverBg: String;
+    mouseHoverFontcolor: String;
+    headerBg: String;
+    btnBgColor: String;
+    loginInputSelectColor: String;
+    searchBar: String;
+    userIcon: String;
+    followerfont: String;
+    searchColor: String;
   }
 }
