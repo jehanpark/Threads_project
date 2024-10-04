@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Border from "../Components/Common/Border";
 import Searchhistory from "../Components/Search/Searchhistory";
+import Display from "../Components/Search/Display";
 import FollowerItem from "../Components/Search/FollowerItem";
 import FollowerList from "../Components/Search/FollowerList";
 import GlobalStyles, {

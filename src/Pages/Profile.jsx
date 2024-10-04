@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
-import { ThreadDispatchContext } from "../Contexts/ThreadProvider";
-import { ThreadDataContext } from "../Contexts/ThreadProvider";
+import { ThreadDispatchContext } from "../Contexts/ThreadContext";
+import { ThreadDataContext } from "../Contexts/ThreadContext";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import Profileimg from "../../public/profile.png";
