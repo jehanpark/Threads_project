@@ -1,9 +1,7 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { GithubAuthProvider, signInWithPopup } from "firebase/auth";
-
-// import { auth } from "../firebase";
-import { auth } from "../../firebase";
+import { FacebookAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase"; // Firebase 초기화 파일 경로
 
 const Button = styled.span`
   width: 100%;
@@ -28,17 +26,17 @@ const FacebookBtn = () => {
   const navigate = useNavigate();
   const onClick = async () => {
     try {
-      const porvider = new GithubAuthProvider();
-      await signInWithPopup(auth, porvider);
-      // await signInWithRedirect(auth, porvider);
-      navigate("/");
+      const provider = new FacebookAuthProvider(); // FacebookAuthProvider 사용
+      await signInWithPopup(auth, provider); // 팝업으로 로그인 처리
+      navigate("/"); // 로그인 후 이동할 페이지
     } catch (e) {
-      console.log(e);
+      console.error(e); // 에러 로그 출력
     }
   };
+
   return (
     <Button onClick={onClick}>
-      <Logo src="/github-mark.svg" />
+      <Logo src="/facebook-logo.svg" /> {/* Facebook 로고 이미지 경로 */}
       페이스북으로 로그인
     </Button>
   );

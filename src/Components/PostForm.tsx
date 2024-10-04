@@ -211,7 +211,12 @@ const PostForm = () => {
             <img
               src={URL.createObjectURL(file)}
               alt={`Uploaded Preview ${index + 1}`}
-              style={{ width: "180px", height: "240px", borderRadius: "10px" ,objectFit:"contain" }}
+              style={{
+                width: "180px",
+                height: "240px",
+                borderRadius: "10px",
+                objectFit: "contain",
+              }}
             />
             <DelteButton onClick={() => removeFile(index)}>X</DelteButton>
           </div>
