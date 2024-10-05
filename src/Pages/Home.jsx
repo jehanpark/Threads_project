@@ -6,7 +6,6 @@ import TimeLine from "../Components/TimeLine";
 const Home = () => {
   return (
     <div>
-      <PostForm />
       <TimeLine />
       <Intro />
     </div>
