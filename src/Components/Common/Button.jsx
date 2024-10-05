@@ -57,7 +57,13 @@ const ButtonItem = styled.button`
       &:hover {
         background: #1c1c1c; 
         color: #fff; 
+        outline: none;
       }
+      @media (max-width: 768px) {
+      height: 38px;
+      width: 100%;
+      outline: none;
+  }
     `}
   ${({ type }) =>
     type === "smalupload" &&

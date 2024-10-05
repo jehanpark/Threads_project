@@ -4,7 +4,7 @@ import { UserIcon2 } from "../Common/Icon";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import { storage, auth } from "../../firebase";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../Common/Button";
 
 const ModalOverlay = styled.div`
@@ -100,11 +100,28 @@ const Img = styled.img`
   width: 100%;
 `;
 
-const ProfileEdit = ({ open, close }) => {
+const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
+  const [profileData, setProfileData] = useState(profile);
+
   const nameInput = useRef();
   const user = auth.currentUser;
   const [avatar, setAvarta] = useState(user?.photoURL || null || undefined);
-  const [name, setName] = useState(user?.displayName ?? "Anonymouse");
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape" || e.key === "Enter") {
+      complete();
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
 
   const onImgchange = async (e) => {
     const { files } = e.target;
@@ -120,28 +137,60 @@ const ProfileEdit = ({ open, close }) => {
       const avatarUrl = await getDownloadURL(result.ref);
       setAvarta(avatarUrl);
       await updateProfile(user, { photoURL: avatarUrl });
-      await console.log(avatarUrl);
     }
   };
 
-  const onChange = async (e) => {
+  const nameEdit = (e) => {
+    if (e.keyCode === 13) {
+      complete();
+      close();
+    }
+  };
+
+  // const complete = async (e) => {
+  //   if (!user) return;
+  //   const nameValue = nameInput.current.value;
+  //   if (nameValue === "" || nameValue === user.displayName) {
+  //     return;
+  //   } else if (nameValue !== user.displayName) {
+  //     try {
+  //       await updateProfile(user, {
+  //         displayName: inputValue,
+  //       });
+  //       setProfileData((data)=>({
+
+  //       }));
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   }
+  // };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setProfileData((prevFormData) => ({
+      ...prevFormData,
+      [name]: type === "checkbox" ? checked : value, // 입력 필드와 체크박스 처리
+    }));
+  };
+
+  const complete = async () => {
     if (!user) return;
-    const inputValue = nameInput.current.value;
-    if (inputValue === "" && inputValue === user.displayName) {
-      return;
-    } else if (inputValue !== user.displayName) {
-      try {
-        await updateProfile(user, {
-          displayName: inputValue,
-        });
-        setName(inputValue);
-      } catch (e) {
-        console.error(e);
-      }
+    const nameValue = nameInput.current.value;
+    try {
+      await updateProfile(user, {
+        displayName: profileData.name,
+        // bio나 공개 설정 같은 다른 필드도 저장해야 하면 Firestore 등에 추가
+      });
+
+      // 업데이트된 프로필 정보를 부모 컴포넌트로 전달
+      onProfileChange(profileData);
+
+      close(); // 모달 닫기
+    } catch (e) {
+      console.error(e);
     }
   };
-
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
 
   if (!open) return null;
   return (
@@ -158,6 +207,7 @@ const ProfileEdit = ({ open, close }) => {
               <NameInput
                 ref={nameInput}
                 placeholder={user?.displayName ?? "이과사의 친구"}
+                onKeyDown={nameEdit}
               />
             </Left>
             <ImgBox htmlFor="profileImg">
@@ -179,7 +229,7 @@ const ProfileEdit = ({ open, close }) => {
             width={"100%"}
             heith={"40px"}
             type="edit"
-            onClick={onChange}
+            onClick={complete}
           />
         </PofileModalBox>
       </ModalOverlay>
@@ -188,3 +238,111 @@ const ProfileEdit = ({ open, close }) => {
 };
 
 export default ProfileEdit;
+
+// const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
+//   const [formData, setFormData] = useState(profile); // 전달받은 프로필 정보로 초기 상태 설정
+
+//   const handleInputChange = (e) => {
+//     const { name, value, type, checked } = e.target;
+//     setFormData((prevFormData) => ({
+//       ...prevFormData,
+//       [name]: type === "checkbox" ? checked : value, // 입력 필드와 체크박스 처리
+//     }));
+//   };
+
+//   const complete = async () => {
+//     try {
+//       const user = auth.currentUser;
+//       if (!user) return;
+
+//       // Firebase에서 사용자 프로필 업데이트 (이름, bio 등)
+//       await updateProfile(user, {
+//         displayName: formData.name,
+//         // bio나 공개 설정 같은 다른 필드도 저장해야 하면 Firestore 등에 추가
+//       });
+
+//       // 업데이트된 프로필 정보를 부모 컴포넌트로 전달
+//       onProfileChange(formData);
+
+//       close(); // 모달 닫기
+//     } catch (e) {
+//       console.error(e);
+//     }
+//   };
+
+//   const handleKeyDown = (e) => {
+//     if (e.key === "Escape" || e.key === "Enter") {
+//       complete();
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (open) {
+//       window.addEventListener("keydown", handleKeyDown);
+//     }
+//     return () => {
+//       window.removeEventListener("keydown", handleKeyDown);
+//     };
+//   }, [open]);
+
+//   if (!open) return null;
+
+//   return (
+//     <ModalOverlay onClick={close}>
+//       <PofileModalBox onClick={(e) => e.stopPropagation()}>
+//         <CloseButton onClick={close}>X</CloseButton>
+//         <Box>
+//           <Left>
+//             <SubTitle>이름</SubTitle>
+//             <NameInput
+//               name="name"
+//               value={formData.name}
+//               onChange={handleInputChange} // 이름 변경
+//               placeholder="이름 입력"
+//             />
+//           </Left>
+
+//           <Left>
+//             <SubTitle>자기소개</SubTitle>
+//             <NameInput
+//               name="bio"
+//               value={formData.bio}
+//               onChange={handleInputChange} // 자기소개 변경
+//               placeholder="자기소개 입력"
+//             />
+//           </Left>
+
+//           <Left>
+//             <SubTitle>링크 공개</SubTitle>
+//             <input
+//               type="checkbox"
+//               name="isLinkPublic"
+//               checked={formData.isLinkPublic}
+//               onChange={handleInputChange} // 링크 공개 여부 변경
+//             />
+//           </Left>
+
+//           <Left>
+//             <SubTitle>프로필 공개</SubTitle>
+//             <input
+//               type="checkbox"
+//               name="isProfilePublic"
+//               checked={formData.isProfilePublic}
+//               onChange={handleInputChange} // 프로필 공개 여부 변경
+//             />
+//           </Left>
+
+//           <Button
+//             text="완료"
+//             width="100%"
+//             height="40px"
+//             type="edit"
+//             onClick={complete} // 완료 버튼 클릭 시 호출
+//           />
+//         </Box>
+//       </PofileModalBox>
+//     </ModalOverlay>
+//   );
+// };
+
+// export default ProfileEdit;

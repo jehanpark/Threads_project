@@ -39,29 +39,26 @@ import ProfileEdit from "../Components/profile/ProfileEdit";
 import TimeLine from "../Components/TimeLine";
 
 const BoederWrapper = styled.div`
-  position: absolute;
   bottom: 0;
-  left: 50%;
-  transform: translate(-50%);
   margin: 0 auto;
   width: 680px;
   height: 800px;
   border-radius: 40px 40px 0px 0px;
+  padding: 10px;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
   @media (max-width: 768px) {
-    position: absolute;
     height: calc(100% - 68px);
     border-radius: 0;
     width: 100%;
-    bottom: 0px;
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
+    background: none;
+    padding: 0;
   }
 `;
 
 const ProfileWrap = styled.div`
-  position: ;
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -93,6 +90,9 @@ const BottomWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 25px;
+  @media screen and (max-width: 768px) {
+    gap: 8px;
+  }
 `;
 
 const FollowLink = styled.div`
@@ -167,8 +167,8 @@ const Profile = () => {
   const user = auth.currentUser; //유저정보
   const [avatar, setAvarta] = useState(user?.photoURL || null || undefined); //이미지관리목적
   const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
+
   const [name, setName] = useState(user?.displayName ?? "Anonymouse"); // 이름 state관리
-  const [editMode, setEditMode] = useState(false); //프로필수정기능 끄고키기
 
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
   const data = useContext(ThreadDataContext);
@@ -179,6 +179,13 @@ const Profile = () => {
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
+
+  const [profile, setProfile] = useState({
+    name: `${user?.displayName ?? "Anonymouse"}`,
+    bio: "",
+    isLinkPublic: true,
+    isProfilePublic: true,
+  }); // 사용자 프로필 상태를 객체로 관리
 
   const onfollow = () => {
     setFollowModal((prev) => !prev);
@@ -235,13 +242,42 @@ const Profile = () => {
     setLastEmail(userEmail);
   }, []);
 
+  const handleProfileChange = (updatedProfile) => {
+    setProfile(updatedProfile); // 상태를 업데이트
+  };
+
   return (
     <BoederWrapper>
+      {followModal ? (
+        <FollowModal open={true} close={onfollow} />
+      ) : (
+        <FollowModal open={false} close={onfollow} />
+      )}
+      {linkmodal ? (
+        <LinkPluse open={true} close={onLinkPlus} />
+      ) : (
+        <LinkPluse open={false} close={onLinkPlus} />
+      )}
+      {editmodal ? (
+        <ProfileEdit
+          open={true}
+          close={onProfileEdite}
+          profile={profile}
+          onProfileChange={handleProfileChange}
+        />
+      ) : (
+        <ProfileEdit
+          open={false}
+          close={onProfileEdite}
+          profile={profile}
+          onProfileChange={handleProfileChange}
+        />
+      )}
       <>
         <ProfileInnner isSmallScreen={isSmallScreen}>
           <ProfileWrap>
             <IdWrap isSmallScreen={isSmallScreen}>
-              <Nick> {user?.displayName ?? "이과사의 친구"}</Nick>
+              <Nick> {profile.name ?? "이과사의 친구"}</Nick>
               <IdText isSmallScreen={isSmallScreen}>
                 {user?.email ? lastemail : "임시"}
               </IdText>
@@ -255,37 +291,28 @@ const Profile = () => {
             </ImgWrap>
           </ProfileWrap>
           <BottomWrap>
-            <Desk isSmallScreen={isSmallScreen}>확인용 문구</Desk>
+            <Desk isSmallScreen={isSmallScreen}>
+              {profile.bio || "프로필을 꾸며보세요!"}
+            </Desk>
             <FollowLink>
-              {followModal ? (
-                <FollowModal open={true} close={onfollow} />
-              ) : (
-                <FollowModal open={false} close={onfollow} />
-              )}
               <Follow onClick={onfollow}>팔로워 1234</Follow>
-              <Links>
-                {linkmodal ? (
-                  <LinkPluse open={true} close={onLinkPlus} />
-                ) : (
-                  <LinkPluse open={false} close={onLinkPlus} />
-                )}
-                <LinkPlus onClick={onLinkPlus}>
-                  <PlusIcon width="16px" />
-                </LinkPlus>
-                <PulsLinkIcon>
-                  <Circle />
-                  <Circle />
-                  <Circle />
-                  <InstaIcon />
-                  <FacebookIcon />
-                </PulsLinkIcon>
-              </Links>
+
+              {profile.isLinkPublic ? (
+                <Links>
+                  <LinkPlus onClick={onLinkPlus}>
+                    <PlusIcon width="16px" />
+                  </LinkPlus>
+                  <PulsLinkIcon>
+                    <Circle />
+                    <Circle />
+                    <Circle />
+                    <InstaIcon />
+                    <FacebookIcon />
+                  </PulsLinkIcon>
+                </Links>
+              ) : null}
             </FollowLink>
-            {editmodal ? (
-              <ProfileEdit open={true} close={onProfileEdite} />
-            ) : (
-              <ProfileEdit open={false} close={onProfileEdite} />
-            )}
+
             <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
           </BottomWrap>
         </ProfileInnner>
