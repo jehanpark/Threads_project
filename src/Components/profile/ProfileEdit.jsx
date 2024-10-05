@@ -3,9 +3,10 @@ import { useMediaQuery } from "react-responsive";
 import { UserIcon2 } from "../Common/Icon";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
-import { storage, auth } from "../../firebase";
+import { storage, auth, db } from "../../firebase";
 import { useEffect, useRef, useState } from "react";
 import Button from "../Common/Button";
+import { addDoc, collection, getDoc, updateDoc } from "firebase/firestore";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -102,8 +103,7 @@ const Img = styled.img`
 
 const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
   const [profileData, setProfileData] = useState(profile);
-
-  const nameInput = useRef();
+  const bioValue = useRef();
   const user = auth.currentUser;
   const [avatar, setAvarta] = useState(user?.photoURL || null || undefined);
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
@@ -123,6 +123,9 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
     };
   }, [open]);
 
+  console.log(`user`);
+  console.log(user);
+
   const onImgchange = async (e) => {
     const { files } = e.target;
     if (!user) return;
@@ -137,13 +140,6 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
       const avatarUrl = await getDownloadURL(result.ref);
       setAvarta(avatarUrl);
       await updateProfile(user, { photoURL: avatarUrl });
-    }
-  };
-
-  const nameEdit = (e) => {
-    if (e.keyCode === 13) {
-      complete();
-      close();
     }
   };
 
@@ -170,20 +166,28 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
     const { name, value, type, checked } = e.target;
     setProfileData((prevFormData) => ({
       ...prevFormData,
-      [name]: type === "checkbox" ? checked : value, // 입력 필드와 체크박스 처리
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const complete = async () => {
     if (!user) return;
-    const nameValue = nameInput.current.value;
     try {
       await updateProfile(user, {
         displayName: profileData.name,
-        // bio나 공개 설정 같은 다른 필드도 저장해야 하면 Firestore 등에 추가
       });
 
       // 업데이트된 프로필 정보를 부모 컴포넌트로 전달
+      // if (! getDoc(doc(db, "profile", userId)) === user.uid) {
+      //   await addDoc(collection(db, "profile"), {
+      //     username: user?.displayName || user.email,
+      //     userId: user.uid,
+      //     bio: bioValue.value,
+      //   });
+      // } else {
+      //   updateDoc
+      // }
+
       onProfileChange(profileData);
 
       close(); // 모달 닫기
@@ -205,9 +209,8 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
             <Left style={{ width: "90%" }}>
               <SubTitle>이름</SubTitle>
               <NameInput
-                ref={nameInput}
                 placeholder={user?.displayName ?? "이과사의 친구"}
-                onKeyDown={nameEdit}
+                onChange={handleInputChange}
               />
             </Left>
             <ImgBox htmlFor="profileImg">
@@ -223,6 +226,17 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
               accept="image/*"
               onChange={onImgchange}
             />
+          </Box>
+          <Box>
+            <Left>
+              <NameInput
+                name="bio"
+                ref={bioValue}
+                value={formData.bio}
+                onChange={handleInputChange} // 자기소개 변경
+                placeholder="자기소개 입력"
+              />
+            </Left>
           </Box>
           <Button
             text={"완료"}
@@ -302,15 +316,7 @@ export default ProfileEdit;
 //             />
 //           </Left>
 
-//           <Left>
-//             <SubTitle>자기소개</SubTitle>
-//             <NameInput
-//               name="bio"
-//               value={formData.bio}
-//               onChange={handleInputChange} // 자기소개 변경
-//               placeholder="자기소개 입력"
-//             />
-//           </Left>
+//
 
 //           <Left>
 //             <SubTitle>링크 공개</SubTitle>
