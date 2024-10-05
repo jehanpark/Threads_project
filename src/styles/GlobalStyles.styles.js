@@ -19,6 +19,7 @@ export const lightTheme = {
   userIcon: "595959",
   followerfont: "#737373",
   searchColor: "#595959",
+  themeIconBackground: "#fafafa",
 };
 
 export const darkTheme = {
@@ -40,6 +41,7 @@ export const darkTheme = {
   userIcon: "#7373",
   followerfont: "#bababa",
   searchColor: "#1D1D1D",
+  themeIconBackground: "#363636",
 };
 
 const GlobalStyles = createGlobalStyle`

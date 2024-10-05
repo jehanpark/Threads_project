@@ -176,11 +176,14 @@ const BackButton = styled.button`
 const ThemeToggleBtnWrapper = styled(motion.div)`
   width: 100%;
   display: flex;
-  background-color: #fafafa;
+  background-color: ${(props) => props.theme.themeIconBackground};
   justify-content: space-between;
   border-radius: 12px;
   align-items: center;
   cursor: pointer;
+  svg {
+    z-index: 2;
+  }
 `;
 
 const ThemeToggleBtnBox = styled(motion.div)`
@@ -198,9 +201,12 @@ const ThemeToggleBtnBox = styled(motion.div)`
 const ToggleBackground = styled(motion.div)`
   width: 100%;
   height: 100%;
-  border: 1px solid #e5e5e5;
+
+  border: 2px solid ${(props) => props.theme.themeIconBackground};
+
+  background-color: ${(props) => props.theme.mouseHoverBg};
   border-radius: 12px;
-  /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); */
+  box-shadow: ${(props) => props.theme.bordershadow};
   position: absolute;
   z-index: 1;
 `;
