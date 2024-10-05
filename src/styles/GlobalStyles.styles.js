@@ -43,7 +43,6 @@ export const darkTheme = {
 };
 
 const GlobalStyles = createGlobalStyle`
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -74,6 +73,8 @@ body {
 	background-color: ${(props) => props.theme.bodyBg};
 	color: ${(props) => props.theme.bodyColor};
 	line-height: 1;
+  overflow-y: scroll;
+  transition: background-color 0.4s ease, color 0.2s ease;
 	/* background-color: #F2F2F2; */
 }
 ol, ul ,li {

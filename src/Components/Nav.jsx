@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./Logo";
+import { useAuth } from "../Contexts/AuthContext";
+import { UserIcon1 } from "./Common/Icon";
 
 const Wrapper = styled.nav`
   width: 100%;
@@ -27,6 +29,16 @@ const MyProfileImgs = styled.div`
 const Img = styled.img`
   width: 100%;
   height: 100%;
+`;
+
+const DefaultImgWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Ul = styled.ul`
@@ -80,13 +92,6 @@ const Li = styled.li`
     css`
       color: ${(props) => props.theme.headerselect};
       background-color: ${(props) => props.theme.logoColor};
-    `}
-`;
-const menuItems = styled.img`
-  ${(props) =>
-    props.$isSelected /* $isSelected로 변경 */ &&
-    css`
-      color: ${(props) => props.theme.selectIconColor};
     `}
 `;
 
@@ -227,6 +232,10 @@ const Nav = () => {
     },
   ];
 
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+
+  console.log(currentUser);
+
   const [selectedMenu, setSelectedMenu] = useState(0);
   const navigate = useNavigate();
 
@@ -257,7 +266,17 @@ const Nav = () => {
         ))}
       </Ul>
       <MyProfileImgs>
-        <Img src="/profile.png" alt="Profile" />
+        {currentUser ? (
+          <Link to="/profile">
+            <Img src="/profile.png" alt="Profile" />
+          </Link>
+        ) : (
+          <Link to="/login">
+            <DefaultImgWrapper src="/profile.png" alt="Profile">
+              <UserIcon1 />
+            </DefaultImgWrapper>
+          </Link>
+        )}
       </MyProfileImgs>
     </Wrapper>
   );

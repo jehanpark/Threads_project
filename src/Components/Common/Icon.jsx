@@ -1009,6 +1009,51 @@ export const FillPlusIcon = ({ width, fill }) => {
   );
 };
 
+// DK CUSTOM Icon
+export const ThemeLightIcon = ({ width, fill }) => {
+  const height = width ? width : "20px";
+  return (
+    <svg
+      width="20"
+      height={height}
+      viewBox="0 0 20 20"
+      fill={fill || "#bababa"}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M10 14C12.2091 14 14 12.2091 14 10C14 7.79086 12.2091 6 10 6C7.79086 6 6 7.79086 6 10C6 12.2091 7.79086 14 10 14Z"
+        stroke="#BABABA"
+        stroke-width="2"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M18 10H19M1 10H2M10 18V19M10 1V2M15.657 15.657L16.364 16.364M3.636 3.636L4.343 4.343M4.343 15.657L3.636 16.364M16.364 3.636L15.657 4.343"
+        stroke="#BABABA"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+    </svg>
+  );
+};
+
+export const ThemeDarkIcon = ({ width, fill }) => {
+  const height = width ? width : "18px";
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8 15.904C5.77733 15.904 3.88833 15.1263 2.333 13.571C0.777666 12.0157 0 10.1267 0 7.904C0 5.878 0.66 4.12133 1.98 2.634C3.3 1.14667 4.93467 0.268667 6.884 0C6.938 0 6.991 0.00200004 7.043 0.00600004C7.095 0.01 7.146 0.0156664 7.196 0.0229998C6.85867 0.493666 6.59167 1.017 6.395 1.593C6.19833 2.169 6.1 2.77267 6.1 3.404C6.1 5.182 6.722 6.693 7.966 7.937C9.21 9.181 10.7213 9.80333 12.5 9.804C13.134 9.804 13.7383 9.70567 14.313 9.509C14.8877 9.31233 15.4037 9.04533 15.861 8.708C15.869 8.758 15.8747 8.809 15.878 8.861C15.8813 8.913 15.8833 8.966 15.884 9.02C15.628 10.9687 14.7563 12.603 13.269 13.923C11.7817 15.243 10.026 15.9033 8 15.904Z"
+        fill="#BABABA"
+      />
+    </svg>
+  );
+};
+
 //* Color Icon  */
 
 export const ColorInstaIcon = ({ width }) => {
