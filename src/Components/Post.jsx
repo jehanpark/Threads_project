@@ -14,30 +14,44 @@ import {
   DmIcon,
   MagnifyingGlassIcon,
   BellOffIcon,
+  RetweetIcon,
+  Coment,
 } from "../Components/Common/Icon";
 // Styled Components
 
 const Wrapper = styled.div`
+width: 100%;
+height: 100%;
   display: flex;
   flex-direction: column;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: ${(props) => props.theme.borderColor};
   border-radius: 30px;
   padding: 20px;
   width: 660px;
-  background: #fff;
+  @media (max-width: 768px) {
+width: 100%;
+height: 100%;
+  }
 `;
 
 const Column = styled.div`
   display: flex;
+  margin-left: 50px;
 `;
 
 const Photo = styled.img`
-  width: 160px;
+  width: 140px;
   height: 140px;
-  object-fit: contain;
-  margin-left: 40px;
+  object-fit: cover/contain;
+  margin-left: 0px;
+  margin-top: 8px;
+  border-radius: 8px;
+  @media (max-width: 768px) {
+    margin-right: 8px;
+    width: 120px;
+    height: 120px;
+  }
 `;
-
 
 const Video = styled.video`
   width: 250px;
@@ -50,38 +64,40 @@ const Header = styled.div`
   gap: 10px;
   justify-content: start;
   align-items: center;
-`
-const UserImage =styled.img`
+  margin-bottom: 8px;
+`;
+const UserImage = styled.img`
   width: 40px;
   height: 40px;
   border: none;
   border-radius: 50%;
-`
+`;
 const Username = styled.span`
   font-size: 14px;
-  font-weight: normal;
+  font-weight: 600;
+  color: ${(props) => props.theme.fontcolor};
 `;
 const Timer = styled.span`
   font-size: 10px;
   color: #9a9a9a;
-`
+`;
 const Payload = styled.p`
   font-size: 15px;
   font-weight: 600;
-  margin-left: 50px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  
+  margin-left: 0px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 `;
 const Icons = styled.div`
   display: flex;
-  gap: 18px;
+  gap: 15px;
   justify-content: start;
   align-items: center;
   margin-left: 50px;
   margin-top: 20px;
-
-`
+  cursor: pointer;
+  color: #bababa;
+`;
 const DeleteButton = styled.button`
   background: #ff6347;
   color: #fff;
@@ -272,50 +288,21 @@ const Post = ({ post, userId, photos, video, username, id }) => {
 
   return (
     <Wrapper>
-        <Header>
-          <UserImage src="http://localhost:5173/profile.png"></UserImage>
-          <Username>{username}</Username>
-          <Timer>2시간전</Timer>
+      <Header>
+        <UserImage src="http://localhost:5173/profile.png"></UserImage>
+        <Username>{username}</Username>
+        <Timer>2시간전</Timer>
       </Header>
-      <Payload>{post}</Payload>
       <Column>
         {isEditing ? (
-          <EditPostFormTextArea onChange={onChange} value={editedPost} placeholder={post} />
+          <EditPostFormTextArea
+            onChange={onChange}
+            value={editedPost}
+            placeholder={post}
+          />
         ) : (
-          <Payload>{post}</Payload>
+          <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
         )}
-
-        {/* <EditorColumns>
-          {user?.uid === userId ? (
-            <>
-              {isEditing ? (
-                <>
-                  <CancelButton onClick={handleCancel}>Cancel</CancelButton>
-                  <UpdateButton onClick={onUpdate}>Update</UpdateButton>
-                  <SetContentButton htmlFor="edit-content">
-                    <svg fill="none" strokeWidth={1.5} stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                      />
-                    </svg>
-                    <SetContentInputButton
-                      id="edit-content"
-                      type="file"
-                      accept="video/*, image/*"
-                      onChange={onClickSetContent}
-                    />
-                  </SetContentButton>
-                </>
-              ) : (
-                <EditButton onClick={handleEdit}>Edit</EditButton>
-              )}
-
-              <DeleteButton onClick={onDelete}>Delete</DeleteButton>
-            </>
-          ) : null}
-        </EditorColumns> */}
       </Column>
 
       {/* Render multiple photos */}
@@ -333,10 +320,10 @@ const Post = ({ post, userId, photos, video, username, id }) => {
         </Column>
       )}
       <Icons>
-        <HeartIcon width={30}/>2
-        <DmIcon width={30}/>2
-        <MagnifyingGlassIcon width={30}/>2
-        <BellOffIcon width={30}/>2
+        <HeartIcon width={24} />2
+        <Coment width={24} />2
+        <DmIcon width={20} />2
+        <RetweetIcon width={24} />2
       </Icons>
     </Wrapper>
   );

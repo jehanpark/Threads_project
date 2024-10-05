@@ -25,10 +25,11 @@ const BottomNavWrapper = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-
+  z-index: 100;
+  box-shadow: ${(props) => props.theme.bor};
   @media (min-width: 768px) {
-    display: none; // 768px 이상의 화면에서는 숨기기
-  }
+      display: none; // 768px 이상의 화면에서는 숨기기
+    }
 `;
 
 const NavItem = styled.div`
@@ -52,8 +53,8 @@ const BackNavwrapper = styled.div`
     background: ${(props) => props.theme.borderColor};
     z-index: 1000;
     @media (min-width: 768px) {
-    display: none; // 768px 이상의 화면에서는 숨기기
-  }
+      display: none; // 768px 이상의 화면에서는 숨기기
+    }
   }
 `;
 const Backdesc = styled.div`
@@ -65,48 +66,47 @@ const Backdesc = styled.div`
   @media (min-width: 768px) {
     display: none; // 768px 이상의 화면에서는 숨기기
   }
-`
+`;
 const BackIcon = styled.div`
-display: flex;
-width: 24px;
-height: 24px;
-transform: translateX(5px);
-transform: translateY(2px);
-align-items: center;
-margin-left: 10px;
-`
+  display: flex;
+  width: 24px;
+  height: 24px;
+  transform: translateX(5px);
+  transform: translateY(2px);
+  align-items: center;
+  margin-left: 10px;
+`;
 const Backtxt = styled.div`
   font-size: 15px;
-`
+`;
 
 const MobileNav = () => {
   const navigate = useNavigate();
   return (
     <Wrapper>
       <BackNavwrapper>
-<Backdesc onClick={()=>navigate(-1)}>
+        <Backdesc onClick={() => navigate(-1)}>
           <BackIcon>
             <GoBack />
           </BackIcon>
-          <Backtxt>
-            뒤로
-            </Backtxt>
-</Backdesc>
+          <Backtxt>뒤로</Backtxt>
+        </Backdesc>
       </BackNavwrapper>
       <BottomNavWrapper>
-        <NavItem onClick={()=>navigate("/")}>
-          <Home style={{color:'#000'}}/>
+        <NavItem onClick={() => navigate("/")}>
+          <Home style={{ color: "#000" }} />
         </NavItem>
-        <NavItem onClick={()=>navigate("/search")}>
+        <NavItem onClick={() => navigate("/Search")}>
           <MagnifyingGlassIcon />
         </NavItem>
         <NavItem>
-          <PlusIcon width={30} />
+          <PlusIcon width={30} 
+          onClick={() => navigate("postform")} />
         </NavItem>
-        <NavItem onClick={()=>navigate("/activity")}>
+        <NavItem onClick={() => navigate("/activity")}>
           <Like />
         </NavItem>
-        <NavItem onClick={()=>navigate("/profile")}>
+        <NavItem onClick={() => navigate("/profile")}>
           <UserIcon1 />
         </NavItem>
       </BottomNavWrapper>

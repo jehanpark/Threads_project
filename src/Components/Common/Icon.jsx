@@ -255,6 +255,28 @@ export const HeartIcon = ({ width, fill }) => {
     </StyledSvg>
   );
 };
+//coment
+export const Coment = ({ width, fill }) => {
+  const height = width ? `${(width / 24) * 24}px` : "24px";
+
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={height}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M19.7588 9.81888C19.7622 11.1387 19.4539 12.4408 18.8588 13.6189C18.1532 15.0306 17.0685 16.218 15.7262 17.0482C14.3839 17.8783 12.837 18.3183 11.2588 18.3189C9.93892 18.3223 8.6369 18.0139 7.45879 17.4189L1.75879 19.3189L3.65879 13.6189C3.06372 12.4408 2.75535 11.1387 2.75879 9.81888C2.7594 8.24063 3.1994 6.69373 4.02951 5.35143C4.85962 4.00913 6.04704 2.92444 7.45879 2.21888C8.6369 1.62381 9.93892 1.31543 11.2588 1.31888H11.7588C13.8431 1.43387 15.8118 2.31364 17.2879 3.78974C18.764 5.26583 19.6438 7.23453 19.7588 9.31888V9.81888Z"
+        stroke={fill || "#BABABA"}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </StyledSvg>
+  );
+};
 
 //DM
 export const DmIcon = ({ width, fill }) => {
@@ -428,9 +450,20 @@ export const GoBack = ({ width, fill }) => {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 26 22"
     >
-<svg width="18" height="18" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M7 13L1 7L7 1" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 8 14"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M7 13L1 7L7 1"
+          stroke="black"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </StyledSvg>
   );
 };
@@ -953,7 +986,6 @@ export const UserPlusIcon = ({ width, fill }) => {
     </svg>
   );
 };
-
 
 export const ShareIcon = ({ width, fill }) => {
   const height = width ? (width * 23) / 19 : "22px";
