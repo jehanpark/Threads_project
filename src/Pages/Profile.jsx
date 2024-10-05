@@ -37,9 +37,31 @@ import FollowModal from "../Components/profile/FollowModal";
 import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
 import TimeLine from "../Components/TimeLine";
-import Border from "../Components/Common/Border";
+
+const BoederWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
+  margin: 0 auto;
+  width: 680px;
+  height: 800px;
+  border-radius: 40px 40px 0px 0px;
+  background: ${(props) => props.theme.borderWrapper};
+  box-shadow: ${(props) => props.theme.bordershadow};
+  @media (max-width: 768px) {
+    position: absolute;
+    height: calc(100% - 68px);
+    border-radius: 0;
+    width: 100%;
+    bottom: 0px;
+    box-shadow: none;
+    border-radius: 0px 0px 0px 0px;
+  }
+`;
 
 const ProfileWrap = styled.div`
+  position: ;
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -214,7 +236,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <Border type="borderWrapper">
+    <BoederWrapper>
       <>
         <ProfileInnner isSmallScreen={isSmallScreen}>
           <ProfileWrap>
@@ -283,7 +305,7 @@ const Profile = () => {
           <TimeLine />
         </ThreadInner>
       </>
-    </Border>
+    </BoederWrapper>
   );
 };
 
