@@ -1,10 +1,9 @@
-import React from "react";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import LogoImg from "../../images/insta.png";
 import RightArrow from "../../images/rightarrow.svg";
 
-const BorderItem = styled.div`
+export const BorderItem = styled.div`
   ${({ type }) =>
     type === "borderWrapper" &&
     `
@@ -50,9 +49,41 @@ const BorderItem = styled.div`
       display: none;
     }
     `}
+  ${({ type }) =>
+    type === "insitesWrapper" &&
+    `
+    width: 640px;
+    height: 137px;
+    background: #F5F5F5;
+    margin-top: 30px;
+    padding: 24px;
+    border: none;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+    `}
+  ${({ type }) =>
+    type === "insitesWrapper_dark" &&
+    `
+    width: 640px;
+    height: 137px;
+    background: #181818;
+    margin-top: 30px;
+    padding: 24px;
+    border: none;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 1px 1px 4px rgba(255, 255, 255, 0.1);
+    `}
 `;
 
-const BorderTextItem = styled.div`
+export const BorderTextItem = styled.div`
   position: ${({ type }) => (type === "borderinner" ? "absolute" : "relative")};
   top: ${({ type }) => (type === "borderinner" ? "30px" : "0px")};
   padding: 20px;
@@ -66,21 +97,33 @@ const BorderTextItem = styled.div`
   color: ${({ type }) => (type === "loginborder" ? "#000" : "#888")};
 `;
 
-const ArrowImage = styled.img`
+export const ArrowImage = styled.img`
   width: 16px; /* 화살표 이미지 크기 설정 */
   height: 16px;
 `;
 
 // 이미지 스타일 컴포넌트 추가
-const LogoImage = styled.img`
+export const LogoImage = styled.img`
   width: 40px; /* 원하는 크기로 이미지 조정 */
   height: 40px;
 `;
 
+export const CreateAccountWrapper = styled.div`
+  position: relative;
+  width: ${(props) => (props.isSmallScreen ? "100%" : "634px")};
+  height: ${(props) => (props.isSmallScreen ? "100%" : "861px")};
+  margin: 0 auto;
+  margin-top: ${(props) => (props.isSmallScreen ? "0" : "78px")};
+  border: ${(props) => (props.isSmallScreen ? "2px solid #f2f2f2" : "none")};
+  border-radius: ${(props) => (props.isSmallScreen ? "0" : "30px")};
+  background: #fff;
+`;
+
 const Border = ({ type, text }) => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+
   return (
-    <BorderItem type={type} isSmallScreen={isSmallScreen}>
+    <BorderItem type={type}>
       <BorderTextItem type={type}>
         <LogoImage src={LogoImg} alt="Instagram Logo" />
         {text}

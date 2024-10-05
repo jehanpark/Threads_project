@@ -4,7 +4,6 @@ import { useMediaQuery } from "react-responsive";
 export const Wrapper = styled.div`
   width: 100%;
   // dan 하이 수정했습니다.
-  height: ${(props) => props.height || "calc(100vh - 15%)"};
   height: ${(props) => (props.$isSmallScreen ? "100%" : "calc(100vh - 15%)")};
   margin: 0 auto;
   color: ${(props) => props.theme.fontcolor};
@@ -28,9 +27,9 @@ export const BgImg = styled.img`
 export const LoginInner = styled.div`
   position: relative;
   margin: 0 auto;
-  margin-top: ${(props) => (props.$isSmallScreen ? "0" : "15%")};
-  width: 370px;
-  height: 407px;
+  margin-top: ${(props) => (props.$isSmallScreen ? "15%" : "0")};
+  width: ${(props) => (props.$isSmallScreen ? "370px" : "292px")};
+  height: ${(props) => (props.$isSmallScreen ? "407px" : "100%")};
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -57,12 +56,15 @@ export const Form = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: ${(props) => props.gap || props.theme.gap};
+  justify-content: center;
+  align-items: center;
+  gap: ${(props) =>
+    props.isSmallScreen ? "24px" : props.gap || props.theme.gap};
 `;
 
 export const InputWrapper = styled.div`
   position: relative;
-  width: 100%;
+  width: ${(props) => (props.isSmallScreen ? "292px" : "100%")};
   // dan 기본값 10px 이었는데 0으로 설정 -> 전달받는 사람이 값 설정하도록
   margin-bottom: ${(props) => props.mb || "10px"};
 `;
@@ -99,7 +101,7 @@ export const StyledInput = styled.input`
 // dan 가입하기 버튼 스타일 타입 추가했습니다.
 export const StyledBtn = styled.button`
   &[type="join"] {
-    width: 370px;
+    width: ${(props) => (props.isSmallScreen ? "292px" : "100%")};
     height: 54px;
     padding: 20px;
     font-size: 14px;

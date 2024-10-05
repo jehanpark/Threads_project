@@ -9,7 +9,9 @@ import LoginInsta from "../Pages/LoginInsta";
 import Follow from "../Pages/Follow";
 import Activity from "../Pages/Activity";
 import Profile from "../Pages/Profile";
-import CreateAccount from "../Components/Login/CreateAccount";
+import CreateAccount from "../Pages/CreateAccount";
+import Insites from "../Pages/Insites";
+// import CreateAccount from "../Components/Login/CreateAccount";
 
 export const router = createBrowserRouter([
   {
@@ -43,11 +45,19 @@ export const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "LoginInsta", // 이 라우트도 Layout 바깥에 있음
+    path: "Createaccount", // 다은 라우트 수정 -짝대기 없앰
+    element: <CreateAccount />,
+  },
+  {
+    path: "Login-insta", // 이 라우트도 Layout 바깥에 있음
     element: <LoginInsta />,
   },
   {
-    path: "CreateAccount", // dan 추가한 라우트
-    element: <CreateAccount />,
+    path: "Insites", // 다은 추가
+    element: <Insites />,
   },
+  // {
+  //   path: "CreateAccount", // dan 추가한 라우트
+  //   element: <CreateAccount />,
+  // },
 ]);

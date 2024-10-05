@@ -1,8 +1,8 @@
 import { createGlobalStyle } from "styled-components";
-import { DefaultTheme } from "styled-components";
 
-export const lightTheme: DefaultTheme = {
+export const lightTheme = {
   logoColor: "#000",
+  nomalIconColor: "#BABABA",
   bodyBg: "#F2F2F2",
   fontcolor: "#000",
   borderWrapper: "#F5F5F5",
@@ -15,10 +15,15 @@ export const lightTheme: DefaultTheme = {
   headerBg: "#fff",
   btnBgColor: "#fff", // 중복 제거
   loginInputSelectColor: "#5987DC",
+  searchBar: "#e9e9e9",
+  userIcon: "595959",
+  followerfont: "#737373",
+  searchColor: "#595959",
 };
 
-export const darkTheme: DefaultTheme = {
+export const darkTheme = {
   logoColor: "#fff",
+  nomalIconColor: "#4D4D4D",
   bodyBg: "#000000",
   fontcolor: "#fff",
   borderWrapper: "#252525",
@@ -31,6 +36,10 @@ export const darkTheme: DefaultTheme = {
   headerBg: "#1E1E1E",
   btnBgColor: "#000", // 중복 제거
   loginInputSelectColor: "#488EE3",
+  searchBar: "#BABABA",
+  userIcon: "#7373",
+  followerfont: "#bababa",
+  searchColor: "#1D1D1D",
 };
 
 const GlobalStyles = createGlobalStyle`
@@ -67,7 +76,7 @@ body {
 	line-height: 1;
 	/* background-color: #F2F2F2; */
 }
-ol, ul {
+ol, ul ,li {
 	list-style: none;
 }
 a {
