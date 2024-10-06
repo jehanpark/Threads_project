@@ -255,6 +255,28 @@ export const HeartIcon = ({ width, fill }) => {
     </StyledSvg>
   );
 };
+//coment
+export const Coment = ({ width, fill }) => {
+  const height = width ? `${(width / 24) * 24}px` : "24px";
+
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={height}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M19.7588 9.81888C19.7622 11.1387 19.4539 12.4408 18.8588 13.6189C18.1532 15.0306 17.0685 16.218 15.7262 17.0482C14.3839 17.8783 12.837 18.3183 11.2588 18.3189C9.93892 18.3223 8.6369 18.0139 7.45879 17.4189L1.75879 19.3189L3.65879 13.6189C3.06372 12.4408 2.75535 11.1387 2.75879 9.81888C2.7594 8.24063 3.1994 6.69373 4.02951 5.35143C4.85962 4.00913 6.04704 2.92444 7.45879 2.21888C8.6369 1.62381 9.93892 1.31543 11.2588 1.31888H11.7588C13.8431 1.43387 15.8118 2.31364 17.2879 3.78974C18.764 5.26583 19.6438 7.23453 19.7588 9.31888V9.81888Z"
+        stroke={fill || "#BABABA"}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </StyledSvg>
+  );
+};
 
 //DM
 export const DmIcon = ({ width, fill }) => {
@@ -356,6 +378,92 @@ export const MagnifyingGlassIcon = ({ width, fill }) => {
         strokeLinejoin="round"
         fill="none"
       />
+    </StyledSvg>
+  );
+};
+
+//bottomNavHeart
+export const Like = ({ width, fill }) => {
+  const height = width ? `${(width / 24) * 24}px` : "24px";
+
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={height}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 26 22"
+    >
+      <svg
+        width="26"
+        height="22"
+        viewBox="0 0 26 22"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M7.6 1C3.955 1 1 3.86955 1 7.40914C1 13.8183 8.8 19.6448 13 21C17.2 19.6448 25 13.8183 25 7.40914C25 3.86955 22.045 1 18.4 1C16.168 1 14.194 2.07615 13 3.7233C12.3913 2.8816 11.5828 2.19467 10.6428 1.72064C9.70286 1.2466 8.65915 0.99942 7.6 1Z"
+          stroke={fill || "#BABABA"}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+      </svg>
+    </StyledSvg>
+  );
+};
+
+//bottomNavHome
+export const Home = ({ width, fill }) => {
+  const height = width ? `${(width / 24) * 24}px` : "24px";
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={height}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 26 22"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M10.488 0.536096C10.9156 0.189279 11.4494 0 12 0C12.5506 0 13.0844 0.189279 13.512 0.536096L22.6656 7.95105C23.0818 8.28807 23.4176 8.71369 23.6484 9.19691C23.8793 9.68012 23.9994 10.2088 24 10.7443V21.6003C24 22.2368 23.7471 22.8471 23.2971 23.2972C22.847 23.7472 22.2365 24 21.6 24H16.8C16.1635 24 15.553 23.7472 15.1029 23.2972C14.6529 22.8471 14.4 22.2368 14.4 21.6003V14.4013H9.6V21.6003C9.6 22.2368 9.34714 22.8471 8.89706 23.2972C8.44697 23.7472 7.83652 24 7.2 24H2.4C1.76348 24 1.15303 23.7472 0.702944 23.2972C0.252856 22.8471 7.04615e-08 22.2368 7.04615e-08 21.6003V10.7467C-0.000106048 10.2103 0.119654 9.68078 0.350527 9.19668C0.581399 8.71258 0.917548 8.28618 1.3344 7.94865L10.488 0.536096ZM21.156 9.81319L12 2.40303L2.844 9.81319C2.70509 9.92586 2.59313 10.0682 2.51631 10.2297C2.43949 10.3912 2.39975 10.5678 2.4 10.7467V21.6003H7.2V14.4013C7.2 13.7649 7.45286 13.1546 7.90294 12.7045C8.35303 12.2545 8.96348 12.0017 9.6 12.0017H14.4C15.0365 12.0017 15.647 12.2545 16.0971 12.7045C16.5471 13.1546 16.8 13.7649 16.8 14.4013V21.6003H21.6V10.7467C21.6003 10.5678 21.5605 10.3912 21.4837 10.2297C21.4069 10.0682 21.2949 9.92586 21.156 9.81319Z"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="#bababa"
+        />
+      </svg>
+    </StyledSvg>
+  );
+};
+export const GoBack = ({ width, fill }) => {
+  const height = width ? `${(width / 24) * 24}px` : "24px";
+
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={height}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 26 22"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 8 14"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M7 13L1 7L7 1"
+          stroke="black"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </StyledSvg>
   );
 };

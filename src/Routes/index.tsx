@@ -10,6 +10,7 @@ import Follow from "../Pages/Follow";
 import Activity from "../Pages/Activity";
 import Profile from "../Pages/Profile";
 import CreateAccount from "../Pages/CreateAccount";
+import PostForm from "../Components/PostForm";
 // import CreateAccount from "../Components/Login/CreateAccount";
 
 export const router = createBrowserRouter([
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "Activity",
         element: <Activity />,
+      },
+      {
+        path: "PostForm",
+        element: <PostForm />,
       },
     ],
   },
