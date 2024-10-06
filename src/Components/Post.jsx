@@ -18,6 +18,7 @@ import {
   Coment,
 } from "../Components/Common/Icon";
 // Styled Components
+import { formatDistanceToNow } from 'date-fns';
 
 const Wrapper = styled.div`
 width: 100%;
@@ -197,12 +198,18 @@ const SetContentInputButton = styled.input`
   display: none;
 `;
 
-const Post = ({ post, userId, photos, video, username, id }) => {
+const Post = ({ post, userId, photos, video, username, id,createdAt  }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
   const [editedPhoto, setEditedPhoto] = useState(null);
 
   const user = auth.currentUser;
+
+  const renderTimeAgo = () => {
+    if (!createdAt || !createdAt.seconds) return "방금 전"; // createdAt가 유효하지 않을 때 처리
+    const date = new Date(createdAt.seconds * 1000);
+    return formatDistanceToNow(date, { addSuffix: true });
+  };
 
   const onChange = (e) => {
     setEditedPost(e.target.value);
@@ -222,6 +229,8 @@ const Post = ({ post, userId, photos, video, username, id }) => {
       setEditedPhoto(files[0]);
     }
   };
+
+
 
   const onDelete = async () => {
     if (
@@ -288,10 +297,10 @@ const Post = ({ post, userId, photos, video, username, id }) => {
 
   return (
     <Wrapper>
-      <Header>
-        <UserImage src="http://localhost:5173/profile.png"></UserImage>
-        <Username>{username}</Username>
-        <Timer>2시간전</Timer>
+        <Header>
+          <UserImage src="http://localhost:5173/profile.png"></UserImage>
+          <Username>{username}</Username>
+          <Timer>{renderTimeAgo()}</Timer>
       </Header>
       <Column>
         {isEditing ? (
@@ -320,10 +329,10 @@ const Post = ({ post, userId, photos, video, username, id }) => {
         </Column>
       )}
       <Icons>
-        <HeartIcon width={24} />2
-        <Coment width={24} />2
-        <DmIcon width={20} />2
-        <RetweetIcon width={24} />2
+        <HeartIcon width={20}/>{Math.floor(Math.random() * 100)} 
+        <DmIcon width={20}/>{Math.floor(Math.random() * 50)}  
+        <MagnifyingGlassIcon width={20}/>{Math.floor(Math.random() * 500)} 
+        <BellOffIcon width={20}/>{2} 
       </Icons>
     </Wrapper>
   );

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import styled from "styled-components";
-import { addDoc, collection, updateDoc } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp, updateDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
@@ -209,9 +209,12 @@ const PostForm = () => {
       setIsLoading(true);
       const docRef = await addDoc(collection(db, "contents"), {
         post,
-        createdAt: Date.now(),
+        createdAt: serverTimestamp(),
         username: user?.displayName || "Anonymous",
         userId: user.uid,
+        followers: 0,  
+        likes: 0,      
+        comments: 0, 
       });
 
       const photoUrls = [];

@@ -11,14 +11,17 @@
   },
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.25.4",
+    "@babel/polyfill": "^7.12.1",
     "@babel/runtime": "^7.25.6",
-    "framer-motion": "^11.9.0",
+    "date-fns": "^4.1.0",
     "firebase": "^10.13.2",
+    "framer-motion": "^11.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-responsive": "^10.0.0",
     "react-router-dom": "^6.26.2",
     "react-speech-recognition": "^3.10.0",
+    "regenerator-runtime": "^0.14.1",
     "styled-components": "^6.1.13",
     "uuid": "^10.0.0"
   },

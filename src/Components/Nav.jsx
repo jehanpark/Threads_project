@@ -288,7 +288,7 @@ const Nav = () => {
           />
         </svg>
       ),
-      path: "/profile",
+      path: "",
     },
   ];
 
@@ -301,33 +301,30 @@ const Nav = () => {
   };
 
   return (
-<AllWrapper>
-<MobileNav></MobileNav>
-        <Wrapper>
-          <Link to="/">
-            <LogoWrapper>
-              <Logo width={40} />
-            </LogoWrapper>
-          </Link>
-    
-          <Ul>
-            {menuItems.map((menu, index) => (
-              <Li
-                key={index}
-                $itemCount={menuItems.length} /* $itemCount로 변경 */
-                $isSelected={selectedMenu === index} /* $isSelected로 변경 */
-                onClick={() => onSelected(index, menu.path)}
-                aria-current={selectedMenu === index ? "page" : undefined} // 접근성 향상
-              >
-                {menu.svg}
-              </Li>
-            ))}
-          </Ul>
-          <MyProfileImgs>
-            <Img src="/profile.png" alt="Profile" />
-          </MyProfileImgs>
-        </Wrapper>
-</AllWrapper>
+    <Wrapper>
+      <Link to="/">
+        <LogoWrapper>
+          <Logo width={40} />
+        </LogoWrapper>
+      </Link>
+
+      <Ul>
+        {menuItems.map((menu, index) => (
+          <Li
+            key={index}
+            $itemCount={menuItems.length} /* $itemCount로 변경 */
+            $isSelected={selectedMenu === index} /* $isSelected로 변경 */
+            onClick={() => onSelected(index, menu.path)}
+            aria-current={selectedMenu === index ? "page" : undefined} // 접근성 향상
+          >
+            {menu.svg}
+          </Li>
+        ))}
+      </Ul>
+      <MyProfileImgs>
+        {/* <Img src="/profile.png" alt="Profile" /> */}
+      </MyProfileImgs>
+    </Wrapper>
   );
 };
 
