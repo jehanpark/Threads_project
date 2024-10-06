@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { addDoc, collection, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import styled from "styled-components";
+import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
@@ -12,6 +12,7 @@ import {
   HashtagIcon,
 } from "../Components/Common/Icon";
 
+// Styled Components
 const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -33,20 +34,20 @@ const TextArea = styled.textarea`
   color: #000;
   border: 2px solid #fff;
   border-left: 1px solid #bababa;
-  padding: 20px;
-  padding-left: 10px;
+  padding: 20px 10px;
   font-size: 16px;
-  margin: 0 auto;
-  margin-top: 40px;
+  margin: 40px auto 0;
   width: 600px;
   height: 200px;
   resize: none;
+
   &::placeholder {
     color: #bababa;
     opacity: 1;
     font-size: 16px;
     transition: opacity 0.3s;
   }
+
   &:focus {
     &::placeholder {
       opacity: 0;
@@ -57,22 +58,11 @@ const TextArea = styled.textarea`
 
 const Icons = styled.div`
   display: flex;
-  margin: 20px 0;
-  margin-left: 20px;
+  margin: 20px 0 0 20px;
   gap: 20px;
 `;
 
-const CameraButton = styled.label`
-  cursor: pointer;
-`;
-const CameraInput = styled.input`
-  display: none;
-`;
-
-const PictureButton = styled.label`
-  cursor: pointer;
-`;
-const PictureInput = styled.input`
+const HiddenInput = styled.input`
   display: none;
 `;
 
@@ -85,7 +75,7 @@ const Buttons = styled.div`
   padding: 20px;
 `;
 
-const DelteButton = styled.button`
+const DeleteButton = styled.button`
   position: absolute;
   top: 5px;
   right: 5px;
@@ -105,6 +95,7 @@ const SubmitBtn = styled.input`
   font-weight: bold;
   border-radius: 30px;
   transition: all 0.3s;
+
   &:hover {
     background: #fff;
     color: #1c1c1c;
@@ -114,138 +105,139 @@ const SubmitBtn = styled.input`
 const PostForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState("");
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState([]);
 
-  const maxFileSize = 5 * 1024 * 1024;
+  const maxFileSize = 5 * 1024 * 1024; // 5MB
   const maxFilesCount = 3;
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handlePostChange = (e) => {
     setPost(e.target.value);
   };
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { files: selectedFiles } = e.target;
+  const handleFileChange = (e) => {
+    const selectedFiles = e.target.files;
     if (selectedFiles) {
       const newFiles = Array.from(selectedFiles).filter((file) => {
         if (file.size > maxFileSize) {
-          alert(
-            "The Maximum Capacity that can be uploaded is 5MB for each file"
-          );
+          alert("The maximum file size is 5MB.");
           return false;
         }
         return true;
       });
+
       if (files.length + newFiles.length > maxFilesCount) {
         alert(`You can upload a maximum of ${maxFilesCount} files.`);
         return;
       }
+
       setFiles((prevFiles) => [...prevFiles, ...newFiles]);
     }
   };
 
-  const removeFile = (index: number) => {
+  const removeFile = (index) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const user = auth.currentUser;
     if (!user || isLoading || post === "" || post.length > 180) return;
+
     try {
       setIsLoading(true);
-      // Firestore에 기본적인 문서를 추가합니다.
-      const doc = await addDoc(collection(db, "contents"), {
+      const docRef = await addDoc(collection(db, "contents"), {
         post,
         createdAt: Date.now(),
         username: user?.displayName || "Anonymous",
         userId: user.uid,
       });
-      // 사진이나 비디오 URL들을 저장할 배열
-      const photoUrls: string[] = [];
-      const videoUrls: string[] = [];
-      // 각 파일을 업로드하고 URL을 가져옵니다.
+
+      const photoUrls = [];
+      const videoUrls = [];
+
       await Promise.all(
         files.map(async (file) => {
           const locationRef = ref(
             storage,
-            `contents/${user.uid}/${doc.id}/${file.name}`
+            `contents/${user.uid}/${docRef.id}/${file.name}`
           );
           const result = await uploadBytes(locationRef, file);
           const url = await getDownloadURL(result.ref);
-          // 파일 타입에 따라 배열에 URL을 추가합니다.
-          const fileType = file.type;
-          if (fileType.startsWith("image/")) {
+
+          if (file.type.startsWith("image/")) {
             photoUrls.push(url);
-          }
-          if (fileType.startsWith("video/")) {
+          } else if (file.type.startsWith("video/")) {
             videoUrls.push(url);
           }
         })
       );
-      // Firestore 문서에 사진 및 비디오 URL 배열을 저장합니다.
-      await updateDoc(doc, {
+
+      await updateDoc(docRef, {
         photos: photoUrls,
         videos: videoUrls,
       });
+
       setPost("");
-      setFiles([]); // 업로드 후 파일 초기화
-    } catch (e) {
-      console.error(e);
+      setFiles([]); // Clear files after upload
+    } catch (error) {
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
   };
+
   return (
-    <Form onSubmit={onSubmit}>
+    <Form onSubmit={handleSubmit}>
       <TextArea
-        onChange={onChange}
+        onChange={handlePostChange}
         value={post}
         name="contents"
         id="contents"
         placeholder="내용을 작성하세요.."
         required
-      ></TextArea>
+      />
       <PlusImage>
         {files.map((file, index) => (
           <div key={index} style={{ position: "relative", margin: "5px" }}>
             <img
               src={URL.createObjectURL(file)}
               alt={`Uploaded Preview ${index + 1}`}
-              style={{ width: "180px", height: "240px", borderRadius: "10px" ,objectFit:"contain" }}
+              style={{
+                width: "180px",
+                height: "240px",
+                borderRadius: "10px",
+                objectFit: "contain",
+              }}
             />
-            <DelteButton onClick={() => removeFile(index)}>X</DelteButton>
+            <DeleteButton onClick={() => removeFile(index)}>X</DeleteButton>
           </div>
         ))}
       </PlusImage>
       <Icons>
-        <CameraButton htmlFor="camera">
+        <label htmlFor="camera">
           <CameraIcon width={50} />
-          <CameraInput
-            onChange={onFileChange}
+          <HiddenInput
+            onChange={handleFileChange}
             id="camera"
             type="file"
             accept="video/*, image/*"
           />
-        </CameraButton>
-        <PictureButton htmlFor="picture">
+        </label>
+        <label htmlFor="picture">
           <PictureIcon width={36} />
-        </PictureButton>
-        <PictureInput
-          onChange={onFileChange}
-          id="picture"
-          type="file"
-          accept="video/*, image/*"
-        />
+          <HiddenInput
+            onChange={handleFileChange}
+            id="picture"
+            type="file"
+            accept="video/*, image/*"
+          />
+        </label>
         <MicIcon width={36} />
         <HashtagIcon width={36} />
       </Icons>
       <Buttons>
         <Button text="팔로워에게만 허용" type="bigupload" />
-        <SubmitBtn
-          text="스레드 업로드"
-          type="submit"
-          value={isLoading ? "Posting..." : "Post"}
-        />
+        <SubmitBtn type="submit" value={isLoading ? "Posting..." : "Post"} />
       </Buttons>
     </Form>
   );

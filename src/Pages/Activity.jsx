@@ -1,28 +1,25 @@
 import React from "react";
-import Border from "../Components/Common/Border";
 import styled from "styled-components";
+import ActivityMenu from "../Components/Activity/Activitymenu";
 
-const Contain = styled.div`
-  width: 100%;
+const Border = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding-top: 39px;
+  margin: 0 auto;
+  padding: 10px 10px 0 10px;
+  width: 680px;
+  height: 898px;
+  border-radius: 40px 40px 0px 0px;
+  border: #c9c9c9;
+  background: #f5f5f5;
 `;
-
-const MenuTitle = styled.p`
-  font-weight: 800;
-  font-size: 20px;
-  margin-bottom: 25px;
-`;
-
 const Activity = () => {
   return (
-    <Contain>
-      <MenuTitle>활동</MenuTitle>
-      <Border type="borderWrapper"></Border>
-    </Contain>
+    <div>
+      <ActivityMenu />
+      <Border></Border>
+    </div>
   );
 };
 

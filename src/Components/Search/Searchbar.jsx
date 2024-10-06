@@ -8,10 +8,12 @@ import GlobalStyles, {
   lightTheme,
   darkTheme,
 } from "../../styles/GlobalStyles.styles";
-import { MicIcon, SoundIcon } from "../Common/Icon";
+import { UserIcon1, MicIcon, SoundIcon } from "../Common/Icon";
 
 const SearchWrapper = styled.div`
   width: 590px;
+  max-width: 590px;
+  min-width: 300px;
   height: 44px;
   display: flex;
   justify-content: space-between;
@@ -20,6 +22,10 @@ const SearchWrapper = styled.div`
   border-radius: 8px;
   border: 1px solid #ccc;
   background: ${(props) => props.theme.searchBar};
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `;
 
 const SearchBar = styled.input`
@@ -27,13 +33,13 @@ const SearchBar = styled.input`
   height: 100%;
   border: none;
   background: transparent;
-
   padding-left: 10px;
   color: #1d1d1d;
   font-size: 13px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+
   &:focus {
     outline: none;
   }
@@ -45,6 +51,10 @@ const SearchBar = styled.input`
 
   &:focus::placeholder {
     color: transparent;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 12px;
   }
 `;
 
@@ -65,7 +75,6 @@ const MicButton = styled.button`
 
 const Searchbar = ({ addSearch }) => {
   const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태
-  const [placeholder, setPlaceholder] = useState("검색");
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
 
   // 입력 값이 변경될 때마다 상태 업데이트
@@ -91,7 +100,6 @@ const Searchbar = ({ addSearch }) => {
     if (listening) {
       SpeechRecognition.stopListening();
       setSearchQuery(transcript); // 인식된 음성 텍스트를 검색창에 반영
-      setPlaceholder("검색");
       addSearch(transcript);
       resetTranscript(); // 텍스트 리셋
     } else {
@@ -109,7 +117,7 @@ const Searchbar = ({ addSearch }) => {
         placeholder="검색"
       />
       <MicButton onClick={toggleListening}>
-        {listening ? <SoundIcon width={20} /> : <MicIcon width={20} />}
+        {listening ? <UserIcon1 width={20} /> : <MicIcon width={20} />}
       </MicButton>
     </SearchWrapper>
   );

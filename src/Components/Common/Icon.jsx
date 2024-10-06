@@ -448,6 +448,48 @@ export const SoundIcon = ({ width, fill }) => {
   );
 };
 
+//CustomArrowIcon
+export const CustomArrowIcon = ({ width, fill }) => {
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={width ? `${(width / 24) * 24}px` : "24px"}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      strokeWidth="1.5"
+      stroke={fill || "currentColor"}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M19.5 8.25l-7.5 7.5-7.5-7.5" /* 새로운 path 데이터 적용 */
+      />
+    </StyledSvg>
+  );
+};
+
+//CustomArrowUpIcon
+export const CustomArrowUpIcon = ({ width, fill }) => {
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={width ? `${(width / 24) * 24}px` : "24px"}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      strokeWidth="1.5"
+      stroke={fill || "currentColor"}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M4.5 15.75l7.5-7.5 7.5 7.5" /* 새로운 path 데이터 적용 */
+      />
+    </StyledSvg>
+  );
+};
+
 export const Thread100Icon = ({ width, fill }) => {
   const height = (114.755 / 100) * parseFloat(width); // Calculate height based on width
   return (

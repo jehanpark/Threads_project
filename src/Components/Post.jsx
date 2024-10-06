@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { IPost } from "./TimeLine";
+// import { IPost } from "./TimeLine";
 import { auth, db, storage } from "../firebase";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import {
   deleteObject,
   ref,
   getDownloadURL,
-  StorageError,
-  StorageErrorCode,
-  uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
 
+// Styled Components
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 3fr 1fr;
@@ -22,7 +20,7 @@ const Wrapper = styled.div`
 `;
 
 const Column = styled.div`
-display: flex;
+  display: flex;
 `;
 
 const Photo = styled.img`
@@ -47,8 +45,8 @@ const Payload = styled.p`
   margin: 10px 0;
 `;
 
-const DeleteButton = styled.button`
-  background: #ff6347;
+const Button = styled.button`
+  background: ${(props) => props.bg || "#7f8689"};
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -65,17 +63,6 @@ const EditorColumns = styled.div`
   gap: 10px;
 `;
 
-const EditButton = styled.button`
-  background: #7f8689;
-  color: #fff;
-  font-weight: 600;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  text-transform: uppercase;
-  cursor: pointer;
-`;
-
 const EditPostFormTextArea = styled.textarea`
   background: #000;
   color: #fff;
@@ -86,45 +73,30 @@ const EditPostFormTextArea = styled.textarea`
   font-size: 16px;
   border-radius: 10px;
   resize: none;
+
   &::placeholder {
     opacity: 1;
     transition: opacity 0.3s;
   }
+
+  &:focus::placeholder {
+    opacity: 0;
+  }
+
   &:focus {
-    ::placeholder {
-      opacity: 0;
-    }
     outline: none;
     border: 1px solid #1d9bf0;
   }
 `;
 
-const CancelButton = styled.button`
-  background: #7f8689;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-transform: uppercase;
-  cursor: pointer;
-`;
-
-const UpdateButton = styled.button`
-  background: #1d9bf0;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-transform: uppercase;
-  cursor: pointer;
-`;
-
 const SetContentButton = styled.label`
   color: #fff;
   transition: color 0.3s;
+
   &:hover {
     color: #1d9bf0;
   }
+
   svg {
     width: 24px;
     cursor: pointer;
@@ -135,14 +107,14 @@ const SetContentInputButton = styled.input`
   display: none;
 `;
 
-const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
+const Post = ({ post, userId, photos, video, username, id }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
-  const [editedPhoto, setEditedPhoto] = useState<File | null>(null);
+  const [editedPhoto, setEditedPhoto] = useState(null);
 
   const user = auth.currentUser;
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onChange = (e) => {
     setEditedPost(e.target.value);
   };
 
@@ -150,47 +122,48 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
     setIsEditing(false);
   };
 
-  const handleEdit = async () => {
+  const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const onClickSetContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onClickSetContent = (e) => {
     const { files } = e.target;
-    if (files && files.length === 1) setEditedPhoto(files[0]);
+    if (files && files.length === 1) {
+      setEditedPhoto(files[0]);
+    }
   };
 
   const onDelete = async () => {
-    const ok = confirm("Are you sure you want to delete this post?");
-    if (!ok || user?.uid !== userId) return;
-    try {
-      await deleteDoc(doc(db, `contents`, id));
-      if (photos.length > 0) {
-        const photoRef = ref(storage, `contents/${user.uid}/${id}`);
-        await deleteObject(photoRef);
+    if (
+      confirm("Are you sure you want to delete this post?") &&
+      user?.uid === userId
+    ) {
+      try {
+        await deleteDoc(doc(db, "contents", id));
+        if (photos.length > 0) {
+          const photoRef = ref(storage, `contents/${user.uid}/${id}`);
+          await deleteObject(photoRef);
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (e) {
-      console.error(e);
     }
   };
 
   const onUpdate = async () => {
+    if (user?.uid !== userId) return;
+
     try {
-      if (user?.uid !== userId) return;
-
       const postDoc = await getDoc(doc(db, "contents", id));
-      if (!postDoc.exists()) throw new Error("Documents does not exist");
+      if (!postDoc.exists()) throw new Error("Document does not exist");
+
       const postData = postDoc.data();
-
-      if (postData) {
-        if (postData.photos) postData.fileType = "image";
-        if (postData.video) postData.fileType = "video";
-      }
-
       const existingFileType = postData?.fileType || null;
+      const newFileType = editedPhoto?.type.startsWith("image/")
+        ? "image"
+        : "video";
 
       if (editedPhoto) {
-        const newFileType = editedPhoto.type.startsWith("image/") ? "image" : "video";
-
         if (existingFileType && existingFileType !== newFileType) {
           alert("You can only upload the same type of content");
           return;
@@ -198,12 +171,13 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
 
         const locationRef = ref(storage, `contents/${user.uid}/${id}`);
         const uploadTask = uploadBytesResumable(locationRef, editedPhoto);
+
         if (editedPhoto.size >= 5 * 1024 * 1024) {
           uploadTask.cancel();
           throw new Error("File Size is over 5MB");
         }
 
-        const result = await uploadBytes(locationRef, editedPhoto);
+        const result = await uploadTask;
         const url = await getDownloadURL(result.ref);
 
         await updateDoc(doc(db, "contents", id), {
@@ -215,8 +189,8 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
       } else {
         await updateDoc(doc(db, "contents", id), { post: editedPost });
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     } finally {
       setIsEditing(false);
     }
@@ -227,20 +201,31 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
       <Column>
         <Username>{username}</Username>
         {isEditing ? (
-          <EditPostFormTextArea onChange={onChange} value={editedPost} placeholder={post} />
+          <EditPostFormTextArea
+            onChange={onChange}
+            value={editedPost}
+            placeholder={post}
+          />
         ) : (
           <Payload>{post}</Payload>
         )}
 
         <EditorColumns>
-          {user?.uid === userId ? (
+          {user?.uid === userId && (
             <>
               {isEditing ? (
                 <>
-                  <CancelButton onClick={handleCancel}>Cancel</CancelButton>
-                  <UpdateButton onClick={onUpdate}>Update</UpdateButton>
+                  <Button onClick={handleCancel}>Cancel</Button>
+                  <Button bg="#1d9bf0" onClick={onUpdate}>
+                    Update
+                  </Button>
                   <SetContentButton htmlFor="edit-content">
-                    <svg fill="none" strokeWidth={1.5} stroke="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      fill="none"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -256,16 +241,18 @@ const Post = ({ username, post, photos = [], video, userId, id }: IPost) => {
                   </SetContentButton>
                 </>
               ) : (
-                <EditButton onClick={handleEdit}>Edit</EditButton>
+                <Button onClick={handleEdit}>Edit</Button>
               )}
 
-              <DeleteButton onClick={onDelete}>Delete</DeleteButton>
+              <Button bg="#ff6347" onClick={onDelete}>
+                Delete
+              </Button>
             </>
-          ) : null}
+          )}
         </EditorColumns>
       </Column>
 
-      {/* 여러 장의 사진을 배열로 렌더링 */}
+      {/* Render multiple photos */}
       {photos && photos.length > 0 && (
         <Column>
           {photos.map((photoUrl, index) => (
