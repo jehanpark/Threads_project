@@ -131,7 +131,7 @@ const LinkPlus = styled.div`
 `;
 
 const PulsLinkIcon = styled.div`
-  width: 150px;
+  width: 50px;
   height: 22px;
   display: flex;
   align-items: center;
@@ -332,23 +332,18 @@ const Profile = ({ userEmail }) => {
             </Desk>
             <FollowLink>
               <Follow onClick={onfollow}>팔로워 1234</Follow>
-
               {profile.isLinkPublic ? (
                 <Links>
                   <LinkPlus onClick={onLinkPlus}>
                     <PlusIcon width="16px" />
                   </LinkPlus>
                   <PulsLinkIcon>
-                    <Circle />
-                    <Circle />
-                    <Circle />
                     <InstaIcon />
                     <FacebookIcon />
                   </PulsLinkIcon>
                 </Links>
               ) : null}
             </FollowLink>
-
             <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
           </BottomWrap>
         </ProfileInnner>

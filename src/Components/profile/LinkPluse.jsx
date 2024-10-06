@@ -16,7 +16,7 @@ const ModalOverlay = styled.div`
 
 const LinkModalBox = styled.div`
   width: 450px;
-  height: 530px;
+  height: 200px;
   border-radius: 12px;
   background: ${(props) => props.theme.borderWrapper};
   padding: 64px 11px 0 11px;
