@@ -8,6 +8,8 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import {
   collection,
+  doc,
+  getDoc,
   getDocs,
   limit,
   orderBy,
@@ -37,6 +39,7 @@ import FollowModal from "../Components/profile/FollowModal";
 import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
 import TimeLine from "../Components/TimeLine";
+import { useNavigate } from "react-router-dom";
 
 const BoederWrapper = styled.div`
   bottom: 0;
@@ -160,15 +163,13 @@ const PostWrap = styled.div`
   padding: 0 10px;
   width: 654px;
   margin: 0 auto;
-  border: 1px solid #f00;
 `;
 
-const Profile = () => {
+const Profile = ({ userEmail }) => {
+  const navigate = useNavigate();
   const user = auth.currentUser; //유저정보
   const [avatar, setAvarta] = useState(user?.photoURL || null || undefined); //이미지관리목적
   const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
-
-  const [name, setName] = useState(user?.displayName ?? "Anonymouse"); // 이름 state관리
 
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
   const data = useContext(ThreadDataContext);
@@ -179,13 +180,55 @@ const Profile = () => {
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
-
   const [profile, setProfile] = useState({
-    name: `${user?.displayName ?? "Anonymouse"}`,
+    username: `${user?.displayName ?? "Anonymouse"}`,
+    userId: `${user?.uid ?? ""}`,
+    userEmail: `${user.email ?? ""}`, // 없다면 파람즈로
     bio: "",
     isLinkPublic: true,
     isProfilePublic: true,
-  }); // 사용자 프로필 상태를 객체로 관리
+    img: `${avatar ?? null}`,
+  });
+
+  const CheckProfile = async () => {
+    // if (!user) return;
+
+    try {
+      const profileQuery = query(
+        collection(db, "profile"),
+        where("userEmail", "==", user.email) // 유저의 이메일을 기준으로 검색
+      );
+      const querySnapshot = await getDocs(profileQuery);
+
+      if (!querySnapshot.empty) {
+        const profileDoc = querySnapshot.docs[0].data(); // 첫 번째 문서 가져오기
+        setProfile((prev) => ({
+          ...prev,
+          username: profileDoc.username,
+          bio: profileDoc.bio,
+          isLinkPublic: profileDoc.isLinkPublic,
+          isProfilePublic: profileDoc.isProfilePublic,
+          img: profileDoc.img,
+        }));
+      } else {
+        // 프로필이 없으면 Firebase 유저 정보를 사용
+        setProfile((prev) => ({
+          ...prev,
+          username: user.displayName ?? "Anonymous",
+          bio: "",
+          isLinkPublic: true,
+          isProfilePublic: true,
+          img: user.photoURL ?? null,
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching profile: ", error);
+    }
+  };
+
+  useEffect(() => {
+    CheckProfile();
+  }, [profile]);
 
   const onfollow = () => {
     setFollowModal((prev) => !prev);
@@ -206,30 +249,25 @@ const Profile = () => {
     //하단에 띄울 쓰레드 스테이트 관리 함수
     const postQuery = query(
       collection(db, "contents"),
-      where("userId", "==", user?.uid),
+      where("userId", "==", `${profile.userId}`), //파람즈 값으로 변경하자
       orderBy("createdAt", "desc"),
       limit(15)
     );
 
     const snapShot = await getDocs(postQuery); //필터된 포스터 가져옴
     const post = snapShot.docs.map((doc) => {
-      const { createdAt, photos, video, post, userId, username } = doc.data();
+      const { createdAt, photos, post, userId, username, videos } = doc.data();
       return {
-        id: doc.id,
         createdAt,
-        photos: photos || [],
-        video,
+        photos,
         post,
         userId,
         username,
+        videos,
       };
     });
     setPosts(post);
   };
-
-  // useEffect(() => {
-  //   fetchPosts();
-  // }, [posts]);
 
   useEffect(() => {
     fetchPosts();
@@ -238,14 +276,12 @@ const Profile = () => {
   useEffect(() => {
     const useEmailIndex = user.email.indexOf("@");
     const userEmail = user.email.substring(0, useEmailIndex);
-    // const userEmail = user.email;
     setLastEmail(userEmail);
   }, []);
 
   const handleProfileChange = (updatedProfile) => {
-    setProfile(updatedProfile); // 상태를 업데이트
+    setProfile(updatedProfile);
   };
-
   return (
     <BoederWrapper>
       {followModal ? (
@@ -277,7 +313,7 @@ const Profile = () => {
         <ProfileInnner isSmallScreen={isSmallScreen}>
           <ProfileWrap>
             <IdWrap isSmallScreen={isSmallScreen}>
-              <Nick> {profile.name ?? "이과사의 친구"}</Nick>
+              <Nick> {profile.username ?? user.uid}</Nick>
               <IdText isSmallScreen={isSmallScreen}>
                 {user?.email ? lastemail : "임시"}
               </IdText>
@@ -292,7 +328,7 @@ const Profile = () => {
           </ProfileWrap>
           <BottomWrap>
             <Desk isSmallScreen={isSmallScreen}>
-              {profile.bio || "프로필을 꾸며보세요!"}
+              {profile.bio ?? "프로필을 꾸며보세요!"}
             </Desk>
             <FollowLink>
               <Follow onClick={onfollow}>팔로워 1234</Follow>
@@ -324,12 +360,11 @@ const Profile = () => {
             <li>인스타</li>
           </Tap>
           <TextInput isSmallScreen={isSmallScreen} />
-          {/* <PostWrap>
-          {posts.map((post) => (
-            <Post key={post.id} {...post} />
-          ))}
-        </PostWrap> */}
-          <TimeLine />
+          <PostWrap>
+            {posts.map((post) => (
+              <Post key={post.id} {...post} />
+            ))}
+          </PostWrap>
         </ThreadInner>
       </>
     </BoederWrapper>
