@@ -9,24 +9,48 @@ import {
   getDownloadURL,
   uploadBytesResumable,
 } from "firebase/storage";
-
+import {
+  HeartIcon,
+  DmIcon,
+  MagnifyingGlassIcon,
+  BellOffIcon,
+  RetweetIcon,
+  Coment,
+} from "../Components/Common/Icon";
 // Styled Components
+
 const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 15px;
+width: 100%;
+height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: ${(props) => props.theme.borderColor};
+  border-radius: 30px;
   padding: 20px;
+  width: 660px;
+  @media (max-width: 768px) {
+width: 100%;
+height: 100%;
+  }
 `;
 
 const Column = styled.div`
   display: flex;
+  margin-left: 50px;
 `;
 
 const Photo = styled.img`
-  width: 200px;
-  height: 100%;
-  border-radius: 15px;
+  width: 140px;
+  height: 140px;
+  object-fit: cover/contain;
+  margin-left: 0px;
+  margin-top: 8px;
+  border-radius: 8px;
+  @media (max-width: 768px) {
+    margin-right: 8px;
+    width: 120px;
+    height: 120px;
+  }
 `;
 
 const Video = styled.video`
@@ -35,18 +59,47 @@ const Video = styled.video`
   border-radius: 15px;
 `;
 
+const Header = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+const UserImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+`;
 const Username = styled.span`
+  font-size: 14px;
+  font-weight: 600;
+  color: ${(props) => props.theme.fontcolor};
+`;
+const Timer = styled.span`
+  font-size: 10px;
+  color: #9a9a9a;
+`;
+const Payload = styled.p`
   font-size: 15px;
   font-weight: 600;
+  margin-left: 0px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 `;
-
-const Payload = styled.p`
-  font-size: 18px;
-  margin: 10px 0;
+const Icons = styled.div`
+  display: flex;
+  gap: 15px;
+  justify-content: start;
+  align-items: center;
+  margin-left: 50px;
+  margin-top: 20px;
+  cursor: pointer;
+  color: #bababa;
 `;
-
-const Button = styled.button`
-  background: ${(props) => props.bg || "#7f8689"};
+const DeleteButton = styled.button`
+  background: #ff6347;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -62,6 +115,28 @@ const EditorColumns = styled.div`
   align-items: center;
   gap: 10px;
 `;
+const EditButton = styled.button`
+  background: #7f8689;
+  color: #fff;
+  font-weight: 600;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+`;
+
+const Button = styled.button`
+  background: ${(props) => props.bg || "#7f8689"};
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+`;
 
 const EditPostFormTextArea = styled.textarea`
   background: #000;
@@ -73,20 +148,35 @@ const EditPostFormTextArea = styled.textarea`
   font-size: 16px;
   border-radius: 10px;
   resize: none;
-
   &::placeholder {
     opacity: 1;
     transition: opacity 0.3s;
   }
-
-  &:focus::placeholder {
-    opacity: 0;
-  }
-
   &:focus {
+    ::placeholder {
+      opacity: 0;
+    }
     outline: none;
     border: 1px solid #1d9bf0;
   }
+`;
+const CancelButton = styled.button`
+  background: #7f8689;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+`;
+const UpdateButton = styled.button`
+  background: #1d9bf0;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
 `;
 
 const SetContentButton = styled.label`
@@ -198,8 +288,12 @@ const Post = ({ post, userId, photos, video, username, id }) => {
 
   return (
     <Wrapper>
-      <Column>
+      <Header>
+        <UserImage src="http://localhost:5173/profile.png"></UserImage>
         <Username>{username}</Username>
+        <Timer>2시간전</Timer>
+      </Header>
+      <Column>
         {isEditing ? (
           <EditPostFormTextArea
             onChange={onChange}
@@ -207,49 +301,8 @@ const Post = ({ post, userId, photos, video, username, id }) => {
             placeholder={post}
           />
         ) : (
-          <Payload>{post}</Payload>
+          <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
         )}
-
-        <EditorColumns>
-          {user?.uid === userId && (
-            <>
-              {isEditing ? (
-                <>
-                  <Button onClick={handleCancel}>Cancel</Button>
-                  <Button bg="#1d9bf0" onClick={onUpdate}>
-                    Update
-                  </Button>
-                  <SetContentButton htmlFor="edit-content">
-                    <svg
-                      fill="none"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                      />
-                    </svg>
-                    <SetContentInputButton
-                      id="edit-content"
-                      type="file"
-                      accept="video/*, image/*"
-                      onChange={onClickSetContent}
-                    />
-                  </SetContentButton>
-                </>
-              ) : (
-                <Button onClick={handleEdit}>Edit</Button>
-              )}
-
-              <Button bg="#ff6347" onClick={onDelete}>
-                Delete
-              </Button>
-            </>
-          )}
-        </EditorColumns>
       </Column>
 
       {/* Render multiple photos */}
@@ -266,6 +319,12 @@ const Post = ({ post, userId, photos, video, username, id }) => {
           <Video src={video} autoPlay loop />
         </Column>
       )}
+      <Icons>
+        <HeartIcon width={24} />2
+        <Coment width={24} />2
+        <DmIcon width={20} />2
+        <RetweetIcon width={24} />2
+      </Icons>
     </Wrapper>
   );
 };

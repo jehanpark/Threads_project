@@ -182,6 +182,7 @@ const Search = () => {
             )}
           </SearchBox>
           <FollowersList />
+          <Display />
         </Border>
       </Contain>
     </div>

@@ -1,16 +1,18 @@
 import React from "react";
 import styled from "styled-components";
+import { UserIcon2 } from "../Common/Icon";
 
 const FollowerContain = styled.div`
-  border: 1px solid #f00;
   width: 590px;
   max-width: 590px;
   min-width: 300px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding: 0 30px;
-  margin-top: 40px;
+  padding: 10px 30px;
+  border-radius: 20px;
+  background: ${(props) => props.theme.borderColor};
+  margin-bottom: 20px;
 
   @media (max-width: 768px) {
     width: 90%;
@@ -24,10 +26,9 @@ const FollowerContain = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: 100%;
   display: flex;
   gap: 20px;
-  margin: 0 auto;
+  align-items: center;
 
   @media (max-width: 768px) {
     gap: 15px;
@@ -40,15 +41,17 @@ const Wrapper = styled.div`
 `;
 
 const UserWrapper = styled.div`
+  width: 60px;
+  height: 60px;
   display: flex;
+  justify-content: center;
   align-items: center;
+  border-radius: 50%;
+  border: 1px solid #f00;
 
-  @media (max-width: 768px) {
-    flex-direction: row;
-  }
-
-  @media (max-width: 480px) {
-    flex-direction: column;
+  img {
+    width: 100%;
+    border-radius: 50%;
   }
 `;
 
@@ -57,11 +60,6 @@ const UserContex = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 7px;
-  padding: 10px 0;
-
-  @media (max-width: 480px) {
-    padding: 5px 0;
-  }
 `;
 
 const UserName = styled.p`
@@ -105,12 +103,14 @@ const UserFollowerNum = styled.p`
 `;
 
 const FollowerButton = styled.button`
-  width: 110px;
+  width: 100px;
   border-radius: 8px;
   padding: 10px 20px;
+  border: 1px solid #ccc;
   background: ${(props) => (props.isFollowing ? "#000" : "#fff")};
   color: ${(props) => (props.isFollowing ? "#fff" : "#000")};
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
 
@@ -137,12 +137,16 @@ const FollowerItem = ({
     <FollowerContain>
       <Wrapper>
         <UserWrapper>
-          <img src={profileImg} alt="User profile" width={60} />
+          {profileImg ? (
+            <img src={profileImg} alt="User profile" />
+          ) : (
+            <UserIcon2 width={50} height={50} />
+          )}
         </UserWrapper>
         <UserContex>
           <UserName>{nickname}</UserName>
           <UserInfo>{desc}</UserInfo>
-          <UserFollowerNum>{`팔로워 ${followers.length}명`}</UserFollowerNum>
+          <UserFollowerNum>{`팔로워 ${followers}명`}</UserFollowerNum>
         </UserContex>
       </Wrapper>
       <FollowerButton isFollowing={isFollowing} onClick={toggleFollow}>

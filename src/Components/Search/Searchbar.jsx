@@ -22,7 +22,7 @@ const SearchWrapper = styled.div`
   border-radius: 8px;
   border: 1px solid #ccc;
   background: ${(props) => props.theme.searchBar};
-
+  margin-bottom: 40px;
   @media (max-width: 768px) {
     width: 90%;
   }
@@ -117,7 +117,7 @@ const Searchbar = ({ addSearch }) => {
         placeholder="검색"
       />
       <MicButton onClick={toggleListening}>
-        {listening ? <UserIcon1 width={20} /> : <MicIcon width={20} />}
+        {listening ? <SoundIcon width={20} /> : <MicIcon width={20} />}
       </MicButton>
     </SearchWrapper>
   );

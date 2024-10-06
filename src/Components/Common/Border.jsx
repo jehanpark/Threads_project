@@ -1,6 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { lightTheme } from "../../styles/GlobalStyles.styles";
+import { useMediaQuery } from "react-responsive";
+import LogoImg from "../../images/insta.png";
+import RightArrow from "../../images/rightarrow.svg";
+console.log(lightTheme);
 
 const BorderItem = styled.div`
   ${({ type }) =>
@@ -15,6 +19,7 @@ const BorderItem = styled.div`
     background:  #F5F5F5;
     border-filter: blur(4px);
     box-shadow: ${lightTheme.bordershadow}
+
     `}
   ${({ type }) =>
     type === "borderinner" &&

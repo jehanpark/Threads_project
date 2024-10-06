@@ -18,8 +18,8 @@ const BtnWrapper = styled.div`
 `;
 
 const SetBtn = styled.button`
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   box-shadow: ${(props) => props.theme.bordershadow};
   border: 2px solid ${(props) => props.theme.borderstroke};
   /* border-color: ${(props) => props.theme.borderstroke};
@@ -29,11 +29,12 @@ const SetBtn = styled.button`
   cursor: pointer;
   background-color: ${(props) => props.theme.bodyBg};
   color: ${(props) => props.theme.fontcolor};
+  font-size: 0.6rem;
 `;
 
 const PinBtn = styled.button`
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   box-shadow: ${(props) => props.theme.bordershadow};
   border: 2px solid ${(props) => props.theme.borderstroke};
 
@@ -43,6 +44,7 @@ const PinBtn = styled.button`
   cursor: pointer;
   background-color: ${(props) => props.theme.bodyBg};
   color: ${(props) => props.theme.fontcolor};
+  font-size: 0.6rem;
 `;
 
 // 왼쪽에서 오른쪽으로 슬라이드 인

@@ -3,6 +3,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./Logo";
+import { GoBack } from "./Common/Icon";
+import MobileNav from "./MobileNav";
+const AllWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+`
 
 const Wrapper = styled.nav`
   width: 100%;
@@ -16,12 +22,18 @@ const Wrapper = styled.nav`
 const LogoWrapper = styled.div`
   width: 40px; /* 고정 크기 설정 */
   cursor: pointer;
+  @media screen and (width: 390px) {
+    display: none;
+  }
 `;
 
 const MyProfileImgs = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 50%;
+  @media screen and (width: 390px) {
+    display: none;
+  }
 `;
 
 const Img = styled.img`
@@ -39,6 +51,16 @@ const Ul = styled.ul`
   border-radius: 50px;
   list-style: none;
   border: 2px solid ${(props) => props.theme.mouseHoverBg};
+  @media screen and (width: 390px) {
+    width: 100%;
+    height: 70px;
+    position: fixed;
+    bottom: 5200px;
+    left: 0;
+    border-radius: 0;
+    z-index: 100;
+    border: none;
+  }
 `;
 
 const Li = styled.li`
@@ -81,6 +103,12 @@ const Li = styled.li`
       color: ${(props) => props.theme.headerselect};
       background-color: ${(props) => props.theme.logoColor};
     `}
+  @media screen and (width: 390px) {
+    &:hover {
+      background-color: ${(props) => props.theme.btnBgColor};
+      color: ${(props) => props.theme.selecticoncolor};
+    }
+  }
 `;
 const menuItems = styled.img`
   ${(props) =>
@@ -89,6 +117,43 @@ const menuItems = styled.img`
       color: ${(props) => props.theme.selectIconColor};
     `}
 `;
+
+const BackNavwrapper = styled.div`
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: ${(props) => props.theme.borderColor};
+    z-index: 1000;
+    @media (min-width: 768px) {
+    display: none; // 768px 이상의 화면에서는 숨기기
+  }
+  }
+`;
+const Backdesc = styled.div`
+  display: flex;
+  align-items: center;
+  width: 70px;
+  height: 100%;
+  cursor: pointer;
+  @media (min-width: 768px) {
+    display: none; // 768px 이상의 화면에서는 숨기기
+  }
+`
+const BackIcon = styled.div`
+display: flex;
+width: 24px;
+height: 24px;
+transform: translateX(5px);
+transform: translateY(2px);
+align-items: center;
+margin-left: 10px;
+`
+const Backtxt = styled.div`
+  font-size: 15px;
+`
 
 const Nav = () => {
   const menuItems = [
@@ -167,7 +232,7 @@ const Nav = () => {
           />
         </svg>
       ),
-      path: "",
+      path: "postform",
     },
     {
       name: "Search",
@@ -227,39 +292,42 @@ const Nav = () => {
     },
   ];
 
-  const [selectedMenu, setSelectedMenu] = useState(0);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  const [selectedMenu, setSelectedMenu] = useState(0);
   const onSelected = (index, path) => {
     setSelectedMenu(index);
     navigate(path); // path에 따라 페이지 이동
   };
 
   return (
-    <Wrapper>
-      <Link to="/">
-        <LogoWrapper>
-          <Logo width={40} />
-        </LogoWrapper>
-      </Link>
-
-      <Ul>
-        {menuItems.map((menu, index) => (
-          <Li
-            key={index}
-            $itemCount={menuItems.length} /* $itemCount로 변경 */
-            $isSelected={selectedMenu === index} /* $isSelected로 변경 */
-            onClick={() => onSelected(index, menu.path)}
-            aria-current={selectedMenu === index ? "page" : undefined} // 접근성 향상
-          >
-            {menu.svg}
-          </Li>
-        ))}
-      </Ul>
-      <MyProfileImgs>
-        <Img src="/profile.png" alt="Profile" />
-      </MyProfileImgs>
-    </Wrapper>
+<AllWrapper>
+<MobileNav></MobileNav>
+        <Wrapper>
+          <Link to="/">
+            <LogoWrapper>
+              <Logo width={40} />
+            </LogoWrapper>
+          </Link>
+    
+          <Ul>
+            {menuItems.map((menu, index) => (
+              <Li
+                key={index}
+                $itemCount={menuItems.length} /* $itemCount로 변경 */
+                $isSelected={selectedMenu === index} /* $isSelected로 변경 */
+                onClick={() => onSelected(index, menu.path)}
+                aria-current={selectedMenu === index ? "page" : undefined} // 접근성 향상
+              >
+                {menu.svg}
+              </Li>
+            ))}
+          </Ul>
+          <MyProfileImgs>
+            <Img src="/profile.png" alt="Profile" />
+          </MyProfileImgs>
+        </Wrapper>
+</AllWrapper>
   );
 };
 
