@@ -39,25 +39,22 @@ import FollowModal from "../Components/profile/FollowModal";
 import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
 import TimeLine from "../Components/TimeLine";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const BoederWrapper = styled.div`
-  bottom: 0;
   margin: 0 auto;
   width: 680px;
-  height: 800px;
+  height: 85%;
   border-radius: 40px 40px 0px 0px;
-  padding: 10px;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
+  padding: 10px 0;
   @media (max-width: 768px) {
-    height: calc(100% - 68px);
     border-radius: 0;
     width: 100%;
+    height: calc(100% - 140px);
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
-    background: none;
-    padding: 0;
   }
 `;
 
@@ -144,13 +141,6 @@ const PulsLinkIcon = styled.div`
   }
 `;
 
-const Circle = styled.div`
-  border-radius: 50px;
-  width: 24px;
-  height: 24px;
-  background: ${(props) => props.theme.nomalIconColor};
-`;
-
 const ThreadInner = styled.div`
   width: 100%;
 `;
@@ -159,17 +149,20 @@ const PostWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow-y: scroll;
-  padding: 0 10px;
-  width: 654px;
-  margin: 0 auto;
+  width: 100%;
+  padding: 10px;
 `;
 
-const Profile = ({ userEmail }) => {
+const Profile = () => {
   const navigate = useNavigate();
   const user = auth.currentUser; //유저정보
   const [avatar, setAvarta] = useState(user?.photoURL || null || undefined); //이미지관리목적
   const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
+
+  // searchParams = email 받아오기
+  const [searchParams] = useSearchParams();
+  const emailAdress = searchParams.get("email");
+  console.log(emailAdress);
 
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
   const data = useContext(ThreadDataContext);
@@ -191,27 +184,30 @@ const Profile = ({ userEmail }) => {
   });
 
   const CheckProfile = async () => {
-    // if (!user) return;
-
     try {
       const profileQuery = query(
         collection(db, "profile"),
-        where("userEmail", "==", user.email) // 유저의 이메일을 기준으로 검색
+        where("userEmail", "==", user.email)
       );
       const querySnapshot = await getDocs(profileQuery);
 
       if (!querySnapshot.empty) {
-        const profileDoc = querySnapshot.docs[0].data(); // 첫 번째 문서 가져오기
-        setProfile((prev) => ({
-          ...prev,
-          username: profileDoc.username,
-          bio: profileDoc.bio,
-          isLinkPublic: profileDoc.isLinkPublic,
-          isProfilePublic: profileDoc.isProfilePublic,
-          img: profileDoc.img,
-        }));
+        const profileDoc = querySnapshot.docs[0].data();
+        if (
+          profileDoc.username !== profile.username ||
+          profileDoc.bio !== profile.bio ||
+          profileDoc.img !== profile.img
+        ) {
+          setProfile((prev) => ({
+            ...prev,
+            username: profileDoc.username,
+            bio: profileDoc.bio,
+            isLinkPublic: profileDoc.isLinkPublic,
+            isProfilePublic: profileDoc.isProfilePublic,
+            img: profileDoc.img,
+          }));
+        }
       } else {
-        // 프로필이 없으면 Firebase 유저 정보를 사용
         setProfile((prev) => ({
           ...prev,
           username: user.displayName ?? "Anonymous",
@@ -228,7 +224,7 @@ const Profile = ({ userEmail }) => {
 
   useEffect(() => {
     CheckProfile();
-  }, [profile]);
+  }, []);
 
   const onfollow = () => {
     setFollowModal((prev) => !prev);

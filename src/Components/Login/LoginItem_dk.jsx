@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { FirebaseError } from "firebase/app";
 import { useMediaQuery } from "react-responsive";
-import Border from "../Common/Border";
+import Border from "../Common/Border_dk";
 
 import {
   Wrapper,
@@ -112,9 +112,7 @@ const LoginItemDk = () => {
           <Link to="/create-account">
             <SingnUpText>회원가입</SingnUpText>
           </Link>
-          <Link to="/">
-            <ForgotPasswordText>비밀번호를 잊으셨나요?</ForgotPasswordText>
-          </Link>
+          <ForgotPasswordText>비밀번호를 잊으셨나요?</ForgotPasswordText>
           <Linebreak $isSmallScreen={isSmallScreen}>
             <Hr $isSmallScreen={isSmallScreen} />
             <Or $isSmallScreen={isSmallScreen}>또는</Or>

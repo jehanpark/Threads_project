@@ -16,7 +16,7 @@ import {
 
 // Styled Components
 const BoederWrapper = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 50%;
   transform: translate(-50%);
@@ -56,6 +56,7 @@ const Form = styled.form`
     top: 0;
     width: 100%;
     height: 100%;
+    border-radius: 0 0 0 0;
   }
 `;
 
@@ -91,6 +92,9 @@ const TextArea = styled.textarea`
     }
     outline: none;
   }
+  @media screen and (width: 390px) {
+    border-radius: 0 0 0 0;
+  }
 `;
 
 const Icons = styled.div`
@@ -122,6 +126,10 @@ const Buttons = styled.div`
   gap: 20px;
   border-top: ${(props) => props.theme.borderstroke};
   padding: 20px;
+  @media screen and (width: 390px) {
+    display: flex;
+    width: 100%;
+  }
 `;
 
 const DelteButton = styled.button`
@@ -133,6 +141,9 @@ const DelteButton = styled.button`
   border: none;
   border-radius: 50%;
   cursor: pointer;
+  @media screen and (width: 390px) {
+    display: none;
+  }
 `;
 
 const SubmitBtn = styled.input`
@@ -147,6 +158,8 @@ const SubmitBtn = styled.input`
   &:hover {
     background: #fff;
     color: #1c1c1c;
+  }
+  @media screen and (width: 390px) {
   }
 `;
 
@@ -198,6 +211,7 @@ const PostForm = () => {
         createdAt: Date.now(),
         username: user?.displayName || "Anonymous",
         userId: user.uid,
+        email: user.email,
       });
 
       const photoUrls = [];

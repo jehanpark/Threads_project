@@ -169,6 +169,7 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
   };
 
   const handleInputChange = (e) => {
+    console.log(e);
     const { name, value, type, checked } = e.target;
     setProfileData((prev) => ({
       ...prev,
@@ -179,12 +180,8 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
   const complete = async () => {
     if (!user) return;
     try {
-      const nameToSave = profileData.name
-        ? profileData.name.trim()
-        : profileData.name.trim();
-      const bioToSave = profileData.bio
-        ? profileData.bio.trim()
-        : profileData.bio.trim();
+      const nameToSave = profileData.name ? profileData.name : profileData.name;
+      const bioToSave = profileData.bio ? profileData.bio : profileData.bio;
       const imgToSave = profileData.img || user.photoURL || null;
 
       const profileQuery = query(
@@ -225,7 +222,6 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
         name: nameToSave,
         bio: bioToSave,
       });
-
       close(); // 모달 닫기
     } catch (e) {
       console.error(e);
@@ -313,22 +309,3 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
 };
 
 export default ProfileEdit;
-
-// const complete = async (e) => {
-//   if (!user) return;
-//   const nameValue = nameInput.current.value;
-//   if (nameValue === "" || nameValue === user.displayName) {
-//     return;
-//   } else if (nameValue !== user.displayName) {
-//     try {
-//       await updateProfile(user, {
-//         displayName: inputValue,
-//       });
-//       setProfileData((data)=>({
-
-//       }));
-//     } catch (e) {
-//       console.error(e);
-//     }
-//   }
-// };

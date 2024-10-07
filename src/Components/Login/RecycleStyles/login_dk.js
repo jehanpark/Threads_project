@@ -305,9 +305,11 @@ export const Switcher = styled.span`
 // 추가된 컴포넌트들
 export const Hr = styled.div`
   width: 122px;
+
   height: 2px;
   border: 1px solid #e5e5e5;
-  display: ${({ $isSmallScreen }) => ($isSmallScreen ? "flex" : "none")};
+  /* display: ${({ $isSmallScreen }) => ($isSmallScreen ? "flex" : "none")}; */
+  display: flex;
   justify-content: center;
   align-content: center;
 `;
@@ -316,14 +318,16 @@ export const Or = styled.span`
   width: 55px;
   font-size: 14px;
   color: #7e7e7e;
-  display: ${({ $isSmallScreen }) => ($isSmallScreen ? "flex" : "none")};
+  /* display: ${({ $isSmallScreen }) => ($isSmallScreen ? "flex" : "none")}; */
+  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 `;
 
 export const Linebreak = styled.div`
-  display: ${({ $isSmallScreen }) => ($isSmallScreen ? "flex" : "none")};
+  /* display: ${({ $isSmallScreen }) => ($isSmallScreen ? "flex" : "none")}; */
+  display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 41.5px;
