@@ -4,7 +4,7 @@ import { ThreadDataContext } from "../Contexts/ThreadContext";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import Profileimg from "../../public/profile.png";
-import Border from "../Components/Common/Border";
+import Border from "../Components/Common/Border_de";
 import Button from "../Components/Common/Button";
 import Modal from "../Components/Common/Modal";
 import { PlusIcon, InstaIcon, FacebookIcon } from "../Components/Common/Icon";

@@ -9,9 +9,9 @@ import LoginInsta from "../Pages/LoginInsta";
 import Follow from "../Pages/Follow";
 import Activity from "../Pages/Activity";
 import Profile from "../Pages/Profile";
-import CreateAccount from "../Pages/CreateAccount";
+import PostForm from "../Components/PostForm";
 import Insites from "../Pages/Insites_de";
-// import CreateAccount from "../Components/Login/CreateAccount";
+import CreateAccount from "../Components/Login/CreateAccount_de";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +38,10 @@ export const router = createBrowserRouter([
         path: "Activity",
         element: <Activity />,
       },
+      {
+        path: "PostForm",
+        element: <PostForm />,
+      },
     ],
   },
   {
@@ -45,7 +49,11 @@ export const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "Createaccount", // 다은 라우트 수정 -짝대기 없앰
+    path: "LoginInsta", // 이 라우트도 Layout 바깥에 있음
+    element: <LoginInsta />,
+  },
+  {
+    path: "CreateAccount", // dan 추가한 라우트
     element: <CreateAccount />,
   },
   {

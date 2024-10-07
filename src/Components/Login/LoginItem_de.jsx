@@ -3,7 +3,7 @@ import Logo from "../Logo";
 import LogoTextMark from "../LogoTextMark";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import Border from "../Common/Border";
+import Border from "../Common/Border_de";
 
 import {
   Wrapper,

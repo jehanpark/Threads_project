@@ -4,7 +4,7 @@ import Insiteitem_de from "../Components/Login/Insiteitem_de";
 import styled from "styled-components";
 import Sidebar from "../Components/Sidebar";
 // import PostForm from "../Components/PostForm";
-import { BorderItem } from "../Components/Common/Border";
+import BorderItem from "../Components/Common/Border_de";
 
 import {
   IconWrapper,

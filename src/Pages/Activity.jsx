@@ -1,5 +1,5 @@
 import React from "react";
-import Border from "../Components/Common/Border";
+import Border from "../Components/Common/Border_de";
 import styled from "styled-components";
 
 const Contain = styled.div`
