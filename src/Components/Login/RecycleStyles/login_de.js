@@ -38,7 +38,8 @@ export const LoginInner = styled.div`
 
 export const LogoWrapper = styled.div`
   margin-bottom: 18px;
-  margin-top: ${(props) => (props.$isSmallScreen ? "137px" : "0")};
+  margin-top: ${(props) =>
+    props.$isSmallScreen ? "137px" : "48px"}; // 수정 10월07일
 `;
 
 export const LoginP = styled.p`
