@@ -109,6 +109,10 @@ const Icons = styled.div`
   margin: 20px 0;
   margin-left: 20px;
   gap: 20px;
+  @media (max-width: 768px) {
+    margin: 0;
+    margin-left: 20px;
+  }
 `;
 
 const CameraButton = styled.label`
@@ -133,26 +137,39 @@ const Buttons = styled.div`
   gap: 20px;
   border-top: ${(props) => props.theme.borderstroke};
   padding: 20px;
-  @media screen and (width: 390px) {
-    display: flex;
+  @media (max-width: 768px) {
     width: 100%;
+    gap: 10px;
   }
 `;
 
 const DeleteButton = styled.button`
-  position: absolute;
-  top: 5px;
-  right: 5px;
+  width: 100%;
+  height: 100%;
   background: #d6d6d6;
   color: #fff;
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  @media screen and (width: 390px) {
+`;
+const OpenButton = styled.button`
+  width: 300px;
+  height: 80px;
+  background: #d6d6d6;
+  border: none;
+  color: #000;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 30px;
+  transition: all 0.3s;
+  &:hover {
+    background: #eaeaea;
+    color: #494949;
+  }
+  @media (max-width: 768px) {
     display: none;
   }
 `;
-
 const SubmitBtn = styled.input`
   width: 300px;
   height: 80px;
@@ -166,7 +183,8 @@ const SubmitBtn = styled.input`
     background: #fff;
     color: #1c1c1c;
   }
-  @media screen and (width: 390px) {
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
 
@@ -307,9 +325,10 @@ const PostForm = () => {
           <MicIcon width={24} />
           <HashtagIcon width={24} />
         </Icons>
-        {/* <PostForm_Modal /> */}
         <Buttons>
-          <Button text="팔로워에게만 허용" type="bigupload" />
+          <OpenButton>
+            팔로워에게만 허용
+            </OpenButton>
           <SubmitBtn
             text="스레드 업로드"
             type="submit"
