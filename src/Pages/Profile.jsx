@@ -162,7 +162,7 @@ const Profile = () => {
   // searchParams = email 받아오기
   const [searchParams] = useSearchParams();
   const emailAdress = searchParams.get("email");
-  console.log(emailAdress);
+  // console.log(emailAdress);
 
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
   const data = useContext(ThreadDataContext);
@@ -174,23 +174,31 @@ const Profile = () => {
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
   const [profile, setProfile] = useState({
-    username: `${user?.displayName ?? "Anonymouse"}`,
-    userId: `${user?.uid ?? ""}`,
-    userEmail: `${user.email ?? ""}`, // 없다면 파람즈로
+    username: `${emailAdress === user.email ? user?.displayName : emailAdress}`,
+    userId: `${emailAdress === user.email ? user?.uid : ""}`,
+    userEmail: `${emailAdress === user.email ? user.email : emailAdress}`, // 없다면 파람즈로
     bio: "",
     isLinkPublic: true,
     isProfilePublic: true,
-    img: `${avatar ?? null}`,
+    img: `${emailAdress === user.email ? avatar : null}`,
   });
+
+  // const dbprofile = async () => {
+  //   const dbUser = query(
+  //     collection(db, "profile"),
+  //     where("userEmail" === `${profile.userEmail}`)
+  //   );
+  // };
 
   const CheckProfile = async () => {
     try {
       const profileQuery = query(
         collection(db, "profile"),
-        where("userEmail", "==", user.email)
+        // where("userEmail", "==", user.email)
+        where("userEmail", "==", `${emailAdress}`)
       );
       const querySnapshot = await getDocs(profileQuery);
-
+      console.log(querySnapshot);
       if (!querySnapshot.empty) {
         const profileDoc = querySnapshot.docs[0].data();
         if (
@@ -245,7 +253,8 @@ const Profile = () => {
     //하단에 띄울 쓰레드 스테이트 관리 함수
     const postQuery = query(
       collection(db, "contents"),
-      where("userId", "==", `${profile.userId}`), //파람즈 값으로 변경하자
+      // where("userId", "==", `${profile.userId}`), //파람즈 값으로 변경하자
+      where("email", "==", `${emailAdress}`), //파람즈 값으로 변경하자
       orderBy("createdAt", "desc"),
       limit(15)
     );
@@ -274,6 +283,14 @@ const Profile = () => {
     const userEmail = user.email.substring(0, useEmailIndex);
     setLastEmail(userEmail);
   }, []);
+  ////////////////////////////////////////////////////////////
+  useEffect(() => {
+    if (user) {
+      const useEmailIndex = user.email.indexOf("@");
+      const userEmail = user.email.substring(0, useEmailIndex);
+      setLastEmail(userEmail);
+    }
+  }, [user]); // user가 null이 아닐 때에만 실행
 
   const handleProfileChange = (updatedProfile) => {
     setProfile(updatedProfile);
@@ -309,9 +326,9 @@ const Profile = () => {
         <ProfileInnner isSmallScreen={isSmallScreen}>
           <ProfileWrap>
             <IdWrap isSmallScreen={isSmallScreen}>
-              <Nick> {profile.username ?? user.uid}</Nick>
+              <Nick> {profile.username ? profile.username : emailAdress}</Nick>
               <IdText isSmallScreen={isSmallScreen}>
-                {user?.email ? lastemail : "임시"}
+                {user?.email ? lastemail : emailAdress}
               </IdText>
             </IdWrap>
             <ImgWrap isSmallScreen={isSmallScreen}>
