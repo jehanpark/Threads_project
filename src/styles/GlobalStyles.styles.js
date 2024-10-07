@@ -19,6 +19,7 @@ export const lightTheme = {
   userIcon: "595959",
   followerfont: "#737373",
   searchColor: "#595959",
+  themeIconBackground: "#fafafa",
   navIconColor: undefined,
 };
 
@@ -41,12 +42,12 @@ export const darkTheme = {
   userIcon: "#7373",
   followerfont: "#bababa",
   searchColor: "#1D1D1D",
+  themeIconBackground: "#363636",
   navIconColor: undefined,
 };
 
 const GlobalStyles = createGlobalStyle`
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
-
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -86,6 +87,8 @@ body {
 	color: ${(props) => props.theme.bodyColor};
 
 	line-height: 1;
+  overflow-y: scroll;
+  transition: background-color 0.4s ease, color 0.2s ease;
 	/* background-color: #F2F2F2; */
 
 }

@@ -115,13 +115,11 @@ const LoginItemInstaDk = () => {
               value={isLoading ? "Loading.." : "로그인"}
             />
           </InputWrapper>
-
+          {/* 
           <Link to="/create-account">
-            <SingnUpText>회원가입</SingnUpText>
-          </Link>
-          <Link to="/">
-            <ForgotPasswordText>비밀번호를 잊으셨나요?</ForgotPasswordText>
-          </Link>
+            <SingnUpText>다른 INSTAGRAM 계정으로 로그인</SingnUpText>
+          </Link> */}
+
           <Linebreak $isSmallScreen={isSmallScreen}>
             <Hr $isSmallScreen={isSmallScreen} />
             <Or $isSmallScreen={isSmallScreen}>또는</Or>

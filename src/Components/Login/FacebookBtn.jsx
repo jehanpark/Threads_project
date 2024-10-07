@@ -5,9 +5,7 @@ import { auth } from "../../firebase"; // Firebase 초기화 파일 경로
 
 const Button = styled.span`
   width: 100%;
-  background: #fff;
-  color: #000;
-  padding: 10px 20px;
+  color: 0 0 0 0 ${(props) => props.theme.fontcolor};
   margin-top: 20px;
   font-weight: 600;
   display: flex;
@@ -34,12 +32,7 @@ const FacebookBtn = () => {
     }
   };
 
-  return (
-    <Button onClick={onClick}>
-      <Logo src="/facebook-logo.svg" /> {/* Facebook 로고 이미지 경로 */}
-      페이스북으로 로그인
-    </Button>
-  );
+  return <Button onClick={onClick}>페이스북으로 로그인</Button>;
 };
 
 export default FacebookBtn;

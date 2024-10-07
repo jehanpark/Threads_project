@@ -22,7 +22,7 @@ import { formatDistanceToNow } from 'date-fns';
 
 const Wrapper = styled.div`
 width: 100%;
-height: 100%;
+height: auto;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
@@ -31,7 +31,6 @@ height: 100%;
   width: 660px;
   @media (max-width: 768px) {
 width: 100%;
-height: 100%;
   }
 `;
 
@@ -330,9 +329,9 @@ const Post = ({ post, userId, photos, video, username, id,createdAt  }) => {
       )}
       <Icons>
         <HeartIcon width={20}/>{Math.floor(Math.random() * 100)} 
-        <DmIcon width={20}/>{Math.floor(Math.random() * 50)}  
-        <MagnifyingGlassIcon width={20}/>{Math.floor(Math.random() * 500)} 
-        <BellOffIcon width={20}/>{2} 
+        <Coment width={20}/>{Math.floor(Math.random() * 500)} 
+        <DmIcon width={18}/>{Math.floor(Math.random() * 50)}  
+        <RetweetIcon width={20}/>{2} 
       </Icons>
     </Wrapper>
   );

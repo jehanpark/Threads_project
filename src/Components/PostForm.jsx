@@ -1,7 +1,12 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import styled from "styled-components";
-import { addDoc, collection, serverTimestamp, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
@@ -13,6 +18,8 @@ import {
   MicIcon,
   HashtagIcon,
 } from "../Components/Common/Icon";
+import Modal from "./Common/Modal";
+import PostForm_Modal from "./PostForm_Modal";
 
 // Styled Components
 const BoederWrapper = styled.div`
@@ -22,16 +29,16 @@ const BoederWrapper = styled.div`
   transform: translate(-50%);
   margin: 0 auto;
   width: 680px;
-  height: 800px;
+  height: 85%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
   @media (max-width: 768px) {
-    position: absolute;
-    height: calc(100% - 68px);
+    position: fixed;
     border-radius: 0;
     width: 100%;
-    bottom: 0px;
+    height: calc(100% - 140px);
+    bottom: 70px;
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
   }
@@ -47,7 +54,7 @@ const Form = styled.form`
   flex-direction: column;
   margin: 0 auto;
   width: 660px;
-  height: 790px;
+  height: calc(100% - 10px);
   gap: 10px;
   background: ${(props) => props.theme.borderColor};
   border-radius: 30px 30px 0 0;
@@ -92,7 +99,7 @@ const TextArea = styled.textarea`
     }
     outline: none;
   }
-  @media screen and (width: 390px){
+  @media screen and (width: 390px) {
     border-radius: 0 0 0 0;
   }
 `;
@@ -127,12 +134,12 @@ const Buttons = styled.div`
   border-top: ${(props) => props.theme.borderstroke};
   padding: 20px;
   @media screen and (width: 390px) {
-   display: flex;
-   width: 100%; 
+    display: flex;
+    width: 100%;
   }
 `;
 
-const DelteButton = styled.button`
+const DeleteButton = styled.button`
   position: absolute;
   top: 5px;
   right: 5px;
@@ -142,7 +149,7 @@ const DelteButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
   @media screen and (width: 390px) {
-   display: none;
+    display: none;
   }
 `;
 
@@ -160,7 +167,6 @@ const SubmitBtn = styled.input`
     color: #1c1c1c;
   }
   @media screen and (width: 390px) {
-   
   }
 `;
 
@@ -212,9 +218,9 @@ const PostForm = () => {
         createdAt: serverTimestamp(),
         username: user?.displayName || "Anonymous",
         userId: user.uid,
-        followers: 0,  
-        likes: 0,      
-        comments: 0, 
+        followers: 0,
+        likes: 0,
+        comments: 0,
       });
 
       const photoUrls = [];
@@ -301,6 +307,7 @@ const PostForm = () => {
           <MicIcon width={24} />
           <HashtagIcon width={24} />
         </Icons>
+        {/* <PostForm_Modal /> */}
         <Buttons>
           <Button text="팔로워에게만 허용" type="bigupload" />
           <SubmitBtn

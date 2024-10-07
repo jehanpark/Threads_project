@@ -4,12 +4,13 @@ import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDvYeXpkSvph_zS-kEY1FE7wjaG_ept3bk",
-  authDomain: "project-threads.firebaseapp.com",
-  projectId: "project-threads",
-  storageBucket: "project-threads.appspot.com",
-  messagingSenderId: "56842076413",
-  appId: "1:56842076413:web:0b7e0d135d37db7a5a3e94",
+  apiKey: "AIzaSyAYS-JakSG6tyqEAbg1UFUNvnQsN_uimUw",
+  authDomain: "threads-56202.firebaseapp.com",
+  projectId: "threads-56202",
+  storageBucket: "threads-56202.appspot.com",
+  messagingSenderId: "220165764566",
+  appId: "1:220165764566:web:fe177c29f299e8e2c5e077",
+  measurementId: "G-B5SW5CSTDV",
 };
 
 const app = initializeApp(firebaseConfig);

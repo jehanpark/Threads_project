@@ -14,8 +14,9 @@ const Wrapper = styled.div`
 const Home = () => {
   return (
     <Wrapper>
-      <TimeLine />
       <Intro />
+
+      <TimeLine />
     </Wrapper>
   );
 };
