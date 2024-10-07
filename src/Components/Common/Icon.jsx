@@ -968,10 +968,25 @@ export const SendIcon = ({ width, fill }) => {
   );
 };
 
-export const InformationIcon = ({ width, fill }) => {
+// 아이콘 스타일링을 위한 래퍼 컴포넌트
+export const IconWrapper = styled.div`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: ${(props) => props.wrapperSize || "40px"};
+  height: ${(props) => props.wrapperSize || "40px"};
+  padding: ${(props) => props.wrapperPadding || "5px"};
+  background: ${(props) => props.background || "#C7B599"};
+  border-radius: ${(props) => props.borderRadius || "50%"};
+  z-index: ${(props) => props.zIndex || "1"};
+`;
+
+// 기존 아이콘 컴포넌트
+export const InformationIcon = ({ width, fill, zindex }) => {
   const height = width;
   return (
     <svg
+      z-index={zindex || "2"}
       width={width || "16px"}
       height={height}
       viewBox="0 0 16 16"
@@ -1156,6 +1171,132 @@ export const ColorMetaIcon = ({ width }) => {
           <rect width="86" height="17.411" fill="white" />
         </clipPath>
       </defs>
+    </svg>
+  );
+};
+
+// 다은 추가 svg
+export const FollowerIcon = ({ width }) => {
+  const height = (width / 86) * 17.411;
+
+  return (
+    <svg width="436" height="280">
+      <g transform="translate(60, 20)">
+        <g
+          transform="translate(0, 225)"
+          fill="none"
+          fontSize="10"
+          fontFamily="sans-serif"
+          textAnchor="middle"
+        >
+          <g className="tick" opacity="1" transform="translate(0.5,0)">
+            <line stroke="gray" y2="6"></line>
+            <text
+              fill="black"
+              y="20"
+              dy="0.71em"
+              fontFamily="Arial, sans-serif"
+              fontSize="13px"
+            ></text>
+          </g>
+          <g className="tick" opacity="1" transform="translate(346.5,0)">
+            <line stroke="gray" y2="6"></line>
+            <text
+              fill="black"
+              y="20"
+              dy="0.71em"
+              fontFamily="Arial, sans-serif"
+              fontSize="13px"
+            ></text>
+          </g>
+        </g>
+        <g
+          fill="none"
+          fontSize="10"
+          fontFamily="Arial, sans-serif"
+          textAnchor="end"
+        >
+          <g className="tick" opacity="1" transform="translate(0,225.5)">
+            <line stroke="gray" x2="346"></line>
+            <text
+              fill="black"
+              x="-15"
+              dy="0.32em"
+              fontFamily="Arial, sans-serif"
+              fontSize="13px"
+            >
+              0
+            </text>
+          </g>
+          <g className="tick" opacity="1" transform="translate(0,180.5)">
+            <line stroke="gray" x2="346"></line>
+            <text
+              fill="black"
+              x="-15"
+              dy="0.32em"
+              fontFamily="Arial, sans-serif"
+              fontSize="13px"
+            >
+              20
+            </text>
+          </g>
+          <g className="tick" opacity="1" transform="translate(0,135.5)">
+            <line stroke="gray" x2="346"></line>
+            <text
+              fill="black"
+              x="-15"
+              dy="0.32em"
+              fontFamily="Arial, sans-serif"
+              fontSize="13px"
+            >
+              40
+            </text>
+          </g>
+          <g className="tick" opacity="1" transform="translate(0,90.5)">
+            <line stroke="gray" x2="346"></line>
+            <text
+              fill="black"
+              x="-15"
+              dy="0.32em"
+              fontFamily="Arial, sans-serif"
+              fontSize="13px"
+            >
+              60
+            </text>
+          </g>
+          <g className="tick" opacity="1" transform="translate(0,45.5)">
+            <line stroke="gray" x2="346"></line>
+            <text
+              fill="black"
+              x="-15"
+              dy="0.32em"
+              fontFamily="Arial, sans-serif"
+              fontSize="13px"
+            >
+              80
+            </text>
+          </g>
+          <g className="tick" opacity="1" transform="translate(0,0.5)">
+            <line stroke="gray" x2="346"></line>
+            <text
+              fill="black"
+              x="-15"
+              dy="0.32em"
+              fontFamily="Arial, sans-serif"
+              fontSize="13px"
+            >
+              100
+            </text>
+          </g>
+        </g>
+        <path
+          fill="none"
+          stroke="gray"
+          strokeLinecap="round"
+          strokeWidth="3"
+          d="M0,222.75L346,222.75"
+        ></path>
+      </g>
     </svg>
   );
 };

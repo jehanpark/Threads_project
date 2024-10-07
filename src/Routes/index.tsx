@@ -10,7 +10,7 @@ import Follow from "../Pages/Follow";
 import Activity from "../Pages/Activity";
 import Profile from "../Pages/Profile";
 import CreateAccount from "../Pages/CreateAccount";
-import Insites from "../Pages/Insites";
+import Insites from "../Pages/Insites_de";
 // import CreateAccount from "../Components/Login/CreateAccount";
 
 export const router = createBrowserRouter([

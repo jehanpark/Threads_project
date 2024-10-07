@@ -8,8 +8,8 @@ export const BorderItem = styled.div`
     type === "borderWrapper" &&
     `
     margin: 0 auto;
-    width: 680px;
-    height: 898px;
+    width: ${(props) => (props.isSmallScreen ? "300px" : "680px")};
+    height: ${(props) => (props.isSmallScreen ? "100%" : "898px")};
     border-radius: 40px 40px 0px 0px;
     border: #C9C9C9;
     background:  #F5F5F5;
@@ -49,11 +49,27 @@ export const BorderItem = styled.div`
       display: none;
     }
     `}
-  ${({ type }) =>
+  ${({ type, isSmallScreen, width, height }) =>
     type === "insitesWrapper" &&
     `
-    width: 640px;
-    height: 137px;
+    width: ${isSmallScreen ? "90%" : "485.41px"};
+    height: ${isSmallScreen ? "100%" : "137px"};
+    background: #F5F5F5;
+    margin-top: 30px;
+    padding: 24px;
+    border: none;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+    `}
+  ${({ type, isSmallScreen }) =>
+    type === "followWrapper" &&
+    `
+    width: ${isSmallScreen ? "90%" : "485.41px"};
+    height: ${isSmallScreen ? "100%" : "536px"};
     background: #F5F5F5;
     margin-top: 30px;
     padding: 24px;
