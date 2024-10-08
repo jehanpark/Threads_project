@@ -6,7 +6,7 @@ import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
 import GlobalStyles from "../styles/GlobalStyles.styles";
-import Border from "./Common/Border";
+import Border from "./Common/Border_de";
 import {
   CameraIcon,
   PictureIcon,
@@ -92,7 +92,7 @@ const TextArea = styled.textarea`
     }
     outline: none;
   }
-  @media screen and (width: 390px){
+  @media screen and (width: 390px) {
     border-radius: 0 0 0 0;
   }
 `;
@@ -127,8 +127,8 @@ const Buttons = styled.div`
   border-top: ${(props) => props.theme.borderstroke};
   padding: 20px;
   @media screen and (width: 390px) {
-   display: flex;
-   width: 100%; 
+    display: flex;
+    width: 100%;
   }
 `;
 
@@ -142,7 +142,7 @@ const DelteButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
   @media screen and (width: 390px) {
-   display: none;
+    display: none;
   }
 `;
 
@@ -160,7 +160,6 @@ const SubmitBtn = styled.input`
     color: #1c1c1c;
   }
   @media screen and (width: 390px) {
-   
   }
 `;
 

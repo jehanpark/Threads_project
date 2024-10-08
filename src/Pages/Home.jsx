@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 const Home = () => {
   return (
     <Wrapper>
-      <TimeLine/>
+      <TimeLine />
       <Intro />
     </Wrapper>
   );

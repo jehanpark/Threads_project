@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { FirebaseError } from "firebase/app";
 import { useMediaQuery } from "react-responsive";
-import Border from "../Common/Border";
+import Border from "../Common/Border_de";
 import { InstaIcon } from "../Common/Icon";
 import FacebookBtn from "./FacebookBtn";
 import {

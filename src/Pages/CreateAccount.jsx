@@ -1,12 +1,11 @@
 import React from "react";
-// import CreateAccountItem from "../Components/Login/CreateAccountItem_dk";
-import CreateAccountItemDk from "../Components/Login/CreateAccountItem_dk";
-import PostForm from "../Components/PostForm";
+// import CreateAccountItemDk from "../Components/Login/CreateAccountItem_dk";
+import CreateAccount_de from "../Components/Login/CreateAccount_de"; // 다은 만든 회원가입 화면
 
 const CreateAccount = () => {
   return (
     <div>
-      <CreateAccountItemDk />
+      <CreateAccount_de />
     </div>
   );
 };
