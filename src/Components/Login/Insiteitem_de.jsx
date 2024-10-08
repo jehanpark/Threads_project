@@ -48,6 +48,7 @@ const BorderItemTitle = styled.div`
 `;
 
 const Info = styled.div`
+  width: ${(props) => (props.isSmallScreen ? "100%" : "auto")};
   display: flex;
   gap: 20px;
 `;
@@ -174,7 +175,7 @@ const Insiteitem_de = () => {
             <BorderItemTitle isSmallScreen={isSmallScreen}>
               {item.title}
             </BorderItemTitle>
-            <Info>
+            <Info isSmallScreen={isSmallScreen}>
               <IconWrapper
                 background={"#e9e9e9"}
                 borderRadius={"100%"}
@@ -193,7 +194,7 @@ const Insiteitem_de = () => {
           <BorderItemTitle isSmallScreen={isSmallScreen}>
             팔로워
           </BorderItemTitle>
-          <Info>
+          <Info isSmallScreen={isSmallScreen}>
             <FollowerWrapper isSmallScreen={isSmallScreen}>
               <FollowerInfo>
                 <TotalInfo>
