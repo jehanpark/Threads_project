@@ -144,9 +144,10 @@ const Buttons = styled.div`
 `;
 
 const DeleteButton = styled.button`
-  width: 100%;
-  height: 100%;
-  background: #d6d6d6;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #000;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -261,6 +262,7 @@ const PostForm = () => {
         })
       );
 
+      console.log("Video URLs to be saved:", videoUrls); // 동영상 URL을 저장하기 전에 확인
       await updateDoc(docRef, {
         photos: photoUrls,
         videos: videoUrls,
@@ -289,16 +291,30 @@ const PostForm = () => {
         <PlusImage>
           {files.map((file, index) => (
             <div key={index} style={{ position: "relative", margin: "5px" }}>
-              <img
-                src={URL.createObjectURL(file)}
-                alt={`Uploaded Preview ${index + 1}`}
-                style={{
-                  width: "180px",
-                  height: "240px",
-                  borderRadius: "10px",
-                  objectFit: "contain",
-                }}
-              />
+              {file.type.startsWith("image/") ? (
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={`Uploaded Preview ${index + 1}`}
+                  style={{
+                    width: "180px",
+                    height: "240px",
+                    borderRadius: "10px",
+                    objectFit: "contain",
+                  }}
+                />
+              ) : (
+                <video
+                  controls
+                  style={{
+                    width: "180px",
+                    height: "240px",
+                    borderRadius: "10px",
+                    objectFit: "contain",
+                  }}
+                >
+                  <source src={URL.createObjectURL(file)} />
+                </video>
+              )}
               <DeleteButton onClick={() => removeFile(index)}>X</DeleteButton>
             </div>
           ))}
@@ -326,9 +342,7 @@ const PostForm = () => {
           <HashtagIcon width={24} />
         </Icons>
         <Buttons>
-          <OpenButton>
-            팔로워에게만 허용
-            </OpenButton>
+          <OpenButton>팔로워에게만 허용</OpenButton>
           <SubmitBtn
             text="스레드 업로드"
             type="submit"

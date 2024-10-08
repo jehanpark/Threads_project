@@ -4,13 +4,12 @@ import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAYS-JakSG6tyqEAbg1UFUNvnQsN_uimUw",
-  authDomain: "threads-56202.firebaseapp.com",
-  projectId: "threads-56202",
-  storageBucket: "threads-56202.appspot.com",
-  messagingSenderId: "220165764566",
-  appId: "1:220165764566:web:fe177c29f299e8e2c5e077",
-  measurementId: "G-B5SW5CSTDV",
+  apiKey: "AIzaSyA3PIGXN7f9bw1nZ8b0ARNwC3fZ7I-k12k",
+  authDomain: "sns-flatform0924.firebaseapp.com",
+  projectId: "sns-flatform0924",
+  storageBucket: "sns-flatform0924.appspot.com",
+  messagingSenderId: "289974252711",
+  appId: "1:289974252711:web:4775f362e7c70700af1782",
 };
 
 const app = initializeApp(firebaseConfig);

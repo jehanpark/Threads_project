@@ -4,8 +4,6 @@ import { lightTheme } from "../../styles/GlobalStyles.styles";
 import { useMediaQuery } from "react-responsive";
 import LogoImg from "../../images/insta.png";
 import RightArrow from "../../images/rightarrow.svg";
-console.log(lightTheme);
-
 
 const BorderItem = styled.div`
   ${({ type }) =>

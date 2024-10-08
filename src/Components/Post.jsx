@@ -18,11 +18,11 @@ import {
   Coment,
 } from "../Components/Common/Icon";
 // Styled Components
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from "date-fns";
 
 const Wrapper = styled.div`
-width: 100%;
-height: auto;
+  width: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
@@ -30,7 +30,7 @@ height: auto;
   padding: 20px;
   width: 660px;
   @media (max-width: 768px) {
-width: 100%;
+    width: 100%;
   }
 `;
 
@@ -197,7 +197,7 @@ const SetContentInputButton = styled.input`
   display: none;
 `;
 
-const Post = ({ post, userId, photos, video, username, id,createdAt  }) => {
+const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
   const [editedPhoto, setEditedPhoto] = useState(null);
@@ -228,8 +228,6 @@ const Post = ({ post, userId, photos, video, username, id,createdAt  }) => {
       setEditedPhoto(files[0]);
     }
   };
-
-
 
   const onDelete = async () => {
     if (
@@ -277,6 +275,7 @@ const Post = ({ post, userId, photos, video, username, id,createdAt  }) => {
 
         const result = await uploadTask;
         const url = await getDownloadURL(result.ref);
+        console.log(url);
 
         await updateDoc(doc(db, "contents", id), {
           post: editedPost,
@@ -293,13 +292,12 @@ const Post = ({ post, userId, photos, video, username, id,createdAt  }) => {
       setIsEditing(false);
     }
   };
-
   return (
     <Wrapper>
-        <Header>
-          <UserImage src="http://localhost:5173/profile.png"></UserImage>
-          <Username>{username}</Username>
-          <Timer>{renderTimeAgo()}</Timer>
+      <Header>
+        <UserImage src="http://localhost:5173/profile.png"></UserImage>
+        <Username>{username}</Username>
+        <Timer>{renderTimeAgo()}</Timer>
       </Header>
       <Column>
         {isEditing ? (
@@ -312,7 +310,6 @@ const Post = ({ post, userId, photos, video, username, id,createdAt  }) => {
           <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
         )}
       </Column>
-
       {/* Render multiple photos */}
       {photos && photos.length > 0 && (
         <Column>
@@ -322,16 +319,22 @@ const Post = ({ post, userId, photos, video, username, id,createdAt  }) => {
         </Column>
       )}
 
-      {video && (
+      {videos && videos.length > 0 && (
         <Column>
-          <Video src={video} autoPlay loop />
+          {videos.map((videoUrl, index) => (
+            <Video key={index} controls autoPlay loop src={videoUrl} />
+          ))}
         </Column>
       )}
       <Icons>
-        <HeartIcon width={20}/>{Math.floor(Math.random() * 100)} 
-        <Coment width={20}/>{Math.floor(Math.random() * 500)} 
-        <DmIcon width={18}/>{Math.floor(Math.random() * 50)}  
-        <RetweetIcon width={20}/>{2} 
+        <HeartIcon width={20} />
+        {Math.floor(Math.random() * 100)}
+        <Coment width={20} />
+        {Math.floor(Math.random() * 500)}
+        <DmIcon width={18} />
+        {Math.floor(Math.random() * 50)}
+        <RetweetIcon width={20} />
+        {2}
       </Icons>
     </Wrapper>
   );

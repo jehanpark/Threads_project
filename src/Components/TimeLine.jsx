@@ -102,13 +102,15 @@ const TimeLine = () => {
       );
       unsubscribe = onSnapshot(postsQuery, (snapshot) => {
         const posts = snapshot.docs.map((doc) => {
-          const { createdAt, photos, video, post, userId, username } =
+          const { createdAt, photos, videos, post, userId, username } =
             doc.data();
+          console.log("Fetched videos:", videos); // videos가 null인지 확인
+
           return {
             id: doc.id,
             createdAt,
             photos: photos || [],
-            video,
+            videos: videos || [],
             post,
             userId,
             username,
