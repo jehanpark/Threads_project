@@ -20,6 +20,8 @@ import {
 } from "../Components/Common/Icon";
 import Modal from "./Common/Modal";
 import PostForm_Modal from "./PostForm_Modal";
+import Loading from "./Loading";
+import { useAuth } from "../Contexts/AuthContext";
 
 // Styled Components
 const BoederWrapper = styled.div`
@@ -193,6 +195,8 @@ const PostForm = () => {
   const [post, setPost] = useState("");
   const [files, setFiles] = useState([]);
 
+  // Auth 사용
+
   const maxFileSize = 5 * 1024 * 1024; // 5MB
   const maxFilesCount = 3;
 
@@ -267,7 +271,7 @@ const PostForm = () => {
       });
 
       setPost("");
-      setFiles([]); // Clear files after upload
+      setFiles([]); // Clear files after upload\
     } catch (error) {
       console.error(error);
     } finally {
@@ -278,6 +282,7 @@ const PostForm = () => {
   return (
     <BoederWrapper>
       <Form onSubmit={handleSubmit}>
+        {isLoading ? <Loading /> : null}``
         <TextArea
           onChange={handlePostChange}
           value={post}
@@ -326,9 +331,7 @@ const PostForm = () => {
           <HashtagIcon width={24} />
         </Icons>
         <Buttons>
-          <OpenButton>
-            팔로워에게만 허용
-            </OpenButton>
+          <OpenButton>팔로워에게만 허용</OpenButton>
           <SubmitBtn
             text="스레드 업로드"
             type="submit"
