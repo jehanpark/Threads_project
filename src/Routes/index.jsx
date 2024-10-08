@@ -11,7 +11,8 @@ import Activity from "../Pages/Activity";
 import Profile from "../Pages/Profile";
 import PostForm from "../Components/PostForm";
 import Insites from "../Pages/Insites_de";
-import CreateAccount from "../Components/Login/CreateAccount_de";
+// import CreateAccount from "../Components/Login/CreateAccount_de";
+import CreateAccount from "../Pages/CreateAccount";
 
 export const router = createBrowserRouter([
   {

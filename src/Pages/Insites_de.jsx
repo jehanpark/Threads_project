@@ -1,6 +1,7 @@
 import React from "react";
 import { useMediaQuery } from "react-responsive";
-import Sidebar from "../Components/Sidebar";
+// import Sidebar from "../Components/Sidebar";
+import Sidebar_de from "../Components/Sidebar_de";
 import Insiteitem_de from "../Components/Login/Insiteitem_de"; // 추가된 부분
 
 const Insites_de = () => {
@@ -14,7 +15,7 @@ const Insites_de = () => {
         alignItems: "center",
       }}
     >
-      <Sidebar />
+      <Sidebar_de />
       <Insiteitem_de isSmallScreen={isSmallScreen} />
     </div>
   );
