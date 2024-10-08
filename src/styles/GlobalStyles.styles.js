@@ -1,42 +1,57 @@
-import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import { createGlobalStyle } from "styled-components";
+import reset from "styled-reset";
 
-const lightTheme = {
+export const lightTheme = {
   logoColor: "#000",
-  bodyBg: "#f2f2f2",
+  nomalIconColor: "#BABABA",
+  bodyBg: "#F2F2F2",
   fontcolor: "#000",
   borderWrapper: "#F5F5F5",
   borderColor: "#fff",
-  bordershadow: "0 0 15px #c9c9c9",
+  bordershadow: "0 0 15px #C9C9C9",
   selecticoncolor: "#000000",
-  borderstroke: "#e9e9e9",
-  mouseHoverBg: "#ececec",
+  borderstroke: "#E9E9E9",
+  mouseHoverBg: "#ECECEC",
   mouseHoverFontcolor: "#000",
   headerBg: "#fff",
-  headerselect: "151515",
-  btnBgColor: "#000",
+  btnBgColor: "#fff", // 중복 제거
   loginInputSelectColor: "#5987DC",
-  selectIconColor: "#fff"
+  searchBar: "#e9e9e9",
+  userIcon: "595959",
+  followerfont: "#737373",
+  searchColor: "#595959",
+  themeIconBackground: "#fafafa",
+  navIconColor: undefined,
 };
 
-const darkTheme = {
+export const darkTheme = {
   logoColor: "#fff",
+  nomalIconColor: "#4D4D4D",
   bodyBg: "#000000",
   fontcolor: "#fff",
   borderWrapper: "#252525",
   borderColor: "#181818",
   bordershadow: "0 0 15px #000",
-  selecticoncolor: "#f3f5f7",
+  selecticoncolor: "#262626", // 중복된 selecticoncolor 수정
   borderstroke: "#343535",
-  mouseHoverBg: "#1f1f1f",
+  mouseHoverBg: "#1F1F1F",
   mouseHoverFontcolor: "#fff",
-  headerBg: "#1e1e1e",
-  headerselect: "fff",
-  btnBgColor: "#000",
+  headerBg: "#1E1E1E",
+  btnBgColor: "#000", // 중복 제거
   loginInputSelectColor: "#488EE3",
-  selectIconColor: "#000"
+  searchBar: "#BABABA",
+  userIcon: "#7373",
+  followerfont: "#bababa",
+  searchColor: "#1D1D1D",
+  themeIconBackground: "#363636",
+  navIconColor: undefined,
 };
 
 const GlobalStyles = createGlobalStyle`
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+${reset};
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -50,84 +65,86 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup, 
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video, input {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
 
-  @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
-  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  box-sizing: border-box;
+	@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+	font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+
+	box-sizing: border-box;
 }
-
+/* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
-  display: block;
+	display: block;
 }
-
 body {
-  background-color: ${(props) => props.theme.bodyBg};
-  color: ${(props) => props.theme.fontcolor};
-  line-height: 1;
-}
+	background-color: ${(props) => props.theme.bodyBg};
 
-ol, ul {
-  list-style: none;
-}
+	color: ${(props) => props.theme.fontcolor};
 
+	color: ${(props) => props.theme.bodyColor};
+
+	line-height: 1;
+  overflow-y: scroll;
+  transition: background-color 0.4s ease, color 0.2s ease;
+	/* background-color: #F2F2F2; */
+
+}
+ol, ul ,li {
+	list-style: none;
+}
 a {
   text-decoration: none;
   color: inherit;
 }
-
 blockquote, q {
-  quotes: none;
+	quotes: none;
 }
-
 blockquote:before, blockquote:after,
 q:before, q:after {
-  content: '';
-  content: none;
+	content: '';
+	content: none;
 }
-
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 
 :root {
-  //light
-  --tag-color: #0396f6;
-  --caution-color: #ff3040;
-  --L-bg: #f2f2f2;
-  --L-borderwrapper: #F5F5F5;
-  --L-boreder: #fff;
-  --L-font-color: #000;
-  --L-subfont:  #9a9a9a;
-  --L-icon: #bababa;
-  --L-selecticon : #000; 
-  --L-strock : #e9e9e9;
-
-  //dark
-  --D-bg : #000;
-  --D-borderwrapper : #252525;
-  --D-border: #181818;
-  --D-font-color: #f1f3f5;
-  --D-subfont: #9a9a9a;
-  --D-icon: #bababa;
-  --D-selecticon : #f3f5f7;
-  --D-strock: #343535;
-
-  //font
-  --font-24px: 24px;
-  --font-15px: 15px;
-  --font-13px: 13px;
+	//light
+	--tag-color: #0396f6;
+	--caution-color: #ff3040;
+	--L-bg : #f2f2f2;
+	--L-borderwrapper: #F5F5F5;
+ --L-boreder: #fff;
+	--L-font-color: : #000;
+	--L-subfont:  #9a9a9a;
+	--L-icon: #bababa;
+	--L-selecticon : #000; 
+	--L-strock : #e9e9e9
+//dark
+	--D-bg : #000;
+	--D-borderwrapper : #252525;
+	--D-border: #181818;
+	--D-font-color: #f1f3f5;
+	--D-subfont: #9a9a9a;
+	--D-icon: #bababa;
+	--D-selecticon : #f3f5f7;
+	--D-strock: #343535;
+//font
+	--font-24px : 24px;
+  --font-15px : 15px;
+  --font-13px : 13px;
   --font-bold: 700;
   --font-medium: 500;
 }
 `;
 
-export { lightTheme, darkTheme };
+// export { lightTheme, darkTheme };
+
 export default GlobalStyles;

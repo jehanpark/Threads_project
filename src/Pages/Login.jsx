@@ -1,7 +1,8 @@
-import LoginItem from "../Components/Login/LoginItem";
+import LoginItemDk from "../Components/Login/LoginItem_dk";
+// import LoginItemDe from "../Components/Login/LoginItem_de";
 
 const Login = () => {
-  return <LoginItem />;
+  return <LoginItemDk />;
 };
 
 export default Login;
