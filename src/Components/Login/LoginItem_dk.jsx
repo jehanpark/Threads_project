@@ -155,6 +155,7 @@ const LoginItemDk = () => {
         background="rgba(255, 255, 255, 0.9)"
         borderRadius="20px"
         isVisible={showing}
+        setShowing={setShowing}
       />
     </Wrapper>
   );
