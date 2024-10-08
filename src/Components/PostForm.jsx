@@ -266,7 +266,6 @@ const PostForm = () => {
         })
       );
 
-      console.log("Video URLs to be saved:", videoUrls); // 동영상 URL을 저장하기 전에 확인
       await updateDoc(docRef, {
         photos: photoUrls,
         videos: videoUrls,

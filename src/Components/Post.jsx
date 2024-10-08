@@ -19,6 +19,7 @@ import {
 } from "../Components/Common/Icon";
 // Styled Components
 import { formatDistanceToNow } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -126,6 +127,12 @@ const EditButton = styled.button`
   cursor: pointer;
 `;
 
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
+
 const Button = styled.button`
   background: ${(props) => props.bg || "#7f8689"};
   color: #fff;
@@ -201,13 +208,49 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
   const [editedPhoto, setEditedPhoto] = useState(null);
-
+  const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
+  const [isLiked, setIsLiked] = useState(false);
+  const [comments, setComments] = useState(Math.floor(Math.random() * 10));
+  const [dms, setDms] = useState(Math.floor(Math.random() * 50));
+  const [isDms, setIsDms] = useState(false);
+  const [retweets, setRetweets] = useState(2);
+  const [isRetweets, setIsRetweets] = useState(false);
   const user = auth.currentUser;
 
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전"; // createdAt가 유효하지 않을 때 처리
     const date = new Date(createdAt.seconds * 1000);
     return formatDistanceToNow(date, { addSuffix: true });
+  };
+
+  const navigator = useNavigate();
+
+  const handleLike = () => {
+    if (isLiked) {
+      setLikes((prevLikes) => prevLikes - 1);
+    } else {
+      setLikes((prevLikes) => prevLikes + 1);
+    }
+    setIsLiked((prevLiked) => !prevLiked);
+  };
+  const handleCommentClick = () => {};
+
+  const handleDmClick = () => {
+    if (isDms) {
+      setDms((prevDms) => prevDms - 1);
+    } else {
+      setDms((prevDms) => prevDms + 1);
+    }
+    setIsDms((prevDms) => !prevDms);
+  };
+
+  const handleRetweetClick = () => {
+    if (isRetweets) {
+      setRetweets((prevRet) => prevRet - 1);
+    } else {
+      setRetweets((prevRet) => prevRet + 1);
+    }
+    setIsRetweets((prevRet) => !prevRet);
   };
 
   const onChange = (e) => {
@@ -275,7 +318,6 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
 
         const result = await uploadTask;
         const url = await getDownloadURL(result.ref);
-        console.log(url);
 
         await updateDoc(doc(db, "contents", id), {
           post: editedPost,
@@ -327,14 +369,18 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
         </Column>
       )}
       <Icons>
-        <HeartIcon width={20} />
-        {Math.floor(Math.random() * 100)}
-        <Coment width={20} />
-        {Math.floor(Math.random() * 500)}
-        <DmIcon width={18} />
-        {Math.floor(Math.random() * 50)}
-        <RetweetIcon width={20} />
-        {2}
+        <IconWrapper onClick={handleLike}>
+          <HeartIcon width={20} /> {likes}
+        </IconWrapper>
+        <IconWrapper onClick={handleCommentClick}>
+          <Coment width={20} /> {comments}
+        </IconWrapper>
+        <IconWrapper onClick={handleDmClick}>
+          <DmIcon width={18} /> {dms}
+        </IconWrapper>
+        <IconWrapper onClick={handleRetweetClick}>
+          <RetweetIcon width={20} /> {retweets}
+        </IconWrapper>
       </Icons>
     </Wrapper>
   );

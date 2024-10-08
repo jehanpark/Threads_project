@@ -4,8 +4,7 @@ import Nav from "../Components/Nav";
 import Intro from "../Components/Intro";
 import PostForm from "../Components/PostForm";
 import TimeLine from "../Components/TimeLine";
-import Loading from "../Components/Loading"
-
+import Loading from "../Components/Loading";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -17,6 +16,7 @@ const Home = () => {
   return (
     <Wrapper>
       <Intro />
+      <PostForm />
       <TimeLine />
     </Wrapper>
   );
