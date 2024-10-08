@@ -154,35 +154,35 @@ const PostWrap = styled.div`
 `;
 
 const Profile = () => {
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
   const navigate = useNavigate();
   const user = auth.currentUser; //유저정보
   const [avatar, setAvarta] = useState(user?.photoURL || null || undefined); //이미지관리목적
-  const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 쓰레드 데이터들
-  const [searchParams] = useSearchParams(); // 파람즈에 있는 email 값
-  const emailAdress = searchParams.get("email"); //파람즈에 email을 담은 변수 emailAdress
+  const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
 
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
-  // const data = useContext(ThreadDataContext);
-  // const { createThread, updateThread, deleteThread, updateProfile } =
-  //   useContext(ThreadDispatchContext);
+  // searchParams = email 받아오기
+  const [searchParams] = useSearchParams();
+  const emailAdress = searchParams.get("email");
+  //console.log(emailAdress);
+
+  const data = useContext(ThreadDataContext);
+  const { createThread, updateThread, deleteThread, updateProfile } =
+    useContext(ThreadDispatchContext);
   const [lastemail, setLastEmail] = useState("");
-
-  //모달 세트
+  //모달관련 state
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
-
-  // 프로필  관리용 state
   const [profile, setProfile] = useState({
-    username: `${user?.displayName ?? emailAdress}`,
-    userId: `${user?.uid ?? ""}`,
-    userEmail: `${user?.email ?? emailAdress}`,
+    username: " ",
+    userId: "",
+    userEmail: "",
     bio: "",
     isLinkPublic: true,
     isProfilePublic: true,
     img: `${avatar ?? null}`,
   });
-
+  console.log(profile);
   const CheckProfile = async () => {
     try {
       const profileQuery = query(
@@ -190,9 +190,10 @@ const Profile = () => {
         where("userEmail", "==", emailAdress)
       );
       const querySnapshot = await getDocs(profileQuery);
-
+      console.log("확인");
+      console.log(querySnapshot);
       if (!querySnapshot.empty) {
-        const profileDoc = querySnapshot.docs[0].data();
+        const profileDoc = querySnapshot.docs[0].data(); //이메일이 프로필db에 있는 사람의 데이터.
         if (
           profileDoc.username !== profile.username ||
           profileDoc.bio !== profile.bio ||
@@ -208,20 +209,23 @@ const Profile = () => {
           }));
         }
       } else {
-        //프로필이 비었다면?? <<<<<<< 수정
         setProfile((prev) => ({
           ...prev,
-          username: user?.displayName ?? emailAdress,
+          username: emailAdress,
           bio: "",
           isLinkPublic: true,
           isProfilePublic: true,
-          img: user?.photoURL ? user?.photoURL : profile.photoURL ?? null,
+          img: null,
         }));
       }
     } catch (error) {
       console.error("Error fetching profile: ", error);
     }
   };
+
+  useEffect(() => {
+    CheckProfile();
+  }, [emailAdress]);
 
   const onfollow = () => {
     setFollowModal((prev) => !prev);
@@ -242,7 +246,7 @@ const Profile = () => {
     //하단에 띄울 쓰레드 스테이트 관리 함수
     const postQuery = query(
       collection(db, "contents"),
-      where("userId", "==", `${profile.userId}`), //파람즈 값으로 변경하자
+      where("email", "==", emailAdress), //파람즈 값으로 변경하자
       orderBy("createdAt", "desc"),
       limit(15)
     );
@@ -264,7 +268,13 @@ const Profile = () => {
 
   useEffect(() => {
     fetchPosts();
-    CheckProfile();
+  }, []);
+
+  useEffect(() => {
+    // let userEmailId =
+    // if(user) {
+
+    // }
     const useEmailIndex = profile.userEmail.indexOf("@");
     const userEmail = profile.userEmail.substring(0, useEmailIndex);
     setLastEmail(userEmail);
@@ -273,7 +283,6 @@ const Profile = () => {
   const handleProfileChange = (updatedProfile) => {
     setProfile(updatedProfile);
   };
-
   return (
     <BoederWrapper>
       {followModal ? (
@@ -305,7 +314,7 @@ const Profile = () => {
         <ProfileInnner isSmallScreen={isSmallScreen}>
           <ProfileWrap>
             <IdWrap isSmallScreen={isSmallScreen}>
-              <Nick> {profile.username ?? user.uid}</Nick>
+              <Nick> {profile.username}</Nick>
               <IdText isSmallScreen={isSmallScreen}>
                 {user?.email ? lastemail : emailAdress}
               </IdText>
@@ -359,3 +368,7 @@ const Profile = () => {
 };
 
 export default Profile;
+
+{
+  /* <Nick> {profile.username ?? user.uid ?? emailAdress}</Nick> */
+}

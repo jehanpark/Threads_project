@@ -304,7 +304,6 @@ const Nav = () => {
 
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
 
-  console.log(currentUser);
   const navigate = useNavigate();
 
   const [selectedMenu, setSelectedMenu] = useState(0);
