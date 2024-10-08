@@ -27,24 +27,27 @@ const Wrapper = styled.div`
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
   border-radius: 30px;
-  padding: 20px;
+  padding:20px;
   width: 660px;
   @media (max-width: 768px) {
     width: 100%;
   }
 `;
-
+const ColumnWrapper = styled.div`
+  display: flex;
+`
 const Column = styled.div`
   display: flex;
   margin-left: 50px;
+  margin-bottom: 12px;
+  gap: 10px;
 `;
 
 const Photo = styled.img`
-  width: 140px;
-  height: 140px;
+  width: 160px;
+  height: 160px;
   object-fit: cover/contain;
   margin-left: 0px;
-  margin-top: 8px;
   border-radius: 8px;
   @media (max-width: 768px) {
     margin-right: 8px;
@@ -54,9 +57,16 @@ const Photo = styled.img`
 `;
 
 const Video = styled.video`
-  width: 250px;
-  height: 100%;
+  display: flex;
+  width: 220px;
+  height: 160px;
   border-radius: 15px;
+  object-fit: cover;
+  @media (max-width: 768px) {
+    margin-right: 8px;
+    width: 120px;
+    height: 120px;
+  }
 `;
 
 const Header = styled.div`
@@ -94,7 +104,7 @@ const Icons = styled.div`
   justify-content: start;
   align-items: center;
   margin-left: 50px;
-  margin-top: 20px;
+  margin-top: 10px;
   cursor: pointer;
   color: #bababa;
 `;
@@ -299,33 +309,35 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
         <Username>{username}</Username>
         <Timer>{renderTimeAgo()}</Timer>
       </Header>
-      <Column>
-        {isEditing ? (
-          <EditPostFormTextArea
+        <Column>
+          {isEditing ? (
+            <EditPostFormTextArea
             onChange={onChange}
             value={editedPost}
             placeholder={post}
-          />
-        ) : (
-          <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
+            />
+          ) : (
+            <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
+          )}
+        </Column>
+            <ColumnWrapper>
+        {/* Render multiple photos */}
+        {photos && photos.length > 0 && (
+          <Column>
+            {photos.map((photoUrl, index) => (
+              <Photo key={index} src={photoUrl} alt={`Post Image ${index + 1}`} />
+            ))}
+          </Column>
         )}
-      </Column>
-      {/* Render multiple photos */}
-      {photos && photos.length > 0 && (
-        <Column>
-          {photos.map((photoUrl, index) => (
-            <Photo key={index} src={photoUrl} alt={`Post Image ${index + 1}`} />
-          ))}
-        </Column>
-      )}
-
-      {videos && videos.length > 0 && (
-        <Column>
-          {videos.map((videoUrl, index) => (
-            <Video key={index} controls autoPlay loop src={videoUrl} />
-          ))}
-        </Column>
-      )}
+  
+        {videos && videos.length > 0 && (
+          <Column>
+            {videos.map((videoUrl, index) => (
+              <Video key={index} controls autoPlay loop src={videoUrl} />
+            ))}
+          </Column>
+        )}
+</ColumnWrapper>
       <Icons>
         <HeartIcon width={20} />
         {Math.floor(Math.random() * 100)}

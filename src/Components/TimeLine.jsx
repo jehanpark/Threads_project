@@ -25,11 +25,10 @@ const BoederWrapper = styled.div`
   overflow: hidden;
   @media (max-width: 768px) {
     position: absolute;
-    height: calc(100% - 68px);
+    bottom:0 ;
     border-radius: 0;
     width: 100%;
-    height: calc(100% - 140px);
-    bottom: 70px;
+    height: calc(100% - 70px  );
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
   }

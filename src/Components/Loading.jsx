@@ -4,18 +4,32 @@ import styled from "styled-components";
 
 // 스타일 컴포넌트 정의
 const LoadingContainer = styled.div`
-width: 100%;
-height: 100vh;
+width: 660px;
+height: 100%;
+position: absolute;
+left: 50%;
+bottom: 0;
+transform: translate(-50%);
+border-radius: 30px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #ffffff; /* 배경색 */
+  opacity: 0.9;
+  z-index: 100000;
 `;
 
 const SvgIcon = styled.svg`
-  width: 50px;
-  height: 56px;
-  animation: rotate 2s linear infinite; /* 로고에 회전 애니메이션 추가 */
+position: absolute;
+top: 50%;
+bottom: 50%;
+transform: translate(-50%);
+width: 100%;
+height: 100vh;
+width: 50px;
+height: 56px;
+animation: rotate 2s linear infinite; /* 로고에 회전 애니메이션 추가 */
 
   @keyframes rotate {
     0% {

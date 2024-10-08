@@ -39,7 +39,7 @@ const BoederWrapper = styled.div`
     position: fixed;
     border-radius: 0;
     width: 100%;
-    height: calc(100% - 140px);
+    height: calc(100% - 100px);
     bottom: 70px;
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
@@ -284,7 +284,7 @@ const PostForm = () => {
   return (
     <BoederWrapper>
       <Form onSubmit={handleSubmit}>
-        {isLoading ? <Loading /> : null}``
+        {isLoading ? <Loading /> : null}
         <TextArea
           onChange={handlePostChange}
           value={post}
@@ -301,8 +301,8 @@ const PostForm = () => {
                   src={URL.createObjectURL(file)}
                   alt={`Uploaded Preview ${index + 1}`}
                   style={{
-                    width: "180px",
-                    height: "240px",
+                    width: "160px",
+                    height: "160px",
                     borderRadius: "10px",
                     objectFit: "contain",
                   }}
@@ -311,10 +311,10 @@ const PostForm = () => {
                 <video
                   controls
                   style={{
-                    width: "180px",
-                    height: "240px",
+                    width: "160px",
+                    height: "160px",
                     borderRadius: "10px",
-                    objectFit: "contain",
+                    objectFit: "cover",
                   }}
                 >
                   <source src={URL.createObjectURL(file)} />
