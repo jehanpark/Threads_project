@@ -270,16 +270,6 @@ const Profile = () => {
     fetchPosts();
   }, []);
 
-  useEffect(() => {
-    // let userEmailId =
-    // if(user) {
-
-    // }
-    const useEmailIndex = profile.userEmail.indexOf("@");
-    const userEmail = profile.userEmail.substring(0, useEmailIndex);
-    setLastEmail(userEmail);
-  }, []);
-
   const handleProfileChange = (updatedProfile) => {
     setProfile(updatedProfile);
   };
@@ -315,9 +305,7 @@ const Profile = () => {
           <ProfileWrap>
             <IdWrap isSmallScreen={isSmallScreen}>
               <Nick> {profile.username}</Nick>
-              <IdText isSmallScreen={isSmallScreen}>
-                {user?.email ? lastemail : emailAdress}
-              </IdText>
+              <IdText isSmallScreen={isSmallScreen}>{emailAdress}</IdText>
             </IdWrap>
             <ImgWrap isSmallScreen={isSmallScreen}>
               {Boolean(avatar) ? (
