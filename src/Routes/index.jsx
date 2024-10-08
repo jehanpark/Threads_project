@@ -9,9 +9,10 @@ import LoginInsta from "../Pages/LoginInsta";
 import Follow from "../Pages/Follow";
 import Activity from "../Pages/Activity";
 import Profile from "../Pages/Profile";
-import CreateAccount from "../Pages/CreateAccount";
 import PostForm from "../Components/PostForm";
-// import CreateAccount from "../Components/Login/CreateAccount";
+import Insites from "../Pages/Insites";
+// import CreateAccount from "../Components/Login/CreateAccount_de";
+import CreateAccount from "../Pages/CreateAccount";
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
         path: "PostForm",
         element: <PostForm />,
       },
+      {
+        path: "Insites", // 다은 추가
+        element: <Insites />,
+      },
     ],
   },
   {
@@ -49,13 +54,22 @@ export const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "Create-account", // 이 라우트는 Layout 바깥에 있음
+    path: "LoginInsta", // 이 라우트도 Layout 바깥에 있음
+    element: <LoginInsta />,
+  },
+  {
+    path: "CreateAccount", // dan 추가한 라우트
+    element: <CreateAccount />,
+  },
+  {
+    path: "Create-Account", // dan 추가한 라우트
     element: <CreateAccount />,
   },
   {
     path: "Login-insta", // 이 라우트도 Layout 바깥에 있음
     element: <LoginInsta />,
   },
+
   // {
   //   path: "CreateAccount", // dan 추가한 라우트
   //   element: <CreateAccount />,

@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import reset from "styled-reset";
 
 export const lightTheme = {
   logoColor: "#000",
@@ -48,6 +49,8 @@ export const darkTheme = {
 
 const GlobalStyles = createGlobalStyle`
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+${reset};
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
