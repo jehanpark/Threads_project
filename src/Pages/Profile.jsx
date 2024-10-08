@@ -157,26 +157,26 @@ const Profile = () => {
   const navigate = useNavigate();
   const user = auth.currentUser; //유저정보
   const [avatar, setAvarta] = useState(user?.photoURL || null || undefined); //이미지관리목적
-  const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
-
-  // searchParams = email 받아오기
-  const [searchParams] = useSearchParams();
-  const emailAdress = searchParams.get("email");
-  console.log(emailAdress);
+  const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 쓰레드 데이터들
+  const [searchParams] = useSearchParams(); // 파람즈에 있는 email 값
+  const emailAdress = searchParams.get("email"); //파람즈에 email을 담은 변수 emailAdress
 
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
-  const data = useContext(ThreadDataContext);
-  const { createThread, updateThread, deleteThread, updateProfile } =
-    useContext(ThreadDispatchContext);
+  // const data = useContext(ThreadDataContext);
+  // const { createThread, updateThread, deleteThread, updateProfile } =
+  //   useContext(ThreadDispatchContext);
   const [lastemail, setLastEmail] = useState("");
-  //모달관련 state
+
+  //모달 세트
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
+
+  // 프로필  관리용 state
   const [profile, setProfile] = useState({
-    username: `${user?.displayName ?? "Anonymouse"}`,
+    username: `${user?.displayName ?? emailAdress}`,
     userId: `${user?.uid ?? ""}`,
-    userEmail: `${user.email ?? ""}`, // 없다면 파람즈로
+    userEmail: `${user?.email ?? emailAdress}`,
     bio: "",
     isLinkPublic: true,
     isProfilePublic: true,
@@ -187,7 +187,7 @@ const Profile = () => {
     try {
       const profileQuery = query(
         collection(db, "profile"),
-        where("userEmail", "==", user.email)
+        where("userEmail", "==", emailAdress)
       );
       const querySnapshot = await getDocs(profileQuery);
 
@@ -208,23 +208,20 @@ const Profile = () => {
           }));
         }
       } else {
+        //프로필이 비었다면?? <<<<<<< 수정
         setProfile((prev) => ({
           ...prev,
-          username: user.displayName ?? "Anonymous",
+          username: user?.displayName ?? emailAdress,
           bio: "",
           isLinkPublic: true,
           isProfilePublic: true,
-          img: user.photoURL ?? null,
+          img: user?.photoURL ? user?.photoURL : profile.photoURL ?? null,
         }));
       }
     } catch (error) {
       console.error("Error fetching profile: ", error);
     }
   };
-
-  useEffect(() => {
-    CheckProfile();
-  }, []);
 
   const onfollow = () => {
     setFollowModal((prev) => !prev);
@@ -267,17 +264,16 @@ const Profile = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
-
-  useEffect(() => {
-    const useEmailIndex = user.email.indexOf("@");
-    const userEmail = user.email.substring(0, useEmailIndex);
+    CheckProfile();
+    const useEmailIndex = profile.userEmail.indexOf("@");
+    const userEmail = profile.userEmail.substring(0, useEmailIndex);
     setLastEmail(userEmail);
   }, []);
 
   const handleProfileChange = (updatedProfile) => {
     setProfile(updatedProfile);
   };
+
   return (
     <BoederWrapper>
       {followModal ? (
@@ -311,7 +307,7 @@ const Profile = () => {
             <IdWrap isSmallScreen={isSmallScreen}>
               <Nick> {profile.username ?? user.uid}</Nick>
               <IdText isSmallScreen={isSmallScreen}>
-                {user?.email ? lastemail : "임시"}
+                {user?.email ? lastemail : emailAdress}
               </IdText>
             </IdWrap>
             <ImgWrap isSmallScreen={isSmallScreen}>

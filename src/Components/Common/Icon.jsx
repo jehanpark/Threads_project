@@ -555,7 +555,7 @@ export const InstaIcon = ({ width, fill }) => {
   return (
     <StyledSvg
       width={width || "22px"}
-      height={`${height}px`}
+      height={`${height}px` || "22px"}
       viewBox="0 0 22 22"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -597,7 +597,7 @@ export const FacebookIcon = ({ width, fill }) => {
   return (
     <StyledSvg
       width={width || "22px"}
-      height={`${height}px`}
+      height={`${height}px` || "22px"}
       viewBox="0 0 22 22"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -899,7 +899,7 @@ export const UserIcon2 = ({ width, fill }) => {
   return (
     <svg
       width={width || "15px"}
-      height={height}
+      height={height || "15px"}
       viewBox="0 0 15 15"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
