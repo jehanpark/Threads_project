@@ -6,7 +6,6 @@ import PostForm from "../Components/PostForm";
 const CreateAccount = () => {
   return (
     <div>
-            <PostForm />
       <CreateAccountItemDk />
     </div>
   );

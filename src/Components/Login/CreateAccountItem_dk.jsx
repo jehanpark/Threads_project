@@ -79,7 +79,7 @@ const CreateAccountItemDk = () => {
           <Logo width={40} />
         </LogoWrapper>
         <LoginP>
-          <LogoTextMark width={62} />
+          <LogoTextMark width={66} />
           <span>계정 생성하기</span>
         </LoginP>
         <Form onSubmit={onSubmit}>
