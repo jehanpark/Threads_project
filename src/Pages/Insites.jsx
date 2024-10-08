@@ -1,10 +1,9 @@
-import React from "react";
 import { useMediaQuery } from "react-responsive";
 // import Sidebar from "../Components/Sidebar";
-import Sidebar_de from "../Components/Sidebar_de";
+import Sidebar from "../Components/Sidebar";
 import Insiteitem_de from "../Components/Login/Insiteitem_de"; // 추가된 부분
 
-const Insites_de = () => {
+const Insites = () => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
 
   return (
@@ -15,10 +14,10 @@ const Insites_de = () => {
         alignItems: "center",
       }}
     >
-      <Sidebar_de />
+      <Sidebar />
       <Insiteitem_de isSmallScreen={isSmallScreen} />
     </div>
   );
 };
 
-export default Insites_de;
+export default Insites;

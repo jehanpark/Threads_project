@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { lightTheme } from "../../styles/GlobalStyles.styles";
 import { useMediaQuery } from "react-responsive";
-import LogoImg from "../../images/insta.png";
-import RightArrow from "../../images/rightarrow.svg";
+// import LogoImg from "../../images/insta.png";
+// import RightArrow from "../../images/rightarrow.svg";
 console.log(lightTheme);
 
 const BorderItem = styled.div`
@@ -12,7 +12,7 @@ const BorderItem = styled.div`
     `
     margin: 0 auto;
     padding:10px 10px 0 10px; 
-    width:${(isSmallScreen) => (isSmallScreen ? " 100%" : "680px")};
+    width:${(props) => (props.isSmallScreen ? "100%" : "680px")};
     height: 898px;
     border-radius: 40px 40px 0px 0px;
     border: #C9C9C9;
@@ -55,11 +55,11 @@ const BorderItem = styled.div`
       display: none;
     }
     `}
-  ${({ type, isSmallScreen, width, height }) =>
+  ${({ type }) =>
     type === "insitesWrapper" &&
     `
-    width: ${isSmallScreen ? "90%" : "485.41px"};
-    height: ${isSmallScreen ? "100%" : "137px"};
+    width: ${(props) => (props.isSmallScreen ? "100%" : "485.41px")}; // 수정!
+    height: ${(props) => (props.isSmallScreen ? "100%" : "137px")};
     background: #F5F5F5;
     margin-top: 30px;
     padding: 24px;
@@ -74,8 +74,8 @@ const BorderItem = styled.div`
   ${({ type, isSmallScreen }) =>
     type === "followWrapper" &&
     `
-    width: ${isSmallScreen ? "90%" : "485.41px"};
-    height: ${isSmallScreen ? "100%" : "536px"};
+    width: ${(props) => (props.isSmallScreen ? "100%" : "485.41px")}; // 수정!
+    height: ${(props) => (props.isSmallScreen ? "100%" : "536px")};
     background: #F5F5F5;
     margin-top: 30px;
     padding: 24px;
