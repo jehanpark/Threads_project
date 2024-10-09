@@ -20,8 +20,8 @@ import {
 // Styled Components
 
 const Wrapper = styled.div`
-width: 100%;
-height: 100%;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
@@ -29,8 +29,8 @@ height: 100%;
   padding: 20px;
   width: 660px;
   @media (max-width: 768px) {
-width: 100%;
-height: 100%;
+    width: 100%;
+    height: 100%;
   }
 `;
 
@@ -77,10 +77,12 @@ const Username = styled.span`
   font-weight: 600;
   color: ${(props) => props.theme.fontcolor};
 `;
+
 const Timer = styled.span`
   font-size: 10px;
   color: #9a9a9a;
 `;
+
 const Payload = styled.p`
   font-size: 15px;
   font-weight: 600;
@@ -88,6 +90,7 @@ const Payload = styled.p`
   margin-top: 5px;
   margin-bottom: 5px;
 `;
+
 const Icons = styled.div`
   display: flex;
   gap: 15px;
@@ -98,6 +101,7 @@ const Icons = styled.div`
   cursor: pointer;
   color: #bababa;
 `;
+
 const DeleteButton = styled.button`
   background: #ff6347;
   color: #fff;

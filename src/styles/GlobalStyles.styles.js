@@ -23,6 +23,15 @@ export const lightTheme = {
   buttonbackground: "#fff",
   buttonText: "#000",
   navIconColor: undefined,
+  activityBG: "linear-gradient(145deg, #ffffff, #e6e6e6)",
+  activitySH:
+    "5px 5px 10px rgba(0, 0, 0, 0.1), -5px -5px 10px rgba(255, 255, 255, 0.5) ",
+  activityhover:
+    "5px 5px 15px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.7)",
+  ImgBG: "linear-gradient(145deg, #ffffff, #e6e6e6)",
+  ImgSH: "linear-gradient(145deg, #333, #444)",
+  readBG: "linear-gradient(145deg, #dcdcdc, #c0c0c0)",
+  readTextColor: "#999",
 };
 
 export const darkTheme = {
@@ -46,11 +55,20 @@ export const darkTheme = {
   searchColor: "#1D1D1D",
   buttonbackground: "#000",
   buttonText: "#fff",
+  activityBG: "linear-gradient(145deg, #333, #444)",
+  activitySH:
+    "5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(0, 0, 0, 0.2)",
+  activityhover:
+    "5px 5px 15px rgba(0, 0, 0, 0.5), -5px -5px 15px rgba(0, 0, 0, 0.2)",
+  ImgBG:
+    "5px 5px 10px rgba(0, 0, 0, 0.1), -5px -5px 10px rgba(255, 255, 255, 0.5)",
+  ImgSH: "5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(0, 0, 0, 0.2)",
+  readBG: "linear-gradient(145deg, #555, #666)",
+  readTextColor: "#bbb",
 };
 
 const GlobalStyles = createGlobalStyle`
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
-
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -90,6 +108,8 @@ body {
 	color: ${(props) => props.theme.bodyColor};
 
 	line-height: 1;
+  overflow-y: scroll;
+  transition: background-color 0.4s ease, color 0.2s ease;
 	/* background-color: #F2F2F2; */
 
 }

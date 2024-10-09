@@ -13,7 +13,7 @@ import { UserIcon1, MicIcon, SoundIcon } from "../Common/Icon";
 const SearchWrapper = styled.div`
   width: 590px;
   max-width: 590px;
-  min-width: 300px;
+  min-width: 340px;
   height: 44px;
   display: flex;
   justify-content: space-between;
@@ -23,7 +23,7 @@ const SearchWrapper = styled.div`
   border: 1px solid #ccc;
   background: ${(props) => props.theme.searchBar};
   margin-bottom: 40px;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     width: 90%;
   }
 `;
@@ -85,7 +85,7 @@ const Searchbar = ({ addSearch }) => {
   // Enter 키를 눌렀을 때 실행되는 함수
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && searchQuery.trim() !== "") {
-      addSearch(searchQuery); // 검색어 저장
+      addSearch(searchQuery); // 검색어 전달
       setSearchQuery(""); // 검색창 초기화
     }
   };
@@ -99,8 +99,11 @@ const Searchbar = ({ addSearch }) => {
   const toggleListening = () => {
     if (listening) {
       SpeechRecognition.stopListening();
-      setSearchQuery(transcript); // 인식된 음성 텍스트를 검색창에 반영
-      addSearch(transcript);
+      const processedTranscript = transcript.trim();
+      if (processedTranscript !== "") {
+        setSearchQuery(processedTranscript); // 음성 인식 텍스트 반영
+        // 음성 인식 결과는 검색창에 표시되지만 바로 검색어 전달은 하지 않음
+      }
       resetTranscript(); // 텍스트 리셋
     } else {
       SpeechRecognition.startListening({ continuous: true, language: "ko-KR" });

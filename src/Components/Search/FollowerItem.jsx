@@ -5,23 +5,21 @@ import { UserIcon2 } from "../Common/Icon";
 const FollowerContain = styled.div`
   width: 590px;
   max-width: 590px;
-  min-width: 300px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 30px;
+  padding: 20px 30px;
   border-radius: 20px;
   background: ${(props) => props.theme.borderColor};
   margin-bottom: 20px;
 
   @media (max-width: 768px) {
-    width: 90%;
-    padding: 0 20px;
+    width: 100%;
+    padding: 20px;
   }
 
   @media (max-width: 480px) {
     width: 100%;
-    padding: 0 15px;
   }
 `;
 
@@ -35,14 +33,13 @@ const Wrapper = styled.div`
   }
 
   @media (max-width: 480px) {
-    flex-direction: column;
     gap: 10px;
   }
 `;
 
 const UserWrapper = styled.div`
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -126,9 +123,9 @@ const FollowerButton = styled.button`
 `;
 
 const FollowerItem = ({
-  nickname,
+  username,
   profileImg,
-  desc,
+  bio,
   followers,
   isFollowing,
   toggleFollow,
@@ -144,8 +141,8 @@ const FollowerItem = ({
           )}
         </UserWrapper>
         <UserContex>
-          <UserName>{nickname}</UserName>
-          <UserInfo>{desc}</UserInfo>
+          <UserName>{username}</UserName>
+          <UserInfo>{bio}</UserInfo>
           <UserFollowerNum>{`팔로워 ${followers}명`}</UserFollowerNum>
         </UserContex>
       </Wrapper>

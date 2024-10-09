@@ -18,9 +18,13 @@ const Wrapper = styled.div`
   border-radius: 30px;
   padding: 30px;
   margin-bottom: 20px;
+
   @media (max-width: 768px) {
     width: 100%;
-    height: 100%;
+  }
+
+  @media (max-width: 480px) {
+    padding: 20px;
   }
 `;
 
@@ -77,6 +81,10 @@ const Username = styled.span`
 const Timer = styled.span`
   font-size: 10px;
   color: #9a9a9a;
+
+  @media (max-width: 480px) {
+    font-size: 9px;
+  }
 `;
 
 const Payload = styled.p`
@@ -96,26 +104,38 @@ const Icons = styled.div`
   margin-top: 20px;
   cursor: pointer;
   color: #bababa;
+  @media (max-width: 480px) {
+    font-size: 9px;
+  }
 `;
 
-const Display = ({ createdAt, photos, post, userId, username, videos }) => {
+const Display = ({
+  bio,
+  createdAt,
+  followers,
+  photos,
+  post,
+  profileimg,
+  userId,
+  username,
+  videos,
+}) => {
   return (
     <Wrapper>
       <Header>
         <UserImage>
-          {profileImg ? (
-            <img src={profileImg} alt="User profile" />
+          {profileimg ? (
+            <img src={profileimg} alt="User profile" />
           ) : (
             <UserIcon2 width={50} height={50} />
           )}
         </UserImage>
         <Username>{username}</Username>
-        <Timer>2시간전</Timer>
+        <Timer>{new Date(createdAt).toLocaleString()}</Timer>
       </Header>
       <Column>
         <Payload>{post}</Payload>
       </Column>
-
       {photos && photos.length > 0 && (
         <Column>
           {photos.map((photoUrl, index) => (
@@ -123,17 +143,16 @@ const Display = ({ createdAt, photos, post, userId, username, videos }) => {
           ))}
         </Column>
       )}
-
-      {video && (
+      {videos && videos.length > 0 && (
         <Column>
-          <Video src={video} autoPlay loop />
+          <Video src={videos[0]} autoPlay loop />
         </Column>
       )}
       <Icons>
         <HeartIcon width={24} /> 2
-        <Coment width={24} /> 2
-        <DmIcon width={20} /> 2
-        <RetweetIcon width={24} /> 2
+        <Coment width={24} />2
+        <DmIcon width={20} />2
+        <RetweetIcon width={24} />2
       </Icons>
     </Wrapper>
   );

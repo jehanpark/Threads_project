@@ -3,12 +3,14 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./Logo";
+import { useAuth } from "../Contexts/AuthContext";
+import { UserIcon1 } from "./Common/Icon";
 import { GoBack } from "./Common/Icon";
 import MobileNav from "./MobileNav";
 const AllWrapper = styled.div`
   width: 100%;
   height: 100%;
-`
+`;
 
 const Wrapper = styled.nav`
   width: 100%;
@@ -39,6 +41,16 @@ const MyProfileImgs = styled.div`
 const Img = styled.img`
   width: 100%;
   height: 100%;
+`;
+
+const DefaultImgWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Ul = styled.ul`
@@ -117,7 +129,6 @@ const menuItems = styled.img`
       color: ${(props) => props.theme.selectIconColor};
     `}
 `;
-
 const BackNavwrapper = styled.div`
   @media (max-width: 768px) {
     position: fixed;
@@ -128,8 +139,8 @@ const BackNavwrapper = styled.div`
     background: ${(props) => props.theme.borderColor};
     z-index: 1000;
     @media (min-width: 768px) {
-    display: none; // 768px 이상의 화면에서는 숨기기
-  }
+      display: none; // 768px 이상의 화면에서는 숨기기
+    }
   }
 `;
 const Backdesc = styled.div`
@@ -141,20 +152,19 @@ const Backdesc = styled.div`
   @media (min-width: 768px) {
     display: none; // 768px 이상의 화면에서는 숨기기
   }
-`
+`;
 const BackIcon = styled.div`
-display: flex;
-width: 24px;
-height: 24px;
-transform: translateX(5px);
-transform: translateY(2px);
-align-items: center;
-margin-left: 10px;
-`
+  display: flex;
+  width: 24px;
+  height: 24px;
+  transform: translateX(5px);
+  transform: translateY(2px);
+  align-items: center;
+  margin-left: 10px;
+`;
 const Backtxt = styled.div`
   font-size: 15px;
-`
-
+`;
 const Nav = () => {
   const menuItems = [
     {
@@ -292,8 +302,11 @@ const Nav = () => {
     },
   ];
 
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
 
+  console.log(currentUser);
   const navigate = useNavigate();
+
   const [selectedMenu, setSelectedMenu] = useState(0);
   const onSelected = (index, path) => {
     setSelectedMenu(index);
@@ -301,33 +314,43 @@ const Nav = () => {
   };
 
   return (
-<AllWrapper>
-<MobileNav></MobileNav>
-        <Wrapper>
-          <Link to="/">
-            <LogoWrapper>
-              <Logo width={40} />
-            </LogoWrapper>
-          </Link>
-    
-          <Ul>
-            {menuItems.map((menu, index) => (
-              <Li
-                key={index}
-                $itemCount={menuItems.length} /* $itemCount로 변경 */
-                $isSelected={selectedMenu === index} /* $isSelected로 변경 */
-                onClick={() => onSelected(index, menu.path)}
-                aria-current={selectedMenu === index ? "page" : undefined} // 접근성 향상
-              >
-                {menu.svg}
-              </Li>
-            ))}
-          </Ul>
-          <MyProfileImgs>
-            <Img src="/profile.png" alt="Profile" />
-          </MyProfileImgs>
-        </Wrapper>
-</AllWrapper>
+    <AllWrapper>
+      <MobileNav></MobileNav>
+      <Wrapper>
+        <Link to="/">
+          <LogoWrapper>
+            <Logo width={40} />
+          </LogoWrapper>
+        </Link>
+
+        <Ul>
+          {menuItems.map((menu, index) => (
+            <Li
+              key={index}
+              $itemCount={menuItems.length} /* $itemCount로 변경 */
+              $isSelected={selectedMenu === index} /* $isSelected로 변경 */
+              onClick={() => onSelected(index, menu.path)}
+              aria-current={selectedMenu === index ? "page" : undefined} // 접근성 향상
+            >
+              {menu.svg}
+            </Li>
+          ))}
+        </Ul>
+        <MyProfileImgs>
+          {currentUser ? (
+            <Link to="/profile">
+              <Img src="/profile.png" alt="Profile" />
+            </Link>
+          ) : (
+            <Link to="/login">
+              <DefaultImgWrapper src="/profile.png" alt="Profile">
+                <UserIcon1 />
+              </DefaultImgWrapper>
+            </Link>
+          )}
+        </MyProfileImgs>
+      </Wrapper>
+    </AllWrapper>
   );
 };
 
