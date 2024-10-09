@@ -189,8 +189,9 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
     try {
       console.log("Uploaded avatar URL:");
       console.log(avatar);
-      const nameToSave = inputData.username || profile.name;
-      const bioToSave = inputData.bio || profile.bio;
+      const nameToSave =
+        inputData.username || profile.username || user.displayName;
+      const bioToSave = inputData.bio || profile.bio || "";
       const imgToSave = avatar || "";
       const profileQuery = query(
         collection(db, "profile"),
@@ -203,8 +204,7 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
         console.log(imgToSave);
         console.log(nameToSave);
         console.log(bioToSave);
-        await addDoc(collection(db, "profile"), {
-          postId: doc.id,
+        const newDocRef = await addDoc(collection(db, "profile"), {
           username: nameToSave,
           userId: user.uid,
           userEmail: user.email,
@@ -213,6 +213,9 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
           isProfilePublic: profileData.isProfilePublic,
           img: imgToSave,
         });
+
+        // postId 업데이트
+        await updateDoc(newDocRef, { postId: newDocRef.id });
       } else {
         console.log("안빔");
         const docRef = querySnapshot.docs[0].ref;

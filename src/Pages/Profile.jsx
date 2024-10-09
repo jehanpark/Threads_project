@@ -181,7 +181,7 @@ const Profile = () => {
     bio: "",
     isLinkPublic: true,
     isProfilePublic: true,
-    img: `${avatar ?? null}`,
+    img: `${avatar ?? ""}`,
   });
 
   const buttonCheck = () => {
@@ -322,7 +322,7 @@ const Profile = () => {
               <IdText isSmallScreen={isSmallScreen}>{emailAdress}</IdText>
             </IdWrap>
             <ImgWrap isSmallScreen={isSmallScreen}>
-              {Boolean(avatar) || avatar === "" ? (
+              {Boolean(avatar) || avatar !== "" ? (
                 <Img src={avatar} />
               ) : (
                 <UserIcon2 width="54" fill="#BABABA" />
