@@ -219,7 +219,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
   const [isDms, setIsDms] = useState(false);
   const [retweets, setRetweets] = useState(2);
   const [isRetweets, setIsRetweets] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [openModalId, setOpenModalId] = useState(null);
 
   const user = auth.currentUser;
 
@@ -231,8 +231,27 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
 
   const navigator = useNavigate();
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const openModal = (postId) => {
+    setOpenModalId(postId); // 특정 포스트의 ID로 모달 열기
+  };
+
+  const closeModal = () => {
+    setOpenModalId(null);
+  };
+
+  const handleClickOutside = (e) => {
+    if (openModalId && !e.target.closest(".modal-content")) {
+      closeModal();
+    }
+  };
+
+  useEffect(() => {
+    // 모달 외부 클릭 감지 이벤트 등록
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openModalId]);
 
   const onChange = (e) => {
     setEditedPost(e.target.value);
@@ -401,9 +420,14 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
         <UserImage src="http://localhost:5173/profile.png"></UserImage>
         <Username>{username}</Username>
         <Timer>{renderTimeAgo()}</Timer>
-        <Etc onClick={openModal}>
+        <Etc onClick={() => openModal(id)}>
           <EtcIcon width={20} fill="gray" />
         </Etc>
+        {openModalId === id && (
+          <div className="modal-content">
+            <PostSetModal onClose={closeModal} />
+          </div>
+        )}
       </Header>
       <Column>
         {isEditing ? (
@@ -447,7 +471,6 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
           <RetweetIcon width={20} /> {retweets}
         </IconWrapper>
       </Icons>
-      {isModalOpen && <PostSetModal onClose={closeModal} />}
     </Wrapper>
   );
 };

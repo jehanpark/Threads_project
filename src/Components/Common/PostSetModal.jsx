@@ -3,18 +3,6 @@ import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
 import { color } from "framer-motion";
 
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 500; // 모달을 항상 화면 위에 위치
-`;
-
 const Wrapper = styled.div`
   position: absolute;
   top: 0px;
@@ -42,6 +30,7 @@ const Wrapper = styled.div`
     box-shadow: ${(props) => props.theme.bordershadow};
   }
 `;
+
 const Contentswrapper = styled.div`
   @media (max-width: 768px) {
     width: 100%;
@@ -126,29 +115,22 @@ const UpLoadButton = styled.button`
 `;
 
 const PostSetModal = ({ onClose }) => {
-  // 모달 외부 클릭 시 모달 닫기
-  const handleOutsideClick = (e) => {
-    onClose();
+  const handleModalClick = (e) => {
+    e.stopPropagation(); // 클릭이 배경으로 전파되지 않도록 방지
   };
 
-  // 모달 내부 클릭 시 이벤트 전파 막기
-  const handleModalClick = (e) => {
-    e.stopPropagation();
-  };
   return (
-    <Overlay onClick={handleOutsideClick}>
-      <Wrapper onClick={handleModalClick}>
-        <Contentswrapper>
-          <TopRec></TopRec>
-          <Optionwrapper>
-            <Li>수정</Li>
-            <Li>리포스트</Li>
-            <Li>삭제</Li>
-          </Optionwrapper>
-          <UpLoadButton>게시글 업로드</UpLoadButton>
-        </Contentswrapper>
-      </Wrapper>
-    </Overlay>
+    <Wrapper onClick={handleModalClick}>
+      <Contentswrapper>
+        <TopRec></TopRec>
+        <Optionwrapper>
+          <Li>수정</Li>
+          <Li>리포스트</Li>
+          <Li>삭제</Li>
+        </Optionwrapper>
+        <UpLoadButton>게시글 업로드</UpLoadButton>
+      </Contentswrapper>
+    </Wrapper>
   );
 };
 export default PostSetModal;
