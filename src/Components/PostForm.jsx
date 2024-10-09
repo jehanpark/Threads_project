@@ -234,21 +234,31 @@ const PostForm = () => {
     const user = auth.currentUser;
     if (!user || isLoading || post === "" || post.length > 180) return;
 
+    // 랜덤으로 아이콘 값 생성
+    const randomLikes = Math.floor(Math.random() * 100);
+    const randomComments = Math.floor(Math.random() * 10);
+    const randomDms = Math.floor(Math.random() * 50);
+    const randomRetweets = Math.floor(Math.random() * 5);
+
     try {
       setIsLoading(true);
+
+      // Firebase에 포스트 기본 정보 저장
       const docRef = await addDoc(collection(db, "contents"), {
         post,
         createdAt: serverTimestamp(),
         username: user?.displayName || "Anonymous",
         userId: user.uid,
-        followers: 0,
-        likes: 0,
-        comments: 0,
+        likes: randomLikes,
+        comments: randomComments,
+        dms: randomDms,
+        retweets: randomRetweets, // 랜덤 아이콘 값 저장
       });
 
       const photoUrls = [];
       const videoUrls = [];
 
+      // 파일이 있을 경우 업로드
       await Promise.all(
         files.map(async (file) => {
           const locationRef = ref(
@@ -266,13 +276,15 @@ const PostForm = () => {
         })
       );
 
+      // 파일 업로드가 완료된 후 Firebase에 사진/비디오 URL 업데이트
       await updateDoc(docRef, {
         photos: photoUrls,
         videos: videoUrls,
       });
 
+      // 제출 후 상태 초기화
       setPost("");
-      setFiles([]); // Clear files after upload\
+      setFiles([]);
     } catch (error) {
       console.error(error);
     } finally {

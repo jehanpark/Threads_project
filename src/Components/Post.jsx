@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 // import { IPost } from "./TimeLine";
 import { auth, db, storage } from "../firebase";
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
 import {
   deleteObject,
   ref,
@@ -15,11 +15,13 @@ import {
   MagnifyingGlassIcon,
   BellOffIcon,
   RetweetIcon,
+  EtcIcon,
   Coment,
 } from "../Components/Common/Icon";
 // Styled Components
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import PostSetModal from "./Common/PostSetModal";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -82,6 +84,8 @@ const Timer = styled.span`
   font-size: 10px;
   color: #9a9a9a;
 `;
+const Etc = styled.div``;
+
 const Payload = styled.p`
   font-size: 15px;
   font-weight: 600;
@@ -215,6 +219,8 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
   const [isDms, setIsDms] = useState(false);
   const [retweets, setRetweets] = useState(2);
   const [isRetweets, setIsRetweets] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const user = auth.currentUser;
 
   const renderTimeAgo = () => {
@@ -225,33 +231,8 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
 
   const navigator = useNavigate();
 
-  const handleLike = () => {
-    if (isLiked) {
-      setLikes((prevLikes) => prevLikes - 1);
-    } else {
-      setLikes((prevLikes) => prevLikes + 1);
-    }
-    setIsLiked((prevLiked) => !prevLiked);
-  };
-  const handleCommentClick = () => {};
-
-  const handleDmClick = () => {
-    if (isDms) {
-      setDms((prevDms) => prevDms - 1);
-    } else {
-      setDms((prevDms) => prevDms + 1);
-    }
-    setIsDms((prevDms) => !prevDms);
-  };
-
-  const handleRetweetClick = () => {
-    if (isRetweets) {
-      setRetweets((prevRet) => prevRet - 1);
-    } else {
-      setRetweets((prevRet) => prevRet + 1);
-    }
-    setIsRetweets((prevRet) => !prevRet);
-  };
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const onChange = (e) => {
     setEditedPost(e.target.value);
@@ -334,12 +315,95 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
       setIsEditing(false);
     }
   };
+
+  useEffect(() => {
+    const postRef = doc(db, "contents", id);
+
+    // Firebase에서 데이터 가져오기 또는 생성하기
+    const fetchPostData = async () => {
+      const postSnap = await getDoc(postRef);
+
+      if (!postSnap.exists()) {
+        // 문서가 없으면 랜덤으로 생성된 값을 저장
+        await setDoc(postRef, {
+          likes: likes,
+          comments: comments,
+          dms: dms,
+          retweets: retweets,
+        });
+      } else {
+        // 문서가 존재할 경우 Firebase에 있는 값을 상태로 설정
+        const postData = postSnap.data();
+
+        // 만약 이미 값이 존재하면 그 값을 설정
+        setLikes(postData.likes || likes);
+        setComments(postData.comments || comments);
+        setDms(postData.dms || dms);
+        setRetweets(postData.retweets || retweets);
+      }
+    };
+
+    fetchPostData();
+  }, [id]);
+
+  const handleLike = async () => {
+    const postRef = doc(db, "contents", id);
+
+    if (isLiked) {
+      setLikes((prevLikes) => prevLikes - 1);
+      await updateDoc(postRef, { likes: likes - 1 }); // Firebase에 업데이트
+    } else {
+      setLikes((prevLikes) => prevLikes + 1);
+      await updateDoc(postRef, { likes: likes + 1 }); // Firebase에 업데이트
+    }
+
+    setIsLiked((prevLiked) => !prevLiked);
+  };
+  const handleCommentClick = async () => {
+    const postRef = doc(db, "contents", id);
+
+    setComments((prevComments) => prevComments + 1); // 댓글을 1 추가 (임시로 설정)
+    await updateDoc(postRef, { comments: comments + 1 }); // Firebase에 업데이트
+  };
+
+  // DM 상태가 변경될 때 Firebase에 업데이트
+  const handleDmClick = async () => {
+    const postRef = doc(db, "contents", id);
+
+    if (isDms) {
+      setDms((prevDms) => prevDms - 1);
+      await updateDoc(postRef, { dms: dms - 1 }); // Firebase에 업데이트
+    } else {
+      setDms((prevDms) => prevDms + 1);
+      await updateDoc(postRef, { dms: dms + 1 }); // Firebase에 업데이트
+    }
+
+    setIsDms((prevDms) => !prevDms);
+  };
+
+  // Retweets 상태가 변경될 때 Firebase에 업데이트
+  const handleRetweetClick = async () => {
+    const postRef = doc(db, "contents", id);
+
+    if (isRetweets) {
+      setRetweets((prevRet) => prevRet - 1);
+      await updateDoc(postRef, { retweets: retweets - 1 }); // Firebase에 업데이트
+    } else {
+      setRetweets((prevRet) => prevRet + 1);
+      await updateDoc(postRef, { retweets: retweets + 1 }); // Firebase에 업데이트
+    }
+
+    setIsRetweets((prevRet) => !prevRet);
+  };
   return (
     <Wrapper>
       <Header>
         <UserImage src="http://localhost:5173/profile.png"></UserImage>
         <Username>{username}</Username>
         <Timer>{renderTimeAgo()}</Timer>
+        <Etc onClick={openModal}>
+          <EtcIcon width={20} fill="gray" />
+        </Etc>
       </Header>
       <Column>
         {isEditing ? (
@@ -352,6 +416,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
           <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
         )}
       </Column>
+
       {/* Render multiple photos */}
       {photos && photos.length > 0 && (
         <Column>
@@ -382,6 +447,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
           <RetweetIcon width={20} /> {retweets}
         </IconWrapper>
       </Icons>
+      {isModalOpen && <PostSetModal onClose={closeModal} />}
     </Wrapper>
   );
 };
