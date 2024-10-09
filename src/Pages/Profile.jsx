@@ -4,8 +4,7 @@ import {
   ThreadDataContext,
 } from "../Contexts/ThreadContext";
 import { auth, storage, db } from "../firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { updateProfile } from "firebase/auth";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import {
   collection,
   doc,
@@ -157,9 +156,10 @@ const Profile = () => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
   const navigate = useNavigate();
   const user = auth.currentUser; //유저정보
-  const [avatar, setAvarta] = useState(user?.photoURL || null || undefined); //이미지관리목적
-  const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
 
+  const [avatar, setAvarta] = useState(null || undefined); //이미지관리목적
+  const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
+  const [editbtn, setEditbtn] = useState(true);
   // searchParams = email 받아오기
   const [searchParams] = useSearchParams();
   const emailAdress = searchParams.get("email");
@@ -174,7 +174,8 @@ const Profile = () => {
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
   const [profile, setProfile] = useState({
-    username: " ",
+    postId: "",
+    username: "",
     userId: "",
     userEmail: "",
     bio: "",
@@ -182,7 +183,15 @@ const Profile = () => {
     isProfilePublic: true,
     img: `${avatar ?? null}`,
   });
-  console.log(profile);
+
+  const buttonCheck = () => {
+    if (user?.email === emailAdress) {
+      setEditbtn(true);
+    } else {
+      setEditbtn(false);
+    }
+  };
+
   const CheckProfile = async () => {
     try {
       const profileQuery = query(
@@ -190,27 +199,32 @@ const Profile = () => {
         where("userEmail", "==", emailAdress)
       );
       const querySnapshot = await getDocs(profileQuery);
-      console.log("확인");
-      console.log(querySnapshot);
+      //db에 firebase에 사람이 있다면 ?
       if (!querySnapshot.empty) {
         const profileDoc = querySnapshot.docs[0].data(); //이메일이 프로필db에 있는 사람의 데이터.
-        if (
-          profileDoc.username !== profile.username ||
-          profileDoc.bio !== profile.bio ||
-          profileDoc.img !== profile.img
-        ) {
+        const imgUrl = profileDoc.img;
+        // const imgUrl = ref(storage, `avatars/${profileDoc.userId}`);
+
+        // 에러
+        setAvarta(imgUrl);
+        if (!profileDoc.empty) {
           setProfile((prev) => ({
             ...prev,
+            postId: profileDoc.postId,
             username: profileDoc.username,
             bio: profileDoc.bio,
             isLinkPublic: profileDoc.isLinkPublic,
             isProfilePublic: profileDoc.isProfilePublic,
-            img: profileDoc.img,
+            img: imgUrl,
           }));
+          console.log(profile);
         }
       } else {
+        // 사람이 없다면?
+        console.log("음따");
         setProfile((prev) => ({
           ...prev,
+          postId: "",
           username: emailAdress,
           bio: "",
           isLinkPublic: true,
@@ -224,8 +238,10 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    fetchPosts();
     CheckProfile();
-  }, [emailAdress]);
+    buttonCheck();
+  }, []);
 
   const onfollow = () => {
     setFollowModal((prev) => !prev);
@@ -250,12 +266,13 @@ const Profile = () => {
       orderBy("createdAt", "desc"),
       limit(15)
     );
-
     const snapShot = await getDocs(postQuery); //필터된 포스터 가져옴
     const post = snapShot.docs.map((doc) => {
-      const { createdAt, photos, post, userId, username, videos } = doc.data();
+      const { createdAt, email, photos, post, userId, username, videos } =
+        doc.data();
       return {
         createdAt,
+        email,
         photos,
         post,
         userId,
@@ -266,13 +283,10 @@ const Profile = () => {
     setPosts(post);
   };
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
   const handleProfileChange = (updatedProfile) => {
     setProfile(updatedProfile);
   };
+
   return (
     <BoederWrapper>
       {followModal ? (
@@ -308,7 +322,7 @@ const Profile = () => {
               <IdText isSmallScreen={isSmallScreen}>{emailAdress}</IdText>
             </IdWrap>
             <ImgWrap isSmallScreen={isSmallScreen}>
-              {Boolean(avatar) ? (
+              {Boolean(avatar) || avatar === "" ? (
                 <Img src={avatar} />
               ) : (
                 <UserIcon2 width="54" fill="#BABABA" />
@@ -333,7 +347,11 @@ const Profile = () => {
                 </Links>
               ) : null}
             </FollowLink>
-            <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
+            {editbtn === true ? (
+              <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
+            ) : (
+              <Button type="edit" text="임시버튼" onClick={onProfileEdite} />
+            )}
           </BottomWrap>
         </ProfileInnner>
         <ThreadInner>

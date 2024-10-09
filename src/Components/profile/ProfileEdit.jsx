@@ -13,6 +13,7 @@ import {
   getDocs,
   addDoc,
   updateDoc,
+  doc,
 } from "firebase/firestore";
 
 const ModalOverlay = styled.div`
@@ -124,10 +125,11 @@ const Img = styled.img`
 `;
 
 const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
-  const [profileData, setProfileData] = useState(profile);
-  const user = auth.currentUser;
-  const [avatar, setAvarta] = useState(user?.photoURL || null || undefined);
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
+  const [profileData, setProfileData] = useState({ ...profile }); //전체적인 프로필 내용
+  const [inputData, setInputDate] = useState({}); //>> 인풋 값을 받을 state
+  const user = auth.currentUser; //유저 계정 내용 ( displayName , email , photoURL  , uid)
+  const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" }); // 미디어 쿼리
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -146,6 +148,24 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
     };
   }, [open]);
 
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    const newValue =
+      value === "" ? profile[name] : type === "checkbox" ? checked : value;
+
+    setInputDate((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : newValue,
+    }));
+    if (type === "checkbox") {
+      setProfileData((prev) => ({
+        ...prev,
+        [name]: checked,
+      }));
+    }
+  };
+
   const onImgchange = async (e) => {
     const { files } = e.target;
     if (!user) return;
@@ -155,81 +175,85 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
         alert("5MD 미만의 이미지만 사용 가능합니다.");
         return;
       }
-      const locationRef = ref(storage, `avatars/${user?.uid}`);
+      const locationRef = ref(storage, `avatars/${user?.uid}}`);
       const result = await uploadBytes(locationRef, file);
       const avatarUrl = await getDownloadURL(result.ref);
       setAvarta(avatarUrl);
-      setProfileData((prev) => ({
-        ...prev,
-        img: avatarUrl,
-      }));
-
-      await updateProfile(user, { photoURL: avatarUrl });
-    }
-  };
-
-  const handleInputChange = (e) => {
-    console.log(e);
-    const { name, value, type, checked } = e.target;
-    setProfileData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+      //console.log(avatar); << 잘나옴
+      await updateProfile(user, { photoURL: avatar });
+    } else return;
   };
 
   const complete = async () => {
     if (!user) return;
     try {
-      const nameToSave = profileData.name ? profileData.name : profileData.name;
-      const bioToSave = profileData.bio ? profileData.bio : profileData.bio;
-      const imgToSave = profileData.img || user.photoURL || null;
-
+      console.log("Uploaded avatar URL:");
+      console.log(avatar);
+      const nameToSave = inputData.username || profile.name;
+      const bioToSave = inputData.bio || profile.bio;
+      const imgToSave = avatar || "";
       const profileQuery = query(
         collection(db, "profile"),
         where("userId", "==", user.uid)
       );
-      const querySnapshot = await getDocs(profileQuery);
 
+      const querySnapshot = await getDocs(profileQuery);
       if (querySnapshot.empty) {
+        console.log("빔");
+        console.log(imgToSave);
+        console.log(nameToSave);
+        console.log(bioToSave);
         await addDoc(collection(db, "profile"), {
+          postId: doc.id,
           username: nameToSave,
           userId: user.uid,
-          userEmail: user.email, // 나중에 파람즈 값과.. 바꿀필요가없구나?ㅋ
+          userEmail: user.email,
           bio: bioToSave,
           isLinkPublic: profileData.isLinkPublic,
           isProfilePublic: profileData.isProfilePublic,
-          img: imgToSave, // 변경된 이미지 URL 추가
+          img: imgToSave,
         });
       } else {
+        console.log("안빔");
         const docRef = querySnapshot.docs[0].ref;
+        console.log(docRef);
         await updateDoc(docRef, {
           username: nameToSave,
-          userEmail: user.email,
           userId: user.uid,
+          userEmail: user.email,
           bio: bioToSave,
           isLinkPublic: profileData.isLinkPublic,
           isProfilePublic: profileData.isProfilePublic,
-          img: imgToSave, // 변경된 이미지 URL 업데이트
+          img: imgToSave,
         });
       }
-
+      // auth 정보 수정
       await updateProfile(user, {
         displayName: nameToSave,
+        photoURL: avatar,
       });
-
+      //여기에 있는 profile state값 변경
+      setProfileData({
+        ...profileData,
+        name: nameToSave,
+        bio: bioToSave,
+        img: avatar,
+      });
       onProfileChange({
         ...profileData,
         name: nameToSave,
         bio: bioToSave,
+        img: avatar,
       });
-      close(); // 모달 닫기
+      close();
     } catch (e) {
-      console.error(e);
+      console.log("업뎃 에러");
+      console.log(e);
+      console.log("업뎃 에러");
     }
   };
 
   if (!open) return null;
-
   return (
     <>
       <ModalOverlay onClick={close}>
@@ -242,14 +266,13 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
             <Left style={{ width: "90%" }}>
               <SubTitle>이름</SubTitle>
               <NameInput
-                name="name"
-                value={profileData.name}
-                placeholder={user.displayName}
+                name="username"
+                placeholder={user.displayName || user.email}
                 onChange={handleInputChange}
               />
             </Left>
             <ImgBox htmlFor="profileImg">
-              {Boolean(avatar) ? (
+              {!avatar === null ? (
                 <Img src={avatar} />
               ) : (
                 <UserIcon2 width="54" fill="#BABABA" />
@@ -267,7 +290,6 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
               <SubTitle>자기소개</SubTitle>
               <NameInput
                 name="bio"
-                value={profileData.bio}
                 placeholder={profileData.bio || "자기소개를 입력하세요"}
                 onChange={handleInputChange}
               />
