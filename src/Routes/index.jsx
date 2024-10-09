@@ -13,6 +13,7 @@ import PostForm from "../Components/PostForm";
 import Insites from "../Pages/Insites";
 // import CreateAccount from "../Components/Login/CreateAccount_de";
 import CreateAccount from "../Pages/CreateAccount";
+import Settings from "../Pages/Settings";
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
       {
         path: "PostForm",
         element: <PostForm />,
+      },
+      {
+        path: "Settings", // 다은 추가
+        element: <Settings />,
       },
     ],
   },
