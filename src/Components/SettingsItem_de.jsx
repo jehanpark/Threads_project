@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import BorderItem from "../Components/Common/Border_de";
@@ -37,26 +37,22 @@ const SettingMenu = styled.div`
   -webkit-tap-highlight-color: transparent;
 `;
 const SettingTitle = styled.div.attrs({ className: "common-style" })`
-  font-size: 18px;
+  font-size: 14px;
   width: 120px;
-  text-align: center; /* 가운데 정렬 */
+  text-align: center;
   line-height: calc(1.4 * 1.3em);
-  overflow-y: visible;
-  word-wrap: break-word;
-  border-bottom: 1px solid #181818;
   font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   cursor: pointer;
-  &:hover {
-    color: dodgerblue;
-    border-bottom: 1px solid dodgerblue;
-  }
+  position: relative; /* 자식 요소의 절대 위치 설정을 위한 relative */
 `;
-const SettingMove = styled.a`
+const SettingMove = styled.div`
   display: flex;
-  align-items: center;
   margin: 20px auto;
   gap: 50px; /* 간격 조절 */
+  border-bottom: 2px solid transparent; /* 기본 border-bottom 설정 */
+  transition: border-color 0.3s ease-in-out; /* 자연스러운 transition 추가 */
+  position: relative; /* 부모 요소의 위치 설정 */
 `;
 
 // 기타 개인정보 설정 묶음
@@ -79,7 +75,7 @@ const OutherPrivacy = styled.div`
 const OtherPivInfo = styled.div`
   display: flex;
   flex-direction: column;
-  width: 590.67px;
+  width: 100%;
   height: 57.8px;
   padding: 8px 0px;
 `;
@@ -114,7 +110,7 @@ const PrivacyProfile = styled.div`
   align-items: center;
 `;
 const PrivacyTitle = styled.span`
-  font-size: 16px;
+  font-size: 14px;
   margin-left: 14px;
   align-items: center;
   text-align: center;
@@ -136,7 +132,7 @@ const AccountContents = styled.div`
   gap: 20px;
 `;
 const AccountTitle = styled.span`
-  font-size: 16px;
+  font-size: 14px;
   margin-left: 14px;
   justify-content: center;
   align-items: center;
@@ -145,7 +141,7 @@ const AccountTitle = styled.span`
 `;
 
 const HelpTitle = styled.span`
-  font-size: 16px;
+  font-size: 14px;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -153,7 +149,6 @@ const HelpTitle = styled.span`
 `;
 
 // 아이콘 정렬
-const TitleAutoLayout = styled.div``;
 
 const ContentAutoLayout = styled.div`
   display: flex;
@@ -162,9 +157,9 @@ const ContentAutoLayout = styled.div`
   width: 100%;
 `;
 const Icon = styled.div`
-  width: 20px;
   height: 20px;
-  text-align: center;
+  text-align: end;
+  padding-right: 10px;
 `;
 const IconRadius = styled.div`
   width: 20px;
@@ -176,44 +171,76 @@ const IconRadius = styled.div`
 
 // 줄
 const Line = styled.hr`
-  width: 96%;
+  width: 98%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin: 16px 0;
   border: none;
   height: 1px;
   background-color: #bababa;
 `;
 
+const ActiveBorder = styled.div`
+  position: absolute; /* 활성화된 border 위치 설정 */
+  bottom: 0; /* 하단에 위치 */
+  left: ${(props) => props.left}px; /* 동적으로 위치 설정 */
+  width: ${(props) => props.width}px; /* 동적으로 너비 설정 */
+  height: 2px; /* border 높이 설정 */
+  background-color: dodgerblue; /* 활성화 색상 */
+  transition: left 0.3s ease-in-out, width 0.3s ease-in-out; /* 자연스러운 애니메이션 추가 */
+`;
+
 const SettingsItem_de = () => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
-  const [activeTab, setActiveTab] = useState("privacy"); // 초기값을 "privacy"로 설정
+  const [activeTab, setActiveTab] = useState("privacy");
+  const [borderPosition, setBorderPosition] = useState({ left: 0, width: 0 }); // border의 위치 및 너비 상태
 
   // 각 탭 클릭 시 호출되는 함수
-  const handleTabClick = (tab) => {
+  const handleTabClick = (tab, index) => {
     setActiveTab(tab);
+    const titleElement = document.getElementById(`setting-title-${index}`);
+    if (titleElement) {
+      const { offsetLeft, offsetWidth } = titleElement;
+      setBorderPosition({ left: offsetLeft, width: offsetWidth }); // border 위치 및 너비 업데이트
+    }
   };
 
+  useEffect(() => {
+    // 초기 상태에 대한 border 위치 설정
+    const titleElement = document.getElementById("setting-title-0"); // 기본 탭(privacy) 선택
+    if (titleElement) {
+      const { offsetLeft, offsetWidth } = titleElement;
+      setBorderPosition({ left: offsetLeft, width: offsetWidth });
+    }
+  }, []);
   return (
     <Wrapper>
       <BorderItem type="settingsWrapper" isSmallScreen={isSmallScreen}>
         <SettingMenu>
           <SettingMove>
             <SettingTitle
-              className="common-style"
-              onClick={() => handleTabClick("privacy")}
+              id="setting-title-0"
+              onClick={() => handleTabClick("privacy", 0)}
             >
               개인정보보호
             </SettingTitle>
             <SettingTitle
-              className="common-style"
-              onClick={() => handleTabClick("account")}
+              id="setting-title-1"
+              onClick={() => handleTabClick("account", 1)}
             >
               계정
             </SettingTitle>
             <SettingTitle
-              className="common-style"
-              onClick={() => handleTabClick("help")}
+              id="setting-title-2"
+              onClick={() => handleTabClick("help", 2)}
             >
               도움말
             </SettingTitle>
+            <ActiveBorder
+              left={borderPosition.left}
+              width={borderPosition.width}
+            />
           </SettingMove>
         </SettingMenu>
 
@@ -256,7 +283,7 @@ const SettingsItem_de = () => {
                   <PrivacyTitle>차단된 프로필</PrivacyTitle>
                   <Icon>
                     <ShareIconNew
-                      width={"20px"}
+                      width={"14px"}
                       stroke="#999"
                       strokeWidth="2"
                     />
@@ -271,7 +298,7 @@ const SettingsItem_de = () => {
                   <PrivacyTitle>좋아요 수 및 공유 수 숨기기</PrivacyTitle>
                   <Icon>
                     <ShareIconNew
-                      width={"20px"}
+                      width={"14px"}
                       stroke="#999"
                       strokeWidth="2"
                     />
@@ -338,7 +365,7 @@ const SettingsItem_de = () => {
                     <PrivacyTitle>개인정보</PrivacyTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -353,7 +380,7 @@ const SettingsItem_de = () => {
                     <PrivacyTitle>관리 감독</PrivacyTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -368,7 +395,7 @@ const SettingsItem_de = () => {
                     <PrivacyTitle>보안</PrivacyTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -383,7 +410,7 @@ const SettingsItem_de = () => {
                     <PrivacyTitle>계정 상태</PrivacyTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -398,7 +425,7 @@ const SettingsItem_de = () => {
                     <PrivacyTitle>내 정보 다운로드</PrivacyTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -413,7 +440,7 @@ const SettingsItem_de = () => {
                     <PrivacyTitle>내 정보 전송</PrivacyTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -434,7 +461,7 @@ const SettingsItem_de = () => {
                   <ContentAutoLayout>
                     <HelpTitle>개인정보 보호 및 보안 도움말</HelpTitle>
                     <Icon>
-                      <RightArrowIcon fill={"gray"} width={"14px"} />
+                      <RightArrowIcon fill={"gray"} width={"12px"} />
                     </Icon>
                   </ContentAutoLayout>
                 </PrivacyProfile>
@@ -454,7 +481,7 @@ const SettingsItem_de = () => {
                     <HelpTitle>고객센터</HelpTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -466,7 +493,7 @@ const SettingsItem_de = () => {
                     <HelpTitle>Meta 개인정보처리방침</HelpTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -478,7 +505,7 @@ const SettingsItem_de = () => {
                     <HelpTitle>Meta 이용약관</HelpTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -490,7 +517,7 @@ const SettingsItem_de = () => {
                     <HelpTitle>Threads 추가 개인정보처리방침</HelpTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -502,7 +529,7 @@ const SettingsItem_de = () => {
                     <HelpTitle>Threads 이용 약관</HelpTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -514,7 +541,7 @@ const SettingsItem_de = () => {
                     <HelpTitle>쿠키 정책</HelpTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -526,7 +553,7 @@ const SettingsItem_de = () => {
                     <HelpTitle>페디버스 가이드</HelpTitle>
                     <Icon>
                       <ShareIconNew
-                        width={"20px"}
+                        width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />

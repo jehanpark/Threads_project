@@ -1464,7 +1464,7 @@ export const ShareIconNew = ({
     <svg
       width={width || "19px"}
       height={height}
-      viewBox="0 0 21 23"
+      viewBox="0 0 26 22"
       stroke={stroke}
       strokeWidth={strokeWidth}
       strokeLinecap={strokeLinecap}
@@ -1488,7 +1488,7 @@ export const RightArrowIcon = ({ width, fill }) => {
     <svg
       width={width || "21px"}
       height={height}
-      viewBox="0 0 21 12"
+      viewBox="0 0 23 30"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
     >
