@@ -19,6 +19,8 @@ export const lightTheme = {
   userIcon: "595959",
   followerfont: "#737373",
   searchColor: "#595959",
+  // 다은 새로 추가(설정부분)
+  activeBorder: "#181818",
 };
 
 export const darkTheme = {
@@ -40,6 +42,8 @@ export const darkTheme = {
   userIcon: "#7373",
   followerfont: "#bababa",
   searchColor: "#1D1D1D",
+  // 다은 새로 추가(설정부분)
+  activeBorder: "#181818",
 };
 
 const GlobalStyles = createGlobalStyle`

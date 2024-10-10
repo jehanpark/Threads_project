@@ -182,19 +182,19 @@ const Line = styled.hr`
 `;
 
 const ActiveBorder = styled.div`
-  position: absolute; /* 활성화된 border 위치 설정 */
-  bottom: 0; /* 하단에 위치 */
-  left: ${(props) => props.left}px; /* 동적으로 위치 설정 */
-  width: ${(props) => props.width}px; /* 동적으로 너비 설정 */
-  height: 2px; /* border 높이 설정 */
-  background-color: dodgerblue; /* 활성화 색상 */
-  transition: left 0.3s ease-in-out, width 0.3s ease-in-out; /* 자연스러운 애니메이션 추가 */
+  position: absolute;
+  bottom: 0;
+  left: ${(props) => props.left}px;
+  width: ${(props) => props.width}px;
+  height: 2px;
+  background-color: ${(props) => props.theme.activeBorder};
+  transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
 `;
 
 const SettingsItem_de = () => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
   const [activeTab, setActiveTab] = useState("privacy");
-  const [borderPosition, setBorderPosition] = useState({ left: 0, width: 0 }); // border의 위치 및 너비 상태
+  const [borderPosition, setBorderPosition] = useState({ left: 0, width: 0 });
 
   // 각 탭 클릭 시 호출되는 함수
   const handleTabClick = (tab, index) => {
@@ -208,7 +208,7 @@ const SettingsItem_de = () => {
 
   useEffect(() => {
     // 초기 상태에 대한 border 위치 설정
-    const titleElement = document.getElementById("setting-title-0"); // 기본 탭(privacy) 선택
+    const titleElement = document.getElementById("setting-title-0");
     if (titleElement) {
       const { offsetLeft, offsetWidth } = titleElement;
       setBorderPosition({ left: offsetLeft, width: offsetWidth });
@@ -234,6 +234,7 @@ const SettingsItem_de = () => {
             <SettingTitle
               id="setting-title-2"
               onClick={() => handleTabClick("help", 2)}
+              gi
             >
               도움말
             </SettingTitle>
