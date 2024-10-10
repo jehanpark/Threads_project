@@ -19,12 +19,15 @@ const Wrapper = styled.nav`
   justify-content: space-between;
   margin-bottom: 20px;
   /* padding: 0px 20px; */
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const LogoWrapper = styled.div`
   width: 40px; /* 고정 크기 설정 */
   cursor: pointer;
-  @media screen and (width: 390px) {
+  @media screen and (width: 768px) {
     display: none;
   }
 `;

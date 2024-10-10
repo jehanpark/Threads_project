@@ -30,16 +30,19 @@ const ModalOverlay = styled.div`
 `;
 
 const PofileModalBox = styled.div`
-  width: 450px;
-  height: 530px;
+  width: ${({ isSmallScreen }) => (isSmallScreen ? "100%" : "450px")};
+  height: ${({ isSmallScreen }) => (isSmallScreen ? "100%" : "530px")};
   border-radius: 12px;
-  background: ${(props) => props.theme.borderWrapper};
-  padding: 64px 11px 0 11px;
+  background: ${(props) => props.theme.borderColor};
+  padding: ${({ isSmallScreen }) =>
+    isSmallScreen ? "40% 20px" : "64px 11px 0 11px"};
   color: ${(props) => props.theme.fontcolor};
   position: relative;
-  display: ${({ isSmallScreen }) => (isSmallScreen ? "none" : "flex")};
+  /* display: ${({ isSmallScreen }) => (isSmallScreen ? "none" : "flex")}; */
   flex-direction: column;
-  gap: 10px;
+  @media screen and (min-width: 768px) {
+    background: ${(props) => props.theme.nomalIconColor};
+  }
 `;
 
 const CloseButton = styled.button`
@@ -60,6 +63,8 @@ const Box = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 15px;
+  background: ${(props) => props.theme.borderColor};
+  margin-bottom: 10px;
 `;
 
 const Left = styled.div`
@@ -70,7 +75,7 @@ const Left = styled.div`
 
 const NameInput = styled.input`
   background-color: inherit;
-  border-bottom: 1px solid ${(props) => props.theme.navIconColor};
+  border-bottom: 1px solid ${(props) => props.theme.nomalIconColor};
   width: 100%;
   &::placeholder {
     opacity: 1;

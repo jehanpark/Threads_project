@@ -8,7 +8,7 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import {
   collection,
   doc,
-  getDoc,
+  onSnapshot,
   getDocs,
   limit,
   orderBy,
@@ -39,6 +39,7 @@ import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
 import TimeLine from "../Components/TimeLine";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import OtherBtnModal from "../Components/profile/OtherBtnModal";
 
 const BoederWrapper = styled.div`
   margin: 0 auto;
@@ -50,10 +51,12 @@ const BoederWrapper = styled.div`
   padding: 10px 0;
   @media (max-width: 768px) {
     border-radius: 0;
-    width: 100%;
+    width: 100vw;
     height: calc(100% - 140px);
     box-shadow: none;
-    border-radius: 0px 0px 0px 0px;
+    margin: 0px;
+    border-radius: 0px;
+    background-color: ${(props) => props.theme.bodyBg};
   }
 `;
 
@@ -153,7 +156,7 @@ const PostWrap = styled.div`
 `;
 
 const Profile = () => {
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
   const navigate = useNavigate();
   const user = auth.currentUser; //유저정보
 
@@ -173,6 +176,7 @@ const Profile = () => {
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
+  const [otherBtn, setOtherBtn] = useState(false);
   const [profile, setProfile] = useState({
     postId: "",
     username: "",
@@ -207,25 +211,30 @@ const Profile = () => {
 
         // 에러
         setAvarta(imgUrl);
+        //유저 정보가 있다면
         if (!profileDoc.empty) {
           setProfile((prev) => ({
             ...prev,
             postId: profileDoc.postId,
             username: profileDoc.username,
+            userEmail: profileDoc.userEmail,
             bio: profileDoc.bio,
             isLinkPublic: profileDoc.isLinkPublic,
             isProfilePublic: profileDoc.isProfilePublic,
             img: imgUrl,
           }));
           console.log(profile);
+          console.log("있다");
         }
       } else {
         // 사람이 없다면?
         console.log("음따");
+        console.log(profile);
         setProfile((prev) => ({
           ...prev,
           postId: "",
           username: emailAdress,
+          userEmail: emailAdress,
           bio: "",
           isLinkPublic: true,
           isProfilePublic: true,
@@ -258,6 +267,10 @@ const Profile = () => {
     //프로필수정모달
   };
 
+  const onOtherbtn = () => {
+    setOtherBtn((prev) => !prev);
+    //프로필수정모달
+  };
   const fetchPosts = async () => {
     //하단에 띄울 쓰레드 스테이트 관리 함수
     const postQuery = query(
@@ -314,6 +327,11 @@ const Profile = () => {
           onProfileChange={handleProfileChange}
         />
       )}
+      {otherBtn ? (
+        <OtherBtnModal open={true} close={onOtherbtn} profile={profile} />
+      ) : (
+        <OtherBtnModal open={false} close={onOtherbtn} profile={profile} />
+      )}
       <>
         <ProfileInnner isSmallScreen={isSmallScreen}>
           <ProfileWrap>
@@ -322,7 +340,7 @@ const Profile = () => {
               <IdText isSmallScreen={isSmallScreen}>{emailAdress}</IdText>
             </IdWrap>
             <ImgWrap isSmallScreen={isSmallScreen}>
-              {Boolean(avatar) || avatar !== "" ? (
+              {Boolean(avatar) ? (
                 <Img src={avatar} />
               ) : (
                 <UserIcon2 width="54" fill="#BABABA" />
@@ -347,10 +365,10 @@ const Profile = () => {
                 </Links>
               ) : null}
             </FollowLink>
-            {editbtn === true ? (
+            {user.email === emailAdress ? (
               <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
             ) : (
-              <Button type="edit" text="임시버튼" onClick={onProfileEdite} />
+              <Button type="edit" text="팔로잉" onClick={onOtherbtn} />
             )}
           </BottomWrap>
         </ProfileInnner>
@@ -361,7 +379,6 @@ const Profile = () => {
             <li>리포트</li>
             <li>인스타</li>
           </Tap>
-          <TextInput isSmallScreen={isSmallScreen} />
           <PostWrap>
             {posts.map((post) => (
               <Post key={post.id} {...post} />
