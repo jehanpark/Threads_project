@@ -1,13 +1,16 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ThreadDispatchContext } from "../Contexts/ThreadContext";
 import { ThreadDataContext } from "../Contexts/ThreadContext";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import Profileimg from "../../public/profile.png";
-import Border from "../Components/Common/Border";
+import Border from "../Components/Common/Border_de";
 import Button from "../Components/Common/Button";
 import Modal from "../Components/Common/Modal";
 import { PlusIcon, InstaIcon, FacebookIcon } from "../Components/Common/Icon";
+import { useAuth } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 import {
   ProfileInnner,
   IdWrap,
@@ -164,6 +167,18 @@ const Tdiv = styled.div`
 const Profile = () => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
   const data = useContext(ThreadDataContext);
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!currentUser) {
+      const confirmLogin = window.confirm("로그인 하시겠습니까?");
+      if (confirmLogin) {
+        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+      } else {
+        navigate("/");
+      }
+    }
+  }, [currentUser, navigate]);
 
   const { createThread, updateThread, deleteThread, updateProfile } =
     useContext(ThreadDispatchContext);

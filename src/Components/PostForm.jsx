@@ -1,12 +1,15 @@
 // @ts-nocheck
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
 import GlobalStyles from "../styles/GlobalStyles.styles";
-import Border from "./Common/Border";
+import Border from "./Common/Border_de";
+import { useAuth } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 import {
   CameraIcon,
   PictureIcon,
@@ -92,7 +95,7 @@ const TextArea = styled.textarea`
     }
     outline: none;
   }
-  @media screen and (width: 390px){
+  @media screen and (width: 390px) {
     border-radius: 0 0 0 0;
   }
 `;
@@ -127,8 +130,8 @@ const Buttons = styled.div`
   border-top: ${(props) => props.theme.borderstroke};
   padding: 20px;
   @media screen and (width: 390px) {
-   display: flex;
-   width: 100%; 
+    display: flex;
+    width: 100%;
   }
 `;
 
@@ -142,7 +145,7 @@ const DelteButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
   @media screen and (width: 390px) {
-   display: none;
+    display: none;
   }
 `;
 
@@ -160,7 +163,6 @@ const SubmitBtn = styled.input`
     color: #1c1c1c;
   }
   @media screen and (width: 390px) {
-   
   }
 `;
 
@@ -168,6 +170,19 @@ const PostForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState("");
   const [files, setFiles] = useState([]);
+
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!currentUser) {
+      const confirmLogin = window.confirm("로그인 하시겠습니까?");
+      if (confirmLogin) {
+        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+      } else {
+        navigate("/");
+      }
+    }
+  }, [currentUser, navigate]);
 
   const maxFileSize = 5 * 1024 * 1024; // 5MB
   const maxFilesCount = 3;

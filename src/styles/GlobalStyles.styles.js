@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import reset from "styled-reset";
 
 export const lightTheme = {
   logoColor: "#000",
@@ -21,6 +22,8 @@ export const lightTheme = {
   searchColor: "#595959",
   themeIconBackground: "#fafafa",
   navIconColor: undefined,
+  // 다은 새로 추가(설정부분)
+  activeBorder: "#181818",
 };
 
 export const darkTheme = {
@@ -44,10 +47,14 @@ export const darkTheme = {
   searchColor: "#1D1D1D",
   themeIconBackground: "#363636",
   navIconColor: undefined,
+  // 다은 새로 추가(설정부분)
+  activeBorder: "#181818",
 };
 
 const GlobalStyles = createGlobalStyle`
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+${reset};
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,

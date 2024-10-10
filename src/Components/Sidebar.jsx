@@ -336,6 +336,9 @@ const Sidebar = () => {
                     // 로그인 페이지로 이동 로직 추가
                     navigate("/login");
                     closeModal();
+                  } else if (ModalList === "인사이트") {
+                    navigate("/insites");
+                    closeModal();
                   } else {
                     closeModal();
                   }

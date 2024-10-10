@@ -3,7 +3,7 @@ import Logo from "../Logo";
 import LogoTextMark from "../LogoTextMark";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import Border from "../Common/Border";
+import Border from "../Common/Border_de";
 
 import {
   Wrapper,
@@ -20,10 +20,9 @@ import {
   Hr,
   Or,
   Linebreak,
-} from "./RecycleStyles/login_de";
-import { signInWithEmailAndPassword } from "firebase/auth";
+} from "../Login/RecycleStyles/login_de";
 
-const LoginItemDe = () => {
+const LoginItem = () => {
   // const [emailPlaceholder, setEmailPlaceholder] = useState(
   //   "사용자 이름, 전화번호 또는 이메일 주소"
   // );
@@ -34,7 +33,6 @@ const LoginItemDe = () => {
   const [password, setPassword] = useState("");
   const onChange = () => {};
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
-  const onSubmit = () => {};
   return (
     <Wrapper>
       <BgImg isSmallScreen={isSmallScreen} src="/login/thread_login_bg.png" />
@@ -46,13 +44,12 @@ const LoginItemDe = () => {
           <LogoTextMark width={62} />
           <span isSmallScreen={isSmallScreen}>계정으로 로그인</span>
         </LoginP>
-        <Form onSubmit={onSubmit}>
+        <Form>
           <InputWrapper>
             <StyledInput
               onChange={onChange}
               type="id"
               id="id"
-              name="id"
               placeholder=""
               required
               value={id}
@@ -66,7 +63,6 @@ const LoginItemDe = () => {
               onChange={onChange}
               type="password"
               id="password"
-              name="password"
               placeholder=""
               required
               value={password}
@@ -76,13 +72,14 @@ const LoginItemDe = () => {
           <InputWrapper>
             <StyledInput
               type="submit"
-              value={isLoading ? "Loading.." : "로그인"}
+              value={isLoading ? "Loading.." : "Login!"}
             />
           </InputWrapper>
-          <Link to="/create-account">
+          {/* 회원가입 링크 설정 */}
+          <Link to="/createaccount">
             <SingnUpText>회원가입</SingnUpText>
           </Link>
-          <Link to="/">
+          <Link>
             <ForgotPasswordText>비밀번호를 잊으셨나요?</ForgotPasswordText>
           </Link>
           <Linebreak isSmallScreen={isSmallScreen}>
@@ -90,11 +87,15 @@ const LoginItemDe = () => {
             <Or isSmallScreen={isSmallScreen}>또는</Or>
             <Hr isSmallScreen={isSmallScreen} />
           </Linebreak>
-          <Border type="loginborder" text="instagram으로 계속"></Border>
+          <Border
+            type="loginborder"
+            text="instagram으로 계속"
+            isSmallScreen={isSmallScreen}
+          ></Border>
         </Form>
       </LoginInner>
     </Wrapper>
   );
 };
 
-export default LoginItemDe;
+export default LoginItem;
