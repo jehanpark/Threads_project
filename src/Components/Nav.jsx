@@ -321,7 +321,6 @@ const Nav = () => {
             <Logo width={40} />
           </LogoWrapper>
         </Link>
-
         <Ul>
           {menuItems.map((menu, index) => (
             <Li
