@@ -11,7 +11,6 @@ const Box = styled(motion.div)`
   left: 0px;
   backdrop-filter: blur(13px); /* 배경 흐림 효과 추가 */
   /* filter: brightness(0.7) contrast(0.5) grayscale(0.1); */
-  cursor: pointer;
 `;
 
 const CloseBtnWrapper = styled.div`
@@ -48,14 +47,17 @@ const ReportContents = styled.div`
 const TextAreaWrapper = styled.div`
   width: 370px;
   height: 220px;
-  background-color: ${(props) => props.theme.btnBgColor};
+  /* background-color: ${(props) => props.theme.btnBgColor}; */
+  background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
   border-radius: 12px;
-  border: 2px solid ${(props) => props.theme.borderstroke};
-  box-shadow: ${(props) => props.theme.bordershadow};
+  /* border: 2px solid ${(props) => props.theme.borderstroke}; */
+  border: 2px solid #e9e9e9;
+  /* box-shadow: ${(props) => props.theme.bordershadow}; */
+  box-shadow: 0 0 15px #c9c9c9;
   /* border: 1px solid skyblue; */
   padding: 5% 5%;
 `;
@@ -177,7 +179,7 @@ const ReportModal = ({
           <ReportContents>
             <TextAreaTitle>문제 신고</TextAreaTitle>
             <TextAreaWrapper>
-              <TextAreaForm>
+              <TextAreaForm onClick={(e) => stopPropGationFuc(e)}>
                 <TextArea
                   placeholder={placeholder}
                   onClick={(e) => stopPropGationFuc(e)}
