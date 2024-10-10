@@ -11,7 +11,7 @@ import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
 import GlobalStyles from "../styles/GlobalStyles.styles";
-import Border from "./Common/Border";
+import Border from "./Common/Border_de";
 import {
   CameraIcon,
   PictureIcon,
@@ -101,6 +101,7 @@ const TextArea = styled.textarea`
     }
     outline: none;
   }
+  @media screen and (width: 390px) {
   @media screen and (width: 390px) {
     border-radius: 0 0 0 0;
   }

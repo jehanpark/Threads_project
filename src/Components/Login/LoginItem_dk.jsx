@@ -6,6 +6,7 @@ import { auth } from "../../firebase";
 import { FirebaseError } from "firebase/app";
 import { useMediaQuery } from "react-responsive";
 import Border from "../Common/Border_dk";
+import ReportModal from "./ReportModal";
 
 import {
   Wrapper,
@@ -21,6 +22,7 @@ import {
   ForgotPasswordText,
   Hr,
   Or,
+  Error,
   Linebreak,
   StyledSpan,
 } from "./RecycleStyles/login_dk";
@@ -32,6 +34,10 @@ const LoginItemDk = () => {
   const [error, setError] = useState("");
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+
+  // modal showing
+  const [showing, setShowing] = useState(false);
+  const toggleShowing = () => setShowing((prev) => !prev);
 
   const navigate = useNavigate();
 
@@ -51,7 +57,25 @@ const LoginItemDk = () => {
     if (isLoading || id === "" || password === "") return;
     try {
       setIsLoading(true);
-      await signInWithEmailAndPassword(auth, id, password);
+
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        id,
+        password
+      );
+
+      // 로그인 성공 후 로컬 스토리지에 사용자 이메일과 비밀번호 저장
+      // 차후에 복호화 예정
+      const userEmail = userCredential.user.email;
+      let storedAccounts = JSON.parse(localStorage.getItem("accounts")) || [];
+
+      // 중복된 계정이 없도록 추가
+      if (!storedAccounts.includes(userEmail)) {
+        storedAccounts.push({ email: userEmail, password: password });
+        localStorage.setItem("accounts", JSON.stringify(storedAccounts));
+      }
+
+      // 이동
       navigate("/");
     } catch (e) {
       if (e instanceof FirebaseError) {
@@ -71,7 +95,7 @@ const LoginItemDk = () => {
           <Logo width={40} />
         </LogoWrapper>
         <LoginP>
-          <LogoTextMark width={62} />
+          <LogoTextMark width={66} />
           <StyledSpan $isSmallScreen={isSmallScreen}>
             계정으로 로그인
           </StyledSpan>
@@ -121,8 +145,18 @@ const LoginItemDk = () => {
           <Link to="/login-insta">
             <Border type="loginborder" text="instagram으로 계속"></Border>
           </Link>
+          {error !== "" ? <Error>{error}</Error> : null}
         </Form>
+        <button onClick={toggleShowing}>click</button>
       </LoginInner>
+      <ReportModal
+        width="100%"
+        height="100%"
+        background="rgba(255, 255, 255, 0.9)"
+        borderRadius="20px"
+        isVisible={showing}
+        setShowing={setShowing}
+      />
     </Wrapper>
   );
 };

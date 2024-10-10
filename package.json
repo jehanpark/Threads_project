@@ -23,6 +23,7 @@
     "react-speech-recognition": "^3.10.0",
     "regenerator-runtime": "^0.14.1",
     "styled-components": "^6.1.13",
+    "styled-reset": "^4.5.2",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

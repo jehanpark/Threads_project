@@ -93,3 +93,4 @@ const Border = ({ type, text }) => {
 };
 
 export default Border;
+

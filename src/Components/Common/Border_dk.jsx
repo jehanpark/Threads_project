@@ -94,13 +94,7 @@ import { useMediaQuery } from "react-responsive";
 import LogoImg from "../../images/insta.png";
 import RightArrow from "../../images/rightarrow.svg";
 
-// Transient Props를 위한 인터페이스 정의
-interface BorderItemProps {
-  type: string;
-  $isSmallScreen: boolean;
-}
-
-const BorderItem = styled.div<BorderItemProps>`
+const BorderItem = styled.div`
   ${({ type }) =>
     type === "borderWrapper" &&
     `
@@ -137,7 +131,9 @@ const BorderItem = styled.div<BorderItemProps>`
     justify-content: center;
     align-items: center;
     padding: 17px 11px;
-    margin-top: 16px;
+    margin-top: 0px;
+    margin-bottom: 12px;
+    font-weight: 700;
     `}
   
   /* 예시: isSmallScreen에 따른 추가 스타일링 */
@@ -150,7 +146,7 @@ const BorderItem = styled.div<BorderItemProps>`
     `}
 `;
 
-const BorderTextItem = styled.div<{ type: string }>`
+const BorderTextItem = styled.div`
   position: ${({ type }) => (type === "borderinner" ? "absolute" : "relative")};
   top: ${({ type }) => (type === "borderinner" ? "30px" : "0px")};
   padding: 20px;
@@ -176,13 +172,7 @@ const LogoImage = styled.img`
   height: 40px;
 `;
 
-// Border 컴포넌트의 프롭스 타입 정의
-interface BorderProps {
-  type: string;
-  text: string;
-}
-
-const BorderDk: React.FC<BorderProps> = ({ type, text }) => {
+const BorderDk = ({ type, text }) => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
   return (
     <BorderItem type={type} $isSmallScreen={isSmallScreen}>
