@@ -5,6 +5,7 @@ import { CloseIcon } from "../Common/Icon";
 import { FixIcon } from "../Common/Icon";
 
 const Box = styled(motion.div)`
+  z-index: 100;
   background: ${({ background }) => background || "rgba(255, 255, 255, 0.3)"};
   position: absolute;
   top: 0px;

@@ -4,6 +4,8 @@ import { ThemeContext } from "../Contexts/ThemeContext";
 import { auth } from "../firebase";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import ReportModal from "./Login/ReportModal";
+
 import {
   ArrowIcon,
   EtcIcon,
@@ -48,7 +50,6 @@ const PinBtn = styled.button`
   height: 60px;
   box-shadow: ${(props) => props.theme.bordershadow};
   border: 2px solid ${(props) => props.theme.borderstroke};
-
   /* border-color: ${(props) => props.theme.borderstroke};
   border-style: none; */
   border-radius: 50%;
@@ -223,6 +224,11 @@ const Sidebar = () => {
   const [isBackClick, setIsBackClick] = useState(false); // 뒤로 가기 애니메이션 상태
   const modalRef = useRef(null);
   const { currentUser } = useAuth(); // 현재 로그인된 사용자 정보 가져오기
+
+  // modal showing
+  const [showing, setShowing] = useState(false);
+  const toggleShowing = () => setShowing((prev) => !prev);
+
   const navigate = useNavigate();
   const openModal = () => {
     setIsOpen(true);
@@ -290,19 +296,20 @@ const Sidebar = () => {
     : ["디자인", , "문제신고", "로그인"];
 
   return (
-    <Aside>
-      <BtnWrapper>
-        <PinBtn>
-          <FixIcon fill={"#bababa"} />
-        </PinBtn>
-        <SetBtn onClick={openModal}>
-          <EtcIcon fill={"#bababa"} />
-        </SetBtn>
-      </BtnWrapper>
+    <>
+      <Aside>
+        <BtnWrapper>
+          <PinBtn>
+            <FixIcon fill={"#bababa"} />
+          </PinBtn>
+          <SetBtn onClick={openModal}>
+            <EtcIcon fill={"#bababa"} />
+          </SetBtn>
+        </BtnWrapper>
 
-      {isOpen && !isThemeModalOpen && (
-        <ModalContainer ref={modalRef} isThemeModal={false}>
-          {/* <Ul>
+        {isOpen && !isThemeModalOpen && (
+          <ModalContainer ref={modalRef} isThemeModal={false}>
+            {/* <Ul>
             {ModalLists.map((ModalList, index) => (
               <Li
                 key={index}
@@ -322,77 +329,91 @@ const Sidebar = () => {
               </Li>
             ))}
           </Ul> */}
-          <Ul>
-            {ModalLists.map((ModalList, index) => (
-              <Li
-                key={index}
-                onClick={() => {
-                  if (index === 0) {
-                    handleThemeModalOpen(); // 첫 번째 메뉴 클릭 시 테마 모달로 전환
-                  } else if (ModalList === "로그아웃" && currentUser) {
-                    onLogOut();
-                    closeModal();
-                  } else if (ModalList === "로그인" && !currentUser) {
-                    // 로그인 페이지로 이동 로직 추가
-                    navigate("/login");
-                    closeModal();
-                  } else if (ModalList === "인사이트") {
-                    navigate("/insites");
-                    closeModal();
-                  } else {
-                    closeModal();
-                  }
-                }}
-              >
-                {ModalList}
-                {index === 0 && (
-                  <ArrowIconWrapper>
-                    <ArrowIcon width={"8px"} fill={"#bababa"} />
-                  </ArrowIconWrapper>
-                )}{" "}
-                {/* 로그인된 경우 첫 번째 항목에 아이콘 표시 */}
-              </Li>
-            ))}
-          </Ul>
-        </ModalContainer>
-      )}
+            <Ul>
+              {ModalLists.map((ModalList, index) => (
+                <Li
+                  key={index}
+                  onClick={() => {
+                    if (index === 0) {
+                      handleThemeModalOpen(); // 첫 번째 메뉴 클릭 시 테마 모달로 전환
+                    } else if (ModalList === "로그아웃" && currentUser) {
+                      onLogOut();
+                      closeModal();
+                    } else if (ModalList === "로그인" && !currentUser) {
+                      // 로그인 페이지로 이동 로직 추가
+                      navigate("/login");
+                      closeModal();
+                    } else if (ModalList === "인사이트") {
+                      navigate("/insites");
+                      closeModal();
+                    } else if (ModalList === "문제신고") {
+                      toggleShowing();
+                    } else if (ModalList === "설정") {
+                      navigate("/settings");
+                      closeModal();
+                    } else {
+                      closeModal();
+                    }
+                  }}
+                >
+                  {ModalList}
+                  {index === 0 && (
+                    <ArrowIconWrapper>
+                      <ArrowIcon width={"8px"} fill={"#bababa"} />
+                    </ArrowIconWrapper>
+                  )}{" "}
+                  {/* 로그인된 경우 첫 번째 항목에 아이콘 표시 */}
+                </Li>
+              ))}
+            </Ul>
+          </ModalContainer>
+        )}
 
-      {/* 테마 변경 모달 */}
-      {isThemeModalOpen && (
-        <ModalContainer
-          ref={modalRef}
-          isThemeModal={true}
-          isBackClick={isBackClick} // 뒤로 가기 애니메이션 구분
-        >
-          <BackButton onClick={handleBackClick}>
-            <ArrowIcon width={"8px"} fill={"#bababa"} />
-            {"디자인"}
-            <div></div>
-          </BackButton>
-          {/* <p>모드 변경</p> */}
-          <ThemeToggleBtnWrapper
-            isDarkMode={isDarkMode}
-            onClick={handleThemeToggle}
+        {/* 테마 변경 모달 */}
+        {isThemeModalOpen && (
+          <ModalContainer
+            ref={modalRef}
+            isThemeModal={true}
+            isBackClick={isBackClick} // 뒤로 가기 애니메이션 구분
           >
-            <ThemeToggleBtnBox>
-              {!clicked ? (
-                <ToggleBackground layoutId="ToggleBackground" style={{}} />
-              ) : null}
-              <ThemeLightIcon />
-            </ThemeToggleBtnBox>
-            <ThemeToggleBtnBox>
-              {clicked ? (
-                <ToggleBackground layoutId="ToggleBackground" style={{}} />
-              ) : null}
-              <ThemeDarkIcon />
-            </ThemeToggleBtnBox>
-            {/* <ThemeToggleButton isDarkMode={isDarkMode} onClick={toggleTheme}>
+            <BackButton onClick={handleBackClick}>
+              <ArrowIcon width={"8px"} fill={"#bababa"} />
+              {"디자인"}
+              <div></div>
+            </BackButton>
+            {/* <p>모드 변경</p> */}
+            <ThemeToggleBtnWrapper
+              isDarkMode={isDarkMode}
+              onClick={handleThemeToggle}
+            >
+              <ThemeToggleBtnBox>
+                {!clicked ? (
+                  <ToggleBackground layoutId="ToggleBackground" style={{}} />
+                ) : null}
+                <ThemeLightIcon />
+              </ThemeToggleBtnBox>
+              <ThemeToggleBtnBox>
+                {clicked ? (
+                  <ToggleBackground layoutId="ToggleBackground" style={{}} />
+                ) : null}
+                <ThemeDarkIcon />
+              </ThemeToggleBtnBox>
+              {/* <ThemeToggleButton isDarkMode={isDarkMode} onClick={toggleTheme}>
               {isDarkMode ? "모드 변경" : "모드 변경"}
             </ThemeToggleButton> */}
-          </ThemeToggleBtnWrapper>
-        </ModalContainer>
-      )}
-    </Aside>
+            </ThemeToggleBtnWrapper>
+          </ModalContainer>
+        )}
+      </Aside>
+      <ReportModal
+        width="100%"
+        height="100vh"
+        background="rgba(255, 255, 255, 0.9)"
+        borderRadius="20px"
+        isVisible={showing}
+        setShowing={setShowing}
+      />
+    </>
   );
 };
 
