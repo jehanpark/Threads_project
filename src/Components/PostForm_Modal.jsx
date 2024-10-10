@@ -74,6 +74,7 @@ width: 280px;
 text-align: center;
 transition: all 0.3s;
 border-radius: 20px;
+color: ${(props) => props.theme.fontcolor};
 &:hover {
       background: ${(props) => props.theme.mouseHoverBg};
       color: ${(props) => props.theme.mouseHoverFontcolor};
@@ -84,7 +85,6 @@ border-radius: 20px;
     text-align: center;
     font-weight: bold;
     border-radius: 16px;
-    color: ${(props) => props.theme.fontcolor};
     transition: all 0.3s;
   }
 `;
@@ -97,8 +97,8 @@ const UpLoadButton = styled.button`
     align-items: center;
     width: 300px;
   height: 70px;
-  background: #1c1c1c;
-  color: #fff;
+  background: ${(props)=>props.theme.fontcolor};
+  color: ${(props)=>props.theme.btnBgColor};
   font-size: 15px;
   font-weight: bold;
   border-radius: 16px;

@@ -36,18 +36,21 @@ const Wrapper = styled.div`
     width: 100%;
   }
 `;
-
+const ColumnWrapper = styled.div`
+  display: flex;
+`;
 const Column = styled.div`
   display: flex;
   margin-left: 50px;
+  margin-bottom: 12px;
+  gap: 10px;
 `;
 
 const Photo = styled.img`
-  width: 140px;
-  height: 140px;
+  width: 160px;
+  height: 160px;
   object-fit: cover/contain;
   margin-left: 0px;
-  margin-top: 8px;
   border-radius: 8px;
   @media (max-width: 768px) {
     margin-right: 8px;
@@ -57,9 +60,16 @@ const Photo = styled.img`
 `;
 
 const Video = styled.video`
-  width: 250px;
-  height: 100%;
+  display: flex;
+  width: 220px;
+  height: 160px;
   border-radius: 15px;
+  object-fit: cover;
+  @media (max-width: 768px) {
+    margin-right: 8px;
+    width: 120px;
+    height: 120px;
+  }
 `;
 
 const Header = styled.div`
@@ -99,7 +109,7 @@ const Icons = styled.div`
   justify-content: start;
   align-items: center;
   margin-left: 50px;
-  margin-top: 20px;
+  margin-top: 10px;
   cursor: pointer;
   color: #bababa;
 `;
@@ -228,8 +238,6 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
     const date = new Date(createdAt.seconds * 1000);
     return formatDistanceToNow(date, { addSuffix: true });
   };
-
-  const navigator = useNavigate();
 
   const openModal = (postId) => {
     setOpenModalId(postId); // 특정 포스트의 ID로 모달 열기
@@ -377,11 +385,18 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
 
     setIsLiked((prevLiked) => !prevLiked);
   };
-  const handleCommentClick = async () => {
-    const postRef = doc(db, "contents", id);
-
-    setComments((prevComments) => prevComments + 1); // 댓글을 1 추가 (임시로 설정)
-    await updateDoc(postRef, { comments: comments + 1 }); // Firebase에 업데이트
+  const navigator = useNavigate();
+  const handleCommentClick = () => {
+    navigator("/Comment", {
+      state: {
+        postId: id,
+        postContent: post,
+        photos,
+        videos,
+        username,
+        createdAt: createdAt || { seconds: Date.now() / 1000 }, // 기본값 설정
+      },
+    });
   };
 
   // DM 상태가 변경될 때 Firebase에 업데이트
@@ -399,7 +414,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
     setIsDms((prevDms) => !prevDms);
   };
 
-  // Retweets 상태가 변경될 때 Firebase에 업데이트
+  // Retweets 상태가 변경될 때 Firebase에 업데이트오늘 저녁 파스타
   const handleRetweetClick = async () => {
     const postRef = doc(db, "contents", id);
 
@@ -444,23 +459,28 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
           <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
         )}
       </Column>
+      <ColumnWrapper>
+        {/* Render multiple photos */}
+        {photos && photos.length > 0 && (
+          <Column>
+            {photos.map((photoUrl, index) => (
+              <Photo
+                key={index}
+                src={photoUrl}
+                alt={`Post Image ${index + 1}`}
+              />
+            ))}
+          </Column>
+        )}
 
-      {/* Render multiple photos */}
-      {photos && photos.length > 0 && (
-        <Column>
-          {photos.map((photoUrl, index) => (
-            <Photo key={index} src={photoUrl} alt={`Post Image ${index + 1}`} />
-          ))}
-        </Column>
-      )}
-
-      {videos && videos.length > 0 && (
-        <Column>
-          {videos.map((videoUrl, index) => (
-            <Video key={index} controls autoPlay loop src={videoUrl} />
-          ))}
-        </Column>
-      )}
+        {videos && videos.length > 0 && (
+          <Column>
+            {videos.map((videoUrl, index) => (
+              <Video key={index} controls autoPlay loop src={videoUrl} />
+            ))}
+          </Column>
+        )}
+      </ColumnWrapper>
       <Icons>
         <IconWrapper onClick={handleLike}>
           <HeartIcon width={20} /> {likes}

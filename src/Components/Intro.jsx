@@ -73,34 +73,9 @@ const MetaLogo = styled.img`
 `;
 
 const Intro = () => {
-  const [isAnimationFinished, setIsAnimationFinished] = useState(false);
-  const [isIntroVisible, setIsIntroVisible] = useState(true); // 인트로 표시 여부 상태
-
-  useEffect(() => {
-    const hasVisited = sessionStorage.getItem('hasVisited'); // sessionStorage 사용
-
-    if (hasVisited) {
-      // 세션에서 이미 방문한 적이 있다면 인트로 표시하지 않음
-      setIsIntroVisible(false);
-    } else {
-      // 세션에 방문 기록이 없으면 인트로를 표시하고 세션에 기록
-      sessionStorage.setItem('hasVisited', 'true');
-      
-      const timer = setTimeout(() => {
-        setIsAnimationFinished(true);
-        setTimeout(() => setIsIntroVisible(false), 300); // 페이드아웃 시간에 맞추어 숨김 처리
-      }, 2300); // SVG 애니메이션 시간과 맞춤 (2.3초)
-
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
-  if (!isIntroVisible) {
-    return null; // 인트로를 더 이상 표시하지 않음
-  }
 
   return (
-    <Background animate={isAnimationFinished}>
+    <Background>
       <Svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
         <Path d="M38 15C37.1667 10.6667 32.5 2 20.5 2C5.5 2 2 14 2 23.5C2 33 7 42.5 17.5 43.5C28 44.5 33.5 40.5 35.5 34.5C37.5 28.5 33 23.5 27 21.5C21 19.5 12.5 21.5 13.5 28C14.5 34.5 26 34.5 28 27C30 19.5 27.5 15.5 26 14.5C24.5 13.5 18.5 10.5 13.5 16" />
       </Svg>
