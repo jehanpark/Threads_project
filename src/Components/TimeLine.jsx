@@ -102,7 +102,7 @@ const TimeLine = () => {
       );
       unsubscribe = onSnapshot(postsQuery, (snapshot) => {
         const posts = snapshot.docs.map((doc) => {
-          const { createdAt, photos, video, post, userId, username } =
+          const { createdAt, photos, video, post, userId, username, email } =
             doc.data();
           return {
             id: doc.id,
@@ -112,6 +112,7 @@ const TimeLine = () => {
             post,
             userId,
             username,
+            email,
           };
         });
         setPosts(posts);
