@@ -58,6 +58,7 @@ const Photo = styled.img`
     width: 120px;
     height: 120px;
   }
+  
 `;
 
 const Video = styled.video`
