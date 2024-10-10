@@ -25,10 +25,10 @@ const BoederWrapper = styled.div`
   overflow: hidden;
   @media (max-width: 768px) {
     position: absolute;
-    bottom:0 ;
+    bottom: 0;
     border-radius: 0;
     width: 100%;
-    height: calc(100% - 70px  );
+    height: calc(100% - 70px);
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
   }
@@ -101,7 +101,7 @@ const TimeLine = () => {
       );
       unsubscribe = onSnapshot(postsQuery, (snapshot) => {
         const posts = snapshot.docs.map((doc) => {
-          const { createdAt, photos, videos, post, userId, username } =
+          const { createdAt, photos, videos, post, userId, username, email } =
             doc.data();
 
           return {
@@ -112,6 +112,7 @@ const TimeLine = () => {
             post,
             userId,
             username,
+            email,
           };
         });
         setPosts(posts);

@@ -24,13 +24,14 @@ import { useNavigate } from "react-router-dom";
 import PostSetModal from "./Common/PostSetModal";
 
 const Wrapper = styled.div`
+  position: relative;
   width: 100%;
   height: auto;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
   border-radius: 30px;
-  padding:20px;
+  padding: 20px;
   width: 660px;
   @media (max-width: 768px) {
     width: 100%;
@@ -38,7 +39,7 @@ const Wrapper = styled.div`
 `;
 const ColumnWrapper = styled.div`
   display: flex;
-`
+`;
 const Column = styled.div`
   display: flex;
   margin-left: 50px;
@@ -73,7 +74,7 @@ const Video = styled.video`
 `;
 
 const Header = styled.div`
-width: 100%;
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -96,10 +97,10 @@ const Timer = styled.span`
   color: #9a9a9a;
 `;
 const Etc = styled.div`
-display: flex;
-justify-content: flex-end;
-margin-right: 20px;
-cursor: pointer;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 20px;
+  cursor: pointer;
 `;
 
 const Payload = styled.p`
@@ -449,27 +450,31 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
           </div>
         )}
       </Header>
-        <Column>
-          {isEditing ? (
-            <EditPostFormTextArea
+      <Column>
+        {isEditing ? (
+          <EditPostFormTextArea
             onChange={onChange}
             value={editedPost}
             placeholder={post}
-            />
-          ) : (
-            <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
-          )}
-        </Column>
-            <ColumnWrapper>
+          />
+        ) : (
+          <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
+        )}
+      </Column>
+      <ColumnWrapper>
         {/* Render multiple photos */}
         {photos && photos.length > 0 && (
           <Column>
             {photos.map((photoUrl, index) => (
-              <Photo key={index} src={photoUrl} alt={`Post Image ${index + 1}`} />
+              <Photo
+                key={index}
+                src={photoUrl}
+                alt={`Post Image ${index + 1}`}
+              />
             ))}
           </Column>
         )}
-  
+
         {videos && videos.length > 0 && (
           <Column>
             {videos.map((videoUrl, index) => (
@@ -477,7 +482,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
             ))}
           </Column>
         )}
-</ColumnWrapper>
+      </ColumnWrapper>
       <Icons>
         <IconWrapper onClick={handleLike}>
           <HeartIcon width={20} /> {likes}

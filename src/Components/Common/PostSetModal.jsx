@@ -2,16 +2,18 @@ import React from "react";
 import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
 import { color } from "framer-motion";
+const WrapperAll = styled.div`
 
+`
 const Wrapper = styled.div`
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 20px;
+  right: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 300px;
+  width: 200px;
   height: auto;
   padding: 10px 0;
   border-radius: 30px;
@@ -21,7 +23,7 @@ const Wrapper = styled.div`
   z-index: 500;
   @media (max-width: 768px) {
     position: absolute;
-    bottom: 0;
+    bottom: 70px;
     left: 0;
     height: 420px;
     width: 100%;
@@ -65,7 +67,8 @@ const Optionwrapper = styled.div`
 `;
 const Li = styled.div`
   padding: 18px;
-  width: 280px;
+  width: 100%;
+  padding: 20px 50px;
   text-align: center;
   transition: all 0.3s;
   border-radius: 20px;
@@ -120,19 +123,21 @@ const PostSetModal = ({ onClose, onEdit, onDelete, isAuthor }) => {
   };
 
   return (
-    <Wrapper onClick={onClose}>
-      <Contentswrapper onClick={handleModalClick}>
-        <TopRec></TopRec>
-        <Optionwrapper>
-          {isAuthor && <Li onClick={onEdit}>수정</Li>}
-          <Li onClick={() => alert("리포스트 기능은 구현되지 않았습니다.")}>
-            리포스트
-          </Li>
-          {isAuthor && <Li onClick={onDelete}>삭제</Li>}
-        </Optionwrapper>
-        <UpLoadButton onClick={onClose}>닫기</UpLoadButton>
-      </Contentswrapper>
-    </Wrapper>
+    <WrapperAll>
+      <Wrapper onClick={onClose}>
+        <Contentswrapper onClick={handleModalClick}>
+          <TopRec></TopRec>
+          <Optionwrapper>
+            {isAuthor && <Li onClick={onEdit}>수정</Li>}
+            <Li onClick={() => alert("리포스트 기능은 구현되지 않았습니다.")}>
+              리포스트
+            </Li>
+            {isAuthor && <Li onClick={onDelete}>삭제</Li>}
+          </Optionwrapper>
+          <UpLoadButton onClick={onClose}>닫기</UpLoadButton>
+        </Contentswrapper>
+      </Wrapper>
+    </WrapperAll>
   );
 };
 export default PostSetModal;

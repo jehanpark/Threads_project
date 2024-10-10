@@ -8,6 +8,7 @@ import { useMediaQuery } from "react-responsive";
 import Border from "../Common/Border_de";
 import { InstaIcon } from "../Common/Icon";
 import FacebookBtn from "./FacebookBtn";
+import { useAuth } from "../../Contexts/AuthContext";
 import {
   Wrapper,
   BgImg,
@@ -36,6 +37,14 @@ const LoginItemInstaDk = () => {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+
+  useEffect(() => {
+    if (currentUser) {
+      // 사용자가 로그인한 상태라면 Home으로 리디렉션
+      navigate("/");
+    }
+  }, [currentUser, navigate]);
 
   // 로컬스토리지 기본 아이디 목록 가져오기
   const [accounts, setAccounts] = useState([]);

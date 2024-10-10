@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
   addDoc,
@@ -12,6 +12,8 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
 import GlobalStyles from "../styles/GlobalStyles.styles";
 import Border from "./Common/Border_de";
+import { useNavigate } from "react-router-dom";
+
 import {
   CameraIcon,
   PictureIcon,
@@ -101,7 +103,6 @@ const TextArea = styled.textarea`
     }
     outline: none;
   }
-  @media screen and (width: 390px) {
   @media screen and (width: 390px) {
     border-radius: 0 0 0 0;
   }
@@ -197,7 +198,18 @@ const PostForm = () => {
   const [post, setPost] = useState("");
   const [files, setFiles] = useState([]);
 
-  // Auth 사용
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!currentUser) {
+      const confirmLogin = window.confirm("로그인 하시겠습니까?");
+      if (confirmLogin) {
+        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+      } else {
+        navigate("/");
+      }
+    }
+  }, [currentUser, navigate]);
 
   const maxFileSize = 5 * 1024 * 1024; // 5MB
   const maxFilesCount = 3;

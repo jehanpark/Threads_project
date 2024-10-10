@@ -94,7 +94,7 @@ const TotalFollow = styled.div`
   margin: 12px 0;
 `;
 
-const Line = styled.hr`
+export const Line = styled.hr`
   width: 96%;
   margin: 20px 0;
   border: none;
