@@ -1,23 +1,24 @@
 import React from "react";
 import GlobalStyles from "../styles/GlobalStyles.styles";
 import styled from "styled-components";
-
+import { color } from "framer-motion";
 
 const Wrapper = styled.div`
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-width: 300px;
-height: auto;
-padding: 10px 0 ;
-border-radius: 30px;
-background: ${(props)=>props.theme.borderColor};
-box-shadow: ${(props)=>props.theme.bordershadow};
-transition: all 0.3s;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: auto;
+  padding: 10px 0;
+  border-radius: 30px;
+  background: ${(props) => props.theme.borderColor};
+  box-shadow: ${(props) => props.theme.bordershadow};
+  transition: all 0.3s;
+  z-index: 500;
   @media (max-width: 768px) {
     position: absolute;
     bottom: 0;
@@ -47,17 +48,11 @@ const TopRec = styled.div`
     border-radius: 16px;
   }
 `;
-const Title = styled.div`
-display: none;
-  @media (max-width: 768px) {
-    font-weight: 500;
-    color: #737373;
-    margin: 32px 0;
-  }
-`;
+
+
 const Optionwrapper = styled.div`
-padding: 10px;
-width: auto;
+  padding: 10px;
+  width: auto;
   @media (max-width: 768px) {
     height: 100%;
     width: 100%;
@@ -69,22 +64,29 @@ width: auto;
   }
 `;
 const Li = styled.div`
-padding: 18px;
-width: 280px;
-text-align: center;
-transition: all 0.3s;
-border-radius: 20px;
-color: ${(props) => props.theme.fontcolor};
-&:hover {
-      background: ${(props) => props.theme.mouseHoverBg};
-      color: ${(props) => props.theme.mouseHoverFontcolor};
-    }
+  padding: 18px;
+  width: 280px;
+  text-align: center;
+  transition: all 0.3s;
+  border-radius: 20px;
+  &:hover {
+    background: ${(props) => props.theme.mouseHoverBg};
+    color: ${(props) => props.theme.mouseHoverFontcolor};
+  }
+  &:nth-child(1) {
+  }
+  &:nth-child(2) {
+  }
+  &:nth-child(3) {
+    color: #ff3040;
+  }
   @media (max-width: 768px) {
     width: 90%;
     padding: 18px;
     text-align: center;
     font-weight: bold;
     border-radius: 16px;
+    color: ${(props) => props.theme.fontcolor};
     transition: all 0.3s;
   }
 `;
@@ -95,33 +97,32 @@ const UpLoadButton = styled.button`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 40px;
     width: 300px;
-  height: 70px;
-  background: ${(props)=>props.theme.fontcolor};
-  color: ${(props)=>props.theme.btnBgColor};
-  font-size: 15px;
-  font-weight: bold;
-  border-radius: 16px;
-  border: none;
-  transition: all 0.3s;
-  &:hover {
-    background: #fff;
-    color: #1c1c1c;
-  }
+    height: 70px;
+    background: ${(props) => props.theme.fontcolor};
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 16px;
+    border: none;
+    transition: all 0.3s;
+    &:hover {
+      background: #fff;
+      color: #1c1c1c;
+    }
   }
 `;
 
-const PostForm_Modal = (centerChild, Button) => {
+const PostSetModal = () => {
   return (
     <Wrapper>
       <Contentswrapper>
         <TopRec></TopRec>
-        <Title>새로운 스레드를 원하는 사람들에게 공개하세요</Title>
         <Optionwrapper>
-          <Li>모두에게 공개</Li>
-          <Li>내 팔로워만</Li>
-          <Li>내가 언급한 사람만</Li>
-          <Li>나만 보기</Li>
+          <Li>수정</Li>
+          <Li>리포스트</Li>
+          <Li>삭제</Li>
         </Optionwrapper>
         <UpLoadButton>게시글 업로드</UpLoadButton>
       </Contentswrapper>
@@ -129,4 +130,4 @@ const PostForm_Modal = (centerChild, Button) => {
   );
 };
 
-export default PostForm_Modal;
+export default PostSetModal;

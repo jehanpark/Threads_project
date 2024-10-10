@@ -5,6 +5,7 @@ import Intro from "../Components/Intro";
 import PostForm from "../Components/PostForm";
 import TimeLine from "../Components/TimeLine";
 import Loading from "../Components/Loading";
+import PostSetModal from "../Components/PostSetModal";
 
 
 const Wrapper = styled.div`
@@ -17,6 +18,7 @@ const Home = () => {
   return (
     <Wrapper>
       <Intro />
+      <Loading />
       <TimeLine />
     </Wrapper>
   );

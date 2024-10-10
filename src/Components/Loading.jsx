@@ -1,47 +1,55 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React from "react";
+import styled, { keyframes } from "styled-components";
 
+// SVG 아이콘이 그려지는 애니메이션
+const draw = keyframes`
+  0% {
+    stroke-dashoffset: 0.8;
+  }
+`;
 
 // 스타일 컴포넌트 정의
 const LoadingContainer = styled.div`
-width: 660px;
-height: 100%;
-position: absolute;
-left: 50%;
-bottom: 0;
-transform: translate(-50%);
-border-radius: 30px;
+  width: 660px;
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%);
+  border-radius: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #ffffff; /* 배경색 */
+  background-color: ${(props)=>props.theme.bodyBg};
   opacity: 0.9;
   z-index: 100000;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const SvgIcon = styled.svg`
-position: absolute;
-top: 50%;
-bottom: 50%;
-transform: translate(-50%);
-width: 100%;
-height: 100vh;
-width: 50px;
-height: 56px;
-animation: rotate 2s linear infinite; /* 로고에 회전 애니메이션 추가 */
-
-  @keyframes rotate {
-    0% {
-      opacity: 1;
-    }
-    80% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
+  width: 50px;
+  height: 56px;
+  path {
+    stroke-dasharray: 300;  // 전체 경로 길이
+    stroke-dashoffset: 300; // 경로가 가려진 상태에서 시작
+    stroke: ${(props)=>props.theme.logoColor};
+    animation: ${draw} 1.6s infinite forwards; // 3초 동안 경로를 그리는 애니메이션
   }
+`;
+
+const GrayLogo = styled.img`
+  position: absolute;
+  width: 50px;
+  height: 56px;
+  opacity: 0.2;
+  stroke-width: 4px;
 `;
 
 const Loading = () => {
@@ -49,8 +57,6 @@ const Loading = () => {
     <LoadingContainer>
       <SvgIcon
         xmlns="http://www.w3.org/2000/svg"
-        width="40"
-        height="46"
         viewBox="0 0 40 46"
         fill="none"
       >
@@ -60,6 +66,7 @@ const Loading = () => {
           strokeWidth="4"
         />
       </SvgIcon>
+      <GrayLogo src='/logoSvg.png'/>
     </LoadingContainer>
   );
 };
