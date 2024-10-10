@@ -295,7 +295,7 @@ const PostForm = () => {
   return (
     <BoederWrapper>
       <Form onSubmit={handleSubmit}>
-        {isLoading ? <Loading /> : null}``
+        {isLoading ? <Loading /> : null}
         <TextArea
           onChange={handlePostChange}
           value={post}

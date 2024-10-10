@@ -114,21 +114,23 @@ const UpLoadButton = styled.button`
   }
 `;
 
-const PostSetModal = ({ onClose }) => {
+const PostSetModal = ({ onClose, onEdit, onDelete, isAuthor }) => {
   const handleModalClick = (e) => {
     e.stopPropagation(); // 클릭이 배경으로 전파되지 않도록 방지
   };
 
   return (
-    <Wrapper onClick={handleModalClick}>
-      <Contentswrapper>
+    <Wrapper onClick={onClose}>
+      <Contentswrapper onClick={handleModalClick}>
         <TopRec></TopRec>
         <Optionwrapper>
-          <Li>수정</Li>
-          <Li>리포스트</Li>
-          <Li>삭제</Li>
+          {isAuthor && <Li onClick={onEdit}>수정</Li>}
+          <Li onClick={() => alert("리포스트 기능은 구현되지 않았습니다.")}>
+            리포스트
+          </Li>
+          {isAuthor && <Li onClick={onDelete}>삭제</Li>}
         </Optionwrapper>
-        <UpLoadButton>게시글 업로드</UpLoadButton>
+        <UpLoadButton onClick={onClose}>닫기</UpLoadButton>
       </Contentswrapper>
     </Wrapper>
   );

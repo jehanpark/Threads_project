@@ -273,10 +273,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
   };
 
   const onDelete = async () => {
-    if (
-      confirm("Are you sure you want to delete this post?") &&
-      user?.uid === userId
-    ) {
+    if (confirm("정말 이 글을 삭제하시겠습니까?") && user?.uid === userId) {
       try {
         await deleteDoc(doc(db, "contents", id));
         if (photos.length > 0) {
@@ -286,11 +283,13 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
       } catch (error) {
         console.error(error);
       }
+    } else {
+      alert("삭제할 권한이 없습니다.");
     }
   };
 
   const onUpdate = async () => {
-    if (user?.uid !== userId) return;
+    if (user?.uid !== userId) return alert("수정할 권한이 없습니다.");
 
     try {
       const postDoc = await getDoc(doc(db, "contents", id));
@@ -304,7 +303,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
 
       if (editedPhoto) {
         if (existingFileType && existingFileType !== newFileType) {
-          alert("You can only upload the same type of content");
+          alert("기존 파일 유형과 다른 유형을 업로드할 수 없습니다.");
           return;
         }
 
@@ -322,7 +321,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
         await updateDoc(doc(db, "contents", id), {
           post: editedPost,
           photos: newFileType === "image" ? [...photos, url] : photos,
-          video: newFileType === "video" ? url : video,
+          video: newFileType === "video" ? url : videos,
           fileType: newFileType,
         });
       } else {
@@ -425,7 +424,12 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
         </Etc>
         {openModalId === id && (
           <div className="modal-content">
-            <PostSetModal onClose={closeModal} />
+            <PostSetModal
+              onClose={closeModal}
+              onDelete={onDelete}
+              onEdit={onUpdate}
+              isAuthor={user?.uid === userId}
+            />
           </div>
         )}
       </Header>
