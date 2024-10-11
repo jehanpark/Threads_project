@@ -112,7 +112,7 @@ const MobileNav = () => {
         <LogoWrapper>
           <Logo width={28} />
         </LogoWrapper>
-        <div>My Profile</div>
+        <div>Activity</div>
         <MobileSidebar />
       </BackNavwrapper>
       <BottomNavWrapper>

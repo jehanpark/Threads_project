@@ -48,7 +48,7 @@ const ButtonItem = styled.button`
     `
       width: 585px;
       height: 39px;
-      background: #d9d9d9;
+      background: ${(props) => props.theme.nomalIconColor} ;
       color: #000;
       font-size: 15px;
       font-weight: Medium;
@@ -57,7 +57,13 @@ const ButtonItem = styled.button`
       &:hover {
         background: #1c1c1c; 
         color: #fff; 
+        outline: none;
       }
+      @media (max-width: 768px) {
+      height: 38px;
+      width: 100%;
+      outline: none;
+  }
     `}
   ${({ type }) =>
     type === "smalupload" &&
@@ -77,9 +83,13 @@ const ButtonItem = styled.button`
     `}
 `;
 
-const Button = ({ text, type, onClick }) => {
+const Button = ({ text, type, onClick, width, heith }) => {
   return (
-    <ButtonItem type={type} onClick={onClick}>
+    <ButtonItem
+      type={type}
+      onClick={onClick}
+      style={{ width: `${width}`, height: `${heith}` }}
+    >
       {text || "button"}
     </ButtonItem>
   );
