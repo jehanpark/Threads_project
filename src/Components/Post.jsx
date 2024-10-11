@@ -58,7 +58,6 @@ const Photo = styled.img`
     width: 120px;
     height: 120px;
   }
-  
 `;
 
 const Video = styled.video`
@@ -395,11 +394,17 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
 
     setIsLiked((prevLiked) => !prevLiked);
   };
-  const handleCommentClick = async () => {
-    const postRef = doc(db, "contents", id);
-
-    setComments((prevComments) => prevComments + 1); // 댓글을 1 추가 (임시로 설정)
-    await updateDoc(postRef, { comments: comments + 1 }); // Firebase에 업데이트
+  const handleCommentClick = () => {
+    navigator("/Comment", {
+      state: {
+        postId: id,
+        postContent: post,
+        photos,
+        videos,
+        username,
+        createdAt: createdAt || { seconds: Date.now() / 1000 }, // 기본값 설정
+      },
+    });
   };
 
   // DM 상태가 변경될 때 Firebase에 업데이트
