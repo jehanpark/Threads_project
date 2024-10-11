@@ -3,7 +3,10 @@ import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
 import { color } from "framer-motion";
 const WrapperAll = styled.div`
-
+width: 100%;
+height: 100%;
+@media (max-width: 768px) {
+  }
 `
 const Wrapper = styled.div`
   position: absolute;

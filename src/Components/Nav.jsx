@@ -18,8 +18,9 @@ const Wrapper = styled.nav`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-  @media (max-width: 768px) {
-    display: none; // 768px 이하의 화면에서는 아래의 스타일 적용
+  /* padding: 0px 20px; */
+  @media screen and (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -27,7 +28,7 @@ const LogoWrapper = styled.div`
   width: 40px;
   padding-left: 20px;
   cursor: pointer;
-  @media screen and (width: 390px) {
+  @media screen and (width: 768px) {
     display: none;
   }
 `;
