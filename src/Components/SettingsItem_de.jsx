@@ -374,18 +374,22 @@ const SettingsItem_de = () => {
                   </OtherInfo>
                 </OtherPivInfo>
                 <PrivacyProfile>
-                  <Icon>
+                  <IconLink>
                     <PersonalInfoIcon width={"30px"} fill={"black"} />
-                  </Icon>
+                  </IconLink>
                   <ContentAutoLayout>
                     <PrivacyTitle>개인정보</PrivacyTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://accountscenter.instagram.com/personal_info/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
@@ -394,13 +398,17 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <PrivacyTitle>관리 감독</PrivacyTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://familycenter.instagram.com/accounts/17841452333493991/?entrypoint=supervision_web&fc_session_id=b427b3a2-c47f-4a18-9bc0-27d6d0a83683&account_type=INSTAGRAM&is_home_e"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
@@ -409,13 +417,17 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <PrivacyTitle>보안</PrivacyTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://accountscenter.instagram.com/password_and_security/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
@@ -424,13 +436,17 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <PrivacyTitle>계정 상태</PrivacyTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://accountscenter.instagram.com/password_and_security/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
@@ -439,13 +455,17 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <PrivacyTitle>내 정보 다운로드</PrivacyTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://accountscenter.instagram.com/info_and_permissions/dyi/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
@@ -454,13 +474,17 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <PrivacyTitle>내 정보 전송</PrivacyTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://accountscenter.instagram.com/info_and_permissions/tyi/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
               </OtherSettings>
@@ -495,85 +519,113 @@ const SettingsItem_de = () => {
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>고객센터</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://help.instagram.com/179980294969821/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>Meta 개인정보처리방침</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://www.facebook.com/privacy/policy/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>Meta 이용약관</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://help.instagram.com/581066165581870"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>Threads 추가 개인정보처리방침</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://help.instagram.com/515230437301944"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>Threads 이용 약관</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://help.instagram.com/769983657850450"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>쿠키 정책</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://privacycenter.instagram.com/policies/cookies/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>페디버스 가이드</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://www.facebook.com/privacy/guide/fediverse/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
               </OtherSettings>
