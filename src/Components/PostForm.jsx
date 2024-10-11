@@ -262,6 +262,7 @@ const PostForm = () => {
         createdAt: serverTimestamp(),
         username: user?.displayName || "Anonymous",
         userId: user.uid,
+        email: user.email,
         likes: randomLikes,
         comments: randomComments,
         dms: randomDms,

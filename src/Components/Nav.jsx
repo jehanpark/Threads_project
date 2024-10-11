@@ -17,12 +17,16 @@ const Wrapper = styled.nav`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+  /* padding: 0px 20px; */
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const LogoWrapper = styled.div`
   width: 40px;
   cursor: pointer;
-  @media screen and (width: 390px) {
+  @media screen and (width: 768px) {
     display: none;
   }
 `;

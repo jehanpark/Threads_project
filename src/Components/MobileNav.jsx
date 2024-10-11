@@ -28,8 +28,8 @@ const BottomNavWrapper = styled.div`
   z-index: 100;
   box-shadow: ${(props) => props.theme.bor};
   @media (min-width: 768px) {
-      display: none; // 768px 이상의 화면에서는 숨기기
-    }
+    display: none; // 768px 이상의 화면에서는 숨기기
+  }
 `;
 
 const NavItem = styled.div`
