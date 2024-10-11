@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./Logo";
 import { useAuth } from "../Contexts/AuthContext";
-import { UserIcon1 } from "./Common/Icon";
 import MobileNav from "./MobileNav";
 
 const AllWrapper = styled.div`
@@ -36,6 +35,16 @@ const MyProfileImgs = styled.div`
   }
 `;
 
+const NavLoginBtn = styled.button`
+  background-color: ${(props) => props.theme.logoColor};
+  color: ${(props) => props.theme.btnBgColor};
+  width: 120px;
+  height: 45px;
+  border-radius: 12px;
+  cursor: pointer;
+  outline: none;
+`;
+
 const Img = styled.img`
   width: 100%;
   height: 100%;
@@ -49,6 +58,7 @@ const DefaultImgWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid red;
 `;
 
 const Ul = styled.ul`
@@ -286,19 +296,17 @@ const Nav = () => {
             </Li>
           ))}
         </Ul>
-        <MyProfileImgs>
-          {currentUser ? (
+        {currentUser ? (
+          <MyProfileImgs>
             <Link to="/profile">
               <Img src="/profile.png" alt="Profile" />
             </Link>
-          ) : (
-            <Link to="/login">
-              <DefaultImgWrapper>
-                <UserIcon1 />
-              </DefaultImgWrapper>
-            </Link>
-          )}
-        </MyProfileImgs>
+          </MyProfileImgs>
+        ) : (
+          <Link to="/login">
+            <NavLoginBtn>로그인</NavLoginBtn>
+          </Link>
+        )}
       </Wrapper>
     </AllWrapper>
   );
