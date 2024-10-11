@@ -19,40 +19,20 @@ const Contain = styled.div`
 
 const MenuTitle = styled.p`
   font-weight: 800;
-  font-size: 18px;
+  font-size: 20px;
   margin-top: 40px;
-  margin-bottom: 10px;
+  margin-bottom: 40px;
   color: ${(props) => props.theme.fontcolor};
   transition: all 0.3s;
   @media (max-width: 768px) {
     margin-top: 30px;
-    font-size: 22px;
+    font-size: 18px;
     margin-bottom: 15px;
   }
   @media (max-width: 480px) {
     margin-top: 30px;
-    font-size: 22px;
+    font-size: 18px;
     margin-bottom: 10px;
-  }
-`;
-
-const Border = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
-  padding: 20px;
-  max-width: 680px;
-  height: 600px;
-  border-radius: 40px 40px 0px 0px;
-  background-color: ${(props) => props.theme.borderColor};
-  @media (max-width: 768px) {
-    width: 90%;
-    border-radius: 20px 20px 0px 0px;
-  }
-  @media (max-width: 480px) {
-    width: 100%;
-    margin: 0 auto;
   }
 `;
 
@@ -93,7 +73,7 @@ const ContentsBorder = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  width: 100%;
+
   max-height: 600px;
   overflow-y: auto;
   padding: 0 20px;
@@ -164,19 +144,28 @@ const Activity = () => {
     setFilteredData(updatedData);
   };
 
-  //알람 밀어서 삭제
+  // 알림 삭제
+  const onDelete = (id) => {
+    const updatedData = savedData.filter(
+      (notification) => notification.id !== id
+    );
+    setSavedData(updatedData);
+    setFilteredData(updatedData);
+  };
+
+  console.log(onDelete);
 
   // 필터링
   const filterList = (type) => {
     if (type === "all") {
-      setFilteredData(savedData);
+      setFilteredData(savedData); // 전체 데이터 보여줌
     } else {
       const filtered = savedData.filter((item) => item.type === type); // 타입에 따른 필터링
       setFilteredData(filtered);
     }
   };
 
-  // 버튼 클릭 시 필터링 적용
+  // 필터 버튼 클릭 처리
   const handleButtonClick = (type) => {
     setContentType(type); // 필터 상태 업데이트
     filterList(type); // 필터링 적용
@@ -208,13 +197,15 @@ const Activity = () => {
 
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
   const navigate = useNavigate();
+
+  // 로그인 확인 및 리다이렉트
   useEffect(() => {
     if (!currentUser) {
       const confirmLogin = window.confirm("로그인 하시겠습니까?");
       if (confirmLogin) {
-        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+        navigate("/login"); // 로그인 페이지로 이동
       } else {
-        navigate("/");
+        navigate("/"); // 메인 페이지로 이동
       }
     }
   }, [currentUser, navigate]);
@@ -223,37 +214,37 @@ const Activity = () => {
     <BoederWrapper>
       <Contain>
         <MenuTitle>활동</MenuTitle>
-        <Border>
-          <ButtonGroup>
-            {buttons.map((button) => (
-              <button
-                key={button.type}
-                style={getButtonStyle(button.type)}
-                onClick={() => handleButtonClick(button.type)}
-              >
-                {button.label}
-              </button>
-            ))}
-          </ButtonGroup>
 
-          <ContentsBorder>
-            {filteredData.length > 0 ? (
-              filteredData.map((notification) => (
-                <NotificationItem
-                  key={notification.id}
-                  {...notification}
-                  onClick={() => markAsRead(notification.id)}
-                />
-              ))
-            ) : (
-              <NoResults>알림 내역이 없습니다.</NoResults>
-            )}
+        <ButtonGroup>
+          {buttons.map((button) => (
+            <button
+              key={button.type}
+              style={getButtonStyle(button.type)}
+              onClick={() => handleButtonClick(button.type)}
+            >
+              {button.label}
+            </button>
+          ))}
+        </ButtonGroup>
 
-            {savedData.length === 0 && (
-              <NotificationList onUpdate={handleDataUpdate} />
-            )}
-          </ContentsBorder>
-        </Border>
+        <ContentsBorder>
+          {filteredData.length > 0 ? (
+            <NotificationList
+              onUpdate={handleDataUpdate}
+              savedData={savedData}
+              filteredData={filteredData}
+              setFilteredData={setFilteredData}
+              onDelete={onDelete}
+              markAsRead={markAsRead}
+            />
+          ) : (
+            <NoResults>알림 내역이 없습니다.</NoResults>
+          )}
+
+          {savedData.length === 0 && (
+            <NotificationList onUpdate={handleDataUpdate} />
+          )}
+        </ContentsBorder>
       </Contain>
     </BoederWrapper>
   );

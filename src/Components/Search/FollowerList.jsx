@@ -8,7 +8,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
 
   // Firestore에서 필터링된 팔로워 데이터 가져오기
   useEffect(() => {
-    let followersQuery = collection(db, "users");
+    let followersQuery = collection(db, "contents");
 
     if (contentType === "profile") {
       followersQuery = query(followersQuery, where("profile", "==", true));

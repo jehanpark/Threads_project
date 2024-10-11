@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import NotificationItem from "./NotificationItem";
 
@@ -16,8 +23,12 @@ const messages = [
   "님이 게시글에 회원님의 게시글을 인용하였습니다.",
 ];
 
-// 메시지를 기반으로 타입 추론 함수
+// 메시지
 const getTypeLabel = (message) => {
+  if (Math.random() < 0.1) {
+    return "friend";
+  }
+
   if (message.includes("좋아요")) {
     return "like";
   } else if (message.includes("답글")) {
@@ -37,7 +48,14 @@ const NotificationList = ({ onUpdate }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "users"));
+        const DesQuery = query(
+          collection(db, "contents"),
+          orderBy("createdAt", "desc")
+        );
+        const querySnapshot = await getDocs(DesQuery);
+
+        // 문서가 제대로 로드되었는지 확인
+        console.log(`Fetched ${querySnapshot.size} documents`);
 
         // 데이터 가져오기 로그 (한 번만 출력)
         console.log(
@@ -46,7 +64,12 @@ const NotificationList = ({ onUpdate }) => {
 
         const initialData = querySnapshot.docs.map((docSnapshot) => {
           const docData = docSnapshot.data();
-          const createdAt = docData.createdAt?.toDate() || new Date();
+
+          const createdAt =
+            docData.createdAt && docData.createdAt.toDate
+              ? docData.createdAt.toDate()
+              : new Date();
+
           const message =
             docData.message ||
             messages[Math.floor(Math.random() * messages.length)];
@@ -56,7 +79,7 @@ const NotificationList = ({ onUpdate }) => {
 
           return {
             id: docSnapshot.id,
-            username: docData.username || "익명",
+            username: docData.nickname || "알수없음",
             createdAt,
             isRead: false,
             message,
@@ -68,16 +91,14 @@ const NotificationList = ({ onUpdate }) => {
         const limitedData = initialData.slice(0, MAX_NOTIFICATIONS);
         setNotifications(limitedData);
 
-        // 부모 컴포넌트로 전달 (필요한 경우에만)
         if (typeof onUpdate === "function") {
           onUpdate(limitedData);
         }
       } catch (error) {
-        console.error("Firestore에서 데이터를 가져오는 중 오류 발생:", error);
+        console.error("오류 발생:", error);
       }
     };
 
-    // fetchData 호출
     fetchData();
 
     // 의존성 배열을 비워서 한 번만 실행되도록 함
@@ -95,11 +116,18 @@ const NotificationList = ({ onUpdate }) => {
     );
 
     try {
-      const notificationRef = doc(db, "users", id);
+      const notificationRef = doc(db, "contents", id);
       await updateDoc(notificationRef, { isRead: true });
     } catch (error) {
       console.error("Firestore 업데이트 중 오류 발생:", error);
     }
+  };
+
+  // 삭제
+  const handleDelete = (id) => {
+    setNotifications(
+      notifications.filter((notification) => notification.id !== id)
+    );
   };
 
   return (
@@ -108,6 +136,7 @@ const NotificationList = ({ onUpdate }) => {
         <NotificationItem
           key={notification.id}
           {...notification}
+          onDelete={() => handleDelete(notification.id)}
           onClick={() => markAsRead(notification.id)}
         />
       ))}

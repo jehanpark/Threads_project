@@ -1,6 +1,7 @@
 import React, { useMemo, useEffect, useState } from "react";
 import styled from "styled-components";
 import { UserIcon2 } from "../Common/Icon";
+import { formatDistanceToNow } from "date-fns";
 import { motion, useMotionValue, useAnimate } from "framer-motion";
 
 const Contain = styled.div``;
@@ -24,18 +25,19 @@ const NotificationContain = styled(motion.div)`
   }
 
   @media (max-width: 768px) {
-    padding: 15px 20px;
+    width: 100%;
   }
 
   @media (max-width: 480px) {
-    padding: 10px 15px;
+    width: 100%;
+    padding: 10px 10px;
   }
 `;
 
 const DeleteButton = styled(motion.div)`
   position: absolute;
   height: 82px;
-  top: 27%;
+  top: 22%;
   right: 40px;
   display: grid;
   place-content: center;
@@ -58,7 +60,7 @@ const Wrapper = styled.div`
     props.isRead ? props.theme.borderstroke : props.theme.fontcolor};
 
   @media (max-width: 768px) {
-    gap: 15px;
+    gap: 20px;
   }
 
   @media (max-width: 480px) {
@@ -150,27 +152,22 @@ const UserDate = styled.p`
 `;
 
 const NotificationItem = React.memo(
-  ({ profileImg, username, createdAt, onClick, isRead, message, type }) => {
+  ({
+    profileImg,
+    username,
+    createdAt,
+    onClick,
+    isRead,
+    message,
+    type,
+    onDelete,
+  }) => {
     //날짜
-    const formattedDate = useMemo(() => {
-      const getTimeDifference = (timestamp) => {
-        if (!timestamp) return "날짜 없음";
-        const now = new Date();
-        const diffInMs = now - new Date(timestamp);
-        const diffInHours = diffInMs / (1000 * 60 * 60);
-        console.log(`NotificationItem received isRead: ${isRead}`);
-        if (diffInHours < 24) {
-          return `${Math.floor(diffInHours)}시간 전`;
-        } else if (diffInHours < 24 * 7) {
-          return `${Math.floor(diffInHours / 24)}일 전`;
-        } else if (diffInHours < 24 * 30) {
-          return `${Math.floor(diffInHours / (24 * 7))}주 전`;
-        } else {
-          return `${Math.floor(diffInHours / (24 * 30))}달 전`;
-        }
-      };
-      return getTimeDifference(createdAt);
-    }, [createdAt]);
+    const renderTimeAgo = () => {
+      if (!createdAt || !createdAt.seconds) return "방금 전";
+      const date = new Date(createdAt.seconds * 1000);
+      return formatDistanceToNow(date, { addSuffix: true });
+    };
 
     //삭제버튼
     const [isDeleteShow, setIsDeleteShow] = useState(false);
@@ -193,6 +190,7 @@ const NotificationItem = React.memo(
             initial="disappear"
             animate={deleteAnimateState}
             variants={{ appear: { opacity: 1 }, disappear: { opacity: 0 } }}
+            onClick={onDelete}
           >
             <DeleteLabel
               variants={{
@@ -206,16 +204,20 @@ const NotificationItem = React.memo(
           <NotificationContain
             whileTap="click"
             drag="x"
-            dragElastic={2}
+            dragElastic={0.5}
             dragMomentum={false}
-            dragConstraints={{ left: -0.1, right: 0 }}
+            dragConstraints={{ left: -64, right: 0 }}
             style={{
               x: itemX,
             }}
             onDragEnd={() => {
-              const isOverThreshold = itemX.get() < -64 / 2;
-
-              animate(animateRef.current, { x: isOverThreshold ? -64 : 0 });
+              const isOverThreshold = itemX.get() < -64;
+              if (isOverThreshold) {
+                animate(animateRef.current, { x: -64 });
+                onDelete();
+              } else {
+                animate(animateRef.current, { x: 0 });
+              }
             }}
             ref={animateRef}
           >
@@ -233,7 +235,7 @@ const NotificationItem = React.memo(
                   <UserName>{username}</UserName>
                   <UserInfo>{message}</UserInfo>
                 </User>
-                <UserDate>{formattedDate}</UserDate>
+                <UserDate>{renderTimeAgo()}</UserDate>
                 {isRead && <UserDate>읽음</UserDate>}
               </UserContex>
             </Wrapper>

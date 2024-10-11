@@ -8,9 +8,9 @@ import styled from "styled-components";
 import { MicIcon, SoundIcon } from "../Common/Icon";
 
 const SearchWrapper = styled.div`
-  width: 540px;
+  width: 530px;
   min-width: 340px;
-  height: 44px;
+  height: 200px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -30,11 +30,11 @@ const SearchWrapper = styled.div`
 const SearchBar = styled.input`
   width: 100%;
   height: 100%;
+  margin-bottom: 10px;
   border: none;
-
   background: transparent;
   color: ${(props) => props.theme.searchColor};
-  font-size: 14px;
+
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -45,6 +45,7 @@ const SearchBar = styled.input`
 
   &::placeholder {
     transition: all 0.3s;
+    font-size: 16px;
   }
 
   &:focus::placeholder {
@@ -62,6 +63,7 @@ const MicButton = styled.button`
   align-items: center;
   flex: 1;
   height: 100%;
+  margin-bottom: 10px;
   border: none;
   background: transparent;
   cursor: pointer;

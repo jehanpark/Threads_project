@@ -18,19 +18,17 @@ const Contain = styled.div`
 
 const MenuTitle = styled.p`
   font-weight: 800;
-  font-size: 18px;
+  font-size: 22px;
   margin-top: 40px;
   color: ${(props) => props.theme.fontcolor};
   transition: all 0.3s;
 
   @media (max-width: 768px) {
-    margin-top: 20px;
-    font-size: 22px;
+    font-size: 20px;
   }
 
   @media (max-width: 480px) {
-    margin-top: 20px;
-    font-size: 22px;
+    font-size: 20px;
   }
 `;
 
@@ -94,7 +92,7 @@ const ButtonGroupPC = styled.div`
   justify-content: space-evenly;
   align-items: center;
   gap: 20px;
-  margin-bottom: 30px;
+
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
     display: none;
@@ -148,7 +146,7 @@ const ContentsBorder = styled.div`
   scrollbar-width: none;
 
   @media (max-width: 768px) {
-    padding: 0;
+    padding: 20px;
   }
 
   @media (max-width: 480px) {
