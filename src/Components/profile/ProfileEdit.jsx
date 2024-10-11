@@ -4,7 +4,7 @@ import { UserIcon2 } from "../Common/Icon";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import { storage, auth, db } from "../../firebase";
-import { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import Button from "../Common/Button";
 import {
   collection,
@@ -30,18 +30,19 @@ const ModalOverlay = styled.div`
 `;
 
 const PofileModalBox = styled.div`
-  width: ${({ isSmallScreen }) => (isSmallScreen ? "100%" : "450px")};
-  height: ${({ isSmallScreen }) => (isSmallScreen ? "100%" : "530px")};
+  width: 450px;
+  height: 530px;
   border-radius: 12px;
-  background: ${(props) => props.theme.borderColor};
-  padding: ${({ isSmallScreen }) =>
-    isSmallScreen ? "40% 20px" : "64px 11px 0 11px"};
+  background: ${(props) => props.theme.headerBg};
+  padding: 64px 11px 0 11px;
   color: ${(props) => props.theme.fontcolor};
   position: relative;
-  /* display: ${({ isSmallScreen }) => (isSmallScreen ? "none" : "flex")}; */
   flex-direction: column;
-  @media screen and (min-width: 768px) {
-    background: ${(props) => props.theme.nomalIconColor};
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+    background: ${(props) => props.theme.headerBg};
+    padding: 40% 20px;
   }
 `;
 
@@ -59,7 +60,7 @@ const CloseButton = styled.button`
 const Box = styled.div`
   width: 100%;
   border: 2px solid ${(props) => props.theme.borderstroke};
-  border-radius: 15px;
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
   padding: 15px;
@@ -120,45 +121,42 @@ const ImgBox = styled.label`
   overflow: hidden;
   background-color: ${(props) => props.theme.mouseHoverBg};
 `;
+const Img = styled.img`
+  width: 100%;
+`;
 
 const ImgInput = styled.input`
   display: none;
 `;
 
-const Img = styled.img`
-  width: 100%;
-`;
-
-const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
+const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   const [profileData, setProfileData] = useState({ ...profile }); //전체적인 프로필 내용
   const [inputData, setInputDate] = useState({}); //>> 인풋 값을 받을 state
   const user = auth.currentUser; //유저 계정 내용 ( displayName , email , photoURL  , uid)
   const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" }); // 미디어 쿼리
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      complete(); // Enter 키를 누르면 complete() 실행 후 모달 닫기
-    } else if (e.key === "Escape") {
-      close(); // ESC 키를 누르면 창 닫기
-    }
-  };
+  // const handleKeyDown = (e) => {
+  //   if (e.key === "Enter") {
+  //     complete();
+  //   } else if (e.key === "Escape") {
+  //     close();
+  //   }
+  // };
 
-  useEffect(() => {
-    if (open) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open]);
+  // useEffect(() => {
+  //   if (open) {
+  //     window.addEventListener("keydown", handleKeyDown);
+  //   }
+  //   return () => {
+  //     window.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, [open]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     const newValue =
       value === "" ? profile[name] : type === "checkbox" ? checked : value;
-
     setInputDate((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : newValue,
@@ -247,12 +245,12 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
         bio: bioToSave,
         img: avatar,
       });
-      onProfileChange({
-        ...profileData,
-        name: nameToSave,
-        bio: bioToSave,
-        img: avatar,
-      });
+      // onProfileChange({
+      //   ...profileData,
+      //   name: nameToSave,
+      //   bio: bioToSave,
+      //   img: avatar,
+      // });
       close();
     } catch (e) {
       console.log("업뎃 에러");
@@ -260,6 +258,64 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
       console.log("업뎃 에러");
     }
   };
+
+  // const CheckProfile = async () => {
+  //   try {
+  //     const profileQuery = query(
+  //       collection(db, "profile"),
+  //       where("userEmail", "==", emailAdress)
+  //     );
+  //     const unsubscribe = onSnapshot(profileQuery, (querySnapshot) => {
+  //       //db에 firebase에 사람이 있다면 ?
+  //       if (!querySnapshot.empty) {
+  //         const profileDoc = querySnapshot.docs[0].data(); //이메일이 프로필db에 있는 사람의 데이터.
+  //         const imgUrl = profileDoc.img;
+  //         // const imgUrl = ref(storage, `avatars/${profileDoc.userId}`);
+
+  //         // 에러
+  //         setAvarta(imgUrl);
+  //         //유저 정보가 있다면
+  //         if (!profileDoc.empty) {
+  //           setProfileData((prev) => ({
+  //             ...prev,
+  //             postId: profileDoc.postId,
+  //             username: profileDoc.username,
+  //             userEmail: profileDoc.userEmail,
+  //             bio: profileDoc.bio,
+  //             isLinkPublic: profileDoc.isLinkPublic,
+  //             isProfilePublic: profileDoc.isProfilePublic,
+  //             img: imgUrl,
+  //           }));
+  //           console.log(profile);
+  //           console.log("있다");
+  //         }
+  //       } else {
+  //         // 사람이 없다면?
+  //         console.log("음따");
+  //         console.log(profile);
+  //         setProfileData((prev) => ({
+  //           ...prev,
+  //           postId: "",
+  //           username: emailAdress,
+  //           userEmail: emailAdress,
+  //           bio: "",
+  //           isLinkPublic: true,
+  //           isProfilePublic: true,
+  //           img: null,
+  //         }));
+  //       }
+  //     });
+  //     return () => unsubscribe();
+  //   } catch (error) {
+  //     console.error("Error fetching profile: ", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   CheckProfile();
+  // }, []);
+
+  console.log(profileData.isLinkPublic);
 
   if (!open) return null;
   return (
@@ -276,11 +332,11 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
               <NameInput
                 name="username"
                 placeholder={user.displayName || user.email}
-                onChange={handleInputChange}
+                onKeyUp={handleInputChange}
               />
             </Left>
             <ImgBox htmlFor="profileImg">
-              {!avatar === null ? (
+              {avatar !== null ? (
                 <Img src={avatar} />
               ) : (
                 <UserIcon2 width="54" fill="#BABABA" />
@@ -299,7 +355,7 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
               <NameInput
                 name="bio"
                 placeholder={profileData.bio || "자기소개를 입력하세요"}
-                onChange={handleInputChange}
+                onKeyUp={handleInputChange}
               />
             </Full>
           </Box>
@@ -336,6 +392,6 @@ const ProfileEdit = ({ open, close, profile, onProfileChange }) => {
       </ModalOverlay>
     </>
   );
-};
+});
 
 export default ProfileEdit;

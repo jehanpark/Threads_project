@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useMediaQuery } from "react-responsive";
+import { BellOffIcon, StarIcon, UserIcon2 } from "../Common/Icon";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -15,18 +15,19 @@ const ModalOverlay = styled.div`
 `;
 
 const OtherModalBox = styled.div`
-  width: ${({ isSmallScreen }) => (isSmallScreen ? "100%" : "450px")};
-  height: ${({ isSmallScreen }) => (isSmallScreen ? "100%" : "530px")};
+  width: 392px;
+  height: 335px;
   border-radius: 12px;
-  background: ${(props) => props.theme.borderColor};
-  padding: ${({ isSmallScreen }) =>
-    isSmallScreen ? "40% 20px" : "64px 11px 0 11px"};
+  background: ${(props) => props.theme.headerBg};
+  padding: 60px 17px 49px;
   color: ${(props) => props.theme.fontcolor};
   position: relative;
-  /* display: ${({ isSmallScreen }) => (isSmallScreen ? "none" : "flex")}; */
   flex-direction: column;
-  @media screen and (min-width: 768px) {
-    background: ${(props) => props.theme.nomalIconColor};
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+    background: ${(props) => props.theme.headerBg};
+    padding: 40% 20px;
   }
 `;
 
@@ -41,33 +42,71 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Box = styled.button`
-  width: 100%;
+  width: 80%;
+  height: 44px;
   border: 2px solid ${(props) => props.theme.borderstroke};
-  border-radius: 15px;
-  padding: 15px;
+  border-radius: 8px;
+  margin: 0px auto 6px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 12px;
+  gap: 6px;
   background: ${(props) => props.theme.borderColor};
-  margin: 0px auto 10px;
+  transition: background 0.3s;
   &:hover {
     background: ${(props) => props.theme.borderWrapper};
   }
 `;
 
+const ImgBox = styled.label`
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 22px;
+  border-radius: 50px;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.mouseHoverBg};
+`;
+const Img = styled.img`
+  width: 100%;
+`;
+
 const OtherBtnModal = ({ open, close, profile }) => {
   if (!open) return null;
-
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
   return (
     <>
       <ModalOverlay onClick={close}>
-        <OtherModalBox
-          isSmallScreen={isSmallScreen}
-          onClick={(e) => e.stopPropagation()}
-        >
+        <OtherModalBox onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={close}>X</CloseButton>
-          <Box>친한 친구 추가</Box>
-          <Box>알림 설정 취소</Box>
-          <Box>팔로잉 취소</Box>
+          <Wrapper>
+            <ImgBox htmlFor="profileImg">
+              {profile.img !== null || profile.img === "" ? (
+                <Img src={profile.img} />
+              ) : (
+                <UserIcon2 width="60" fill="#BABABA" />
+              )}
+            </ImgBox>
+            <Box>
+              <StarIcon width="16px" />
+              친한 친구 추가
+            </Box>
+            <Box>
+              {" "}
+              <BellOffIcon width="16px" /> 알림 설정 취소
+            </Box>
+            <Box>팔로잉 취소</Box>
+          </Wrapper>
         </OtherModalBox>
       </ModalOverlay>
     </>

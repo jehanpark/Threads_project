@@ -46,7 +46,8 @@ const BoederWrapper = styled.div`
   width: 680px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
+  /* background: ${(props) => props.theme.borderWrapper}; */
+  background: ${(props) => props.theme.headerBg};
   box-shadow: ${(props) => props.theme.bordershadow};
   padding: 10px 0;
   @media (max-width: 768px) {
@@ -56,7 +57,7 @@ const BoederWrapper = styled.div`
     box-shadow: none;
     margin: 0px;
     border-radius: 0px;
-    background-color: ${(props) => props.theme.bodyBg};
+    background: ${(props) => props.theme.headerBg};
   }
 `;
 
@@ -147,6 +148,38 @@ const ThreadInner = styled.div`
   width: 100%;
 `;
 
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  @media (max-width: 768px) {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 480px) {
+  }
+  button {
+    flex: 0 0 auto;
+    width: 130px;
+    padding: 10px 20px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all;
+    @media (max-width: 768px) {
+      width: 90px;
+      padding: 8px 15px;
+    }
+    @media (max-width: 480px) {
+      width: 80px;
+      padding: 6px 10px;
+    }
+  }
+`;
+
 const PostWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -188,6 +221,17 @@ const Profile = () => {
     img: `${avatar ?? ""}`,
   });
 
+  const [savedData, setSavedData] = useState([]); // 모든 데이터를 저장
+  const [filteredData, setFilteredData] = useState([]); // 필터링된 데이터를 저장
+  const [contentType, setContentType] = useState("all"); // 선택된 필터 상태
+  // NotificationList에서 데이터를 받아옴
+  const handleDataUpdate = (listData) => {
+    if (listData.length > 0) {
+      setSavedData(listData); // 전체 데이터를 저장
+      setFilteredData(listData); // 필터링 없이 모든 데이터를 먼저 보여줌
+    }
+  };
+
   const buttonCheck = () => {
     if (user?.email === emailAdress) {
       setEditbtn(true);
@@ -202,45 +246,47 @@ const Profile = () => {
         collection(db, "profile"),
         where("userEmail", "==", emailAdress)
       );
-      const querySnapshot = await getDocs(profileQuery);
-      //db에 firebase에 사람이 있다면 ?
-      if (!querySnapshot.empty) {
-        const profileDoc = querySnapshot.docs[0].data(); //이메일이 프로필db에 있는 사람의 데이터.
-        const imgUrl = profileDoc.img;
-        // const imgUrl = ref(storage, `avatars/${profileDoc.userId}`);
+      const unsubscribe = onSnapshot(profileQuery, (querySnapshot) => {
+        //db에 firebase에 사람이 있다면 ?
+        if (!querySnapshot.empty) {
+          const profileDoc = querySnapshot.docs[0].data(); //이메일이 프로필db에 있는 사람의 데이터.
+          const imgUrl = profileDoc.img;
+          // const imgUrl = ref(storage, `avatars/${profileDoc.userId}`);
 
-        // 에러
-        setAvarta(imgUrl);
-        //유저 정보가 있다면
-        if (!profileDoc.empty) {
+          // 에러
+          setAvarta(imgUrl);
+          //유저 정보가 있다면
+          if (!profileDoc.empty) {
+            setProfile((prev) => ({
+              ...prev,
+              postId: profileDoc.postId,
+              username: profileDoc.username,
+              userEmail: profileDoc.userEmail,
+              bio: profileDoc.bio,
+              isLinkPublic: profileDoc.isLinkPublic,
+              isProfilePublic: profileDoc.isProfilePublic,
+              img: imgUrl,
+            }));
+            console.log(profile);
+            console.log("있다");
+          }
+        } else {
+          // 사람이 없다면?
+          console.log("음따");
+          console.log(profile);
           setProfile((prev) => ({
             ...prev,
-            postId: profileDoc.postId,
-            username: profileDoc.username,
-            userEmail: profileDoc.userEmail,
-            bio: profileDoc.bio,
-            isLinkPublic: profileDoc.isLinkPublic,
-            isProfilePublic: profileDoc.isProfilePublic,
-            img: imgUrl,
+            postId: "",
+            username: emailAdress,
+            userEmail: emailAdress,
+            bio: "",
+            isLinkPublic: true,
+            isProfilePublic: true,
+            img: null,
           }));
-          console.log(profile);
-          console.log("있다");
         }
-      } else {
-        // 사람이 없다면?
-        console.log("음따");
-        console.log(profile);
-        setProfile((prev) => ({
-          ...prev,
-          postId: "",
-          username: emailAdress,
-          userEmail: emailAdress,
-          bio: "",
-          isLinkPublic: true,
-          isProfilePublic: true,
-          img: null,
-        }));
-      }
+      });
+      return () => unsubscribe();
     } catch (error) {
       console.error("Error fetching profile: ", error);
     }
@@ -272,7 +318,7 @@ const Profile = () => {
     //프로필수정모달
   };
   const fetchPosts = async () => {
-    //하단에 띄울 쓰레드 스테이트 관리 함수
+    //하단에 띄울 쓰레드 탭에 쓰래드 state 관리 함수
     const postQuery = query(
       collection(db, "contents"),
       where("email", "==", emailAdress), //파람즈 값으로 변경하자
@@ -297,9 +343,38 @@ const Profile = () => {
   };
 
   const handleProfileChange = (updatedProfile) => {
+    console.log("확인");
+    console.log(profile);
     setProfile(updatedProfile);
   };
 
+  // 필터링
+  const filterList = (type) => {
+    if (type === "thresds") {
+      setFilteredData(savedData);
+    } else {
+      const filtered = savedData.filter((item) => item.type === type); // 타입에 따른 필터링
+      setFilteredData(filtered);
+    }
+  };
+  // 버튼 클릭 시 필터링 적용
+  const handleButtonClick = (type) => {
+    setContentType(type); // 필터 상태 업데이트
+    filterList(type); // 필터링 적용
+  };
+
+  const getButtonStyle = (type) => ({
+    background: "#fff",
+    color: contentType === type ? "#000" : "rgba(204, 204, 204, 0.8)",
+    borderBottom: contentType === type ? "1.5px solid #000" : "none",
+  });
+  const buttons = [
+    { label: "스레드", type: "thresds" },
+    { label: "답글", type: "comment" },
+    { label: "사진", type: "photo" },
+    { label: "동영상", type: "media" },
+  ];
+  console.log(profile);
   return (
     <BoederWrapper>
       {followModal ? (
@@ -355,9 +430,12 @@ const Profile = () => {
               <Follow onClick={onfollow}>팔로워 1234</Follow>
               {profile.isLinkPublic ? (
                 <Links>
-                  <LinkPlus onClick={onLinkPlus}>
-                    <PlusIcon width="16px" />
-                  </LinkPlus>
+                  {user?.email === emailAdress ? (
+                    <LinkPlus onClick={onLinkPlus}>
+                      <PlusIcon width="16px" />
+                    </LinkPlus>
+                  ) : null}
+
                   <PulsLinkIcon>
                     <InstaIcon />
                     <FacebookIcon />
@@ -365,7 +443,7 @@ const Profile = () => {
                 </Links>
               ) : null}
             </FollowLink>
-            {user.email === emailAdress ? (
+            {user?.email === emailAdress ? (
               <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
             ) : (
               <Button type="edit" text="팔로잉" onClick={onOtherbtn} />
@@ -373,15 +451,20 @@ const Profile = () => {
           </BottomWrap>
         </ProfileInnner>
         <ThreadInner>
-          <Tap isSmallScreen={isSmallScreen}>
-            <li>스레드</li>
-            <li>답글</li>
-            <li>리포트</li>
-            <li>인스타</li>
-          </Tap>
+          <ButtonGroup>
+            {buttons.map((button) => (
+              <button
+                key={button.type}
+                style={getButtonStyle(button.type)}
+                onClick={() => handleButtonClick(button.type)}
+              >
+                {button.label}
+              </button>
+            ))}
+          </ButtonGroup>
           <PostWrap>
-            {posts.map((post) => (
-              <Post key={post.id} {...post} />
+            {posts.map((post, index) => (
+              <Post key={index} {...post} />
             ))}
           </PostWrap>
         </ThreadInner>
