@@ -15,7 +15,6 @@ import {
   EalthIcon,
   InfoDownIcon,
   PersonalInfoIcon,
-  SupervisionIcon,
   FamilyIcon,
   SecurityIcon,
   AccountStatusIcon,
@@ -28,6 +27,27 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+const SettingsInner = styled.div`
+  width: 558.67px; // 수정!
+  height: 100%;
+  padding: 20px 0;
+  background: #fff;
+  margin-top: 30px;
+  border: 1px solid rgb(213, 213, 213);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+  @media (max-width: 768px) {
+    width: 100%;
+    height: calc(100vh - 70px);
+    margin: 0;
+    border-radius: 0;
+  }
+`;
+
 const SettingMenu = styled.div`
   display: flex;
   justify-content: center;
@@ -35,7 +55,11 @@ const SettingMenu = styled.div`
   width: 169.77px;
   height: 48px;
   -webkit-tap-highlight-color: transparent;
+  @media (max-width: 768px) {
+    margin-bottom: 12px;
+  }
 `;
+
 const SettingTitle = styled.div.attrs({ className: "common-style" })`
   font-size: 14px;
   width: 120px;
@@ -45,6 +69,9 @@ const SettingTitle = styled.div.attrs({ className: "common-style" })`
   margin-bottom: 8px;
   cursor: pointer;
   position: relative; /* 자식 요소의 절대 위치 설정을 위한 relative */
+  @media (max-width: 768px) {
+    width: 80px;
+  }
 `;
 const SettingMove = styled.div`
   display: flex;
@@ -60,15 +87,16 @@ const OtherSettings = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
+  width: 100%;
   gap: 20px;
 `;
 const OutherPrivacy = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-  width: 509.33px;
+  width: 100%;
   height: 100%;
-  padding: 0 24px;
+  padding: 0 20px;
   gap: 30px;
 `;
 // 기타 개인정보 설정 텍스트
@@ -76,8 +104,9 @@ const OtherPivInfo = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 57.8px;
+  height: auto;
   padding: 8px 0px;
+  padding: 0 24px;
 `;
 const OtherTitle = styled.div`
   font-size: 16px;
@@ -86,19 +115,20 @@ const OtherTitle = styled.div`
 const OtherInfo = styled.span`
   font-size: 11px;
   font-weight: 400;
-  width: 462px;
+  width: 100%;
   color: #999;
   margin-top: 12px;
-  line-height: calc(1.4 * 1.3em);
-`;
 
+  line-height: calc(1.4em);
+`;
+// 개인정보보호
 const PrivacySettings = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-  margin: 10px auto;
-  width: 509.33px;
-  padding: 0 24px;
+  width: 100%;
+  margin: 8px auto;
+  padding: 0 20px;
   gap: 20px;
 `;
 const PrivacyProfile = styled.div`
@@ -108,10 +138,19 @@ const PrivacyProfile = styled.div`
   display: flex;
   justify-content: start;
   align-items: center;
+  padding: 0 24px;
 `;
 const PrivacyTitle = styled.span`
   font-size: 14px;
   margin-left: 14px;
+  align-items: center;
+  text-align: center;
+  line-height: calc(1.4 * 1.3em);
+`;
+
+const PersonalInfoTitle = styled.span`
+  font-size: 14px;
+  margin-left: 4px;
   align-items: center;
   text-align: center;
   line-height: calc(1.4 * 1.3em);
@@ -122,14 +161,23 @@ const AccountSettings = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-  margin-top: 8px;
+  width: 100%;
+  margin: 8px auto;
+  /* padding: 0 24px; */
+  gap: 20px;
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 `;
 const AccountContents = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
-  width: 460.33px;
+  width: 100%;
   gap: 20px;
+  @media (max-width: 768px) {
+    width: 360px;
+  }
 `;
 const AccountTitle = styled.span`
   font-size: 14px;
@@ -155,15 +203,21 @@ const ContentAutoLayout = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  @media (max-width: 768px) {
+    padding-right: 28px;
+  }
 `;
 const Icon = styled.div`
   height: 20px;
   text-align: end;
-  padding-right: 10px;
+  /* padding: 0 10px; */
 `;
 const IconRadius = styled.div`
   width: 20px;
   height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   border: 2px solid #000;
   border-radius: 100%;
@@ -195,7 +249,7 @@ const ActiveBorder = styled.div`
 const IconLink = styled.a`
   height: 20px;
   text-align: end;
-  padding-right: 10px;
+  /* padding-right: 10px; */
 `;
 
 const SettingsItem_de = () => {
@@ -223,7 +277,7 @@ const SettingsItem_de = () => {
   }, []);
   return (
     <Wrapper>
-      <BorderItem type="settingsWrapper" isSmallScreen={isSmallScreen}>
+      <SettingsInner>
         <SettingMenu>
           <SettingMove>
             <SettingTitle
@@ -254,7 +308,7 @@ const SettingsItem_de = () => {
 
         {/* 현재 활성화된 탭에 따라 다른 내용을 렌더링 */}
         {activeTab === "privacy" && (
-          <PrivacySettings>
+          <PrivacySettings isSmallScreen={isSmallScreen}>
             <PrivacyProfile>
               <Icon>
                 <LockIcon width={"18px"} />
@@ -284,9 +338,11 @@ const SettingsItem_de = () => {
                 </OtherInfo>
               </OtherPivInfo>
               <PrivacyProfile>
-                <IconRadius>
-                  <CloseIcon width={"10px"} fill={"black"} />
-                </IconRadius>
+                <Icon>
+                  <IconRadius>
+                    <CloseIcon width={"10px"} fill={"black"} />
+                  </IconRadius>
+                </Icon>
                 <ContentAutoLayout>
                   <PrivacyTitle>차단된 프로필</PrivacyTitle>
                   <IconLink
@@ -326,7 +382,7 @@ const SettingsItem_de = () => {
         )}
 
         {activeTab === "account" && (
-          <OutherPrivacy>
+          <OutherPrivacy isSmallScreen={isSmallScreen}>
             {/* 계정 탭의 내용 */}
             <AccountSettings>
               <AccountContents>
@@ -374,11 +430,17 @@ const SettingsItem_de = () => {
                   </OtherInfo>
                 </OtherPivInfo>
                 <PrivacyProfile>
-                  <IconLink>
-                    <PersonalInfoIcon width={"30px"} fill={"black"} />
-                  </IconLink>
+                  <Icon>
+                    <IconLink>
+                      <PersonalInfoIcon
+                        width={"30px"}
+                        height={"30px"}
+                        fill={"black"}
+                      />
+                    </IconLink>
+                  </Icon>
                   <ContentAutoLayout>
-                    <PrivacyTitle>개인정보</PrivacyTitle>
+                    <PersonalInfoTitle>개인정보</PersonalInfoTitle>
                     <IconLink
                       href="https://accountscenter.instagram.com/personal_info/"
                       target="_blank"
@@ -632,7 +694,7 @@ const SettingsItem_de = () => {
             </AccountSettings>
           </OutherPrivacy>
         )}
-      </BorderItem>
+      </SettingsInner>
     </Wrapper>
   );
 };

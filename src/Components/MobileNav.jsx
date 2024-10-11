@@ -99,9 +99,8 @@ const MobileNav = () => {
         <NavItem onClick={() => navigate("/Search")}>
           <MagnifyingGlassIcon />
         </NavItem>
-        <NavItem>
-          <PlusIcon width={30} 
-          onClick={() => navigate("postform")} />
+        <NavItem onClick={() => navigate("/postform")} >
+          <PlusIcon width={30} />
         </NavItem>
         <NavItem onClick={() => navigate("/activity")}>
           <Like />

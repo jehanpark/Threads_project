@@ -7,6 +7,7 @@ import { FirebaseError } from "firebase/app";
 import { useMediaQuery } from "react-responsive";
 import Border from "../Common/Border_dk";
 import ReportModal from "./ReportModal";
+import Loading from "../Loading";
 
 import {
   Wrapper,
@@ -25,6 +26,8 @@ import {
   Error,
   Linebreak,
   StyledSpan,
+  FooterMenuUl,
+  FooterMenuLi,
 } from "./RecycleStyles/login_dk";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -58,20 +61,19 @@ const LoginItemDk = () => {
     try {
       setIsLoading(true);
 
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        id,
-        password
-      );
+      await signInWithEmailAndPassword(auth, id, password);
 
       // 로그인 성공 후 로컬 스토리지에 사용자 이메일과 비밀번호 저장
-      // 차후에 복호화 예정
-      const userEmail = userCredential.user.email;
       let storedAccounts = JSON.parse(localStorage.getItem("accounts")) || [];
+      const userEmail = auth.currentUser.email;
 
-      // 중복된 계정이 없도록 추가
-      if (!storedAccounts.includes(userEmail)) {
-        storedAccounts.push({ email: userEmail, password: password });
+      // 중복된 계정이 없도록 이메일을 기준으로 추가
+      const accountExists = storedAccounts.some(
+        (account) => account.email === userEmail
+      );
+
+      if (!accountExists) {
+        storedAccounts.push({ email: userEmail, password });
         localStorage.setItem("accounts", JSON.stringify(storedAccounts));
       }
 
@@ -79,13 +81,32 @@ const LoginItemDk = () => {
       navigate("/");
     } catch (e) {
       if (e instanceof FirebaseError) {
-        setError(e.message);
+        // Firebase 에러 처리
+        switch (e.code) {
+          case "auth/user-not-found":
+          case "auth/wrong-password":
+            setError("아이디나 비밀번호가 잘못되었습니다.");
+            break;
+          case "auth/invalid-email":
+            setError("유효한 이메일을 입력하세요.");
+            break;
+          default:
+            setError("아이디와 비밀번호를 확인해주세요.");
+        }
       }
       console.log(e);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const footerMenuList = [
+    "© 2024",
+    "Threads 약관",
+    "개인정보처리방침",
+    "쿠키정책",
+    "문제 신고",
+  ];
 
   return (
     <Wrapper>
@@ -101,10 +122,12 @@ const LoginItemDk = () => {
           </StyledSpan>
         </LoginP>
         <Form onSubmit={onSubmit}>
+          {isLoading ? <Loading /> : null}
+
           <InputWrapper>
             <StyledInput
               onChange={onChange}
-              type="text" // 'id'는 유효한 input 타입이 아니므로 'text'로 수정
+              type="text"
               id="id"
               name="id"
               placeholder=""
@@ -147,7 +170,20 @@ const LoginItemDk = () => {
           </Link>
           {error !== "" ? <Error>{error}</Error> : null}
         </Form>
-        <button onClick={toggleShowing}>click</button>
+        <FooterMenuUl>
+          {footerMenuList.map((menu, index) => (
+            <FooterMenuLi
+              key={index}
+              onClick={() => {
+                if (index === footerMenuList.length - 1) {
+                  toggleShowing();
+                }
+              }}
+            >
+              {menu}
+            </FooterMenuLi>
+          ))}
+        </FooterMenuUl>
       </LoginInner>
       <ReportModal
         width="100%"

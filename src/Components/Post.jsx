@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 // import { IPost } from "./TimeLine";
 import { auth, db, storage } from "../firebase";
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
 import {
   deleteObject,
   ref,
@@ -15,13 +15,18 @@ import {
   MagnifyingGlassIcon,
   BellOffIcon,
   RetweetIcon,
+  EtcIcon,
   Coment,
 } from "../Components/Common/Icon";
 // Styled Components
+import { formatDistanceToNow } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import PostSetModal from "./Common/PostSetModal";
 
 const Wrapper = styled.div`
-width: 100%;
-height: 100%;
+  position: relative;
+  width: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
@@ -29,22 +34,24 @@ height: 100%;
   padding: 20px;
   width: 660px;
   @media (max-width: 768px) {
-width: 100%;
-height: 100%;
+    width: 100%;
   }
 `;
-
+const ColumnWrapper = styled.div`
+  display: flex;
+`;
 const Column = styled.div`
   display: flex;
   margin-left: 50px;
+  margin-bottom: 12px;
+  gap: 10px;
 `;
 
 const Photo = styled.img`
-  width: 140px;
-  height: 140px;
+  width: 160px;
+  height: 160px;
   object-fit: cover/contain;
   margin-left: 0px;
-  margin-top: 8px;
   border-radius: 8px;
   @media (max-width: 768px) {
     margin-right: 8px;
@@ -54,16 +61,23 @@ const Photo = styled.img`
 `;
 
 const Video = styled.video`
-  width: 250px;
-  height: 100%;
+  display: flex;
+  width: 220px;
+  height: 160px;
   border-radius: 15px;
+  object-fit: cover;
+  @media (max-width: 768px) {
+    margin-right: 8px;
+    width: 120px;
+    height: 120px;
+  }
 `;
 
 const Header = styled.div`
+  width: 100%;
   display: flex;
-  gap: 10px;
-  justify-content: start;
   align-items: center;
+  gap: 10px;
   margin-bottom: 8px;
 `;
 const UserImage = styled.img`
@@ -78,9 +92,17 @@ const Username = styled.span`
   color: ${(props) => props.theme.fontcolor};
 `;
 const Timer = styled.span`
+  flex: 1;
   font-size: 10px;
   color: #9a9a9a;
 `;
+const Etc = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 20px;
+  cursor: pointer;
+`;
+
 const Payload = styled.p`
   font-size: 15px;
   font-weight: 600;
@@ -94,7 +116,7 @@ const Icons = styled.div`
   justify-content: start;
   align-items: center;
   margin-left: 50px;
-  margin-top: 20px;
+  margin-top: 10px;
   cursor: pointer;
   color: #bababa;
 `;
@@ -124,6 +146,12 @@ const EditButton = styled.button`
   border-radius: 5px;
   text-transform: uppercase;
   cursor: pointer;
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
 `;
 
 const Button = styled.button`
@@ -197,12 +225,50 @@ const SetContentInputButton = styled.input`
   display: none;
 `;
 
-const Post = ({ post, userId, photos, video, username, id }) => {
+const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
   const [editedPhoto, setEditedPhoto] = useState(null);
+  const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
+  const [isLiked, setIsLiked] = useState(false);
+  const [comments, setComments] = useState(Math.floor(Math.random() * 10));
+  const [dms, setDms] = useState(Math.floor(Math.random() * 50));
+  const [isDms, setIsDms] = useState(false);
+  const [retweets, setRetweets] = useState(2);
+  const [isRetweets, setIsRetweets] = useState(false);
+  const [openModalId, setOpenModalId] = useState(null);
 
   const user = auth.currentUser;
+
+  const renderTimeAgo = () => {
+    if (!createdAt || !createdAt.seconds) return "방금 전"; // createdAt가 유효하지 않을 때 처리
+    const date = new Date(createdAt.seconds * 1000);
+    return formatDistanceToNow(date, { addSuffix: true });
+  };
+
+  const navigator = useNavigate();
+
+  const openModal = (postId) => {
+    setOpenModalId(postId); // 특정 포스트의 ID로 모달 열기
+  };
+
+  const closeModal = () => {
+    setOpenModalId(null);
+  };
+
+  const handleClickOutside = (e) => {
+    if (openModalId && !e.target.closest(".modal-content")) {
+      closeModal();
+    }
+  };
+
+  useEffect(() => {
+    // 모달 외부 클릭 감지 이벤트 등록
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openModalId]);
 
   const onChange = (e) => {
     setEditedPost(e.target.value);
@@ -224,10 +290,7 @@ const Post = ({ post, userId, photos, video, username, id }) => {
   };
 
   const onDelete = async () => {
-    if (
-      confirm("Are you sure you want to delete this post?") &&
-      user?.uid === userId
-    ) {
+    if (confirm("정말 이 글을 삭제하시겠습니까?") && user?.uid === userId) {
       try {
         await deleteDoc(doc(db, "contents", id));
         if (photos.length > 0) {
@@ -237,11 +300,13 @@ const Post = ({ post, userId, photos, video, username, id }) => {
       } catch (error) {
         console.error(error);
       }
+    } else {
+      alert("삭제할 권한이 없습니다.");
     }
   };
 
   const onUpdate = async () => {
-    if (user?.uid !== userId) return;
+    if (user?.uid !== userId) return alert("수정할 권한이 없습니다.");
 
     try {
       const postDoc = await getDoc(doc(db, "contents", id));
@@ -255,7 +320,7 @@ const Post = ({ post, userId, photos, video, username, id }) => {
 
       if (editedPhoto) {
         if (existingFileType && existingFileType !== newFileType) {
-          alert("You can only upload the same type of content");
+          alert("기존 파일 유형과 다른 유형을 업로드할 수 없습니다.");
           return;
         }
 
@@ -273,7 +338,7 @@ const Post = ({ post, userId, photos, video, username, id }) => {
         await updateDoc(doc(db, "contents", id), {
           post: editedPost,
           photos: newFileType === "image" ? [...photos, url] : photos,
-          video: newFileType === "video" ? url : video,
+          video: newFileType === "video" ? url : videos,
           fileType: newFileType,
         });
       } else {
@@ -286,12 +351,104 @@ const Post = ({ post, userId, photos, video, username, id }) => {
     }
   };
 
+  useEffect(() => {
+    const postRef = doc(db, "contents", id);
+
+    // Firebase에서 데이터 가져오기 또는 생성하기
+    const fetchPostData = async () => {
+      const postSnap = await getDoc(postRef);
+
+      if (!postSnap.exists()) {
+        // 문서가 없으면 랜덤으로 생성된 값을 저장
+        await setDoc(postRef, {
+          likes: likes,
+          comments: comments,
+          dms: dms,
+          retweets: retweets,
+        });
+      } else {
+        // 문서가 존재할 경우 Firebase에 있는 값을 상태로 설정
+        const postData = postSnap.data();
+
+        // 만약 이미 값이 존재하면 그 값을 설정
+        setLikes(postData.likes || likes);
+        setComments(postData.comments || comments);
+        setDms(postData.dms || dms);
+        setRetweets(postData.retweets || retweets);
+      }
+    };
+
+    fetchPostData();
+  }, [id]);
+
+  const handleLike = async () => {
+    const postRef = doc(db, "contents", id);
+
+    if (isLiked) {
+      setLikes((prevLikes) => prevLikes - 1);
+      await updateDoc(postRef, { likes: likes - 1 }); // Firebase에 업데이트
+    } else {
+      setLikes((prevLikes) => prevLikes + 1);
+      await updateDoc(postRef, { likes: likes + 1 }); // Firebase에 업데이트
+    }
+
+    setIsLiked((prevLiked) => !prevLiked);
+  };
+  const handleCommentClick = async () => {
+    const postRef = doc(db, "contents", id);
+
+    setComments((prevComments) => prevComments + 1); // 댓글을 1 추가 (임시로 설정)
+    await updateDoc(postRef, { comments: comments + 1 }); // Firebase에 업데이트
+  };
+
+  // DM 상태가 변경될 때 Firebase에 업데이트
+  const handleDmClick = async () => {
+    const postRef = doc(db, "contents", id);
+
+    if (isDms) {
+      setDms((prevDms) => prevDms - 1);
+      await updateDoc(postRef, { dms: dms - 1 }); // Firebase에 업데이트
+    } else {
+      setDms((prevDms) => prevDms + 1);
+      await updateDoc(postRef, { dms: dms + 1 }); // Firebase에 업데이트
+    }
+
+    setIsDms((prevDms) => !prevDms);
+  };
+
+  // Retweets 상태가 변경될 때 Firebase에 업데이트
+  const handleRetweetClick = async () => {
+    const postRef = doc(db, "contents", id);
+
+    if (isRetweets) {
+      setRetweets((prevRet) => prevRet - 1);
+      await updateDoc(postRef, { retweets: retweets - 1 }); // Firebase에 업데이트
+    } else {
+      setRetweets((prevRet) => prevRet + 1);
+      await updateDoc(postRef, { retweets: retweets + 1 }); // Firebase에 업데이트
+    }
+
+    setIsRetweets((prevRet) => !prevRet);
+  };
   return (
     <Wrapper>
       <Header>
         <UserImage src="http://localhost:5173/profile.png"></UserImage>
         <Username>{username}</Username>
-        <Timer>2시간전</Timer>
+        <Timer>{renderTimeAgo()}</Timer>
+        <Etc onClick={() => openModal(id)}>
+          <EtcIcon width={20} fill="gray" />
+        </Etc>
+        {openModalId === id && (
+          <div className="modal-content">
+            <PostSetModal
+              onClose={closeModal}
+              onDelete={onDelete}
+              onEdit={onUpdate}
+              isAuthor={user?.uid === userId}
+            />
+          </div>
+        )}
       </Header>
       <Column>
         {isEditing ? (
@@ -304,26 +461,41 @@ const Post = ({ post, userId, photos, video, username, id }) => {
           <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
         )}
       </Column>
+      <ColumnWrapper>
+        {/* Render multiple photos */}
+        {photos && photos.length > 0 && (
+          <Column>
+            {photos.map((photoUrl, index) => (
+              <Photo
+                key={index}
+                src={photoUrl}
+                alt={`Post Image ${index + 1}`}
+              />
+            ))}
+          </Column>
+        )}
 
-      {/* Render multiple photos */}
-      {photos && photos.length > 0 && (
-        <Column>
-          {photos.map((photoUrl, index) => (
-            <Photo key={index} src={photoUrl} alt={`Post Image ${index + 1}`} />
-          ))}
-        </Column>
-      )}
-
-      {video && (
-        <Column>
-          <Video src={video} autoPlay loop />
-        </Column>
-      )}
+        {videos && videos.length > 0 && (
+          <Column>
+            {videos.map((videoUrl, index) => (
+              <Video key={index} controls autoPlay loop src={videoUrl} />
+            ))}
+          </Column>
+        )}
+      </ColumnWrapper>
       <Icons>
-        <HeartIcon width={24} />2
-        <Coment width={24} />2
-        <DmIcon width={20} />2
-        <RetweetIcon width={24} />2
+        <IconWrapper onClick={handleLike}>
+          <HeartIcon width={20} /> {likes}
+        </IconWrapper>
+        <IconWrapper onClick={handleCommentClick}>
+          <Coment width={20} /> {comments}
+        </IconWrapper>
+        <IconWrapper onClick={handleDmClick}>
+          <DmIcon width={18} /> {dms}
+        </IconWrapper>
+        <IconWrapper onClick={handleRetweetClick}>
+          <RetweetIcon width={20} /> {retweets}
+        </IconWrapper>
       </Icons>
     </Wrapper>
   );

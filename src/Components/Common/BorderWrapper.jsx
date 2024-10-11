@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Mobile_Modal = () => {
+const BorderWrapper = () => {
   return (
     <div>
       
@@ -8,5 +8,4 @@ const Mobile_Modal = () => {
   )
 }
 
-export default Mobile_Modal
-
+export default BorderWrapper
