@@ -1664,3 +1664,24 @@ export const FamilyIcon = ({
     </svg>
   );
 };
+
+// 도경 => 모바일 메뉴 아이콘 생성
+
+export const MobileMenu = ({ width }) => {
+  const height = width * 1;
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width || 24} // 기본값 86px
+      height={height} // 비율에 맞춰 height 계산
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <path
+        d="M4 6H20V8H4V6ZM8 11H20V13H8V11ZM13 16H20V18H13V16Z"
+        fill="black"
+      />
+    </svg>
+  );
+};
