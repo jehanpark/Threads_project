@@ -195,3 +195,15 @@ export const LoginInstaLi = styled.li`
     border-bottom: 0px;
   }
 `;
+
+export const FooterMenuUl = styled.ul`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const FooterMenuLi = styled.li`
+  cursor: pointer;
+  font-size: 12px;
+  color: ${(props) => props.theme.nomalIconColor};
+`;

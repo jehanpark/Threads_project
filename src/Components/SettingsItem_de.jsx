@@ -26,7 +26,7 @@ import {
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  height: calc(100vh - 120px);
 `;
 const SettingMenu = styled.div`
   display: flex;

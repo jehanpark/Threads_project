@@ -110,7 +110,7 @@ const CreateAccountItemDk = () => {
               type="email"
               id="id"
               name="id"
-              placeholder="사용자 이름, 전화번호 또는 이메일 주소"
+              placeholder=""
               required
               value={id}
             />

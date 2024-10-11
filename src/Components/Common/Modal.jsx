@@ -42,7 +42,6 @@ const Modal = ({ isOpen, onClose, children, height }) => {
     <ModalOverlay onClick={onClose}>
       <ModalContainer style={{ height }} onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>X</CloseButton>
-
         {children}
       </ModalContainer>
     </ModalOverlay>

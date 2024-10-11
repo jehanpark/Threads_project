@@ -1,383 +1,31 @@
-// // src/components/Nav.jsx
-// import React, { useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-// import styled, { css } from "styled-components";
-// import Logo from "./Logo";
-// import { useAuth } from "../Contexts/AuthContext";
-// import { UserIcon1 } from "./Common/Icon";
-// import { GoBack } from "./Common/Icon";
-// import MobileNav from "./MobileNav";
-// const AllWrapper = styled.div`
-//   width: 100%;
-//   height: 100%;
-// `;
-
-// const Wrapper = styled.nav`
-//   width: 100%;
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-//   margin-bottom: 20px;
-//   /* padding: 0px 20px; */
-// `;
-
-// const LogoWrapper = styled.div`
-//   width: 40px; /* 고정 크기 설정 */
-//   cursor: pointer;
-//   @media screen and (width: 390px) {
-//     display: none;
-//   }
-// `;
-
-// const MyProfileImgs = styled.div`
-//   width: 60px;
-//   height: 60px;
-//   border-radius: 50%;
-//   @media screen and (width: 390px) {
-//     display: none;
-//   }
-// `;
-
-// const Img = styled.img`
-//   width: 100%;
-//   height: 100%;
-// `;
-
-// const DefaultImgWrapper = styled.div`
-//   width: 100%;
-//   height: 100%;
-//   border: 1px solid #ccc;
-//   border-radius: 50%;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-// `;
-
-// const Ul = styled.ul`
-//   width: 620px;
-//   background-color: ${(props) => props.theme.borderColor};
-//   height: 60px;
-//   display: flex;
-//   align-items: center;
-//   justify-content: space-between;
-//   border-radius: 50px;
-//   list-style: none;
-//   border: 2px solid ${(props) => props.theme.mouseHoverBg};
-//   @media screen and (width: 390px) {
-//     width: 100%;
-//     height: 70px;
-//     position: fixed;
-//     bottom: 5200px;
-//     left: 0;
-//     border-radius: 0;
-//     z-index: 100;
-//     border: none;
-//   }
-// `;
-
-// const Li = styled.li`
-//   color: #c95c5c;
-//   cursor: pointer;
-//   border-radius: 50px;
-//   width: ${(props) => 100 / props.$itemCount}%;
-//   height: 100%;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   transition: all 0.4s;
-//   color: #bababa;
-//   /* color: ${(props) => (props.$isSelected ? "#fff" : "#BABABA")}; */
-//   background-color: ${(props) =>
-//     props.$isSelected
-//       ? props.theme.logoColor
-//       : props.theme.bordeborderColorrshadow};
-//   color: ${(props) =>
-//     props.$isSelected ? props.theme.bodyBg : props.theme.navIconColor};
-
-//   &:hover {
-//     background-color: ${(props) => props.theme.fontcolor};
-//     color: ${(props) => props.theme.bodyBg};
-
-//     /* background-color: ${(props) =>
-//       props.$isSelected ? props.theme.fontcolor : "#f0f0f0"}; */
-//   }
-
-//   svg {
-//     width: 24px;
-//     height: 24px;
-//     stroke: currentColor; /* stroke 색상을 부모의 color에 따라 변경 */
-//     fill: none; /* fill을 없애거나 필요에 따라 조정 */
-//     transition: stroke 0.4s;
-//   }
-//   ${(props) =>
-//     props.$isSelected /* $isSelected로 변경 */ &&
-//     css`
-//       color: ${(props) => props.theme.headerselect};
-//       background-color: ${(props) => props.theme.logoColor};
-//     `}
-//   @media screen and (width: 390px) {
-//     &:hover {
-//       background-color: ${(props) => props.theme.btnBgColor};
-//       color: ${(props) => props.theme.selecticoncolor};
-//     }
-//   }
-// `;
-// const menuItems = styled.img`
-//   ${(props) =>
-//     props.$isSelected /* $isSelected로 변경 */ &&
-//     css`
-//       color: ${(props) => props.theme.selectIconColor};
-//     `}
-// `;
-// const BackNavwrapper = styled.div`
-//   @media (max-width: 768px) {
-//     position: fixed;
-//     top: 0;
-//     left: 0;
-//     width: 100%;
-//     height: 70px;
-//     background: ${(props) => props.theme.borderColor};
-//     z-index: 1000;
-//     @media (min-width: 768px) {
-//       display: none; // 768px 이상의 화면에서는 숨기기
-//     }
-//   }
-// `;
-// const Backdesc = styled.div`
-//   display: flex;
-//   align-items: center;
-//   width: 70px;
-//   height: 100%;
-//   cursor: pointer;
-//   @media (min-width: 768px) {
-//     display: none; // 768px 이상의 화면에서는 숨기기
-//   }
-// `;
-// const BackIcon = styled.div`
-//   display: flex;
-//   width: 24px;
-//   height: 24px;
-//   transform: translateX(5px);
-//   transform: translateY(2px);
-//   align-items: center;
-//   margin-left: 10px;
-// `;
-// const Backtxt = styled.div`
-//   font-size: 15px;
-// `;
-// const Nav = () => {
-//   const menuItems = [
-//     {
-//       name: "Home",
-//       svg: (
-//         <svg
-//           width="24"
-//           height="24"
-//           viewBox="0 0 24 24"
-//           fill="none"
-//           xmlns="http://www.w3.org/2000/svg"
-//         >
-//           <path
-//             d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-//             stroke="currentColor"
-//             strokeWidth="2"
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//           />
-//           <path
-//             d="M9 22V12H15V22"
-//             stroke="currentColor"
-//             strokeWidth="2"
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//           />
-//         </svg>
-//       ),
-//       path: "/",
-//     },
-//     {
-//       name: "Heart",
-//       svg: (
-//         <svg
-//           width="24"
-//           height="24"
-//           viewBox="0 0 24 24"
-//           fill="none"
-//           xmlns="http://www.w3.org/2000/svg"
-//         >
-//           <path
-//             d="M20.8401 4.60999C20.3294 4.099 19.7229 3.69364 19.0555 3.41708C18.388 3.14052 17.6726 2.99817 16.9501 2.99817C16.2276 2.99817 15.5122 3.14052 14.8448 3.41708C14.1773 3.69364 13.5709 4.099 13.0601 4.60999L12.0001 5.66999L10.9401 4.60999C9.90843 3.5783 8.50915 2.9987 7.05012 2.9987C5.59109 2.9987 4.19181 3.5783 3.16012 4.60999C2.12843 5.64169 1.54883 7.04096 1.54883 8.49999C1.54883 9.95903 2.12843 11.3583 3.16012 12.39L4.22012 13.45L12.0001 21.23L19.7801 13.45L20.8401 12.39C21.3511 11.8792 21.7565 11.2728 22.033 10.6053C22.3096 9.93789 22.4519 9.22248 22.4519 8.49999C22.4519 7.77751 22.3096 7.0621 22.033 6.39464C21.7565 5.72718 21.3511 5.12075 20.8401 4.60999Z"
-//             stroke="currentColor"
-//             strokeWidth="2"
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//           />
-//         </svg>
-//       ),
-//       path: "/activity",
-//     },
-//     {
-//       name: "Plus",
-//       svg: (
-//         <svg
-//           width="24"
-//           height="24"
-//           viewBox="0 0 24 24"
-//           fill="none"
-//           xmlns="http://www.w3.org/2000/svg"
-//         >
-//           <path
-//             d="M12 5V19"
-//             stroke="currentColor"
-//             strokeWidth="2"
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//           />
-//           <path
-//             d="M5 12H19"
-//             stroke="currentColor"
-//             strokeWidth="2"
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//           />
-//         </svg>
-//       ),
-//       path: "postform",
-//     },
-//     {
-//       name: "Search",
-//       svg: (
-//         <svg
-//           width="24"
-//           height="24"
-//           viewBox="0 0 24 24"
-//           fill="none"
-//           xmlns="http://www.w3.org/2000/svg"
-//         >
-//           <path
-//             d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z"
-//             stroke="currentColor"
-//             strokeWidth="2"
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//           />
-//           <path
-//             d="M20.9999 21L16.6499 16.65"
-//             stroke="currentColor"
-//             strokeWidth="2"
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//           />
-//         </svg>
-//       ),
-//       path: "/search",
-//     },
-//     {
-//       name: "User",
-//       svg: (
-//         <svg
-//           width="24"
-//           height="24"
-//           viewBox="0 0 24 24"
-//           fill="none"
-//           xmlns="http://www.w3.org/2000/svg"
-//         >
-//           <path
-//             d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
-//             stroke="currentColor"
-//             strokeWidth="2"
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//           />
-//           <path
-//             d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"
-//             stroke="currentColor"
-//             strokeWidth="2"
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//           />
-//         </svg>
-//       ),
-//       path: "/profile",
-//     },
-//   ];
-
-//   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
-
-//   const navigate = useNavigate();
-
-//   const [selectedMenu, setSelectedMenu] = useState(0);
-//   const onSelected = (index, path) => {
-//     setSelectedMenu(index);
-//     navigate(path); // path에 따라 페이지 이동
-//   };
-
-//   return (
-//     <AllWrapper>
-//       <MobileNav></MobileNav>
-//       <Wrapper>
-//         <Link to="/">
-//           <LogoWrapper>
-//             <Logo width={40} />
-//           </LogoWrapper>
-//         </Link>
-
-//         <Ul>
-//           {menuItems.map((menu, index) => (
-//             <Li
-//               key={index}
-//               $itemCount={menuItems.length} /* $itemCount로 변경 */
-//               $isSelected={selectedMenu === index} /* $isSelected로 변경 */
-//               onClick={() => onSelected(index, menu.path)}
-//               aria-current={selectedMenu === index ? "page" : undefined} // 접근성 향상
-//             >
-//               {menu.svg}
-//             </Li>
-//           ))}
-//         </Ul>
-//         <MyProfileImgs>
-//           {currentUser ? (
-//             <Link to="/profile">
-//               <Img src="/profile.png" alt="Profile" />
-//             </Link>
-//           ) : (
-//             <Link to="/login">
-//               <DefaultImgWrapper src="/profile.png" alt="Profile">
-//                 <UserIcon1 />
-//               </DefaultImgWrapper>
-//             </Link>
-//           )}
-//         </MyProfileImgs>
-//       </Wrapper>
-//     </AllWrapper>
-//   );
-// };
-
-// export default Nav;
-
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./Logo";
 import { useAuth } from "../Contexts/AuthContext";
-import { UserIcon1 } from "./Common/Icon";
 import MobileNav from "./MobileNav";
 
 const AllWrapper = styled.div`
   width: 100%;
   height: 100%;
+  padding: 20px 0px;
 `;
 
 const Wrapper = styled.nav`
   width: 100%;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+  @media (max-width: 768px) {
+    display: none; // 768px 이하의 화면에서는 아래의 스타일 적용
+  }
 `;
 
 const LogoWrapper = styled.div`
   width: 40px;
+  padding-left: 20px;
   cursor: pointer;
   @media screen and (width: 390px) {
     display: none;
@@ -385,11 +33,29 @@ const LogoWrapper = styled.div`
 `;
 
 const MyProfileImgs = styled.div`
+  position: absolute;
+  right: 20px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
   @media screen and (width: 390px) {
     display: none;
+  }
+`;
+
+const NavLoginBtn = styled.button`
+  position: absolute;
+  right: 20px;
+  background-color: ${(props) => props.theme.logoColor};
+  color: ${(props) => props.theme.btnBgColor};
+  width: 70px;
+  height: 37px;
+  border-radius: 12px;
+  cursor: pointer;
+  outline: none;
+  a {
+    width: 100%;
+    height: 100%;
   }
 `;
 
@@ -406,6 +72,7 @@ const DefaultImgWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid red;
 `;
 
 const Ul = styled.ul`
@@ -460,6 +127,10 @@ const Li = styled.li`
     fill: none;
     transition: stroke 0.4s;
   }
+`;
+
+const RightDiv = styled.div`
+  width: 40px;
 `;
 
 const Nav = () => {
@@ -601,7 +272,7 @@ const Nav = () => {
           />
         </svg>
       ),
-      path: "/profile",
+      path: "",
     },
   ];
 
@@ -630,7 +301,6 @@ const Nav = () => {
             <Logo width={40} />
           </LogoWrapper>
         </Link>
-
         <Ul>
           {menuItems.map((menu, index) => (
             <Li
@@ -644,19 +314,18 @@ const Nav = () => {
             </Li>
           ))}
         </Ul>
-        <MyProfileImgs>
-          {currentUser ? (
+        {currentUser ? (
+          <MyProfileImgs>
             <Link to="/profile">
               <Img src="/profile.png" alt="Profile" />
             </Link>
-          ) : (
-            <Link to="/login">
-              <DefaultImgWrapper>
-                <UserIcon1 />
-              </DefaultImgWrapper>
-            </Link>
-          )}
-        </MyProfileImgs>
+          </MyProfileImgs>
+        ) : (
+          <NavLoginBtn>
+            <Link to="/login">로그인</Link>
+          </NavLoginBtn>
+        )}
+        <RightDiv />
       </Wrapper>
     </AllWrapper>
   );
