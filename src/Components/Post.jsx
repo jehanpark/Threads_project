@@ -35,6 +35,7 @@ const Wrapper = styled.div`
   width: 660px;
   @media (max-width: 768px) {
     width: 100%;
+    display: flex;
   }
 `;
 const ColumnWrapper = styled.div`
