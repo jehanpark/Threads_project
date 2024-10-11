@@ -11,8 +11,8 @@ import {
   PictureIcon,
   MicIcon,
   HashtagIcon,
-} from "../Common/Icon";
-import { useAuth } from "../../Contexts/AuthContext";
+} from "../Components/Common/Icon";
+import { useAuth } from "../Contexts/AuthContext";
 import {
   addDoc,
   collection,
@@ -20,10 +20,10 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
-import { auth, db, storage } from "../../firebase";
+import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import Button from "./Button";
-import Loading from "../Loading";
+import Button from "./Common/Button";
+import Loading from "./Loading";
 
 const Wrapper = styled.div`
   display: flex;
@@ -325,6 +325,7 @@ const Comment = () => {
 
   const maxFileSize = 5 * 1024 * 1024; // 5MB
   const maxFilesCount = 3;
+
   const handleFileChange = (e) => {
     const selectedFiles = e.target.files;
     if (selectedFiles) {

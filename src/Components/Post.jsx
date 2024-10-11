@@ -407,6 +407,19 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
     });
   };
 
+  const PostCommentClick = () => {
+    navigate("/PostComment", {
+      state: {
+        postId: id,
+        postContent: post,
+        photos,
+        videos,
+        username,
+        createdAt: createdAt || { seconds: Date.now() / 1000 }, // 기본값 설정
+      },
+    });
+  };
+
   // DM 상태가 변경될 때 Firebase에 업데이트
   const handleDmClick = async () => {
     const postRef = doc(db, "contents", id);
@@ -456,7 +469,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
           </div>
         )}
       </Header>
-      <Column>
+      <Column onClick={PostCommentClick}>
         {isEditing ? (
           <EditPostFormTextArea
             onChange={onChange}
@@ -467,7 +480,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
           <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
         )}
       </Column>
-      <ColumnWrapper>
+      <ColumnWrapper onClick={PostCommentClick}>
         {/* Render multiple photos */}
         {photos && photos.length > 0 && (
           <Column>

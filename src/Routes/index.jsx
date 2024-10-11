@@ -15,7 +15,8 @@ import Insites from "../Pages/Insites";
 import CreateAccount from "../Components/Login/CreateAccountItem_dk";
 // import CreateAccount from "../Pages/CreateAccount";
 import Settings from "../Pages/Settings";
-import Comment from "../Components/Common/Comment";
+import Comment from "../Components/Comment";
+import PostComment from "../Components/PostComment";
 // import CreateAccount from "../Components/Login/CreateAccount";
 
 export const router = createBrowserRouter([
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
       {
         path: "Comment",
         element: <Comment />,
+      },
+      {
+        path: "PostComment",
+        element: <PostComment />,
       },
     ],
   },
