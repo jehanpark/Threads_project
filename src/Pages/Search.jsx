@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEff } from "react";
 import styled from "styled-components";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase";
+import { motion } from "framer-motion";
 import Searchbar from "../Components/Search/Searchbar";
 import FollowersList from "../Components/Search/FollowerList";
-import DisplayList from "../Components/Search/DisplayList";
-import TimeLine from "../Components/TimeLine";
+import DisplayList from "../Components/Search/Displaylist";
 
 const Contain = styled.div`
   width: 100%;
@@ -13,11 +11,6 @@ const Contain = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  @media (max-width: 768px) {
-    padding-top: 20px;
-  }
-
   @media (max-width: 480px) {
     width: 100%;
   }
@@ -27,18 +20,17 @@ const MenuTitle = styled.p`
   font-weight: 800;
   font-size: 18px;
   margin-top: 40px;
-
   color: ${(props) => props.theme.fontcolor};
   transition: all 0.3s;
 
   @media (max-width: 768px) {
+    margin-top: 20px;
     font-size: 22px;
-    margin-bottom: 15px;
   }
 
   @media (max-width: 480px) {
+    margin-top: 20px;
     font-size: 22px;
-    margin-bottom: 10px;
   }
 `;
 
@@ -51,56 +43,87 @@ const Border = styled.div`
   max-width: 680px;
   height: 600px;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
-
+  background-color: ${(props) => props.theme.borderColor};
   @media (max-width: 768px) {
     width: 90%;
     border-radius: 20px 20px 0px 0px;
   }
-
   @media (max-width: 480px) {
     width: 100%;
     margin: 0 auto;
   }
 `;
 
-const ButtonGroup = styled.div`
+const ButtonGroup = styled(motion.div)`
   display: flex;
+  width: 100%;
   gap: 12px;
-  margin-bottom: 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+`;
 
-  button {
-    flex: 0 0 auto;
-    width: 110px;
-    border-radius: 8px;
-    padding: 10px 20px;
-    background: ${(props) => props.theme.buttonbackground};
-    border: 1px solid ${(props) => props.theme.searchButton};
-    color: ${(props) => props.theme.buttonText};
-    font-weight: 700;
-    cursor: pointer;
-    transition: all;
+const SelectButton = styled(motion.button)`
+  display: flex;
+  flex: 0 0 auto;
+  width: 110px;
+  border-radius: 8px;
+  padding: 10px 20px;
+  background: ${(props) => props.theme.buttonbackground};
+  border: 1px solid ${(props) => props.theme.searchButton};
+  color: ${(props) => props.theme.buttonText};
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
 
-    @media (max-width: 768px) {
-      width: 90px;
-      padding: 8px 15px;
-    }
-
-    @media (max-width: 480px) {
-      width: 80px;
-      padding: 6px 10px;
-    }
+  @media (max-width: 768px) {
+    display: block;
+    width: 90px;
+    padding: 8px 15px;
   }
 
+  @media (max-width: 480px) {
+    display: block;
+    width: 80px;
+    padding: 6px 10px;
+  }
+`;
+
+const ButtonGroupPC = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  @media (max-width: 768px) {
+    display: none;
+  }
   @media (max-width: 480px) {
   }
 `;
 
+const SelectButtonPC = styled.button`
+  flex: 0 0 auto;
+  width: 106px;
+  padding: 10px 20px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+`;
+
 const SearchBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin-top: 20px;
+  overflow: hidden;
 
   @media (max-width: 768px) {
-    margin-top: 15px;
+    margin-top: 10px;
   }
 
   @media (max-width: 480px) {
@@ -116,13 +139,21 @@ const ContentsBorder = styled.div`
   width: 100%;
   max-height: 600px;
   overflow-y: auto;
+  padding: 0 20px;
   padding-bottom: 20px;
-
   ::-webkit-scrollbar {
     display: none;
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0;
+  }
 `;
 
 const BoederWrapper = styled.div`
@@ -134,7 +165,7 @@ const BoederWrapper = styled.div`
   width: 680px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
+  background-color: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   @media (max-width: 768px) {
     position: fixed;
@@ -151,138 +182,61 @@ const NoResults = styled.p`
   font-size: 16px;
   text-align: center;
   color: #999;
-  margin-top: 20px;
+  margin-top: 40px;
 `;
 
 const Search = () => {
+  const [showSearchBar, setShowSearchBar] = useState(true); // 검색창 표시 여부
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
   const [contentType, setContentType] = useState("popular"); // 선택된 콘텐츠 타입 저장
-  const [showSearchBar, setShowSearchBar] = useState(true); // 검색창 표시 여부
-  const [followers, setFollowers] = useState([]); // 전체 팔로워 데이터
-  const [displays, setDisplays] = useState([]); // 전체 게시글 데이터
-  const [initialFilteredFollowers, setInitialFilteredFollowers] = useState([]); // 1차 필터된 팔로워 데이터
-  const [initialFilteredDisplays, setInitialFilteredDisplays] = useState([]); // 1차 필터된 게시글 데이터
-  const [filteredFollowers, setFilteredFollowers] = useState([]); // 2차 필터된 팔로워 데이터
-  const [filteredDisplays, setFilteredDisplays] = useState([]); // 2차 필터된 게시글 데이터
+  const [followersEmpty, setFollowersEmpty] = useState(false); // 팔로워가 비어 있는지 여부
+  const [displaysEmpty, setDisplaysEmpty] = useState(false); // 게시글이 비어 있는지 여부
 
-  // Firestore에서 팔로워와 게시글 데이터 가져오기
-  useEffect(() => {
-    const unsubscribeFollowers = onSnapshot(
-      collection(db, "users"),
-      (snapshot) => {
-        const data = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setFollowers(data); // 팔로워 데이터 설정
-        setFilteredFollowers(data); // 초기값 설정
-      }
-    );
-
-    const unsubscribeDisplays = onSnapshot(
-      collection(db, "contents"),
-      (snapshot) => {
-        const data = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setDisplays(data); // 게시글 데이터 설정
-        setFilteredDisplays(data); // 초기값 설정
-      }
-    );
-
-    return () => {
-      unsubscribeFollowers();
-      unsubscribeDisplays();
-    };
-  }, []);
-
-  // 검색어를 통한 1차 필터링
+  // 검색어 변경 시 처리
   const handleSearch = (term) => {
-    setSearchTerm(term);
-    setContentType("popular");
+    setSearchTerm(term); // 검색어를 상태로 저장
+    setContentType("popular"); // 기본 필터로 설정
     setShowSearchBar(false);
 
     if (!term) {
-      setInitialFilteredFollowers(followers);
-      setInitialFilteredDisplays(displays);
-      setFilteredFollowers(followers);
-      setFilteredDisplays(displays);
+      setFollowersEmpty(false);
+      setDisplaysEmpty(false);
+
       return;
     }
-
-    const lowerCaseTerm = term.toLowerCase();
-
-    const filteredFollowers = followers.filter(
-      (follower) =>
-        follower.username.toLowerCase().includes(lowerCaseTerm) ||
-        follower.bio.toLowerCase().includes(lowerCaseTerm)
-    );
-
-    const filteredDisplays = displays.filter(
-      (display) =>
-        display.post.toLowerCase().includes(lowerCaseTerm) ||
-        display.username.toLowerCase().includes(lowerCaseTerm) ||
-        display.userId.toLowerCase().includes(lowerCaseTerm)
-    );
-
-    // 1차 필터링된 데이터를 따로 저장
-    setInitialFilteredFollowers(filteredFollowers);
-    setInitialFilteredDisplays(filteredDisplays);
-
-    // 1차 필터링된 데이터를 표시
-    setFilteredFollowers(filteredFollowers);
-    setFilteredDisplays(filteredDisplays);
   };
 
-  // 버튼 클릭 시 2차 필터링 적용
+  // 버튼 클릭 시 필터링 처리
   const handleButtonClick = (type) => {
     setContentType(type);
-
-    //  1차 필터링된 데이터를 바탕으로 2차 필터링
-    let filtered = [...initialFilteredDisplays];
-    let filteredFollow = [...initialFilteredFollowers];
-
-    if (type === "popular") {
-      setFilteredDisplays(filtered);
-      setFilteredFollowers(filteredFollow);
-      return;
-    }
-
-    if (type === "recent") {
-      filtered = filtered.sort(
-        (a, b) => b.createdAt.seconds - a.createdAt.seconds
-      );
-      setFilteredDisplays(filtered);
-      setFilteredFollowers(filteredFollow);
-      return;
-    }
-
-    if (type === "picture") {
-      filtered = filtered.filter((d) => d.photos && d.photos.length > 0);
-      setFilteredDisplays(filtered);
-      setFilteredFollowers([]);
-    } else if (type === "video") {
-      filtered = filtered.filter((d) => d.videos && d.videos.length > 0);
-      setFilteredDisplays(filtered);
-      setFilteredFollowers([]);
-    } else if (type === "profile") {
-      const profileFiltered = filteredFollow.filter(
-        (follower) =>
-          follower.username.includes(searchTerm) ||
-          follower.bio.includes(searchTerm)
-      );
-      setFilteredDisplays([]);
-      setFilteredFollowers(profileFiltered);
-    }
   };
-  // 동적으로 버튼 스타일 적용
-  const getButtonStyle = (type) => {
-    return {
-      backgroundColor: contentType === type ? "#000" : "#fff",
-      color: contentType === type ? "#fff" : "#000",
-    };
-  };
+
+  // 미디어 사이즈 변화시 버튼 종류 변경
+  const width = innerWidth;
+  const isMobile = width <= 768;
+
+  // 버튼 스타일 동적 처리
+  const getButtonStyle = (type) => ({
+    backgroundColor: contentType === type ? "#000" : "#fff",
+    color: contentType === type ? "#fff" : "#000",
+  });
+
+  // 버튼 스타일 동적 적용
+  const getPCButtonStyle = (type, isNightMode) => ({
+    background: "transparent",
+    color:
+      contentType === type
+        ? isNightMode
+          ? "#FFF"
+          : "#000"
+        : isNightMode
+        ? "rgba(255, 255, 255, 0.8)"
+        : "rgba(204, 204, 204, 0.8)",
+    borderBottom:
+      contentType === type
+        ? `1.5px solid ${isNightMode ? "#fff" : "#000"}`
+        : "none",
+  });
 
   const buttons = [
     { label: "인기", type: "popular" },
@@ -301,41 +255,70 @@ const Search = () => {
             <SearchBox>
               {showSearchBar ? (
                 <Searchbar addSearch={handleSearch} />
-              ) : (
-                <ButtonGroup>
+              ) : isMobile ? (
+                <ButtonGroup
+                  className="mobile-buttons"
+                  whileTap="click"
+                  drag="x"
+                  dragMomentum={false}
+                  dragConstraints={{ left: -100, right: 0 }}
+                >
                   {buttons.map((button) => (
-                    <button
+                    <SelectButton
                       key={button.type}
-                      style={getButtonStyle(button.type)} // 선택된 버튼에 스타일 적용
+                      style={getButtonStyle(button.type)}
                       onClick={() => handleButtonClick(button.type)}
                     >
                       {button.label}
-                    </button>
+                    </SelectButton>
                   ))}
                 </ButtonGroup>
+              ) : (
+                <ButtonGroupPC className="desktop-buttons">
+                  {buttons.map((button) => (
+                    <SelectButtonPC
+                      key={button.type}
+                      style={getPCButtonStyle(button.type)}
+                      onClick={() => handleButtonClick(button.type)}
+                    >
+                      {button.label}
+                    </SelectButtonPC>
+                  ))}
+                </ButtonGroupPC>
               )}
             </SearchBox>
             <ContentsBorder>
-              {/* 검색어가 없을 때 모든 팔로워와 게시글을 보여줌 */}
-              {searchTerm === "" && (
-                <>
-                  <FollowersList followers={followers} />
-                  <DisplayList displays={displays} />
-                </>
-              )}
-              {/* 필터링된 팔로워와 게시글을 보여줌 */}
-              {filteredFollowers.length > 0 && (
-                <FollowersList followers={filteredFollowers} />
-              )}
-              {filteredDisplays.length > 0 && (
-                <DisplayList displays={filteredDisplays} />
+              {contentType !== "picture" && contentType !== "video" && (
+                <FollowersList
+                  searchTerm={searchTerm}
+                  contentType={contentType}
+                  onDataEmpty={(isEmpty) => setFollowersEmpty(isEmpty)}
+                />
               )}
 
-              {/* 필터링 결과가 없을 때 */}
-              {filteredDisplays.length === 0 &&
-                filteredFollowers.length === 0 &&
-                searchTerm !== "" && (
-                  <NoResults>팔로워 또는 게시글이 없습니다.</NoResults>
+              {contentType !== "profile" && (
+                <DisplayList
+                  searchTerm={searchTerm}
+                  contentType={contentType}
+                  onDataEmpty={(isEmpty) => setDisplaysEmpty(isEmpty)}
+                />
+              )}
+
+              {contentType === "profile" && followersEmpty && (
+                <NoResults>프로필이 존재하지 않습니다.</NoResults>
+              )}
+
+              {(contentType === "picture" || contentType === "video") &&
+                displaysEmpty && (
+                  <NoResults>게시글이 존재하지 않습니다.</NoResults>
+                )}
+
+              {contentType !== "profile" &&
+                contentType !== "picture" &&
+                contentType !== "video" &&
+                followersEmpty &&
+                displaysEmpty && (
+                  <NoResults>게시글 및 프로필이 존재하지 않습니다.</NoResults>
                 )}
             </ContentsBorder>
           </Border>
@@ -344,5 +327,4 @@ const Search = () => {
     </div>
   );
 };
-
 export default Search;

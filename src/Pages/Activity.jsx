@@ -42,7 +42,7 @@ const Border = styled.div`
   max-width: 680px;
   height: 600px;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
+  background-color: ${(props) => props.theme.borderColor};
   @media (max-width: 768px) {
     width: 90%;
     border-radius: 20px 20px 0px 0px;
@@ -58,24 +58,20 @@ const ButtonGroup = styled.div`
   justify-content: space-evenly;
   align-items: center;
   gap: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
     gap: 10px;
-    padding: 0 40px;
     margin-bottom: 20px;
   }
   @media (max-width: 480px) {
-    padding: 0 40px;
   }
   button {
     flex: 0 0 auto;
     width: 130px;
-    border-radius: 8px;
     padding: 10px 20px;
-    background: ${(props) => props.theme.buttonbackground};
-    border: 1px solid ${(props) => props.theme.searchButton};
-    color: ${(props) => props.theme.buttonText};
-    font-weight: 700;
+    border: none;
+    font-weight: bold;
     cursor: pointer;
     transition: all;
     @media (max-width: 768px) {
@@ -104,6 +100,14 @@ const ContentsBorder = styled.div`
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0;
+  }
 `;
 
 const BoederWrapper = styled.div`
@@ -115,7 +119,7 @@ const BoederWrapper = styled.div`
   width: 680px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
+  background-color: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   @media (max-width: 768px) {
     position: fixed;
@@ -140,19 +144,31 @@ const Activity = () => {
   const [filteredData, setFilteredData] = useState([]); // 필터링된 데이터를 저장
   const [contentType, setContentType] = useState("all"); // 선택된 필터 상태
 
+  // NotificationList에서 데이터를 받아옴
   const handleDataUpdate = (listData) => {
     if (listData.length > 0) {
-      setSavedData(listData);
-      setFilteredData(listData);
+      setSavedData(listData); // 전체 데이터를 저장
+      setFilteredData(listData); // 필터링 없이 모든 데이터를 먼저 보여줌
     }
   };
 
-  // 필터링 함수
+  // 알림 읽음 표시
+  const markAsRead = (id) => {
+    const updatedData = savedData.map((notification) =>
+      notification.id === id ? { ...notification, isRead: true } : notification
+    );
+    setSavedData(updatedData);
+    setFilteredData(updatedData);
+  };
+
+  //알람 밀어서 삭제
+
+  // 필터링
   const filterList = (type) => {
     if (type === "all") {
       setFilteredData(savedData);
     } else {
-      const filtered = savedData.filter((item) => item.type === type);
+      const filtered = savedData.filter((item) => item.type === type); // 타입에 따른 필터링
       setFilteredData(filtered);
     }
   };
@@ -164,9 +180,20 @@ const Activity = () => {
   };
 
   // 버튼 스타일 동적 적용
-  const getButtonStyle = (type) => ({
-    backgroundColor: contentType === type ? "#000" : "#fff",
-    color: contentType === type ? "#fff" : "#000",
+  const getButtonStyle = (type, isNightMode) => ({
+    background: "transparent",
+    color:
+      contentType === type
+        ? isNightMode
+          ? "#FFF"
+          : "#000"
+        : isNightMode
+        ? "rgba(255, 255, 255, 0.8)"
+        : "rgba(204, 204, 204, 0.8)",
+    borderBottom:
+      contentType === type
+        ? `1.5px solid ${isNightMode ? "#fff" : "#000"}`
+        : "none",
   });
 
   const buttons = [
@@ -196,13 +223,19 @@ const Activity = () => {
           <ContentsBorder>
             {filteredData.length > 0 ? (
               filteredData.map((notification) => (
-                <NotificationItem key={notification.id} {...notification} />
+                <NotificationItem
+                  key={notification.id}
+                  {...notification}
+                  onClick={() => markAsRead(notification.id)}
+                />
               ))
             ) : (
               <NoResults>알림 내역이 없습니다.</NoResults>
             )}
 
-            <NotificationList onUpdate={handleDataUpdate} />
+            {savedData.length === 0 && (
+              <NotificationList onUpdate={handleDataUpdate} />
+            )}
           </ContentsBorder>
         </Border>
       </Contain>

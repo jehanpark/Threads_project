@@ -1,28 +1,60 @@
-import React from "react";
-import styled from "styled-components";
+import { useState, useEffect } from "react";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase";
 import FollowerItem from "./FollowerItem";
 
-const ErrorInfo = styled.p`
-  margin-bottom: 10px;
-  margin-top: 30px;
-`;
+const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
+  const [filteredFollowers, setFilteredFollowers] = useState([]);
 
-const FollowersList = ({ followers }) => {
-  if (!followers || followers.length === 0) {
-    return <ErrorInfo>팔로워 데이터를 찾을 수 없습니다.</ErrorInfo>;
-  }
+  // Firestore에서 필터링된 팔로워 데이터 가져오기
+  useEffect(() => {
+    let followersQuery = collection(db, "users");
+
+    if (contentType === "profile") {
+      followersQuery = query(followersQuery, where("profile", "==", true));
+    }
+
+    if (searchTerm && searchTerm.trim() !== "") {
+      followersQuery = query(
+        followersQuery,
+        where("username", ">=", searchTerm.toLowerCase()),
+        where("username", "<=", searchTerm.toLowerCase() + "\uf8ff")
+      );
+    }
+    // 실시간으로 데이터 구독
+    const unsubscribeFollowers = onSnapshot(followersQuery, (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setFilteredFollowers(data);
+      onDataEmpty(data.length === 0); // 데이터가 없을 때 상태 알림
+    });
+
+    // 구독 해제
+    return () => {
+      unsubscribeFollowers();
+    };
+  }, [searchTerm, contentType, onDataEmpty]);
+
+  // 팔로우 상태를 변경하는 함수
+  const handleToggleFollow = (id) => {
+    setFilteredFollowers((prevFollowers) =>
+      prevFollowers.map((follower) =>
+        follower.id === id
+          ? { ...follower, isFollowing: !follower.isFollowing }
+          : follower
+      )
+    );
+  };
 
   return (
     <div>
-      {followers.map((follower) => (
+      {filteredFollowers.map((follower) => (
         <FollowerItem
           key={follower.id}
-          nickname={follower.username}
-          profileImg={follower.profileImg}
-          desc={follower.bio}
-          followers={follower.followers}
-          isFollowing={follower.isFollowing}
-          toggleFollow={() => console.log("팔로우 상태 변경", follower.id)}
+          follower={follower}
+          toggleFollow={() => handleToggleFollow(follower.id)}
         />
       ))}
     </div>
