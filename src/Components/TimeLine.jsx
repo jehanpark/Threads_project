@@ -12,6 +12,7 @@ import Post from "./Post";
 import { Thread100Icon } from "./Common/Icon";
 
 const BoederWrapper = styled.div`
+  border: 1px solid #f00;
   position: fixed;
   bottom: 0;
   left: 50%;
@@ -141,17 +142,15 @@ const TimeLine = () => {
   // console.log(posts);
 
   return (
-    <BoederWrapper>
-      <PostlistWrapper
-        ref={wrapperRef}
-        className={isBouncing ? "bounce" : ""}
-        onScroll={handleScroll}
-      >
-        {posts.map((post) => (
-          <Post key={post.id} {...post} />
-        ))}
-      </PostlistWrapper>
-    </BoederWrapper>
+    <PostlistWrapper
+      ref={wrapperRef}
+      className={isBouncing ? "bounce" : ""}
+      onScroll={handleScroll}
+    >
+      {posts.map((post) => (
+        <Post key={post.id} {...post} />
+      ))}
+    </PostlistWrapper>
   );
 };
 

@@ -8,7 +8,7 @@ export const lightTheme = {
   fontcolor: "#000",
   borderWrapper: "#F5F5F5",
   borderColor: "#fff",
-  bordershadow: "0 0 15px #C9C9C9",
+  bordershadow: "0 0 15px rgba(201, 201, 201,0.5)",
   selecticoncolor: "#000000",
   borderstroke: "#E9E9E9",
   mouseHoverBg: "#ECECEC",
@@ -16,12 +16,24 @@ export const lightTheme = {
   headerBg: "#fff",
   btnBgColor: "#fff", // 중복 제거
   loginInputSelectColor: "#5987DC",
-  searchBar: "#e9e9e9",
+  searchBar: "#000",
   userIcon: "595959",
   followerfont: "#737373",
-  searchColor: "#595959",
-  themeIconBackground: "#fafafa",
+  searchColor: "#000",
+  searchButton: "#e9e9e9",
+  buttonbackground: "#fff",
+  buttonText: "#000",
   navIconColor: undefined,
+  activityBG: "linear-gradient(145deg, #ffffff, #e6e6e6)",
+  activitySH:
+    "5px 5px 10px rgba(0, 0, 0, 0.1), -5px -5px 10px rgba(255, 255, 255, 0.5) ",
+  activityhover:
+    "5px 5px 15px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.7)",
+  ImgBG: "linear-gradient(145deg, #ffffff, #e6e6e6)",
+  ImgSH: "linear-gradient(145deg, #333, #444)",
+  readBG: "linear-gradient(145deg, #dcdcdc, #c0c0c0)",
+  readTextColor: "#949494",
+  btnbottom: "1px solid rgba(204, 204, 204, 0.4)",
 };
 
 export const darkTheme = {
@@ -43,8 +55,19 @@ export const darkTheme = {
   userIcon: "#7373",
   followerfont: "#bababa",
   searchColor: "#1D1D1D",
-  themeIconBackground: "#363636",
-  navIconColor: undefined,
+  buttonbackground: "#000",
+  buttonText: "#fff",
+  activityBG: "linear-gradient(145deg, #333, #444)",
+  activitySH:
+    "5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(0, 0, 0, 0.2)",
+  activityhover:
+    "5px 5px 15px rgba(0, 0, 0, 0.5), -5px -5px 15px rgba(0, 0, 0, 0.2)",
+  ImgBG:
+    "5px 5px 10px rgba(0, 0, 0, 0.1), -5px -5px 10px rgba(255, 255, 255, 0.5)",
+  ImgSH: "5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(0, 0, 0, 0.2)",
+  readBG: "linear-gradient(145deg, #555, #666)",
+  readTextColor: "#bbb",
+  btnbottom: "1px solid #fff",
 };
 
 const GlobalStyles = createGlobalStyle`
