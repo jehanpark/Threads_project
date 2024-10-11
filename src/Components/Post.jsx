@@ -238,6 +238,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
   const [isRetweets, setIsRetweets] = useState(false);
   const [openModalId, setOpenModalId] = useState(null);
 
+  const navigate = useNavigate();
   const user = auth.currentUser;
 
   const renderTimeAgo = () => {
@@ -245,8 +246,6 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
     const date = new Date(createdAt.seconds * 1000);
     return formatDistanceToNow(date, { addSuffix: true });
   };
-
-  const navigator = useNavigate();
 
   const openModal = (postId) => {
     setOpenModalId(postId); // 특정 포스트의 ID로 모달 열기
@@ -394,8 +393,9 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
 
     setIsLiked((prevLiked) => !prevLiked);
   };
+
   const handleCommentClick = () => {
-    navigator("/Comment", {
+    navigate("/Comment", {
       state: {
         postId: id,
         postContent: post,
