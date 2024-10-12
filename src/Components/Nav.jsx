@@ -3,36 +3,60 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./Logo";
 import { useAuth } from "../Contexts/AuthContext";
-import { UserIcon1 } from "./Common/Icon";
 import MobileNav from "./MobileNav";
 
 const AllWrapper = styled.div`
   width: 100%;
   height: 100%;
+  padding: 20px 0px;
 `;
 
 const Wrapper = styled.nav`
   width: 100%;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+  /* padding: 0px 20px; */
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const LogoWrapper = styled.div`
   width: 40px;
+  padding-left: 20px;
   cursor: pointer;
-  @media screen and (width: 390px) {
+  @media screen and (width: 768px) {
     display: none;
   }
 `;
 
 const MyProfileImgs = styled.div`
+  position: absolute;
+  right: 20px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
   @media screen and (width: 390px) {
     display: none;
+  }
+`;
+
+const NavLoginBtn = styled.button`
+  position: absolute;
+  right: 20px;
+  background-color: ${(props) => props.theme.logoColor};
+  color: ${(props) => props.theme.btnBgColor};
+  width: 70px;
+  height: 37px;
+  border-radius: 12px;
+  cursor: pointer;
+  outline: none;
+  a {
+    width: 100%;
+    height: 100%;
   }
 `;
 
@@ -49,6 +73,7 @@ const DefaultImgWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid red;
 `;
 
 const Ul = styled.ul`
@@ -103,6 +128,10 @@ const Li = styled.li`
     fill: none;
     transition: stroke 0.4s;
   }
+`;
+
+const RightDiv = styled.div`
+  width: 40px;
 `;
 
 const Nav = () => {
@@ -286,19 +315,18 @@ const Nav = () => {
             </Li>
           ))}
         </Ul>
-        <MyProfileImgs>
-          {currentUser ? (
+        {currentUser ? (
+          <MyProfileImgs>
             <Link to="/profile">
               <Img src="/profile.png" alt="Profile" />
             </Link>
-          ) : (
-            <Link to="/login">
-              <DefaultImgWrapper>
-                <UserIcon1 />
-              </DefaultImgWrapper>
-            </Link>
-          )}
-        </MyProfileImgs>
+          </MyProfileImgs>
+        ) : (
+          <NavLoginBtn>
+            <Link to="/login">로그인</Link>
+          </NavLoginBtn>
+        )}
+        <RightDiv />
       </Wrapper>
     </AllWrapper>
   );

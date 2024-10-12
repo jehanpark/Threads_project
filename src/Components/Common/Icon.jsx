@@ -158,6 +158,7 @@ export const MicIcon = ({ width, fill }) => {
     </StyledSvg>
   );
 };
+
 //Hashtag
 export const HashtagIcon = ({ width, fill }) => {
   const height = width ? `${(width / 24) * 24}px` : "24px";
@@ -532,6 +533,71 @@ export const RetweetIcon = ({ width, fill }) => {
   );
 };
 
+//SoundIcon
+export const SoundIcon = ({ width, fill }) => {
+  const height = width ? width * 1 : "29px";
+
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={height}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        stroke={fill || "currentColor"}
+        fill="none"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z"
+      />
+    </StyledSvg>
+  );
+};
+
+//CustomArrowIcon
+export const CustomArrowIcon = ({ width, fill }) => {
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={width ? `${(width / 24) * 24}px` : "24px"}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      strokeWidth="1.5"
+      stroke={fill || "currentColor"}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M19.5 8.25l-7.5 7.5-7.5-7.5" /* 새로운 path 데이터 적용 */
+      />
+    </StyledSvg>
+  );
+};
+
+//CustomArrowUpIcon
+export const CustomArrowUpIcon = ({ width, fill }) => {
+  return (
+    <StyledSvg
+      width={width || "24px"}
+      height={width ? `${(width / 24) * 24}px` : "24px"}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      strokeWidth="1.5"
+      stroke={fill || "currentColor"}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M4.5 15.75l7.5-7.5 7.5 7.5" /* 새로운 path 데이터 적용 */
+      />
+    </StyledSvg>
+  );
+};
+
 export const Thread100Icon = ({ width, fill }) => {
   const height = (114.755 / 100) * parseFloat(width); // Calculate height based on width
   return (
@@ -555,7 +621,7 @@ export const InstaIcon = ({ width, fill }) => {
   return (
     <StyledSvg
       width={width || "22px"}
-      height={`${height}px`}
+      height={`${height}px` || "22px"}
       viewBox="0 0 22 22"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -597,7 +663,7 @@ export const FacebookIcon = ({ width, fill }) => {
   return (
     <StyledSvg
       width={width || "22px"}
-      height={`${height}px`}
+      height={`${height}px` || "22px"}
       viewBox="0 0 22 22"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -899,7 +965,7 @@ export const UserIcon2 = ({ width, fill }) => {
   return (
     <svg
       width={width || "15px"}
-      height={height}
+      height={height || "15px"}
       viewBox="0 0 15 15"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -1458,26 +1524,34 @@ export const ShareIconNew = ({
   strokeWidth = "1",
   strokeLinecap = "round",
   strokeLinejoin = "round",
+  link, // 링크를 props로 받음
 }) => {
   const height = width ? (width * 23) / 19 : "22px";
+
   return (
-    <svg
-      width={width || "19px"}
-      height={height}
-      viewBox="0 0 26 22"
-      stroke={stroke}
-      strokeWidth={strokeWidth}
-      strokeLinecap={strokeLinecap}
-      strokeLinejoin={strokeLinejoin}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <a
+      href={link} // 링크에 대한 href 속성 추가
+      target="_blank" // 새 창으로 열기
+      rel="noopener noreferrer" // 보안 및 성능 향상을 위한 속성
     >
-      <path
-        d="M21 9.00001L21 3.00001M21 3.00001H15M21 3.00001L12 12M10 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V14"
+      <svg
+        width={width || "19px"}
+        height={height}
+        viewBox="0 0 26 22"
         stroke={stroke}
+        strokeWidth={strokeWidth}
+        strokeLinecap={strokeLinecap}
+        strokeLinejoin={strokeLinejoin}
         fill="none"
-      />
-    </svg>
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M21 9.00001L21 3.00001M21 3.00001H15M21 3.00001L12 12M10 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V14"
+          stroke={stroke}
+          fill="none"
+        />
+      </svg>
+    </a>
   );
 };
 
@@ -1660,6 +1734,27 @@ export const FamilyIcon = ({
         clipRule="evenodd"
         d="M16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM9.25 3.75C9.25 4.44036 8.69036 5 8 5C7.30964 5 6.75 4.44036 6.75 3.75C6.75 3.05964 7.30964 2.5 8 2.5C8.69036 2.5 9.25 3.05964 9.25 3.75ZM12 8H9.41901L11.2047 13H9.081L8 9.97321L6.91901 13H4.79528L6.581 8H4V6H12V8Z"
         fill={fill} // props로 받은 fill 값 사용
+      />
+    </svg>
+  );
+};
+
+// 도경 => 모바일 메뉴 아이콘 생성
+
+export const MobileMenu = ({ width }) => {
+  const height = width * 1;
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width || 24} // 기본값 86px
+      height={height} // 비율에 맞춰 height 계산
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <path
+        d="M4 6H20V8H4V6ZM8 11H20V13H8V11ZM13 16H20V18H13V16Z"
+        fill="black"
       />
     </svg>
   );

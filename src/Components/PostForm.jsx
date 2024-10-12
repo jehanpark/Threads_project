@@ -26,6 +26,11 @@ import Loading from "./Loading";
 import { useAuth } from "../Contexts/AuthContext";
 
 // Styled Components
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: calc(100vh - 120px);
+`;
 const BoederWrapper = styled.div`
   position: fixed;
   bottom: 0;
@@ -262,6 +267,7 @@ const PostForm = () => {
         createdAt: serverTimestamp(),
         username: user?.displayName || "Anonymous",
         userId: user.uid,
+        email: user.email,
         likes: randomLikes,
         comments: randomComments,
         dms: randomDms,
@@ -306,80 +312,82 @@ const PostForm = () => {
   };
 
   return (
-    <BoederWrapper>
-      <Form onSubmit={handleSubmit}>
-        {isLoading ? <Loading /> : null}
-        <TextArea
-          onChange={handlePostChange}
-          value={post}
-          name="contents"
-          id="contents"
-          placeholder="내용을 작성하세요.."
-          required
-        />
-        <PlusImage>
-          {files.map((file, index) => (
-            <div key={index} style={{ position: "relative", margin: "5px" }}>
-              {file.type.startsWith("image/") ? (
-                <img
-                  src={URL.createObjectURL(file)}
-                  alt={`Uploaded Preview ${index + 1}`}
-                  style={{
-                    width: "160px",
-                    height: "160px",
-                    borderRadius: "10px",
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <video
-                  controls
-                  style={{
-                    width: "160px",
-                    height: "160px",
-                    borderRadius: "10px",
-                    objectFit: "cover",
-                  }}
-                >
-                  <source src={URL.createObjectURL(file)} />
-                </video>
-              )}
-              <DeleteButton onClick={() => removeFile(index)}>X</DeleteButton>
-            </div>
-          ))}
-        </PlusImage>
-        <Icons>
-          <CameraButton htmlFor="camera">
-            <CameraIcon width={38} />
-            <CameraInput
+    <Wrapper>
+      <BoederWrapper>
+        <Form onSubmit={handleSubmit}>
+          {isLoading ? <Loading /> : null}
+          <TextArea
+            onChange={handlePostChange}
+            value={post}
+            name="contents"
+            id="contents"
+            placeholder="내용을 작성하세요.."
+            required
+          />
+          <PlusImage>
+            {files.map((file, index) => (
+              <div key={index} style={{ position: "relative", margin: "5px" }}>
+                {file.type.startsWith("image/") ? (
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={`Uploaded Preview ${index + 1}`}
+                    style={{
+                      width: "160px",
+                      height: "160px",
+                      borderRadius: "10px",
+                      objectFit: "contain",
+                    }}
+                  />
+                ) : (
+                  <video
+                    controls
+                    style={{
+                      width: "160px",
+                      height: "160px",
+                      borderRadius: "10px",
+                      objectFit: "cover",
+                    }}
+                  >
+                    <source src={URL.createObjectURL(file)} />
+                  </video>
+                )}
+                <DeleteButton onClick={() => removeFile(index)}>X</DeleteButton>
+              </div>
+            ))}
+          </PlusImage>
+          <Icons>
+            <CameraButton htmlFor="camera">
+              <CameraIcon width={38} />
+              <CameraInput
+                onChange={handleFileChange}
+                id="camera"
+                type="file"
+                accept="video/*, image/*"
+              />
+            </CameraButton>
+            <PictureButton htmlFor="picture">
+              <PictureIcon width={24} />
+            </PictureButton>
+            <PictureInput
               onChange={handleFileChange}
-              id="camera"
+              id="picture"
               type="file"
               accept="video/*, image/*"
             />
-          </CameraButton>
-          <PictureButton htmlFor="picture">
-            <PictureIcon width={24} />
-          </PictureButton>
-          <PictureInput
-            onChange={handleFileChange}
-            id="picture"
-            type="file"
-            accept="video/*, image/*"
-          />
-          <MicIcon width={24} />
-          <HashtagIcon width={24} />
-        </Icons>
-        <Buttons>
-          <OpenButton>팔로워에게만 허용</OpenButton>
-          <SubmitBtn
-            text="스레드 업로드"
-            type="submit"
-            value={isLoading ? "Posting..." : "Post"}
-          />
-        </Buttons>
-      </Form>
-    </BoederWrapper>
+            <MicIcon width={24} />
+            <HashtagIcon width={24} />
+          </Icons>
+          <Buttons>
+            <OpenButton>팔로워에게만 허용</OpenButton>
+            <SubmitBtn
+              text="스레드 업로드"
+              type="submit"
+              value={isLoading ? "Posting..." : "Post"}
+            />
+          </Buttons>
+        </Form>
+      </BoederWrapper>
+    </Wrapper>
   );
 };
 

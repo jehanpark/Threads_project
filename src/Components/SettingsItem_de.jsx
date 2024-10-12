@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import BorderItem from "../Components/Common/Border_de";
+import { ShareIconNew } from "../Components/Common/Icon";
 import {
   LockIcon,
   EyeCloseIcon,
   Thread100Icon,
   CloseIcon,
   NotHeartIcon,
-  ShareIconNew,
   RightArrowIcon,
   CloseLockIcon,
   DeleteProfileIcon,
@@ -26,7 +26,7 @@ import {
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  height: calc(100vh - 120px);
 `;
 const SettingMenu = styled.div`
   display: flex;
@@ -191,6 +191,13 @@ const ActiveBorder = styled.div`
   transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
 `;
 
+// 아이콘 눌렀을 때 링크로 이동
+const IconLink = styled.a`
+  height: 20px;
+  text-align: end;
+  padding-right: 10px;
+`;
+
 const SettingsItem_de = () => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
   const [activeTab, setActiveTab] = useState("privacy");
@@ -282,13 +289,17 @@ const SettingsItem_de = () => {
                 </IconRadius>
                 <ContentAutoLayout>
                   <PrivacyTitle>차단된 프로필</PrivacyTitle>
-                  <Icon>
+                  <IconLink
+                    href="https://www.instagram.com/accounts/blocked_accounts/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <ShareIconNew
                       width={"14px"}
                       stroke="#999"
                       strokeWidth="2"
                     />
-                  </Icon>
+                  </IconLink>
                 </ContentAutoLayout>
               </PrivacyProfile>
               <PrivacyProfile>
@@ -297,13 +308,17 @@ const SettingsItem_de = () => {
                 </Icon>
                 <ContentAutoLayout>
                   <PrivacyTitle>좋아요 수 및 공유 수 숨기기</PrivacyTitle>
-                  <Icon>
+                  <IconLink
+                    href="https://www.instagram.com/accounts/like_count/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <ShareIconNew
                       width={"14px"}
                       stroke="#999"
                       strokeWidth="2"
                     />
-                  </Icon>
+                  </IconLink>
                 </ContentAutoLayout>
               </PrivacyProfile>
             </OtherSettings>

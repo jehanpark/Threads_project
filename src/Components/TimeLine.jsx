@@ -138,6 +138,8 @@ const TimeLine = () => {
     }
   };
 
+  // console.log(posts);
+
   return (
     <BoederWrapper>
       <PostlistWrapper

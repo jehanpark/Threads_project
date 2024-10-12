@@ -93,15 +93,16 @@ const BorderItem = styled.div`
     type === "settingsWrapper" &&
     `
     width: 558.67px; // 수정!
-    height: auto;
+    height: 100%;
     padding: 20px 0;
     background: #fff;
     margin-top: 30px;
     border: 1px solid rgb(213, 213, 213);
+
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    // justify-content: center;
     align-items: center;
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
     `}
