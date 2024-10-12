@@ -62,6 +62,7 @@ const Box = styled.button`
   gap: 6px;
   background: ${(props) => props.theme.borderColor};
   transition: background 0.3s;
+  color: ${(props) => props.theme.fontcolor};
   &:hover {
     background: ${(props) => props.theme.borderWrapper};
   }
@@ -80,6 +81,11 @@ const ImgBox = styled.label`
 `;
 const Img = styled.img`
   width: 100%;
+`;
+
+const P = styled.p`
+  color: ${(props) => props.theme.followerfont};
+  font-size: 14px;
 `;
 
 const OtherBtnModal = ({ open, close, profile }) => {
@@ -102,10 +108,10 @@ const OtherBtnModal = ({ open, close, profile }) => {
               친한 친구 추가
             </Box>
             <Box>
-              {" "}
               <BellOffIcon width="16px" /> 알림 설정 취소
             </Box>
             <Box>팔로잉 취소</Box>
+            <P>해당 모달의 기능은 준비 중인 기능입니다</P>
           </Wrapper>
         </OtherModalBox>
       </ModalOverlay>

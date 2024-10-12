@@ -1,38 +1,14 @@
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 
-export const ProfileInnner = styled.div`
-  padding: ${({ isSmallScreen }) =>
-    isSmallScreen ? " 14px 18px" : "40px 40px 0 40px"};
-  width: ${({ isSmallScreen }) =>
-    isSmallScreen ? "calc(100% - 10px)" : "calc(100% - 20px)"};
-  height: ${({ isSmallScreen }) => (isSmallScreen ? " 260px" : "306px")};
-  border: ${({ isSmallScreen }) => (isSmallScreen ? "none" : "306px")};
-  border-radius: ${({ isSmallScreen }) =>
-    isSmallScreen ? "30px 30px 10px 10px " : "40px 40px 18px 18px"};
-  background: ${(props) => props.theme.borderColor};
-  margin: ${({ isSmallScreen }) =>
-    isSmallScreen ? "70px auto 0px" : " 0 10px 8px"};
-`;
-
 export const ProfileWrap = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
 `;
 
-export const IdWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: ${({ isSmallScreen }) => (isSmallScreen ? "4px" : " 10px")};
-`;
-
-// export const Nick = styled.h1`
-//   font-size: ${({ isSmallScreen }) => (isSmallScreen ? "16px" : " 24px")};
-//   font-weight: 800;
-//   color: ${(props) => props.theme.fontcolor};
-// `;
+// @media (max-width: 768px) {
+// }
 
 export const IdText = styled.h3`
   font-size: 15px;
@@ -72,8 +48,11 @@ export const Tap = styled.ul`
 
 export const Desk = styled.div`
   height: 83px;
-  font-size: ${({ isSmallScreen }) => (isSmallScreen ? "16px" : "18px")};
+  font-size: 18px;
   color: ${(props) => props.theme.fontcolor};
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 
 export const TextInput = styled.div`

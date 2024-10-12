@@ -166,7 +166,7 @@ const Displayitem = ({ display }) => {
           <Payload>{post}</Payload>
 
           {photos && photos.length > 0 && (
-            <PhotoWrapper>
+            <>
               {photos.map((photoUrl, index) => (
                 <Photo
                   key={index}
@@ -174,7 +174,7 @@ const Displayitem = ({ display }) => {
                   alt={`Post Image ${index + 1}`}
                 />
               ))}
-            </PhotoWrapper>
+            </>
           )}
 
           {videos && videos.length > 0 && (

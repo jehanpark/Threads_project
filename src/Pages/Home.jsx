@@ -15,7 +15,6 @@ const Home = () => {
   return (
     <Wrapper>
       <TimeLine />
-      <Intro />
     </Wrapper>
   );
 };

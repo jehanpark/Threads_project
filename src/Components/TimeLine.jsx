@@ -12,25 +12,23 @@ import Post from "./Post";
 import { Thread100Icon } from "./Common/Icon";
 
 const BoederWrapper = styled.div`
-  border: 1px solid #f00;
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translate(-50%);
   margin: 0 auto;
   width: 680px;
-  height: 800px;
+  height: 85%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
   overflow: hidden;
   @media (max-width: 768px) {
     position: absolute;
-    height: calc(100% - 68px);
+    bottom: 0;
     border-radius: 0;
     width: 100%;
-    height: calc(100% - 140px);
-    bottom: 70px;
+    height: calc(100% - 70px);
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
   }
@@ -92,7 +90,6 @@ const TimeLine = () => {
   const [posts, setPosts] = useState([]);
   const [isBouncing, setIsBouncing] = useState(false);
   const wrapperRef = useRef(null);
-
   useEffect(() => {
     let unsubscribe = null;
     const fetchPosts = async () => {
@@ -103,13 +100,13 @@ const TimeLine = () => {
       );
       unsubscribe = onSnapshot(postsQuery, (snapshot) => {
         const posts = snapshot.docs.map((doc) => {
-          const { createdAt, photos, video, post, userId, username, email } =
+          const { createdAt, photos, videos, post, userId, username, email } =
             doc.data();
           return {
             id: doc.id,
             createdAt,
             photos: photos || [],
-            video,
+            videos: videos || [],
             post,
             userId,
             username,
@@ -139,18 +136,18 @@ const TimeLine = () => {
     }
   };
 
-  // console.log(posts);
-
   return (
-    <PostlistWrapper
-      ref={wrapperRef}
-      className={isBouncing ? "bounce" : ""}
-      onScroll={handleScroll}
-    >
-      {posts.map((post) => (
-        <Post key={post.id} {...post} />
-      ))}
-    </PostlistWrapper>
+    <BoederWrapper>
+      <PostlistWrapper
+        ref={wrapperRef}
+        className={isBouncing ? "bounce" : ""}
+        onScroll={handleScroll}
+      >
+        {posts.map((post) => (
+          <Post key={post.id} {...post} />
+        ))}
+      </PostlistWrapper>
+    </BoederWrapper>
   );
 };
 

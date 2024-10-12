@@ -1,9 +1,9 @@
-import React, { useState, useEff } from "react";
+import React, { useState, useEffct } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import Searchbar from "../Components/Search/Searchbar";
 import FollowersList from "../Components/Search/FollowerList";
-import DisplayList from "../Components/Search/Displaylist";
+import DisplayList from "../Components/Search/DisplayList";
 
 const Contain = styled.div`
   width: 100%;

@@ -12,37 +12,47 @@ import {
   FixIcon,
   ThemeLightIcon,
   ThemeDarkIcon,
+  MobileMenu,
 } from "./Common/Icon";
 import { motion } from "framer-motion";
 
 const Aside = styled.aside`
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
+  /* position: absolute; */
+  /* top: 50%; */
+  /* right: 0px; */
+  /* transform: translateY(-50%); */
 `;
 
 const BtnWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  @media (max-width: 768px) {
+  /* @media (max-width: 768px) {
     display: none; // 768px 이상의 화면에서는 숨기기
-  }
+  } */
 `;
 
 const SetBtn = styled.button`
-  width: 60px;
-  height: 60px;
-  box-shadow: ${(props) => props.theme.bordershadow};
-  border: 2px solid ${(props) => props.theme.borderstroke};
+  /* width: 60px;
+  height: 60px; */
+  /* box-shadow: ${(props) => props.theme.bordershadow};
+  border: 2px solid ${(props) => props.theme.borderstroke}; */
   /* border-color: ${(props) => props.theme.borderstroke};
   border-style: none;
   border-width: 1px; */
-  border-radius: 50%;
+  /* border-radius: 50%; */
   cursor: pointer;
-  background-color: ${(props) => props.theme.bodyBg};
+  /* background-color: ${(props) => props.theme.bodyBg}; */
   color: ${(props) => props.theme.fontcolor};
   font-size: 0.6rem;
+  border: none;
+  background-color: transparent;
+
+  svg {
+    path {
+      fill: ${(props) => props.theme.logoColor};
+    }
+  }
 `;
 
 const PinBtn = styled.button`
@@ -90,8 +100,8 @@ const ModalContainer = styled.div.withConfig({
     prop !== "isThemeModal" && prop !== "isBackClick",
 })`
   position: absolute;
-  bottom: 0px;
-  left: 0px;
+  top: 0px;
+  right: 10px;
   padding: 10px;
   width: 258px;
   /* height: ${(props) => (props.isThemeModal ? "220px" : "")}; */
@@ -214,7 +224,7 @@ const ToggleBackground = styled(motion.div)`
   z-index: 1;
 `;
 
-const Sidebar = () => {
+const MobileSidebar = () => {
   const { toggleTheme } = useContext(ThemeContext);
   // theme motion
   const [clicked, setClicked] = useState(false);
@@ -299,11 +309,12 @@ const Sidebar = () => {
     <>
       <Aside>
         <BtnWrapper>
-          <PinBtn>
+          {/* <PinBtn>
             <FixIcon fill={"#bababa"} />
-          </PinBtn>
+          </PinBtn> */}
           <SetBtn onClick={openModal}>
-            <EtcIcon fill={"#bababa"} />
+            {/* <EtcIcon fill={"#bababa"} /> */}
+            <MobileMenu width={32} fill={""} />
           </SetBtn>
         </BtnWrapper>
 
@@ -417,4 +428,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default MobileSidebar;

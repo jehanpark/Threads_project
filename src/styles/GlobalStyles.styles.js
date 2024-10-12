@@ -17,7 +17,7 @@ export const lightTheme = {
   btnBgColor: "#fff", // 중복 제거
   loginInputSelectColor: "#5987DC",
   searchBar: "#000",
-  userIcon: "595959",
+  userIcon: "#595959",
   followerfont: "#737373",
   searchColor: "#000",
   searchButton: "#e9e9e9",
@@ -34,6 +34,8 @@ export const lightTheme = {
   readBG: "linear-gradient(145deg, #dcdcdc, #c0c0c0)",
   readTextColor: "#949494",
   btnbottom: "1px solid rgba(204, 204, 204, 0.4)",
+  // 다은 새로 추가(설정부분)
+  activeBorder: "#181818",
 };
 
 export const darkTheme = {
@@ -52,9 +54,11 @@ export const darkTheme = {
   btnBgColor: "#000", // 중복 제거
   loginInputSelectColor: "#488EE3",
   searchBar: "#BABABA",
-  userIcon: "#7373",
+  userIcon: "#737373",
   followerfont: "#bababa",
   searchColor: "#1D1D1D",
+  themeIconBackground: "#363636",
+  navIconColor: undefined,
   buttonbackground: "#000",
   buttonText: "#fff",
   activityBG: "linear-gradient(145deg, #333, #444)",
@@ -68,6 +72,8 @@ export const darkTheme = {
   readBG: "linear-gradient(145deg, #555, #666)",
   readTextColor: "#bbb",
   btnbottom: "1px solid #fff",
+  // 다은 새로 추가(설정부분)
+  activeBorder: "#181818",
 };
 
 const GlobalStyles = createGlobalStyle`

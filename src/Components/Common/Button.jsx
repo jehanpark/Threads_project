@@ -48,7 +48,6 @@ const ButtonItem = styled.button`
     `
       width: 585px;
       height: 39px;
-      background: ${(props) => props.theme.nomalIconColor} ;
       color: #000;
       font-size: 15px;
       font-weight: Medium;

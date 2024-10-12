@@ -5,7 +5,7 @@ import CreateAccount_de from "../Components/Login/CreateAccount_de"; // 다은 �
 const CreateAccount = () => {
   return (
     <div>
-      <CreateAccount_de />
+      <CreateAccountItemDk />
     </div>
   );
 };
