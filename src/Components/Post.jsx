@@ -59,7 +59,6 @@ const Photo = styled.img`
     width: 120px;
     height: 120px;
   }
-  
 `;
 
 const Video = styled.video`
@@ -154,6 +153,7 @@ const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
+  transition: all 0.2s;
 `;
 
 const Button = styled.button`
@@ -240,6 +240,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
   const [isRetweets, setIsRetweets] = useState(false);
   const [openModalId, setOpenModalId] = useState(null);
 
+  const navigate = useNavigate();
   const user = auth.currentUser;
 
   const renderTimeAgo = () => {
@@ -247,8 +248,6 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
     const date = new Date(createdAt.seconds * 1000);
     return formatDistanceToNow(date, { addSuffix: true });
   };
-
-  const navigator = useNavigate();
 
   const openModal = (postId) => {
     setOpenModalId(postId); // 특정 포스트의 ID로 모달 열기
@@ -396,11 +395,31 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
 
     setIsLiked((prevLiked) => !prevLiked);
   };
-  const handleCommentClick = async () => {
-    const postRef = doc(db, "contents", id);
 
-    setComments((prevComments) => prevComments + 1); // 댓글을 1 추가 (임시로 설정)
-    await updateDoc(postRef, { comments: comments + 1 }); // Firebase에 업데이트
+  const handleCommentClick = () => {
+    navigate("/Comment", {
+      state: {
+        postId: id,
+        postContent: post,
+        photos,
+        videos,
+        username,
+        createdAt: createdAt || { seconds: Date.now() / 1000 }, // 기본값 설정
+      },
+    });
+  };
+
+  const PostCommentClick = () => {
+    navigate("/PostComment", {
+      state: {
+        postId: id,
+        postContent: post,
+        photos,
+        videos,
+        username,
+        createdAt: createdAt || { seconds: Date.now() / 1000 }, // 기본값 설정
+      },
+    });
   };
 
   // DM 상태가 변경될 때 Firebase에 업데이트
@@ -452,7 +471,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
           </div>
         )}
       </Header>
-      <Column>
+      <Column onClick={PostCommentClick}>
         {isEditing ? (
           <EditPostFormTextArea
             onChange={onChange}
@@ -463,7 +482,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
           <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
         )}
       </Column>
-      <ColumnWrapper>
+      <ColumnWrapper onClick={PostCommentClick}>
         {/* Render multiple photos */}
         {photos && photos.length > 0 && (
           <Column>
