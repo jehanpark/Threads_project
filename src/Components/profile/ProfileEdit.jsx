@@ -130,28 +130,33 @@ const ImgInput = styled.input`
 `;
 
 const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
-  const [profileData, setProfileData] = useState({ ...profile }); //전체적인 프로필 내용
+  const [profileData, setProfileData] = useState(profile); //전체적인 프로필 내용
+  console.log("확", profile);
   const [inputData, setInputDate] = useState({}); //>> 인풋 값을 받을 state
   const user = auth.currentUser; //유저 계정 내용 ( displayName , email , photoURL  , uid)
   const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" }); // 미디어 쿼리
 
-  // const handleKeyDown = (e) => {
-  //   if (e.key === "Enter") {
-  //     complete();
-  //   } else if (e.key === "Escape") {
-  //     close();
-  //   }
-  // };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      complete();
+    } else if (e.key === "Escape") {
+      close();
+    }
+  };
 
-  // useEffect(() => {
-  //   if (open) {
-  //     window.addEventListener("keydown", handleKeyDown);
-  //   }
-  //   return () => {
-  //     window.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, [open]);
+  useEffect(() => {
+    setProfileData({ ...profile });
+  }, [profile]);
+
+  useEffect(() => {
+    if (open) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -241,16 +246,16 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
       //여기에 있는 profile state값 변경
       setProfileData({
         ...profileData,
-        name: nameToSave,
+        username: nameToSave,
         bio: bioToSave,
         img: avatar,
       });
-      // onProfileChange({
-      //   ...profileData,
-      //   name: nameToSave,
-      //   bio: bioToSave,
-      //   img: avatar,
-      // });
+      onProfileChange({
+        ...profileData,
+        username: nameToSave,
+        bio: bioToSave,
+        img: avatar,
+      });
       close();
     } catch (e) {
       console.log("업뎃 에러");

@@ -241,6 +241,7 @@ const Profile = () => {
   };
 
   const CheckProfile = async () => {
+    console.log("프로필 체크 가동");
     try {
       const profileQuery = query(
         collection(db, "profile"),
@@ -267,13 +268,12 @@ const Profile = () => {
               isProfilePublic: profileDoc.isProfilePublic,
               img: imgUrl,
             }));
+            console.log("유저가 있을때 읽기 가동 완료");
             console.log(profile);
-            console.log("있다");
+            console.log("유저 있을 때 프로필 체크");
           }
         } else {
           // 사람이 없다면?
-          console.log("음따");
-          console.log(profile);
           setProfile((prev) => ({
             ...prev,
             postId: "",
@@ -284,6 +284,9 @@ const Profile = () => {
             isProfilePublic: true,
             img: null,
           }));
+          console.log("유저가 없을 때 읽기 가동 완료");
+          console.log(profile);
+          console.log("유저 없을 때 프로필 체크");
         }
       });
       return () => unsubscribe();
@@ -296,7 +299,7 @@ const Profile = () => {
     fetchPosts();
     CheckProfile();
     buttonCheck();
-  }, []);
+  }, [emailAdress]);
 
   const onfollow = () => {
     setFollowModal((prev) => !prev);
@@ -343,8 +346,7 @@ const Profile = () => {
   };
 
   const handleProfileChange = (updatedProfile) => {
-    console.log("확인");
-    console.log(profile);
+    console.log("이건", updatedProfile);
     setProfile(updatedProfile);
   };
 
@@ -374,7 +376,6 @@ const Profile = () => {
     { label: "사진", type: "photo" },
     { label: "동영상", type: "media" },
   ];
-  console.log(profile);
   return (
     <BoederWrapper>
       {followModal ? (
@@ -392,14 +393,14 @@ const Profile = () => {
           open={true}
           close={onProfileEdite}
           profile={profile}
-          onProfileChange={handleProfileChange}
+          onProfileChange={() => handleProfileChange}
         />
       ) : (
         <ProfileEdit
           open={false}
           close={onProfileEdite}
           profile={profile}
-          onProfileChange={handleProfileChange}
+          onProfileChange={() => handleProfileChange}
         />
       )}
       {otherBtn ? (
