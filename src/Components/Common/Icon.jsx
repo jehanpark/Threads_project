@@ -841,10 +841,10 @@ export const CloseIcon = ({ width, fill, border, borderRadius }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={width || "12px"}
-      height={height}
-      viewBox="0 0 14 14"
-      fill="none"
+      width={width || "24px"}
+      height={width || "24px"}
+      fill={fill || "#000000"} // fill Prop을 사용하여 색상을 설정
+      viewBox="0 0 24 24"
     >
       <path
         d="M13 1L1 13"
@@ -1697,11 +1697,12 @@ export const SecurityIcon = (props) => {
     </svg>
   );
 };
+
 // 계정상태
 export const AccountStatusIcon = ({
   width = "24px",
   height = "24px",
-  fill = "#000000",
+  fill = "currentColor",
   ...props
 }) => {
   return (

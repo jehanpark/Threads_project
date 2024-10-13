@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import GlobalStyles from "../styles/GlobalStyles.styles";
 import { useMediaQuery } from "react-responsive";
 import BorderItem from "../Components/Common/Border_de";
 import { ShareIconNew } from "../Components/Common/Icon";
+
 import {
   LockIcon,
   EyeCloseIcon,
@@ -212,7 +214,7 @@ const Icon = styled.div`
   height: 20px;
   text-align: end;
   /* padding: 0 10px; */
-  fill: ${({ theme }) => (theme === "dark" ? "#fff" : "#000")};
+  fill: ${({ theme }) => (theme === "dark" ? "white" : "black")};
 `;
 const IconRadius = styled.div`
   width: 20px;
@@ -253,7 +255,6 @@ const IconLink = styled.a`
   height: 20px;
   text-align: end;
   /* padding-right: 10px; */
-  fill: ${({ theme }) => (theme === "dark" ? "#fff" : "#000")};
 `;
 
 const SettingsItem_de = () => {
@@ -279,6 +280,8 @@ const SettingsItem_de = () => {
       setBorderPosition({ left: offsetLeft, width: offsetWidth });
     }
   }, []);
+  const [isDarkMode, setIsDarkMode] = useState(false); // 기본값은 라이트 모드
+
   return (
     <Wrapper>
       <SettingsInner>
@@ -355,7 +358,7 @@ const SettingsItem_de = () => {
                     rel="noopener noreferrer"
                   >
                     <ShareIconNew
-                      width={"14px"}
+                      width={"18px"}
                       stroke="#999"
                       strokeWidth="2"
                     />
@@ -374,7 +377,7 @@ const SettingsItem_de = () => {
                     rel="noopener noreferrer"
                   >
                     <ShareIconNew
-                      width={"14px"}
+                      width={"18px"}
                       stroke="#999"
                       strokeWidth="2"
                     />
@@ -451,7 +454,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -470,7 +473,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -489,7 +492,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -508,7 +511,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -527,7 +530,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -546,7 +549,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -591,7 +594,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -607,7 +610,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -623,7 +626,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -655,7 +658,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -671,7 +674,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -687,7 +690,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
