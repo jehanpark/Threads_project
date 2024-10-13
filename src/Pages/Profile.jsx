@@ -383,6 +383,7 @@ const Profile = () => {
     color: contentType === type ? "#000" : "rgba(204, 204, 204, 0.8)",
     borderBottom: contentType === type ? "1.5px solid #000" : "none",
   });
+
   const buttons = [
     { label: "스레드", type: "thresds" },
     { label: "답글", type: "comment" },

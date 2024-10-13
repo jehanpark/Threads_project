@@ -37,27 +37,36 @@ const NotificationContain = styled(motion.div)`
 const DeleteButton = styled(motion.div)`
   position: absolute;
   height: 82px;
-  top: 22%;
-  right: 40px;
+  top: 10%;
+  right: 0;
   display: grid;
   place-content: center;
   width: 70px;
   aspect-ratio: 1/1;
-  background: crimson;
+  background: #000;
+
+  @media (max-width: 768px) {
+    top: 13%;
+  }
+
+  @media (max-width: 480px) {
+    top: -13%;
+  }
 `;
 
 const DeleteLabel = styled(motion.p)`
   color: #fff;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 300;
 `;
 
 const Wrapper = styled.div`
+  color: ${(props) =>
+    props.isRead ? props.theme.borderstroke : props.theme.fontcolor};
+
   display: flex;
   gap: 20px;
   align-items: center;
-  color: ${(props) =>
-    props.isRead ? props.theme.borderstroke : props.theme.fontcolor};
 
   @media (max-width: 768px) {
     gap: 20px;
@@ -151,99 +160,105 @@ const UserDate = styled.p`
   }
 `;
 
-const NotificationItem = React.memo(
-  ({
-    profileImg,
-    username,
-    createdAt,
-    onClick,
-    isRead,
-    message,
-    type,
-    onDelete,
-  }) => {
-    //날짜
-    const renderTimeAgo = () => {
-      if (!createdAt || !createdAt.seconds) return "방금 전";
-      const date = new Date(createdAt.seconds * 1000);
-      return formatDistanceToNow(date, { addSuffix: true });
-    };
+const NotificationItem = ({
+  profileImg,
+  username,
+  createdAt,
+  onClick,
+  isRead,
+  message,
+  type,
+  onDelete,
+}) => {
+  //날짜 포맷 함수
+  const renderTimeAgo = () => {
+    if (!createdAt || !createdAt.seconds) return "방금 전";
+    const date = new Date(createdAt.seconds * 1000);
+    return formatDistanceToNow(date, { addSuffix: true });
+  };
 
-    //삭제버튼
-    const [isDeleteShow, setIsDeleteShow] = useState(false);
-    const itemX = useMotionValue(0); // 임계치를 넘는 순간 애니메이션 발생
-    const deleteAnimateState = isDeleteShow ? "appear" : "disappear";
-    const [animateRef, animate] = useAnimate();
+  useEffect(() => {
+    console.log("읽음 상태 변경:", isRead);
+  }, [isRead]);
 
-    useEffect(() => {
-      itemX.on("change", (v) => {
-        const isOverThreshold = v < -64 / 2;
+  // 삭제 관련 상태 및 애니메이션 처리
+  const [isDeleteShow, setIsDeleteShow] = useState(false);
+  const itemX = useMotionValue(0);
+  const deleteAnimateState = isDeleteShow ? "appear" : "disappear";
+  const [animateRef, animate] = useAnimate();
+  const DELETE_THRESHOLD = -10;
 
-        setIsDeleteShow(isOverThreshold);
-      });
-    }, [itemX]);
+  useEffect(() => {
+    itemX.on("change", (v) => {
+      const isOverThreshold = v < DELETE_THRESHOLD / 2;
+      setIsDeleteShow(isOverThreshold);
+    });
+  }, [itemX]);
 
-    return (
-      <>
-        <Contain>
-          <DeleteButton
-            initial="disappear"
-            animate={deleteAnimateState}
-            variants={{ appear: { opacity: 1 }, disappear: { opacity: 0 } }}
-            onClick={onDelete}
-          >
-            <DeleteLabel
-              variants={{
-                appear: { scale: 1 },
-                disappear: { scale: 0 },
-              }}
-            >
-              삭제
-            </DeleteLabel>
-          </DeleteButton>
-          <NotificationContain
-            whileTap="click"
-            drag="x"
-            dragElastic={0.5}
-            dragMomentum={false}
-            dragConstraints={{ left: -64, right: 0 }}
-            style={{
-              x: itemX,
+  // 클릭 이벤트 처리
+  const handleClick = () => {
+    if (itemX.get() === 0) {
+      onClick();
+    }
+  };
+
+  // 드래그 종료 시 삭제 처리
+  const handleDelete = () => {
+    const isOverThreshold = itemX.get() < DELETE_THRESHOLD;
+    if (isOverThreshold) {
+      onDelete(); // 삭제 실행
+    } else {
+      animate(animateRef.current, { x: 0 });
+    }
+  };
+
+  return (
+    <Contain>
+      <NotificationContain
+        drag="x"
+        dragElastic={0.5}
+        dragMomentum={false}
+        dragConstraints={{ left: DELETE_THRESHOLD, right: 0 }} // 드래그 제한 범위 설정
+        style={{ x: itemX }}
+        onDragEnd={handleDelete} // 드래그 종료 시 삭제 처리
+        ref={animateRef}
+      >
+        <Wrapper onClick={handleClick} isRead={isRead}>
+          <UserWrapper>
+            {profileImg ? (
+              <img src={profileImg} alt="User profile" />
+            ) : (
+              <UserIcon2 width={50} />
+            )}
+          </UserWrapper>
+          <UserContex>
+            <User>
+              {type === "friend" && <UserInfo>친한친구</UserInfo>}
+              <UserName>{username}</UserName>
+              <UserInfo>{message}</UserInfo>
+            </User>
+            <UserDate>{renderTimeAgo()}</UserDate>
+            {isRead && <UserDate>읽음</UserDate>}
+          </UserContex>
+        </Wrapper>
+        <DeleteButton
+          initial="disappear"
+          animate={deleteAnimateState}
+          variants={{ appear: { opacity: 1 }, disappear: { opacity: 0 } }}
+          onClick={handleDelete} // 삭제 버튼 클릭 시 삭제
+        >
+          <DeleteLabel
+            variants={{
+              appear: { scale: 1 },
+              disappear: { scale: 0 },
             }}
-            onDragEnd={() => {
-              const isOverThreshold = itemX.get() < -64;
-              if (isOverThreshold) {
-                animate(animateRef.current, { x: -64 });
-                onDelete();
-              } else {
-                animate(animateRef.current, { x: 0 });
-              }
-            }}
-            ref={animateRef}
           >
-            <Wrapper onClick={onClick} isRead={isRead}>
-              <UserWrapper>
-                {profileImg ? (
-                  <img src={profileImg} alt="User profile" />
-                ) : (
-                  <UserIcon2 width={50} />
-                )}
-              </UserWrapper>
-              <UserContex>
-                <User>
-                  {type === "friend" && <UserInfo>친한친구</UserInfo>}
-                  <UserName>{username}</UserName>
-                  <UserInfo>{message}</UserInfo>
-                </User>
-                <UserDate>{renderTimeAgo()}</UserDate>
-                {isRead && <UserDate>읽음</UserDate>}
-              </UserContex>
-            </Wrapper>
-          </NotificationContain>
-        </Contain>
-      </>
-    );
-  }
-);
+            삭제
+          </DeleteLabel>
+        </DeleteButton>
+      </NotificationContain>
+    </Contain>
+  );
+};
 
 export default NotificationItem;

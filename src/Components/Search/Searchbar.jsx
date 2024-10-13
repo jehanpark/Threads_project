@@ -20,10 +20,12 @@ const SearchWrapper = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.searchBar};
   @media (max-width: 768px) {
     width: 100%;
+    padding-bottom: 10px;
   }
 
   @media (max-width: 480px) {
     width: 100%;
+    padding-bottom: 10px;
   }
 `;
 
@@ -33,8 +35,7 @@ const SearchBar = styled.input`
   margin-bottom: 10px;
   border: none;
   background: transparent;
-  color: ${(props) => props.theme.searchColor};
-
+  color: ${(props) => props.theme.searchBar};
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -46,6 +47,9 @@ const SearchBar = styled.input`
   &::placeholder {
     transition: all 0.3s;
     font-size: 16px;
+    @media (max-width: 468px) {
+      font-size: 16px;
+    }
   }
 
   &:focus::placeholder {
@@ -53,7 +57,7 @@ const SearchBar = styled.input`
   }
 
   @media (max-width: 768px) {
-    font-size: 12px;
+    font-size: 16px;
   }
 `;
 
@@ -69,7 +73,10 @@ const MicButton = styled.button`
   cursor: pointer;
   transition: all 0.3s;
   path {
-    stroke: ${(props) => props.theme.searchColor};
+    stroke: ${(props) => props.theme.searchBar};
+  }
+  @media (max-width: 468px) {
+    margin: 0;
   }
 `;
 

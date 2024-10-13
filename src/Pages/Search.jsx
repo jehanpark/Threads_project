@@ -1,9 +1,10 @@
-import React, { useState, useEffct } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect } from "react";
+import styled, { useTheme } from "styled-components";
 import { motion } from "framer-motion";
 import Searchbar from "../Components/Search/Searchbar";
 import FollowersList from "../Components/Search/FollowerList";
-import DisplayList from "../Components/Search/DisplayList";
+
+import TimeLine from "../Components/TimeLine";
 
 const Contain = styled.div`
   width: 100%;
@@ -24,11 +25,11 @@ const MenuTitle = styled.p`
   transition: all 0.3s;
 
   @media (max-width: 768px) {
-    font-size: 20px;
+    display: none;
   }
 
   @media (max-width: 480px) {
-    font-size: 20px;
+    display: none;
   }
 `;
 
@@ -53,6 +54,7 @@ const Border = styled.div`
 `;
 
 const ButtonGroup = styled(motion.div)`
+  padding-left: 100px;
   display: flex;
   width: 100%;
   gap: 12px;
@@ -112,24 +114,22 @@ const SelectButtonPC = styled.button`
 `;
 
 const SearchBox = styled.div`
-  width: 100%;
+  height: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
-  overflow: hidden;
 
   @media (max-width: 768px) {
-    margin-top: 10px;
   }
 
   @media (max-width: 480px) {
-    margin-top: 10px;
   }
 `;
 
 const ContentsBorder = styled.div`
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -189,6 +189,7 @@ const Search = () => {
   const [contentType, setContentType] = useState("popular"); // 선택된 콘텐츠 타입 저장
   const [followersEmpty, setFollowersEmpty] = useState(false); // 팔로워가 비어 있는지 여부
   const [displaysEmpty, setDisplaysEmpty] = useState(false); // 게시글이 비어 있는지 여부
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   // 검색어 변경 시 처리
   const handleSearch = (term) => {
@@ -210,8 +211,18 @@ const Search = () => {
   };
 
   // 미디어 사이즈 변화시 버튼 종류 변경
-  const width = innerWidth;
-  const isMobile = width <= 768;
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // resize 이벤트를 감지하여 상태 업데이트
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   // 버튼 스타일 동적 처리
   const getButtonStyle = (type) => ({
@@ -295,7 +306,7 @@ const Search = () => {
               )}
 
               {contentType !== "profile" && (
-                <DisplayList
+                <TimeLine
                   searchTerm={searchTerm}
                   contentType={contentType}
                   onDataEmpty={(isEmpty) => setDisplaysEmpty(isEmpty)}

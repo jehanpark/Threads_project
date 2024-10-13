@@ -1,60 +1,86 @@
 import { useState, useEffect } from "react";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  limit,
+  onSnapshot,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import FollowerItem from "./FollowerItem";
 
 const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
-  const [filteredFollowers, setFilteredFollowers] = useState([]);
+  const [followers, setFollowers] = useState([]);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const emailAdress = searchParams.get("email");
 
-  // Firestore에서 필터링된 팔로워 데이터 가져오기
-  useEffect(() => {
-    let followersQuery = collection(db, "contents");
+  // Firestore에서 데이터를 가져오는 함수
 
-    if (contentType === "profile") {
-      followersQuery = query(followersQuery, where("profile", "==", true));
+  const fetchPosts = async () => {
+    let postsQuery = query(
+      collection(db, "contents"),
+      orderBy("createdAt", "desc"),
+      limit(5)
+    );
+
+    // 이메일 주소가 있는 경우 해당 이메일만 필터링
+    if (emailAdress) {
+      postsQuery = query(postsQuery, where("email", "==", emailAdress));
     }
 
-    if (searchTerm && searchTerm.trim() !== "") {
-      followersQuery = query(
-        followersQuery,
-        where("username", ">=", searchTerm.toLowerCase()),
-        where("username", "<=", searchTerm.toLowerCase() + "\uf8ff")
-      );
-    }
-    // 실시간으로 데이터 구독
-    const unsubscribeFollowers = onSnapshot(followersQuery, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
+    const unsubscribe = onSnapshot(postsQuery, (snapshot) => {
+      let data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setFilteredFollowers(data);
-      onDataEmpty(data.length === 0); // 데이터가 없을 때 상태 알림
+
+      // 클라이언트에서 필터링
+      // 1. 검색어 필터링
+      if (searchTerm && searchTerm.trim() !== "") {
+        const searchLower = searchTerm.toLowerCase();
+        data = data.filter((item) => {
+          const usernameMatch =
+            item.username && item.username.toLowerCase().includes(searchLower);
+          const emailMatch =
+            item.email && item.email.toLowerCase().includes(searchLower);
+          const userInfoMatch =
+            item.userInfo && item.userInfo.toLowerCase().includes(searchLower);
+          return usernameMatch || emailMatch || userInfoMatch;
+        });
+      }
+
+      if (contentType === "profile") {
+        data = data.filter((item) => item.profile === true);
+      } else if (contentType === "all") {
+      }
+
+      setFollowers(data);
+      onDataEmpty && onDataEmpty(data.length === 0);
     });
 
-    // 구독 해제
-    return () => {
-      unsubscribeFollowers();
-    };
-  }, [searchTerm, contentType, onDataEmpty]);
-
-  // 팔로우 상태를 변경하는 함수
-  const handleToggleFollow = (id) => {
-    setFilteredFollowers((prevFollowers) =>
-      prevFollowers.map((follower) =>
-        follower.id === id
-          ? { ...follower, isFollowing: !follower.isFollowing }
-          : follower
-      )
-    );
+    return () => unsubscribe();
   };
 
+  useEffect(() => {
+    fetchPosts();
+  }, [searchTerm, contentType, emailAdress]);
+
+  // 팔로워 아이템 클릭 시 프로필 페이지로 이동
+  const handleProfileClick = (email) => {
+    if (email) {
+      navigate(`/profile/${email}`);
+    }
+  };
   return (
     <div>
-      {filteredFollowers.map((follower) => (
+      {followers.map((follower) => (
         <FollowerItem
           key={follower.id}
           follower={follower}
-          toggleFollow={() => handleToggleFollow(follower.id)}
+          onClick={() => handleProfileClick(follower.email)}
         />
       ))}
     </div>

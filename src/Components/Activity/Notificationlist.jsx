@@ -31,14 +31,10 @@ const getTypeLabel = (message) => {
 
   if (message.includes("좋아요")) {
     return "like";
-  } else if (message.includes("답글")) {
+  } else if (message.includes("답변")) {
     return "comment";
   } else if (message.includes("언급") || message.includes("인용")) {
     return "comment";
-  } else if (message.includes("친한친구")) {
-    return "friend";
-  } else {
-    return "other";
   }
 };
 
@@ -53,14 +49,6 @@ const NotificationList = ({ onUpdate }) => {
           orderBy("createdAt", "desc")
         );
         const querySnapshot = await getDocs(DesQuery);
-
-        // 문서가 제대로 로드되었는지 확인
-        console.log(`Fetched ${querySnapshot.size} documents`);
-
-        // 데이터 가져오기 로그 (한 번만 출력)
-        console.log(
-          `Firestore에서 데이터를 가져옴: 총 ${querySnapshot.size} 개`
-        );
 
         const initialData = querySnapshot.docs.map((docSnapshot) => {
           const docData = docSnapshot.data();
@@ -100,33 +88,32 @@ const NotificationList = ({ onUpdate }) => {
     };
 
     fetchData();
-
-    // 의존성 배열을 비워서 한 번만 실행되도록 함
   }, []); // 빈 배열로 의존성을 설정하여 컴포넌트 마운트 시 한 번만 실행
 
   // 알림 읽음 처리 함수
   const markAsRead = async (id) => {
-    // 알림의 상태를 업데이트
-    setNotifications((prevNotifications) =>
-      prevNotifications.map((notification) =>
-        notification.id === id
-          ? { ...notification, isRead: true }
-          : notification
-      )
-    );
-
     try {
-      const notificationRef = doc(db, "contents", id);
+      const notificationRef = doc(db, "notifications", id);
       await updateDoc(notificationRef, { isRead: true });
+
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) =>
+          notification.id === id
+            ? { ...notification, isRead: true }
+            : notification
+        )
+      );
+
+      console.log("업데이트된 알림 상태");
     } catch (error) {
       console.error("Firestore 업데이트 중 오류 발생:", error);
     }
   };
 
-  // 삭제
+  //알림 삭제
   const handleDelete = (id) => {
-    setNotifications(
-      notifications.filter((notification) => notification.id !== id)
+    setNotifications((prevNotifications) =>
+      prevNotifications.filter((notification) => notification.id !== id)
     );
   };
 
@@ -136,8 +123,11 @@ const NotificationList = ({ onUpdate }) => {
         <NotificationItem
           key={notification.id}
           {...notification}
+          onClick={() => {
+            console.log("click");
+            markAsRead(notification.id);
+          }}
           onDelete={() => handleDelete(notification.id)}
-          onClick={() => markAsRead(notification.id)}
         />
       ))}
     </>

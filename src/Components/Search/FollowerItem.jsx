@@ -150,9 +150,9 @@ const FollowerButton = styled.button`
   }
 `;
 
-const FollowerItem = ({ follower, toggleFollow }) => {
+const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
   return (
-    <FollowerContain>
+    <FollowerContain onClick={onProfileClick}>
       <Wrapper>
         <UserWrapper>
           {follower.profileImg ? (

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import Border from "../Components/Common/Border";
 import styled from "styled-components";
 import NotificationItem from "../Components/Activity/NotificationItem";
 import NotificationList from "../Components/Activity/Notificationlist";
@@ -25,47 +24,70 @@ const MenuTitle = styled.p`
   color: ${(props) => props.theme.fontcolor};
   transition: all 0.3s;
   @media (max-width: 768px) {
-    margin-top: 30px;
-    font-size: 18px;
-    margin-bottom: 15px;
+    display: none;
   }
   @media (max-width: 480px) {
-    margin-top: 30px;
-    font-size: 18px;
-    margin-bottom: 10px;
+    display: none;
   }
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
+  width: 100%;
+  justify-content: center;
+  align-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+`;
+
+const SelectButton = styled.button`
+  display: flex;
+  flex: 0 0 auto;
+  width: 110px;
+  border-radius: 8px;
+  padding: 10px 20px;
+  background: ${(props) => props.theme.buttonbackground};
+  border: 1px solid ${(props) => props.theme.searchButton};
+  color: ${(props) => props.theme.buttonText};
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  @media (max-width: 768px) {
+    display: block;
+    width: 90px;
+    padding: 8px 15px;
+  }
+
+  @media (max-width: 480px) {
+    display: block;
+    width: 80px;
+    padding: 6px 10px;
+  }
+`;
+
+const ButtonGroupPC = styled.div`
+  width: 84%;
+  display: flex;
   justify-content: space-evenly;
   align-items: center;
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 10px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
-    gap: 10px;
-    margin-bottom: 20px;
+    display: none;
   }
-  @media (max-width: 480px) {
-  }
-  button {
-    flex: 0 0 auto;
-    width: 130px;
-    padding: 10px 20px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all;
-    @media (max-width: 768px) {
-      width: 90px;
-      padding: 8px 15px;
-    }
-    @media (max-width: 480px) {
-      width: 80px;
-      padding: 6px 10px;
-    }
-  }
+`;
+
+const SelectButtonPC = styled.button`
+  flex: 0 0 auto;
+  width: 140px;
+  padding: 10px 20px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
 `;
 
 const ContentsBorder = styled.div`
@@ -73,11 +95,12 @@ const ContentsBorder = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-
-  max-height: 600px;
+  height: 100%;
+  max-height: 700px;
   overflow-y: auto;
   padding: 0 20px;
   padding-bottom: 20px;
+  margin-top: 20px;
   ::-webkit-scrollbar {
     display: none;
   }
@@ -85,11 +108,13 @@ const ContentsBorder = styled.div`
   scrollbar-width: none;
 
   @media (max-width: 768px) {
-    padding: 0;
+    width: 100%;
+    max-height: 100%;
   }
 
   @media (max-width: 480px) {
-    padding: 0;
+    width: 100%;
+    max-height: 100%;
   }
 `;
 
@@ -126,10 +151,12 @@ const Activity = () => {
   const [savedData, setSavedData] = useState([]); // 모든 데이터를 저장
   const [filteredData, setFilteredData] = useState([]); // 필터링된 데이터를 저장
   const [contentType, setContentType] = useState("all"); // 선택된 필터 상태
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   // NotificationList에서 데이터를 받아옴
   const handleDataUpdate = (listData) => {
     if (listData.length > 0) {
+      console.log("받은 데이터:", listData);
       setSavedData(listData); // 전체 데이터를 저장
       setFilteredData(listData); // 필터링 없이 모든 데이터를 먼저 보여줌
     }
@@ -137,42 +164,75 @@ const Activity = () => {
 
   // 알림 읽음 표시
   const markAsRead = (id) => {
-    const updatedData = savedData.map((notification) =>
-      notification.id === id ? { ...notification, isRead: true } : notification
-    );
-    setSavedData(updatedData);
-    setFilteredData(updatedData);
+    setSavedData((prevData) => {
+      const updatedData = prevData.map((notification) =>
+        notification.id === id
+          ? { ...notification, isRead: true }
+          : notification
+      );
+
+      setFilteredData(updatedData);
+
+      console.log("업데이트된 데이터:", updatedData);
+
+      return updatedData;
+    });
   };
 
-  // 알림 삭제
-  const onDelete = (id) => {
-    const updatedData = savedData.filter(
-      (notification) => notification.id !== id
+  // 알림 삭제 함수
+  const handleDelete = (id) => {
+    setSavedData((prevData) =>
+      prevData.filter((notification) => notification.id !== id)
     );
-    setSavedData(updatedData);
-    setFilteredData(updatedData);
+    setFilteredData((prevData) =>
+      prevData.filter((notification) => notification.id !== id)
+    );
   };
-
-  console.log(onDelete);
 
   // 필터링
   const filterList = (type) => {
+    console.log("선택된 타입:", type);
+    console.log("저장된 데이터:", savedData);
     if (type === "all") {
       setFilteredData(savedData); // 전체 데이터 보여줌
     } else {
       const filtered = savedData.filter((item) => item.type === type); // 타입에 따른 필터링
+      console.log("필터된 데이터:", filtered);
       setFilteredData(filtered);
     }
   };
 
   // 필터 버튼 클릭 처리
   const handleButtonClick = (type) => {
-    setContentType(type); // 필터 상태 업데이트
-    filterList(type); // 필터링 적용
+    setContentType(type);
   };
 
+  useEffect(() => {
+    filterList(contentType);
+  }, [contentType]);
+
+  // 미디어 사이즈 변화시 버튼 종류 변경
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // resize 이벤트를 감지하여 상태 업데이트
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // 버튼 스타일 동적 처리
+  const getButtonStyle = (type) => ({
+    backgroundColor: contentType === type ? "#000" : "#fff",
+    color: contentType === type ? "#fff" : "#000",
+  });
+
   // 버튼 스타일 동적 적용
-  const getButtonStyle = (type, isNightMode) => ({
+  const getPCButtonStyle = (type, isNightMode) => ({
     background: "transparent",
     color:
       contentType === type
@@ -214,29 +274,41 @@ const Activity = () => {
     <BoederWrapper>
       <Contain>
         <MenuTitle>활동</MenuTitle>
-
-        <ButtonGroup>
-          {buttons.map((button) => (
-            <button
-              key={button.type}
-              style={getButtonStyle(button.type)}
-              onClick={() => handleButtonClick(button.type)}
-            >
-              {button.label}
-            </button>
-          ))}
-        </ButtonGroup>
-
+        {isMobile ? (
+          <ButtonGroup>
+            {buttons.map((button) => (
+              <SelectButton
+                key={button.type}
+                style={getButtonStyle(button.type)}
+                onClick={() => handleButtonClick(button.type)}
+              >
+                {button.label}
+              </SelectButton>
+            ))}
+          </ButtonGroup>
+        ) : (
+          <ButtonGroupPC className="desktop-buttons">
+            {buttons.map((button) => (
+              <SelectButtonPC
+                key={button.type}
+                style={getPCButtonStyle(button.type)}
+                onClick={() => handleButtonClick(button.type)}
+              >
+                {button.label}
+              </SelectButtonPC>
+            ))}
+          </ButtonGroupPC>
+        )}
         <ContentsBorder>
           {filteredData.length > 0 ? (
-            <NotificationList
-              onUpdate={handleDataUpdate}
-              savedData={savedData}
-              filteredData={filteredData}
-              setFilteredData={setFilteredData}
-              onDelete={onDelete}
-              markAsRead={markAsRead}
-            />
+            filteredData.map((notification) => (
+              <NotificationItem
+                key={notification.id}
+                {...notification}
+                onClick={() => markAsRead(notification.id)}
+                onDelete={() => handleDelete(notification.id)}
+              />
+            ))
           ) : (
             <NoResults>알림 내역이 없습니다.</NoResults>
           )}
