@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
@@ -9,6 +9,13 @@ import {
   RetweetIcon,
   Coment,
 } from "../Components/Common/Icon";
+import BackBtn from "../Components/post/BackBtn";
+
+const Backarea = styled.div`
+  position: fixed;
+  top: 12%;
+  left: 25%;
+`
 
 const BoederWrapper = styled.div`
   position: fixed;
@@ -188,6 +195,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 height: 100%;
+margin-top: 30px;
 font-size: 16px;
 color: #bababa;
 `
@@ -266,102 +274,105 @@ const PostComment = ({ id }) => {
   }, [location.state.postId]); // postId가 변경될 때마다 댓글을 다시 불러옴
 
   return (
-    <BoederWrapper>
-      <PostWrapper>
-        <Header>
-          <UserImage src="http://localhost:5173/profile.png"></UserImage>
-          <Username>{username}</Username>
-          <Timer>{renderTimeAgo()}</Timer>
-        </Header>
-        <Column>
-          <Posted>{postContent}</Posted>
-        </Column>
-        <ColumnWrapper>
+<div>      
+        <Backarea><BackBtn /></Backarea>
+      <BoederWrapper>
+        <PostWrapper>
+          <Header>
+            <UserImage src="http://localhost:5173/profile.png"></UserImage>
+            <Username>{username}</Username>
+            <Timer>{renderTimeAgo()}</Timer>
+          </Header>
           <Column>
-            {photos &&
-              photos.length > 0 &&
-              photos.map((photoUrl, index) => (
-                <Photo
-                  key={index}
-                  src={photoUrl}
-                  alt={`Post Image ${index + 1}`}
-                />
-              ))}
+            <Posted>{postContent}</Posted>
           </Column>
-          <Column>
-            {videos &&
-              videos.length > 0 &&
-              videos.map((videoUrl, index) => (
-                <Video key={index} controls autoPlay loop src={videoUrl} />
-              ))}
-          </Column>
-        </ColumnWrapper>
-        <Icons>
-          <IconWrapper>
-            <HeartIcon width={20} /> {likes}
-          </IconWrapper>
-          <IconWrapper onClick={handleCommentClick}>
-            <Coment width={20} /> {comments.length}
-          </IconWrapper>
-          <IconWrapper>
-            <DmIcon width={18} /> {dms}
-          </IconWrapper>
-          <IconWrapper>
-            <RetweetIcon width={20} /> {retweets}
-          </IconWrapper>
-        </Icons>
-      </PostWrapper>
-
-      <div>
-        {comments.length > 0 ? (
-          comments.map((comment) => (
-            <CommentWrapper key={comment.id}>
-              <CommentHeader>
-                <UserImage src="http://localhost:5173/profile.png"></UserImage>
-                <CommentUsername>{comment.username}</CommentUsername>
-                <CommentTimer>
-                  {formatDistanceToNow(
-                    new Date(comment.createdAt.seconds * 1000),
-                    {
-                      addSuffix: true,
-                    }
-                  )}
-                </CommentTimer>
-              </CommentHeader>
-              <CommentContent>
-                {typeof comment.comment === "string"
-                  ? comment.comment
-                  : JSON.stringify(comment.comment)}
-              </CommentContent>
-
-              {/* 댓글에 이미지가 있을 경우 */}
-              {comment.photoUrls && comment.photoUrls.length > 0 && (
-                <div>
-                  {comment.photoUrls.map((photoUrl, index) => (
-                    <CommentImage
-                      key={index}
-                      src={photoUrl}
-                      alt={`Comment Image ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
-
-              {/* 댓글에 비디오가 있을 경우 */}
-              {comment.videoUrls && comment.videoUrls.length > 0 && (
-                <div>
-                  {comment.videoUrls.map((videoUrl, index) => (
-                    <CommentVideo key={index} controls src={videoUrl} />
-                  ))}
-                </div>
-              )}
-            </CommentWrapper>
-          ))
-        ) : (
-          <NotComment>댓글이 없습니다.</NotComment>
-        )}
-      </div>
-    </BoederWrapper>
+          <ColumnWrapper>
+            <Column>
+              {photos &&
+                photos.length > 0 &&
+                photos.map((photoUrl, index) => (
+                  <Photo
+                    key={index}
+                    src={photoUrl}
+                    alt={`Post Image ${index + 1}`}
+                  />
+                ))}
+            </Column>
+            <Column>
+              {videos &&
+                videos.length > 0 &&
+                videos.map((videoUrl, index) => (
+                  <Video key={index} controls autoPlay loop src={videoUrl} />
+                ))}
+            </Column>
+          </ColumnWrapper>
+          <Icons>
+            <IconWrapper>
+              <HeartIcon width={20} /> {likes}
+            </IconWrapper>
+            <IconWrapper onClick={handleCommentClick}>
+              <Coment width={20} /> {comments.length}
+            </IconWrapper>
+            <IconWrapper>
+              <DmIcon width={18} /> {dms}
+            </IconWrapper>
+            <IconWrapper>
+              <RetweetIcon width={20} /> {retweets}
+            </IconWrapper>
+          </Icons>
+        </PostWrapper>
+  
+        <div>
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <CommentWrapper key={comment.id}>
+                <CommentHeader>
+                  <UserImage src="http://localhost:5173/profile.png"></UserImage>
+                  <CommentUsername>{comment.username}</CommentUsername>
+                  <CommentTimer>
+                    {formatDistanceToNow(
+                      new Date(comment.createdAt.seconds * 1000),
+                      {
+                        addSuffix: true,
+                      }
+                    )}
+                  </CommentTimer>
+                </CommentHeader>
+                <CommentContent>
+                  {typeof comment.comment === "string"
+                    ? comment.comment
+                    : JSON.stringify(comment.comment)}
+                </CommentContent>
+  
+                {/* 댓글에 이미지가 있을 경우 */}
+                {comment.photoUrls && comment.photoUrls.length > 0 && (
+                  <div>
+                    {comment.photoUrls.map((photoUrl, index) => (
+                      <CommentImage
+                        key={index}
+                        src={photoUrl}
+                        alt={`Comment Image ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+  
+                {/* 댓글에 비디오가 있을 경우 */}
+                {comment.videoUrls && comment.videoUrls.length > 0 && (
+                  <div>
+                    {comment.videoUrls.map((videoUrl, index) => (
+                      <CommentVideo key={index} controls src={videoUrl} />
+                    ))}
+                  </div>
+                )}
+              </CommentWrapper>
+            ))
+          ) : (
+            <NotComment>댓글이 없습니다.</NotComment>
+          )}
+        </div>
+      </BoederWrapper>
+</div>
   );
 };
 
