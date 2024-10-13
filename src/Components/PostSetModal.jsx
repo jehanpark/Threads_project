@@ -49,7 +49,6 @@ const TopRec = styled.div`
   }
 `;
 
-
 const Optionwrapper = styled.div`
   padding: 10px;
   width: auto;
@@ -116,17 +115,15 @@ const UpLoadButton = styled.button`
 
 const PostSetModal = () => {
   return (
-    <Wrapper>
-      <Contentswrapper>
-        <TopRec></TopRec>
-        <Optionwrapper>
-          <Li>수정</Li>
-          <Li>리포스트</Li>
-          <Li>삭제</Li>
-        </Optionwrapper>
-        <UpLoadButton>게시글 업로드</UpLoadButton>
-      </Contentswrapper>
-    </Wrapper>
+    <Contentswrapper>
+      <TopRec></TopRec>
+      <Optionwrapper>
+        <Li>수정</Li>
+        <Li>리포스트</Li>
+        <Li>삭제</Li>
+      </Optionwrapper>
+      <UpLoadButton>게시글 업로드</UpLoadButton>
+    </Contentswrapper>
   );
 };
 

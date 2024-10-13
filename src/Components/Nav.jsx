@@ -8,25 +8,34 @@ import MobileNav from "./MobileNav";
 const AllWrapper = styled.div`
   width: 100%;
   height: 100%;
+  padding: 20px 0px;
 `;
 
 const Wrapper = styled.nav`
   width: 100%;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+  /* padding: 0px 20px; */
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const LogoWrapper = styled.div`
   width: 40px;
+  padding-left: 20px;
   cursor: pointer;
-  @media screen and (width: 390px) {
+  @media screen and (width: 768px) {
     display: none;
   }
 `;
 
 const MyProfileImgs = styled.div`
+  position: absolute;
+  right: 20px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -36,13 +45,19 @@ const MyProfileImgs = styled.div`
 `;
 
 const NavLoginBtn = styled.button`
+  position: absolute;
+  right: 20px;
   background-color: ${(props) => props.theme.logoColor};
   color: ${(props) => props.theme.btnBgColor};
-  width: 120px;
-  height: 45px;
+  width: 70px;
+  height: 37px;
   border-radius: 12px;
   cursor: pointer;
   outline: none;
+  a {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const Img = styled.img`
@@ -113,6 +128,10 @@ const Li = styled.li`
     fill: none;
     transition: stroke 0.4s;
   }
+`;
+
+const RightDiv = styled.div`
+  width: 40px;
 `;
 
 const Nav = () => {
@@ -303,10 +322,11 @@ const Nav = () => {
             </Link>
           </MyProfileImgs>
         ) : (
-          <Link to="/login">
-            <NavLoginBtn>로그인</NavLoginBtn>
-          </Link>
+          <NavLoginBtn>
+            <Link to="/login">로그인</Link>
+          </NavLoginBtn>
         )}
+        <RightDiv />
       </Wrapper>
     </AllWrapper>
   );

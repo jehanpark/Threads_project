@@ -18,10 +18,13 @@ import {
   EtcIcon,
   Coment,
 } from "../Components/Common/Icon";
+
+import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
+
 import { formatDistanceToNow } from "date-fns";
-import { useNavigate } from "react-router-dom";
 import PostSetModal from "./Common/PostSetModal";
+import PostEtcModal from "./PostEtcModal";
 
 const Wrapper = styled.div`
   position: relative;
@@ -91,11 +94,13 @@ const Username = styled.span`
   font-weight: 600;
   color: ${(props) => props.theme.fontcolor};
 `;
+
 const Timer = styled.span`
   flex: 1;
   font-size: 10px;
   color: #9a9a9a;
 `;
+
 const Etc = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -110,6 +115,7 @@ const Payload = styled.p`
   margin-top: 5px;
   margin-bottom: 5px;
 `;
+
 const Icons = styled.div`
   display: flex;
   gap: 15px;
@@ -120,6 +126,7 @@ const Icons = styled.div`
   cursor: pointer;
   color: #bababa;
 `;
+
 const DeleteButton = styled.button`
   background: #ff6347;
   color: #fff;
@@ -225,10 +232,20 @@ const SetContentInputButton = styled.input`
   display: none;
 `;
 
-const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
+const Post = ({
+  post,
+  userId,
+  photos,
+  videos,
+  username,
+  id,
+  createdAt,
+  email,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
   const [editedPhoto, setEditedPhoto] = useState(null);
+
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [isLiked, setIsLiked] = useState(false);
   const [comments, setComments] = useState(Math.floor(Math.random() * 10));
@@ -238,15 +255,15 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
   const [isRetweets, setIsRetweets] = useState(false);
   const [openModalId, setOpenModalId] = useState(null);
 
-  const user = auth.currentUser;
+  const navigate = useNavigate();
+
+  // const user = auth.currentUser;
 
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전"; // createdAt가 유효하지 않을 때 처리
     const date = new Date(createdAt.seconds * 1000);
     return formatDistanceToNow(date, { addSuffix: true });
   };
-
-  const navigator = useNavigate();
 
   const openModal = (postId) => {
     setOpenModalId(postId); // 특정 포스트의 ID로 모달 열기
@@ -269,6 +286,8 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [openModalId]);
+
+  const user = auth.currentUser;
 
   const onChange = (e) => {
     setEditedPost(e.target.value);
@@ -394,11 +413,31 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
 
     setIsLiked((prevLiked) => !prevLiked);
   };
-  const handleCommentClick = async () => {
-    const postRef = doc(db, "contents", id);
 
-    setComments((prevComments) => prevComments + 1); // 댓글을 1 추가 (임시로 설정)
-    await updateDoc(postRef, { comments: comments + 1 }); // Firebase에 업데이트
+  const handleCommentClick = () => {
+    navigate("/Comment", {
+      state: {
+        postId: id,
+        postContent: post,
+        photos,
+        videos,
+        username,
+        createdAt: createdAt || { seconds: Date.now() / 1000 }, // 기본값 설정
+      },
+    });
+  };
+
+  const PostCommentClick = () => {
+    navigate("/PostComment", {
+      state: {
+        postId: id,
+        postContent: post,
+        photos,
+        videos,
+        username,
+        createdAt: createdAt || { seconds: Date.now() / 1000 }, // 기본값 설정
+      },
+    });
   };
 
   // DM 상태가 변경될 때 Firebase에 업데이트
@@ -432,7 +471,16 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
   };
   return (
     <Wrapper>
-      <Header>
+      <Header
+        onClick={() => {
+          navigate({
+            pathname: "/profile",
+            search: `${createSearchParams({
+              email: email,
+            })}`,
+          });
+        }}
+      >
         <UserImage src="http://localhost:5173/profile.png"></UserImage>
         <Username>{username}</Username>
         <Timer>{renderTimeAgo()}</Timer>
@@ -450,7 +498,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
           </div>
         )}
       </Header>
-      <Column>
+      <Column onClick={PostCommentClick}>
         {isEditing ? (
           <EditPostFormTextArea
             onChange={onChange}
@@ -461,7 +509,7 @@ const Post = ({ post, userId, photos, videos, username, id, createdAt }) => {
           <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
         )}
       </Column>
-      <ColumnWrapper>
+      <ColumnWrapper onClick={PostCommentClick}>
         {/* Render multiple photos */}
         {photos && photos.length > 0 && (
           <Column>

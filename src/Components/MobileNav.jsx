@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import GlobalStyles from "../styles/GlobalStyles.styles";
+import MobileSidebar from "./MobileSidebar";
 import {
   PlusIcon,
   MagnifyingGlassIcon,
@@ -9,10 +10,15 @@ import {
   Home,
   GoBack,
 } from "./Common/Icon";
+import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
 
 // BottomNav 스타일 정의
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  @media (min-width: 768px) {
+    display: none; // 768px 이상의 화면에서는 숨기기
+  }
+`;
 
 const BottomNavWrapper = styled.div`
   position: fixed;
@@ -28,8 +34,8 @@ const BottomNavWrapper = styled.div`
   z-index: 100;
   box-shadow: ${(props) => props.theme.bor};
   @media (min-width: 768px) {
-      display: none; // 768px 이상의 화면에서는 숨기기
-    }
+    display: none; // 768px 이상의 화면에서는 숨기기
+  }
 `;
 
 const NavItem = styled.div`
@@ -46,6 +52,9 @@ const NavItem = styled.div`
 const BackNavwrapper = styled.div`
   @media (max-width: 768px) {
     position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     top: 0;
     left: 0;
     width: 100%;
@@ -56,6 +65,10 @@ const BackNavwrapper = styled.div`
       display: none; // 768px 이상의 화면에서는 숨기기
     }
   }
+`;
+
+const LogoWrapper = styled.div`
+  padding-left: 20px;
 `;
 const Backdesc = styled.div`
   display: flex;
@@ -75,6 +88,11 @@ const BackIcon = styled.div`
   transform: translateY(2px);
   align-items: center;
   margin-left: 10px;
+  svg {
+    path {
+      stroke: ${(props) => props.theme.logoColor};
+    }
+  }
 `;
 const Backtxt = styled.div`
   font-size: 15px;
@@ -85,12 +103,17 @@ const MobileNav = () => {
   return (
     <Wrapper>
       <BackNavwrapper>
-        <Backdesc onClick={() => navigate(-1)}>
+        {/* <Backdesc onClick={() => navigate(-1)}>
           <BackIcon>
             <GoBack />
           </BackIcon>
           <Backtxt>뒤로</Backtxt>
-        </Backdesc>
+        </Backdesc> */}
+        <LogoWrapper>
+          <Logo width={28} />
+        </LogoWrapper>
+        <div>Activity</div>
+        <MobileSidebar />
       </BackNavwrapper>
       <BottomNavWrapper>
         <NavItem onClick={() => navigate("/")}>
@@ -99,7 +122,7 @@ const MobileNav = () => {
         <NavItem onClick={() => navigate("/Search")}>
           <MagnifyingGlassIcon />
         </NavItem>
-        <NavItem onClick={() => navigate("/postform")} >
+        <NavItem onClick={() => navigate("/postform")}>
           <PlusIcon width={30} />
         </NavItem>
         <NavItem onClick={() => navigate("/activity")}>

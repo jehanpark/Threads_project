@@ -32,9 +32,10 @@ const SettingsInner = styled.div`
   width: 558.67px; // 수정!
   height: 100%;
   padding: 20px 0;
-  background: #fff;
+  background: ${(props) => props.theme.borderColor};
   margin-top: 30px;
-  border: 1px solid rgb(213, 213, 213);
+  /* border: 1px solid rgb(213, 213, 213); */
+  border: none;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -211,6 +212,7 @@ const Icon = styled.div`
   height: 20px;
   text-align: end;
   /* padding: 0 10px; */
+  fill: ${({ theme }) => (theme === "dark" ? "#fff" : "#000")};
 `;
 const IconRadius = styled.div`
   width: 20px;
@@ -221,6 +223,7 @@ const IconRadius = styled.div`
   text-align: center;
   border: 2px solid #000;
   border-radius: 100%;
+  fill: ${({ theme }) => (theme === "dark" ? "#fff" : "#000")};
 `;
 
 // 줄
@@ -250,6 +253,7 @@ const IconLink = styled.a`
   height: 20px;
   text-align: end;
   /* padding-right: 10px; */
+  fill: ${({ theme }) => (theme === "dark" ? "#fff" : "#000")};
 `;
 
 const SettingsItem_de = () => {
@@ -494,7 +498,7 @@ const SettingsItem_de = () => {
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <Icon>
-                    <AccountStatusIcon width="22px" fill="#000" />
+                    <AccountStatusIcon width={"22px"} fill={"black"} />
                   </Icon>
                   <ContentAutoLayout>
                     <PrivacyTitle>계정 상태</PrivacyTitle>
