@@ -67,6 +67,19 @@ const Box = styled.div`
   padding: 15px;
   background: ${(props) => props.theme.borderColor};
   margin-bottom: 10px;
+  &.mobile {
+    display: none;
+    margin-top: 8px;
+    @media screen and (max-width: 768px) {
+      display: block;
+      text-align: center;
+      background: ${(props) => props.theme.borderstroke};
+      &:hover {
+        background: ${(props) => props.theme.followerfont};
+        color: ${(props) => props.theme.btnBgColor};
+      }
+    }
+  }
 `;
 
 const Left = styled.div`
@@ -380,6 +393,9 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
             type="edit"
             onClick={complete}
           />
+          <Box className="mobile" onClick={close}>
+            모달 닫기
+          </Box>
         </PofileModalBox>
       </ModalOverlay>
     </>

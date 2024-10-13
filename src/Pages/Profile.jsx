@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import {
   ThreadDispatchContext,
   ThreadDataContext,
@@ -28,22 +28,26 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
 
 const BoederWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
   margin: 0 auto;
   width: 680px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
-  /* background: ${(props) => props.theme.borderWrapper}; */
   background: ${(props) => props.theme.headerBg};
   box-shadow: ${(props) => props.theme.bordershadow};
-  padding: 10px 0;
+  /* overflow: hidden; */
   @media (max-width: 768px) {
-    border-radius: 0;
+    position: static;
+    margin: 0;
     width: 100vw;
     height: calc(100% - 140px);
     box-shadow: none;
-    margin: 0px;
     border-radius: 0px;
-    background: ${(props) => props.theme.headerBg};
+    background: ${(props) => props.theme.borderColor};
+    transform: translate(0%);
   }
 `;
 
@@ -65,6 +69,26 @@ const ProfileInnner = styled.div`
     margin: 70px auto 0px;
   }
 `;
+
+const PostlistWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  width: 100%;
+  padding: 10px 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+    margin-top: 6px;
+    padding: 0 5px;
+    gap: 5px;
+  }
+`;
+
 const ProfileWrap = styled.div`
   display: flex;
   width: 100%;
@@ -119,7 +143,7 @@ const Nick = styled.h1`
 
 const BottomWrap = styled.div`
   width: 100%;
-  height: calc(100% - 80px);
+  height: 85%;
   display: flex;
   flex-direction: column;
   gap: 25px;
@@ -183,6 +207,7 @@ const PulsLinkIcon = styled.div`
 
 const ThreadInner = styled.div`
   width: 100%;
+  height: 100%;
 `;
 
 const ButtonGroup = styled.div`
@@ -190,11 +215,12 @@ const ButtonGroup = styled.div`
   justify-content: space-evenly;
   align-items: center;
   gap: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 6px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+
   @media (max-width: 768px) {
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
   }
   button {
     flex: 0 0 auto;
@@ -204,9 +230,11 @@ const ButtonGroup = styled.div`
     font-weight: bold;
     cursor: pointer;
     transition: all;
+
     @media (max-width: 768px) {
       width: 90px;
       padding: 8px 15px;
+      background-color: ${(props) => props.theme.borderColor};
     }
     @media (max-width: 480px) {
       width: 80px;
@@ -218,9 +246,33 @@ const ButtonGroup = styled.div`
 const PostWrap = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 10px;
+  height: calc(100% - 80px);
+  padding: 10px 0px 260px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  transition: transform 0.3s ease-out;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  &.bounce {
+    animation: bounce-back 1s ease-in-out;
+  }
+
+  @keyframes bounce-back {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(40px); /* 살짝 위로 올렸다가 */
+    }
+    100% {
+      transform: translateY(0px); /* 원래 자리로 돌아오기 */
+    }
+  }
 `;
 
 const ButtonStyle = styled.button`
@@ -239,10 +291,9 @@ const Profile = () => {
   const emailAdress = searchParams.get("email");
   //console.log(emailAdress);
 
-  const data = useContext(ThreadDataContext);
-  const { createThread, updateThread, deleteThread, updateProfile } =
-    useContext(ThreadDispatchContext);
-  const [lastemail, setLastEmail] = useState("");
+  // const data = useContext(ThreadDataContext);
+  // const { createThread, updateThread, deleteThread, updateProfile } =
+  //   useContext(ThreadDispatchContext);
   //모달관련 state
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
@@ -261,8 +312,9 @@ const Profile = () => {
 
   const [savedData, setSavedData] = useState([]); // 모든 데이터를 저장
   const [filteredData, setFilteredData] = useState([]); // 필터링된 데이터를 저장
-  const [contentType, setContentType] = useState("all"); // 선택된 필터 상태
+  const [contentType, setContentType] = useState("thresds"); // 선택된 필터 상태
   // NotificationList에서 데이터를 받아옴
+  const [isBouncing, setIsBouncing] = useState(false);
   const handleDataUpdate = (listData) => {
     if (listData.length > 0) {
       setSavedData(listData); // 전체 데이터를 저장
@@ -387,21 +439,46 @@ const Profile = () => {
   const handleProfileChange = (updatedProfile) => {
     setProfile(updatedProfile);
   };
+  let filter;
+  //console.log(
+  //   "필터데이터",
+  // posts.filter((data) => data.photos.length > 0)
+  // );
 
   // 필터링
   const filterList = (type) => {
     if (type === "thresds") {
-      setFilteredData(savedData);
-    } else {
-      const filtered = savedData.filter((item) => item.type === type); // 타입에 따른 필터링
-      setFilteredData(filtered);
+      setFilteredData(posts);
+    } else if (type === "photos") {
+      const filteredPhotos = posts.filter((data) => data.photos.length > 0);
+      setFilteredData(filteredPhotos);
+    } else if (type === "videos") {
+      const filteredVideos = posts.filter((data) => data.videos.length > 0);
+      setFilteredData(filteredVideos);
     }
   };
+
   // 버튼 클릭 시 필터링 적용
   const handleButtonClick = (type) => {
     setContentType(type); // 필터 상태 업데이트
     filterList(type); // 필터링 적용
   };
+
+  const handleScroll = () => {
+    const element = wrapperRef.current;
+    // 스크롤이 가장 위에 도달했는지 확인
+    if (element.scrollTop === 0) {
+      // 텐션감을 위한 애니메이션 트리거
+      setIsBouncing(true);
+
+      // 0.5초 후에 애니메이션 클래스 제거
+      setTimeout(() => {
+        setIsBouncing(false);
+      }, 500);
+    }
+  };
+
+  const wrapperRef = useRef(null);
 
   const getButtonStyle = (type) => ({
     color: contentType === type ? "#000" : "rgba(204, 204, 204, 0.8)",
@@ -410,12 +487,12 @@ const Profile = () => {
   const buttons = [
     { label: "스레드", type: "thresds" },
     { label: "답글", type: "comment" },
-    { label: "사진", type: "photo" },
-    { label: "동영상", type: "media" },
+    { label: "사진", type: "photos" },
+    { label: "동영상", type: "videos" },
   ];
 
   return (
-    <BoederWrapper>
+    <>
       {followModal ? (
         <FollowModal open={true} close={onfollow} />
       ) : (
@@ -446,72 +523,80 @@ const Profile = () => {
       ) : (
         <OtherBtnModal open={false} close={onOtherbtn} profile={profile} />
       )}
-      <>
-        <ProfileInnner>
-          <ProfileWrap>
-            <IdWrap>
-              <Nick> {profile.username}</Nick>
-              <IdText>{emailAdress}</IdText>
-            </IdWrap>
-            <ImgWrap>
-              {Boolean(avatar) ? (
-                <Img src={avatar} />
-              ) : (
-                <UserIcon2 width="54" fill="#BABABA" />
-              )}
-            </ImgWrap>
-          </ProfileWrap>
-          <BottomWrap>
-            <Desk>{profile.bio ?? "프로필을 꾸며보세요!"}</Desk>
-            <FollowLink>
-              <Follow onClick={onfollow}>팔로워 1234</Follow>
-              {profile.isLinkPublic ? (
-                <Links>
-                  {user?.email === emailAdress ? (
-                    <LinkPlus onClick={onLinkPlus}>
-                      <PlusIcon width="16px" />
-                    </LinkPlus>
-                  ) : null}
+      <BoederWrapper>
+        <PostlistWrapper>
+          <ProfileInnner>
+            <ProfileWrap>
+              <IdWrap>
+                <Nick> {profile.username}</Nick>
+                <IdText>{emailAdress}</IdText>
+              </IdWrap>
+              <ImgWrap>
+                {Boolean(avatar) ? (
+                  <Img src={avatar} />
+                ) : (
+                  <UserIcon2 width="54" fill="#BABABA" />
+                )}
+              </ImgWrap>
+            </ProfileWrap>
+            <BottomWrap>
+              <Desk>{profile.bio ?? "프로필을 꾸며보세요!"}</Desk>
+              <FollowLink>
+                <Follow onClick={onfollow}>팔로워 1234</Follow>
+                {profile.isLinkPublic ? (
+                  <Links>
+                    {user?.email === emailAdress ? (
+                      <LinkPlus onClick={onLinkPlus}>
+                        <PlusIcon width="16px" />
+                      </LinkPlus>
+                    ) : null}
 
-                  <PulsLinkIcon>
-                    <InstaIcon />
-                    <FacebookIcon />
-                  </PulsLinkIcon>
-                </Links>
-              ) : null}
-            </FollowLink>
-            {user?.email === emailAdress ? (
-              <Button
-                type="edit"
-                text="프로필 수정"
-                onClick={onProfileEdite}
-                heith={"40px"}
-              />
-            ) : (
-              <Button type="edit" text="팔로잉" onClick={onOtherbtn} />
-            )}
-          </BottomWrap>
-        </ProfileInnner>
-        <ThreadInner>
-          <ButtonGroup>
-            {buttons.map((button) => (
-              <ButtonStyle
-                key={button.type}
-                style={getButtonStyle(button.type)}
-                onClick={() => handleButtonClick(button.type)}
-              >
-                {button.label}
-              </ButtonStyle>
-            ))}
-          </ButtonGroup>
-          <PostWrap>
-            {posts.map((post) => (
-              <Post key={post.id} {...post} />
-            ))}
-          </PostWrap>
-        </ThreadInner>
-      </>
-    </BoederWrapper>
+                    <PulsLinkIcon>
+                      <InstaIcon />
+                      <FacebookIcon />
+                    </PulsLinkIcon>
+                  </Links>
+                ) : null}
+              </FollowLink>
+              {user?.email === emailAdress ? (
+                <Button
+                  type="edit"
+                  text="프로필 수정"
+                  onClick={onProfileEdite}
+                  heith={"40px"}
+                />
+              ) : (
+                <Button type="edit" text="팔로잉" onClick={onOtherbtn} />
+              )}
+            </BottomWrap>
+          </ProfileInnner>
+          <ThreadInner>
+            <ButtonGroup>
+              {buttons.map((button) => (
+                <ButtonStyle
+                  key={button.type}
+                  style={getButtonStyle(button.type)}
+                  onClick={() => handleButtonClick(button.type)}
+                >
+                  {button.label}
+                </ButtonStyle>
+              ))}
+            </ButtonGroup>
+            <PostWrap
+              ref={wrapperRef}
+              className={isBouncing ? "bounce" : ""}
+              onScroll={handleScroll}
+            >
+              {contentType === "thresds"
+                ? posts.map((post) => <Post key={post.id} {...post} />)
+                : filteredData.map((filter) => (
+                    <Post key={filter.id} {...filter} />
+                  ))}
+            </PostWrap>
+          </ThreadInner>
+        </PostlistWrapper>
+      </BoederWrapper>
+    </>
   );
 };
 

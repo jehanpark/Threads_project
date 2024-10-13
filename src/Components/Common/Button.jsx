@@ -54,7 +54,7 @@ const ButtonItem = styled.button`
       border-radius: 6px;
       transition: all 0.3s;
       &:hover {
-        background: #1c1c1c; 
+        background: {#1c1c1c}; 
         color: #fff; 
         outline: none;
       }
@@ -82,7 +82,7 @@ const ButtonItem = styled.button`
     `}
 `;
 
-const Button = ({ text, type, onClick, width, heith }) => {
+const Button = ({ text, type, onClick, width, heith, bg }) => {
   return (
     <ButtonItem
       type={type}

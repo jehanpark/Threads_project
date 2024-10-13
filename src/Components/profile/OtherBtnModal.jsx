@@ -40,6 +40,9 @@ const CloseButton = styled.button`
   color: ${(props) => props.theme.fontcolor};
   font-size: 18px;
   cursor: pointer;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -65,6 +68,17 @@ const Box = styled.button`
   color: ${(props) => props.theme.fontcolor};
   &:hover {
     background: ${(props) => props.theme.borderWrapper};
+  }
+  &.mobile {
+    display: none;
+    @media screen and (max-width: 768px) {
+      display: block;
+      background: ${(props) => props.theme.borderstroke};
+      &:hover {
+        background: ${(props) => props.theme.followerfont};
+        color: ${(props) => props.theme.btnBgColor};
+      }
+    }
   }
 `;
 
@@ -111,6 +125,9 @@ const OtherBtnModal = ({ open, close, profile }) => {
               <BellOffIcon width="16px" /> 알림 설정 취소
             </Box>
             <Box>팔로잉 취소</Box>
+            <Box className="mobile" onClick={close}>
+              모달 닫기
+            </Box>
             <P>해당 모달의 기능은 준비 중인 기능입니다</P>
           </Wrapper>
         </OtherModalBox>

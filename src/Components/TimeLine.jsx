@@ -75,6 +75,7 @@ const PostlistWrapper = styled.div`
     gap: 5px;
   }
 `;
+
 const Logo = styled.img`
   position: absolute;
   left: 50%;

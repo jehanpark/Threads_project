@@ -13,7 +13,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
     if (contentType === "profile") {
       followersQuery = query(followersQuery, where("profile", "==", true));
     }
-
+    console.log(followersQuery);
     if (searchTerm && searchTerm.trim() !== "") {
       followersQuery = query(
         followersQuery,
