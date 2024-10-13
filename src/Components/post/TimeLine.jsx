@@ -50,7 +50,6 @@ const PostlistWrapper = styled.div`
   }
   scrollbar-width: none;
   transition: transform 0.3s ease-out;
-
   &.bounce {
     animation: bounce-back 1s ease-in-out;
   }
