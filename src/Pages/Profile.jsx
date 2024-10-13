@@ -19,7 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import Button from "../Components/Common/Button";
-import Post from "../Components/post/Post";
+import Post from "../Components/Post";
 import {
   PlusIcon,
   InstaIcon,

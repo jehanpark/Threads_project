@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
@@ -42,6 +42,7 @@ const PostWrapper = styled.div`
   border-radius: 30px;
   padding: 20px;
   width: 660px;
+  margin-bottom: 20px;
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
@@ -130,19 +131,93 @@ const IconWrapper = styled.div`
   gap: 6px;
 `;
 
+const CommentWrapper = styled.div`
+  margin: 0 auto;
+  width: 90%;
+  background: ${(props) => props.theme.borderColor};
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const CommentHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const CommentUsername = styled.span`
+  font-size: 14px;
+  font-weight: 600;
+  color: ${(props) => props.theme.fontcolor};
+`;
+
+const CommentTimer = styled.span`
+  font-size: 10px;
+  color: #9a9a9a;
+  flex: 1;
+`;
+
+const CommentContent = styled.div`
+  font-size: 14px;
+  color: ${(props) => props.theme.fontcolor};
+`;
+
+const CommentImage = styled.img`
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+`;
+
+const CommentVideo = styled.video`
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+`;
+const NotComment = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100%;
+font-size: 16px;
+color: #bababa;
+`
+
 const PostComment = ({ id }) => {
   const [post, setPost] = useState("");
-  const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
-  const [comments, setComments] = useState(Math.floor(Math.random() * 10));
-  const [dms, setDms] = useState(Math.floor(Math.random() * 50));
-  const [retweets, setRetweets] = useState(2);
+  const [likes, setLikes] = useState(0);
+  const [comments, setComments] = useState([]); // 초기 값을 빈 배열로 설정
+  const [dms, setDms] = useState(0);
+  const [retweets, setRetweets] = useState(0);
   const [files, setFiles] = useState([]);
   const location = useLocation();
-
   const navigate = useNavigate();
 
-  const { postContent, photos, videos, username, createdAt } =
-    location.state || {};
+  const {
+    postContent,
+    photos,
+    videos,
+    username,
+    createdAt,
+    likes: passedLikes,
+    dms: passedDms,
+    retweets: passedRetweets,
+  } = location.state || {};
+
+  useEffect(() => {
+    setLikes(passedLikes);
+    setDms(passedDms);
+    setRetweets(passedRetweets);
+  }, [passedLikes, passedDms, passedRetweets]);
 
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
@@ -158,10 +233,37 @@ const PostComment = ({ id }) => {
         photos,
         videos,
         username,
-        createdAt: createdAt || { seconds: Date.now() / 1000 }, // 기본값 설정
+        createdAt: createdAt || { seconds: Date.now() / 1000 },
       },
     });
   };
+
+  // Firestore에서 댓글 불러오기 함수
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        if (location.state && location.state.postId) {
+          const commentsRef = collection(
+            db,
+            "contents",
+            location.state.postId,
+            "comments"
+          );
+          const q = query(commentsRef, orderBy("createdAt", "desc"));
+          const querySnapshot = await getDocs(q);
+          const commentsList = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setComments(commentsList); // 불러온 댓글을 상태에 저장
+        }
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
+    fetchComments();
+  }, [location.state.postId]); // postId가 변경될 때마다 댓글을 다시 불러옴
 
   return (
     <BoederWrapper>
@@ -199,7 +301,7 @@ const PostComment = ({ id }) => {
             <HeartIcon width={20} /> {likes}
           </IconWrapper>
           <IconWrapper onClick={handleCommentClick}>
-            <Coment width={20} /> {comments}
+            <Coment width={20} /> {comments.length}
           </IconWrapper>
           <IconWrapper>
             <DmIcon width={18} /> {dms}
@@ -209,6 +311,56 @@ const PostComment = ({ id }) => {
           </IconWrapper>
         </Icons>
       </PostWrapper>
+
+      <div>
+        {comments.length > 0 ? (
+          comments.map((comment) => (
+            <CommentWrapper key={comment.id}>
+              <CommentHeader>
+                <UserImage src="http://localhost:5173/profile.png"></UserImage>
+                <CommentUsername>{comment.username}</CommentUsername>
+                <CommentTimer>
+                  {formatDistanceToNow(
+                    new Date(comment.createdAt.seconds * 1000),
+                    {
+                      addSuffix: true,
+                    }
+                  )}
+                </CommentTimer>
+              </CommentHeader>
+              <CommentContent>
+                {typeof comment.comment === "string"
+                  ? comment.comment
+                  : JSON.stringify(comment.comment)}
+              </CommentContent>
+
+              {/* 댓글에 이미지가 있을 경우 */}
+              {comment.photoUrls && comment.photoUrls.length > 0 && (
+                <div>
+                  {comment.photoUrls.map((photoUrl, index) => (
+                    <CommentImage
+                      key={index}
+                      src={photoUrl}
+                      alt={`Comment Image ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* 댓글에 비디오가 있을 경우 */}
+              {comment.videoUrls && comment.videoUrls.length > 0 && (
+                <div>
+                  {comment.videoUrls.map((videoUrl, index) => (
+                    <CommentVideo key={index} controls src={videoUrl} />
+                  ))}
+                </div>
+              )}
+            </CommentWrapper>
+          ))
+        ) : (
+          <NotComment>댓글이 없습니다.</NotComment>
+        )}
+      </div>
     </BoederWrapper>
   );
 };

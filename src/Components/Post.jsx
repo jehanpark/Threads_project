@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-// import { IPost } from "./TimeLine";
-import { auth, db, storage } from "../../firebase";
-import { deleteDoc, doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
+import { auth, db, storage } from "../firebase";
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  updateDoc,
+  setDoc,
+  collection,
+  getDocs,
+} from "firebase/firestore";
 import {
   deleteObject,
   ref,
@@ -17,13 +24,13 @@ import {
   RetweetIcon,
   EtcIcon,
   Coment,
-} from "../Common/Icon";
+} from "./Common/Icon";
 
 import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
 
 import { formatDistanceToNow } from "date-fns";
-import PostSetModal from "../Common/PostSetModal";
+import PostSetModal from "./Common/PostSetModal";
 
 const Wrapper = styled.div`
   position: relative;
@@ -246,10 +253,9 @@ const Post = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
   const [editedPhoto, setEditedPhoto] = useState(null);
-
+  const [commentsCount, setCommentsCount] = useState(0); // 댓글 수 상태 추가
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [isLiked, setIsLiked] = useState(false);
-  const [comments, setComments] = useState(Math.floor(Math.random() * 10));
   const [dms, setDms] = useState(Math.floor(Math.random() * 50));
   const [isDms, setIsDms] = useState(false);
   const [retweets, setRetweets] = useState(2);
@@ -279,6 +285,50 @@ const Post = ({
       closeModal();
     }
   };
+
+  useEffect(() => {
+    if (!id) {
+      console.error("ID is not available for this post");
+      return; // id가 유효하지 않으면 바로 return
+    }
+
+    const fetchPostAndCommentsData = async () => {
+      try {
+        // 1. Firestore에서 포스트 데이터를 가져오기
+        const postRef = doc(db, "contents", id);
+        const postSnap = await getDoc(postRef);
+
+        if (!postSnap.exists()) {
+          // 문서가 없으면 랜덤으로 생성된 값을 저장
+          await setDoc(postRef, {
+            likes: likes,
+            dms: dms,
+            retweets: retweets,
+          });
+        } else {
+          // 문서가 존재할 경우 Firebase에 있는 값을 상태로 설정
+          const postData = postSnap.data();
+          setLikes(postData.likes || likes);
+          setDms(postData.dms || dms);
+          setRetweets(postData.retweets || retweets);
+        }
+
+        // 2. Firestore에서 댓글 수 가져오기
+        const commentsCollectionRef = collection(
+          db,
+          "contents",
+          id,
+          "comments"
+        );
+        const commentsSnapshot = await getDocs(commentsCollectionRef);
+        setCommentsCount(commentsSnapshot.size); // 댓글 개수를 상태로 설정
+      } catch (error) {
+        console.error("Error fetching post and comments data:", error);
+      }
+    };
+
+    fetchPostAndCommentsData();
+  }, [id, likes, dms, retweets]); // 의존성 배열에 필요한 상태 추가
 
   useEffect(() => {
     // 모달 외부 클릭 감지 이벤트 등록
@@ -371,36 +421,6 @@ const Post = ({
     }
   };
 
-  useEffect(() => {
-    const postRef = doc(db, "contents", id);
-
-    // Firebase에서 데이터 가져오기 또는 생성하기
-    const fetchPostData = async () => {
-      const postSnap = await getDoc(postRef);
-
-      if (!postSnap.exists()) {
-        // 문서가 없으면 랜덤으로 생성된 값을 저장
-        await setDoc(postRef, {
-          likes: likes,
-          comments: comments,
-          dms: dms,
-          retweets: retweets,
-        });
-      } else {
-        // 문서가 존재할 경우 Firebase에 있는 값을 상태로 설정
-        const postData = postSnap.data();
-
-        // 만약 이미 값이 존재하면 그 값을 설정
-        setLikes(postData.likes || likes);
-        setComments(postData.comments || comments);
-        setDms(postData.dms || dms);
-        setRetweets(postData.retweets || retweets);
-      }
-    };
-
-    fetchPostData();
-  }, [id]);
-
   const handleLike = async () => {
     const postRef = doc(db, "contents", id);
 
@@ -423,7 +443,10 @@ const Post = ({
         photos,
         videos,
         username,
-        createdAt: createdAt || { seconds: Date.now() / 1000 }, // 기본값 설정
+        createdAt: createdAt || { seconds: Date.now() / 1000 },
+        likes,
+        dms,
+        retweets, // 기본값 설정
       },
     });
   };
@@ -436,7 +459,10 @@ const Post = ({
         photos,
         videos,
         username,
-        createdAt: createdAt || { seconds: Date.now() / 1000 }, // 기본값 설정
+        createdAt: createdAt || { seconds: Date.now() / 1000 },
+        likes,
+        dms,
+        retweets, // 기본값 설정
       },
     });
   };
@@ -537,7 +563,7 @@ const Post = ({
           <HeartIcon width={20} /> {likes}
         </IconWrapper>
         <IconWrapper onClick={handleCommentClick}>
-          <Coment width={20} /> {comments}
+          <Coment width={20} /> {commentsCount}
         </IconWrapper>
         <IconWrapper onClick={handleDmClick}>
           <DmIcon width={18} /> {dms}
