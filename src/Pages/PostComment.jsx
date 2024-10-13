@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
@@ -10,12 +10,14 @@ import {
   Coment,
 } from "../Components/Common/Icon";
 import BackBtn from "../Components/post/BackBtn";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { db } from "../firebase";
 
 const Backarea = styled.div`
   position: fixed;
   top: 12%;
   left: 25%;
-`
+`;
 
 const BoederWrapper = styled.div`
   position: fixed;
@@ -191,19 +193,20 @@ const CommentVideo = styled.video`
   margin-top: 10px;
 `;
 const NotComment = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100%;
-margin-top: 30px;
-font-size: 16px;
-color: #bababa;
-`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-top: 30px;
+  font-size: 16px;
+  color: #bababa;
+`;
 
 const PostComment = ({ id }) => {
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState([]); // 초기 값을 빈 배열로 설정
+  const [commentsCount, setCommentsCount] = useState(0); // 댓글 수
   const [dms, setDms] = useState(0);
   const [retweets, setRetweets] = useState(0);
   const [files, setFiles] = useState([]);
@@ -227,6 +230,35 @@ const PostComment = ({ id }) => {
     setRetweets(passedRetweets);
   }, [passedLikes, passedDms, passedRetweets]);
 
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        if (!location.state?.postId) return; // postId가 없으면 return
+        const commentsRef = collection(
+          db,
+          "contents",
+          location.state.postId,
+          "comments"
+        );
+        const q = query(commentsRef, orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+
+        // 댓글 데이터를 배열로 변환하여 상태에 저장
+        const commentsList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setComments(commentsList); // 댓글 리스트 저장
+        setCommentsCount(commentsList.length); // 댓글 수 저장 (이 부분을 수정)
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
+    fetchComments();
+  }, [location.state?.postId]);
+
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
@@ -242,40 +274,19 @@ const PostComment = ({ id }) => {
         videos,
         username,
         createdAt: createdAt || { seconds: Date.now() / 1000 },
+        likes,
+        dms,
+        retweets,
+        commentsCount,
       },
     });
   };
 
-  // Firestore에서 댓글 불러오기 함수
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        if (location.state && location.state.postId) {
-          const commentsRef = collection(
-            db,
-            "contents",
-            location.state.postId,
-            "comments"
-          );
-          const q = query(commentsRef, orderBy("createdAt", "desc"));
-          const querySnapshot = await getDocs(q);
-          const commentsList = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setComments(commentsList); // 불러온 댓글을 상태에 저장
-        }
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    };
-
-    fetchComments();
-  }, [location.state.postId]); // postId가 변경될 때마다 댓글을 다시 불러옴
-
   return (
-<div>      
-        <Backarea><BackBtn /></Backarea>
+    <div>
+      <Backarea>
+        <BackBtn />
+      </Backarea>
       <BoederWrapper>
         <PostWrapper>
           <Header>
@@ -311,7 +322,7 @@ const PostComment = ({ id }) => {
               <HeartIcon width={20} /> {likes}
             </IconWrapper>
             <IconWrapper onClick={handleCommentClick}>
-              <Coment width={20} /> {comments.length}
+              <Coment width={20} /> {commentsCount}
             </IconWrapper>
             <IconWrapper>
               <DmIcon width={18} /> {dms}
@@ -321,7 +332,7 @@ const PostComment = ({ id }) => {
             </IconWrapper>
           </Icons>
         </PostWrapper>
-  
+
         <div>
           {comments.length > 0 ? (
             comments.map((comment) => (
@@ -343,7 +354,7 @@ const PostComment = ({ id }) => {
                     ? comment.comment
                     : JSON.stringify(comment.comment)}
                 </CommentContent>
-  
+
                 {/* 댓글에 이미지가 있을 경우 */}
                 {comment.photoUrls && comment.photoUrls.length > 0 && (
                   <div>
@@ -356,12 +367,18 @@ const PostComment = ({ id }) => {
                     ))}
                   </div>
                 )}
-  
+
                 {/* 댓글에 비디오가 있을 경우 */}
                 {comment.videoUrls && comment.videoUrls.length > 0 && (
                   <div>
                     {comment.videoUrls.map((videoUrl, index) => (
-                      <CommentVideo key={index} controls src={videoUrl} />
+                      <CommentVideo
+                        key={index}
+                        controls
+                        autoPlay
+                        loop
+                        src={videoUrl}
+                      />
                     ))}
                   </div>
                 )}
@@ -372,7 +389,7 @@ const PostComment = ({ id }) => {
           )}
         </div>
       </BoederWrapper>
-</div>
+    </div>
   );
 };
 
