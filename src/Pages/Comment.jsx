@@ -22,8 +22,8 @@ import {
 } from "firebase/firestore";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import Button from "./Common/Button";
-import Loading from "./Loading";
+import Button from "../Components/Common/Button";
+import Loading from "../Components/LoadingLogo/Loading";
 
 const BoederWrapper = styled.div`
   position: fixed;
@@ -44,7 +44,7 @@ const BoederWrapper = styled.div`
     bottom: 70px;
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
-    padding:  10px;
+    padding: 10px;
   }
 `;
 
@@ -59,11 +59,10 @@ const Wrapper = styled.div`
   gap: 16px;
   margin-top: 10px;
   @media (max-width: 768px) {
-    
   }
 `;
 const PostWrapper = styled.div`
-  scale: 0.9;
+  scale: 0.95;
   margin: 0px;
   width: 100%;
   height: auto;
@@ -76,7 +75,7 @@ const PostWrapper = styled.div`
   width: 660px;
   @media (max-width: 768px) {
     height: auto;
-    width: 100%;
+    width: 98%;
     margin-top: 6px;
     scale: 1;
     gap: 5px;
@@ -223,7 +222,7 @@ const TextArea = styled.textarea`
   color: ${(props) => props.theme.fontcolor};
   border: none;
   padding: 20px;
-  padding-left: 10px;
+  padding-left: 20px;
   font-size: 16px;
 
   margin-top: 20px;

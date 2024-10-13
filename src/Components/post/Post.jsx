@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 // import { IPost } from "./TimeLine";
-import { auth, db, storage } from "../firebase";
+import { auth, db, storage } from "../../firebase";
 import { deleteDoc, doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
 import {
   deleteObject,
@@ -17,13 +17,13 @@ import {
   RetweetIcon,
   EtcIcon,
   Coment,
-} from "../Components/Common/Icon";
+} from "../Common/Icon";
 
 import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
 
 import { formatDistanceToNow } from "date-fns";
-import PostSetModal from "./Common/PostSetModal";
+import PostSetModal from "../Common/PostSetModal";
 
 const Wrapper = styled.div`
   position: relative;

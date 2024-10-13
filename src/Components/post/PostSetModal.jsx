@@ -1,5 +1,5 @@
 import React from "react";
-import GlobalStyles from "../styles/GlobalStyles.styles";
+import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
 import { color } from "framer-motion";
 

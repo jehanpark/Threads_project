@@ -19,7 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import Button from "../Components/Common/Button";
-import Post from "../Components/Post";
+import Post from "../Components/post/Post";
 import {
   PlusIcon,
   InstaIcon,
@@ -37,30 +37,40 @@ import {
 import FollowModal from "../Components/profile/FollowModal";
 import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
-import TimeLine from "../Components/TimeLine";
+import TimeLine from "../Components/post/TimeLine";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
 
 const BoederWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
   margin: 0 auto;
   width: 680px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
-  /* background: ${(props) => props.theme.borderWrapper}; */
-  background: ${(props) => props.theme.headerBg};
+  background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
-  padding: 10px 0;
   @media (max-width: 768px) {
+    position: fixed;
     border-radius: 0;
-    width: 100vw;
-    height: calc(100% - 140px);
+    width: 100%;
+    height: calc(100% - 100px);
+    bottom: 70px;
+    
     box-shadow: none;
-    margin: 0px;
-    border-radius: 0px;
-    background: ${(props) => props.theme.headerBg};
+    border-radius: 0px 0px 0px 0px;
   }
 `;
-
+const ContentsAll =styled.div`
+width: 100%;
+height: 100%;
+margin-top: 10px;
+@media (max-width: 768px) {
+  margin-top: 0px;
+  }
+`
 const ProfileWrap = styled.div`
   display: flex;
   width: 100%;
@@ -416,7 +426,7 @@ const Profile = () => {
       ) : (
         <OtherBtnModal open={false} close={onOtherbtn} profile={profile} />
       )}
-      <>
+      <ContentsAll>
         <ProfileInnner isSmallScreen={isSmallScreen}>
           <ProfileWrap>
             <IdWrap isSmallScreen={isSmallScreen}>
@@ -477,7 +487,7 @@ const Profile = () => {
             ))}
           </PostWrap>
         </ThreadInner>
-      </>
+      </ContentsAll>
     </BoederWrapper>
   );
 };

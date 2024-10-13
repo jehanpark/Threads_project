@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Logo from "../Logo";
-import LogoTextMark from "../LogoTextMark";
+import Logo from "../LoadingLogo/Logo";
+import LogoTextMark from "../LoadingLogo/LogoTextMark";
 import JoinQR from "../../images/QRcode.jpg";
 
 const AppQRcode = styled.img`

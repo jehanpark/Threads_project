@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Logo from "../Logo";
-import LogoTextMark from "../LogoTextMark";
+import Logo from "../LoadingLogo/Logo";
+import LogoTextMark from "../LoadingLogo/LogoTextMark";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { useMediaQuery } from "react-responsive";

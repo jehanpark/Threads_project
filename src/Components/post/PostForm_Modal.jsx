@@ -1,23 +1,22 @@
 import React from "react";
-import GlobalStyles from "../styles/GlobalStyles.styles";
+import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
 
-
 const Wrapper = styled.div`
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-width: 300px;
-height: auto;
-padding: 10px 0 ;
-border-radius: 30px;
-background: ${(props)=>props.theme.borderColor};
-box-shadow: ${(props)=>props.theme.bordershadow};
-transition: all 0.3s;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: auto;
+  padding: 10px 0;
+  border-radius: 30px;
+  background: ${(props) => props.theme.borderColor};
+  box-shadow: ${(props) => props.theme.bordershadow};
+  transition: all 0.3s;
   @media (max-width: 768px) {
     position: absolute;
     bottom: 0;
@@ -48,7 +47,7 @@ const TopRec = styled.div`
   }
 `;
 const Title = styled.div`
-display: none;
+  display: none;
   @media (max-width: 768px) {
     font-weight: 500;
     color: #737373;
@@ -56,8 +55,8 @@ display: none;
   }
 `;
 const Optionwrapper = styled.div`
-padding: 10px;
-width: auto;
+  padding: 10px;
+  width: auto;
   @media (max-width: 768px) {
     height: 100%;
     width: 100%;
@@ -69,16 +68,16 @@ width: auto;
   }
 `;
 const Li = styled.div`
-padding: 18px;
-width: 280px;
-text-align: center;
-transition: all 0.3s;
-border-radius: 20px;
-color: ${(props) => props.theme.fontcolor};
-&:hover {
-      background: ${(props) => props.theme.mouseHoverBg};
-      color: ${(props) => props.theme.mouseHoverFontcolor};
-    }
+  padding: 18px;
+  width: 280px;
+  text-align: center;
+  transition: all 0.3s;
+  border-radius: 20px;
+  color: ${(props) => props.theme.fontcolor};
+  &:hover {
+    background: ${(props) => props.theme.mouseHoverBg};
+    color: ${(props) => props.theme.mouseHoverFontcolor};
+  }
   @media (max-width: 768px) {
     width: 90%;
     padding: 18px;
@@ -96,18 +95,18 @@ const UpLoadButton = styled.button`
     justify-content: center;
     align-items: center;
     width: 300px;
-  height: 70px;
-  background: ${(props)=>props.theme.fontcolor};
-  color: ${(props)=>props.theme.btnBgColor};
-  font-size: 15px;
-  font-weight: bold;
-  border-radius: 16px;
-  border: none;
-  transition: all 0.3s;
-  &:hover {
-    background: #fff;
-    color: #1c1c1c;
-  }
+    height: 70px;
+    background: ${(props) => props.theme.fontcolor};
+    color: ${(props) => props.theme.btnBgColor};
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 16px;
+    border: none;
+    transition: all 0.3s;
+    &:hover {
+      background: #fff;
+      color: #1c1c1c;
+    }
   }
 `;
 
