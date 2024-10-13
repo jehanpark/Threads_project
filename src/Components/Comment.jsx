@@ -13,13 +13,8 @@ import {
   HashtagIcon,
 } from "../Components/Common/Icon";
 import { useAuth } from "../Contexts/AuthContext";
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
+import { addDoc, serverTimestamp, updateDoc, doc } from "firebase/firestore";
+import { getDocs, collection } from "firebase/firestore";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "./Common/Button";
@@ -241,20 +236,59 @@ const Comment = () => {
 
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
 
-  const { postContent, photos, videos, username, createdAt } =
-    location.state || {};
+  const {
+    postContent,
+    photos,
+    videos,
+    username,
+    createdAt,
+    likes: passedLikes,
+    dms: passedDms,
+    retweets: passedRetweets,
+    postId,
+  } = location.state || {};
+
+  // Firebase에서 전달된 값을 상태로 설정
+  useEffect(() => {
+    setLikes(passedLikes);
+    setDms(passedDms);
+    setRetweets(passedRetweets);
+  }, [passedLikes, passedDms, passedRetweets]);
+
+  useEffect(() => {
+    const fetchCommentsCount = async () => {
+      try {
+        if (!postId) return; // postId가 없으면 return
+        const commentsCollectionRef = collection(
+          db,
+          "contents",
+          postId,
+          "comments"
+        );
+        const commentsSnapshot = await getDocs(commentsCollectionRef);
+        setComments(commentsSnapshot.size); // 댓글 개수를 상태로 설정
+      } catch (error) {
+        console.error("Error fetching comments count:", error);
+      }
+    };
+
+    fetchCommentsCount();
+  }, [postId]); // postId가 변경될 때마다 실행
 
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
     return formatDistanceToNow(date, { addSuffix: true });
   };
+
   const handlePostChange = (e) => {
     setPost(e.target.value);
   };
+
   const removeFile = (index) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const user = auth.currentUser;

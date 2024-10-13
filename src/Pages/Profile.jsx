@@ -19,11 +19,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import Button from "../Components/Common/Button";
-import Modal from "../Components/Common/Modal";
 import Post from "../Components/Post";
 import {
-  InstaIcon,
   PlusIcon,
+  InstaIcon,
   FacebookIcon,
   UserIcon2,
 } from "../Components/Common/Icon";
@@ -41,8 +40,6 @@ import ProfileEdit from "../Components/profile/ProfileEdit";
 import TimeLine from "../Components/TimeLine";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
-
-import { useAuth } from "../Contexts/AuthContext";
 
 const BoederWrapper = styled.div`
   margin: 0 auto;
@@ -205,18 +202,6 @@ const Profile = () => {
   //console.log(emailAdress);
 
   const data = useContext(ThreadDataContext);
-  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
-  useEffect(() => {
-    if (!currentUser) {
-      const confirmLogin = window.confirm("로그인 하시겠습니까?");
-      if (confirmLogin) {
-        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
-      } else {
-        navigate("/");
-      }
-    }
-  }, [currentUser, navigate]);
-
   const { createThread, updateThread, deleteThread, updateProfile } =
     useContext(ThreadDispatchContext);
   const [lastemail, setLastEmail] = useState("");
@@ -256,6 +241,7 @@ const Profile = () => {
   };
 
   const CheckProfile = async () => {
+    console.log("프로필 체크 가동");
     try {
       const profileQuery = query(
         collection(db, "profile"),
@@ -282,13 +268,12 @@ const Profile = () => {
               isProfilePublic: profileDoc.isProfilePublic,
               img: imgUrl,
             }));
+            console.log("유저가 있을때 읽기 가동 완료");
             console.log(profile);
-            console.log("있다");
+            console.log("유저 있을 때 프로필 체크");
           }
         } else {
           // 사람이 없다면?
-          console.log("음따");
-          console.log(profile);
           setProfile((prev) => ({
             ...prev,
             postId: "",
@@ -299,6 +284,9 @@ const Profile = () => {
             isProfilePublic: true,
             img: null,
           }));
+          console.log("유저가 없을 때 읽기 가동 완료");
+          console.log(profile);
+          console.log("유저 없을 때 프로필 체크");
         }
       });
       return () => unsubscribe();
@@ -308,10 +296,9 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    fetchPosts();
     CheckProfile();
     buttonCheck();
-  }, []);
+  }, [emailAdress]);
 
   const onfollow = () => {
     setFollowModal((prev) => !prev);
@@ -332,34 +319,42 @@ const Profile = () => {
     setOtherBtn((prev) => !prev);
     //프로필수정모달
   };
-  const fetchPosts = async () => {
-    //하단에 띄울 쓰레드 탭에 쓰래드 state 관리 함수
-    const postQuery = query(
-      collection(db, "contents"),
-      where("email", "==", emailAdress), //파람즈 값으로 변경하자
-      orderBy("createdAt", "desc"),
-      limit(15)
-    );
-    const snapShot = await getDocs(postQuery); //필터된 포스터 가져옴
-    const post = snapShot.docs.map((doc) => {
-      const { createdAt, email, photos, post, userId, username, videos } =
-        doc.data();
-      return {
-        createdAt,
-        email,
-        photos,
-        post,
-        userId,
-        username,
-        videos,
-      };
-    });
-    setPosts(post);
-  };
+
+  useEffect(() => {
+    let unsubscribe = null;
+    const fetchPosts = async () => {
+      const postsQuery = query(
+        collection(db, "contents"),
+        where("email", "==", emailAdress),
+        orderBy("createdAt", "desc"),
+        limit(15)
+      );
+      unsubscribe = onSnapshot(postsQuery, (snapshot) => {
+        const posts = snapshot.docs.map((doc) => {
+          const { createdAt, photos, videos, post, userId, username, email } =
+            doc.data();
+          return {
+            id: doc.id,
+            createdAt,
+            photos: photos || [],
+            videos: videos || [],
+            post,
+            userId,
+            username,
+            email,
+          };
+        });
+        setPosts(posts);
+      });
+    };
+    fetchPosts();
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, []);
 
   const handleProfileChange = (updatedProfile) => {
-    console.log("확인");
-    console.log(profile);
+    console.log("이건", updatedProfile);
     setProfile(updatedProfile);
   };
 
@@ -389,7 +384,6 @@ const Profile = () => {
     { label: "사진", type: "photo" },
     { label: "동영상", type: "media" },
   ];
-  console.log(profile);
   return (
     <BoederWrapper>
       {followModal ? (
@@ -407,14 +401,14 @@ const Profile = () => {
           open={true}
           close={onProfileEdite}
           profile={profile}
-          onProfileChange={handleProfileChange}
+          onProfileChange={() => handleProfileChange}
         />
       ) : (
         <ProfileEdit
           open={false}
           close={onProfileEdite}
           profile={profile}
-          onProfileChange={handleProfileChange}
+          onProfileChange={() => handleProfileChange}
         />
       )}
       {otherBtn ? (
@@ -478,8 +472,8 @@ const Profile = () => {
             ))}
           </ButtonGroup>
           <PostWrap>
-            {posts.map((post, index) => (
-              <Post key={index} {...post} />
+            {posts.map((post) => (
+              <Post key={post.id} {...post} />
             ))}
           </PostWrap>
         </ThreadInner>
