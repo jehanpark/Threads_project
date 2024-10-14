@@ -13,23 +13,34 @@ import BackBtn from "../Components/post/BackBtn";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 
-const Backarea = styled.div`
-  position: fixed;
-  top: 12%;
-  left: 25%;
+const AllWrap = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
-
+const Backarea = styled.div`
+  width: 700px;
+`;
 const BoederWrapper = styled.div`
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translate(-50%);
-  margin: 0 auto;
-  width: 680px;
+  width: 660px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 전체 높이를 고정 */
+  scrollbar-width: none;
+  max-height: auto; /* 고정된 높이를 주어야 스크롤이 발생함 */
+  overflow-y: auto; /* 스크롤을 활성화 */
+  ::-webkit-scrollbar {
+    display: none;
+  }
   @media (max-width: 768px) {
     position: fixed;
     border-radius: 0;
@@ -42,22 +53,23 @@ const BoederWrapper = styled.div`
 `;
 
 const PostWrapper = styled.div`
-  margin: 10px auto 10px;
+  position: sticky;
+  top: 0;
+  left: 0px;
   width: 100%;
   height: auto;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
-  border-radius: 30px;
   padding: 20px;
   width: 660px;
-  margin-bottom: 20px;
+  border-radius: 40px 40px 0 0;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
-    margin: 6px;
     padding: 20px;
-    gap: 5px;
+    border-radius: 0;
   }
 `;
 const Header = styled.div`
@@ -85,7 +97,7 @@ const Timer = styled.span`
 const Posted = styled.div`
   font-size: 15px;
   font-weight: 600;
-  margin-left: 0px;
+  margin-left: 30px;
   margin-top: 5px;
   margin-bottom: 5px;
 `;
@@ -94,7 +106,7 @@ const ColumnWrapper = styled.div`
 `;
 const Column = styled.div`
   display: flex;
-  margin-left: 50px;
+  margin-left: 30px;
   margin-bottom: 12px;
   gap: 10px;
 `;
@@ -140,15 +152,22 @@ const IconWrapper = styled.div`
   gap: 6px;
 `;
 
+const ScrollWrapper = styled.div``;
+const ComentList = styled.div`
+  width: 100%;
+  height: auto;
+`;
+
 const CommentWrapper = styled.div`
-  margin: 0 auto;
-  width: 90%;
+  width: 100%;
+  height: auto;
   background: ${(props) => props.theme.borderColor};
   padding: 15px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition: transform 0.3s ease-out;
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -158,8 +177,12 @@ const CommentHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-left: 20px;
 `;
-
+const CommentUserImage = styled.img`
+  width: 38px;
+  height: 38px;
+`;
 const CommentUsername = styled.span`
   font-size: 14px;
   font-weight: 600;
@@ -175,6 +198,7 @@ const CommentTimer = styled.span`
 const CommentContent = styled.div`
   font-size: 14px;
   color: ${(props) => props.theme.fontcolor};
+  margin-left: 70px;
 `;
 
 const CommentImage = styled.img`
@@ -183,6 +207,7 @@ const CommentImage = styled.img`
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
+  margin-left: 70px;
 `;
 
 const CommentVideo = styled.video`
@@ -191,6 +216,7 @@ const CommentVideo = styled.video`
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
+  margin-left: 70px;
 `;
 const NotComment = styled.div`
   display: flex;
@@ -284,111 +310,117 @@ const PostComment = ({ id }) => {
 
   return (
     <div>
-      <Backarea>
-        <BackBtn />
-      </Backarea>
-      <BoederWrapper>
-        <PostWrapper>
-          <Header>
-            <UserImage src="http://localhost:5173/profile.png"></UserImage>
-            <Username>{username}</Username>
-            <Timer>{renderTimeAgo()}</Timer>
-          </Header>
-          <Column>
-            <Posted>{postContent}</Posted>
-          </Column>
-          <ColumnWrapper>
+      <AllWrap>
+        <Backarea>
+          <BackBtn />
+        </Backarea>
+        <BoederWrapper>
+          <PostWrapper>
+            <Header>
+              <UserImage src="http://localhost:5173/profile.png"></UserImage>
+              <Username>{username}</Username>
+              <Timer>{renderTimeAgo()}</Timer>
+            </Header>
             <Column>
-              {photos &&
-                photos.length > 0 &&
-                photos.map((photoUrl, index) => (
-                  <Photo
-                    key={index}
-                    src={photoUrl}
-                    alt={`Post Image ${index + 1}`}
-                  />
-                ))}
+              <Posted>{postContent}</Posted>
             </Column>
-            <Column>
-              {videos &&
-                videos.length > 0 &&
-                videos.map((videoUrl, index) => (
-                  <Video key={index} controls autoPlay loop src={videoUrl} />
-                ))}
-            </Column>
-          </ColumnWrapper>
-          <Icons>
-            <IconWrapper>
-              <HeartIcon width={20} /> {likes}
-            </IconWrapper>
-            <IconWrapper onClick={handleCommentClick}>
-              <Coment width={20} /> {commentsCount}
-            </IconWrapper>
-            <IconWrapper>
-              <DmIcon width={18} /> {dms}
-            </IconWrapper>
-            <IconWrapper>
-              <RetweetIcon width={20} /> {retweets}
-            </IconWrapper>
-          </Icons>
-        </PostWrapper>
+            <ColumnWrapper>
+              <Column>
+                {photos &&
+                  photos.length > 0 &&
+                  photos.map((photoUrl, index) => (
+                    <Photo
+                      key={index}
+                      src={photoUrl}
+                      alt={`Post Image ${index + 1}`}
+                    />
+                  ))}
+              </Column>
+              <Column>
+                {videos &&
+                  videos.length > 0 &&
+                  videos.map((videoUrl, index) => (
+                    <Video key={index} controls autoPlay loop src={videoUrl} />
+                  ))}
+              </Column>
+            </ColumnWrapper>
+            <Icons>
+              <IconWrapper>
+                <HeartIcon width={20} /> {likes}
+              </IconWrapper>
+              <IconWrapper onClick={handleCommentClick}>
+                <Coment width={20} /> {commentsCount}
+              </IconWrapper>
+              <IconWrapper>
+                <DmIcon width={18} /> {dms}
+              </IconWrapper>
+              <IconWrapper>
+                <RetweetIcon width={20} /> {retweets}
+              </IconWrapper>
+            </Icons>
+          </PostWrapper>
 
-        <div>
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <CommentWrapper key={comment.id}>
-                <CommentHeader>
-                  <UserImage src="http://localhost:5173/profile.png"></UserImage>
-                  <CommentUsername>{comment.username}</CommentUsername>
-                  <CommentTimer>
-                    {formatDistanceToNow(
-                      new Date(comment.createdAt.seconds * 1000),
-                      {
-                        addSuffix: true,
-                      }
-                    )}
-                  </CommentTimer>
-                </CommentHeader>
-                <CommentContent>
-                  {typeof comment.comment === "string"
-                    ? comment.comment
-                    : JSON.stringify(comment.comment)}
-                </CommentContent>
+          <div>
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <ScrollWrapper>
+                  <commentsList>
+                    <CommentWrapper key={comment.id}>
+                      <CommentHeader>
+                        <UserImage src="http://localhost:5173/profile.png"></UserImage>
+                        <CommentUsername>{comment.username}</CommentUsername>
+                        <CommentTimer>
+                          {formatDistanceToNow(
+                            new Date(comment.createdAt.seconds * 1000),
+                            {
+                              addSuffix: true,
+                            }
+                          )}
+                        </CommentTimer>
+                      </CommentHeader>
+                      <CommentContent>
+                        {typeof comment.comment === "string"
+                          ? comment.comment
+                          : JSON.stringify(comment.comment)}
+                      </CommentContent>
 
-                {/* 댓글에 이미지가 있을 경우 */}
-                {comment.photoUrls && comment.photoUrls.length > 0 && (
-                  <div>
-                    {comment.photoUrls.map((photoUrl, index) => (
-                      <CommentImage
-                        key={index}
-                        src={photoUrl}
-                        alt={`Comment Image ${index + 1}`}
-                      />
-                    ))}
-                  </div>
-                )}
+                      {/* 댓글에 이미지가 있을 경우 */}
+                      {comment.photoUrls && comment.photoUrls.length > 0 && (
+                        <div>
+                          {comment.photoUrls.map((photoUrl, index) => (
+                            <CommentImage
+                              key={index}
+                              src={photoUrl}
+                              alt={`Comment Image ${index + 1}`}
+                            />
+                          ))}
+                        </div>
+                      )}
 
-                {/* 댓글에 비디오가 있을 경우 */}
-                {comment.videoUrls && comment.videoUrls.length > 0 && (
-                  <div>
-                    {comment.videoUrls.map((videoUrl, index) => (
-                      <CommentVideo
-                        key={index}
-                        controls
-                        autoPlay
-                        loop
-                        src={videoUrl}
-                      />
-                    ))}
-                  </div>
-                )}
-              </CommentWrapper>
-            ))
-          ) : (
-            <NotComment>댓글이 없습니다.</NotComment>
-          )}
-        </div>
-      </BoederWrapper>
+                      {/* 댓글에 비디오가 있을 경우 */}
+                      {comment.videoUrls && comment.videoUrls.length > 0 && (
+                        <div>
+                          {comment.videoUrls.map((videoUrl, index) => (
+                            <CommentVideo
+                              key={index}
+                              controls
+                              autoPlay
+                              loop
+                              src={videoUrl}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </CommentWrapper>
+                  </commentsList>
+                </ScrollWrapper>
+              ))
+            ) : (
+              <NotComment>댓글이 없습니다.</NotComment>
+            )}
+          </div>
+        </BoederWrapper>
+      </AllWrap>
     </div>
   );
 };
