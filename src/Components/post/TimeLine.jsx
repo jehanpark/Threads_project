@@ -9,6 +9,66 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { db } from "../../firebase";
 import Post from "../Post";
+import styled from "styled-components";
+
+const PostlistWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  border-radius: 20px 20px 0 0;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
+  transition: transform 0.3s ease-out;
+  &.bounce {
+    animation: bounce-back 1s ease-in-out;
+  }
+  @keyframes bounce-back {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(40px); /* 살짝 위로 올렸다가 */
+    }
+    100% {
+      transform: translateY(0px); /* 원래 자리로 돌아오기 */
+    }
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+    margin-top: 6px;
+    padding: 0 5px;
+    gap: 5px;
+  }
+`;
+const BoederWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
+  margin: 0 auto;
+  width: 660px;
+  height: 85%;
+  border-radius: 40px 40px 0px 0px;
+  background: ${(props) => props.theme.btnBgColor};
+  box-shadow: ${(props) => props.theme.bordershadow};
+  overflow: hidden;
+  @media (max-width: 768px) {
+    position: absolute;
+    bottom: 0;
+    border-radius: 0;
+    width: 100%;
+    height: calc(100% - 70px);
+    box-shadow: none;
+    border-radius: 0px 0px 0px 0px;
+  }
+`;
 
 const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
   const [posts, setPosts] = useState([]);
@@ -97,15 +157,17 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
   };
 
   return (
-    <div
-      ref={wrapperRef}
-      className={isBouncing ? "bounce" : ""}
-      onScroll={handleScroll}
-    >
-      {posts.map((post) => (
-        <Post key={post.id} {...post} />
-      ))}
-    </div>
+    <BoederWrapper>
+      <PostlistWrapper
+        ref={wrapperRef}
+        className={isBouncing ? "bounce" : ""}
+        onScroll={handleScroll}
+      >
+        {posts.map((post) => (
+          <Post key={post.id} {...post} />
+        ))}
+      </PostlistWrapper>
+    </BoederWrapper>
   );
 };
 
