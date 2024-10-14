@@ -1,16 +1,10 @@
 import React from "react";
-import GlobalStyles from "../../styles/GlobalStyles.styles";
+import GlobalStyles from "../styles/GlobalStyles.styles";
 import styled from "styled-components";
 import { color } from "framer-motion";
 
-const ContentsAll = styled.div`
-  @media (max-width: 768px) {
-    position: relative;
-  }
-`;
-
 const Wrapper = styled.div`
-  position: fixed;
+  position: absolute;
   bottom: 20px;
   left: 20px;
   display: flex;
@@ -26,9 +20,14 @@ const Wrapper = styled.div`
   transition: all 0.3s;
   z-index: 500;
   @media (max-width: 768px) {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
+    height: 420px;
+    width: 100%;
+    border-radius: 30px 30px 0 0;
+    background: ${(props) => props.theme.btnBgColor};
+    box-shadow: ${(props) => props.theme.bordershadow};
   }
 `;
 const Contentswrapper = styled.div`
@@ -49,6 +48,7 @@ const TopRec = styled.div`
     border-radius: 16px;
   }
 `;
+
 
 const Optionwrapper = styled.div`
   padding: 10px;
@@ -116,19 +116,17 @@ const UpLoadButton = styled.button`
 
 const PostSetModal = () => {
   return (
-    <ContentsAll>
-      <Wrapper>
-        <Contentswrapper>
-          <TopRec></TopRec>
-          <Optionwrapper>
-            <Li>수정</Li>
-            <Li>리포스트</Li>
-            <Li>삭제</Li>
-          </Optionwrapper>
-          <UpLoadButton>게시글 업로드</UpLoadButton>
-        </Contentswrapper>
-      </Wrapper>
-    </ContentsAll>
+    <Wrapper>
+      <Contentswrapper>
+        <TopRec></TopRec>
+        <Optionwrapper>
+          <Li>수정</Li>
+          <Li>리포스트</Li>
+          <Li>삭제</Li>
+        </Optionwrapper>
+        <UpLoadButton>게시글 업로드</UpLoadButton>
+      </Contentswrapper>
+    </Wrapper>
   );
 };
 

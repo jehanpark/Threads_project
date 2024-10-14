@@ -269,8 +269,7 @@ const SubmitBtn = styled.input`
 const Comment = () => {
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
-  const [comments, setComments] = useState([]); // 댓글 배열
-  const [commentsCount, setCommentsCount] = useState(0); // 댓글 수
+  const [comments, setComments] = useState(Math.floor(Math.random() * 10));
   const [dms, setDms] = useState(Math.floor(Math.random() * 50));
   const [retweets, setRetweets] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
@@ -290,7 +289,7 @@ const Comment = () => {
     retweets: passedRetweets,
     postId,
   } = location.state || {};
-  console.log(location.state);
+
   // Firebase에서 전달된 값을 상태로 설정
   useEffect(() => {
     setLikes(passedLikes);
@@ -299,18 +298,9 @@ const Comment = () => {
   }, [passedLikes, passedDms, passedRetweets]);
 
   useEffect(() => {
-    if (!postId) {
-      console.error("postId가 없습니다. 댓글을 불러올 수 없습니다.");
-      return;
-    }
-  }, [postId]);
-
-  // Firestore에서 댓글 데이터를 가져오는 useEffect
-  useEffect(() => {
-    const fetchComments = async () => {
-      if (!postId) return; // postId가 없을 경우 함수 종료
-
+    const fetchCommentsCount = async () => {
       try {
+        if (!postId) return; // postId가 없으면 return
         const commentsCollectionRef = collection(
           db,
           "contents",
@@ -318,21 +308,14 @@ const Comment = () => {
           "comments"
         );
         const commentsSnapshot = await getDocs(commentsCollectionRef);
-
-        const commentsList = commentsSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setComments(commentsList); // 댓글 리스트 저장
-        setCommentsCount(commentsSnapshot.size); // 댓글 수 저장
+        setComments(commentsSnapshot.size); // 댓글 개수를 상태로 설정
       } catch (error) {
-        console.error("댓글을 불러오는 중 오류가 발생했습니다:", error);
+        console.error("Error fetching comments count:", error);
       }
     };
 
-    if (postId) fetchComments();
-  }, [postId]);
+    fetchCommentsCount();
+  }, [postId]); // postId가 변경될 때마다 실행
 
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
@@ -350,22 +333,30 @@ const Comment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!currentUser || isLoading || !post.trim() || post.length > 180) return;
+    const user = auth.currentUser;
+    if (!user || isLoading || post === "" || post.length > 180) return;
 
     try {
       setIsLoading(true);
 
       const commentData = {
-        comment: post.trim(),
+        comment: post,
         createdAt: serverTimestamp(),
-        username: currentUser?.displayName || "Anonymous",
-        userId: currentUser.uid,
-        photoUrls: [],
-        videoUrls: [],
+        username: user?.displayName || "Anonymous",
+        userId: user.uid,
+        photoUrls: [], // 이미지를 저장할 배열
+        videoUrls: [], // 비디오를 저장할 배열
       };
 
-      const commentsRef = collection(db, "contents", postId, "comments");
+      // Firestore에서 해당 포스트 문서 참조 가져오기
+      const commentsRef = collection(
+        db,
+        "contents",
+        location.state.postId,
+        "comments"
+      );
 
+      // 파일이 있을 경우 업로드 처리
       const photoUrls = [];
       const videoUrls = [];
 
@@ -374,33 +365,35 @@ const Comment = () => {
           files.map(async (file) => {
             const storageRef = ref(
               storage,
-              `comments/${currentUser.uid}/${file.name}`
+              `comments/${user.uid}/${file.name}`
             );
             const snapshot = await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(snapshot.ref);
 
+            // 파일이 이미지면 photoUrls에 저장
             if (file.type.startsWith("image/")) {
               photoUrls.push(downloadURL);
-            } else if (file.type.startsWith("video/")) {
+            }
+            // 파일이 비디오면 videoUrls에 저장
+            if (file.type.startsWith("video/")) {
               videoUrls.push(downloadURL);
             }
           })
         );
 
+        // 업로드된 파일의 URL을 댓글 데이터에 추가
         commentData.photoUrls = photoUrls;
         commentData.videoUrls = videoUrls;
       }
 
+      // 댓글 데이터를 해당 포스트의 comments 하위 컬렉션에 추가
       await addDoc(commentsRef, commentData);
 
-      setPost(""); // 상태 초기화
-      setFiles([]); // 업로드 파일 초기화
-
-      // 댓글을 추가한 후 즉시 업데이트
-      setComments((prevComments) => [...prevComments, commentData]);
-      setCommentsCount((prevCount) => prevCount + 1);
+      // 상태 초기화
+      setPost("");
+      setFiles([]);
     } catch (error) {
-      console.error("댓글 추가 중 오류가 발생했습니다:", error);
+      console.error("Error adding comment: ", error);
     } finally {
       setIsLoading(false);
     }
@@ -428,12 +421,9 @@ const Comment = () => {
       setFiles((prevFiles) => [...prevFiles, ...newFiles]);
     }
   };
-
   return (
     <div>
-      <Backarea>
-        <BackBtn />
-      </Backarea>
+      <Backarea><BackBtn /></Backarea>
       <BoederWrapper>
         <Wrapper>
           <PostWrapper>
@@ -473,7 +463,7 @@ const Comment = () => {
                 <HeartIcon width={14} /> {likes}
               </IconWrapper>
               <IconWrapper>
-                <Coment width={14} /> {commentsCount}
+                <Coment width={14} /> {comments}
               </IconWrapper>
               <IconWrapper>
                 <DmIcon width={12} /> {dms}

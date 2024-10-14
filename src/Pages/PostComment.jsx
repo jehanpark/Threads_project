@@ -13,7 +13,6 @@ import {
 } from "../Components/Common/Icon";
 import BackBtn from "../Components/post/BackBtn";
 
-
 const Backarea = styled.div`
   position: fixed;
   top: 12%;
@@ -175,9 +174,6 @@ const CommentHeader = styled.div`
   align-items: center;
   gap: 10px;
   margin-left: 20px;
-  @media (max-width: 768px) {
-    margin-left: 10px;
-  }
 `;
 const CommentUserImage = styled.img`
   width: 38px;
@@ -199,9 +195,6 @@ const CommentContent = styled.div`
   font-size: 14px;
   color: ${(props) => props.theme.fontcolor};
   margin-left: 70px;
-    @media (max-width: 768px) {
-    margin-left: 60px;
-  }
 `;
 
 const CommentImage = styled.img`
@@ -211,9 +204,6 @@ const CommentImage = styled.img`
   border-radius: 8px;
   margin-top: 10px;
   margin-left: 70px;
-  @media (max-width: 768px) {
-    margin-left: 60px;
-  }
 `;
 
 const CommentVideo = styled.video`
@@ -223,9 +213,6 @@ const CommentVideo = styled.video`
   border-radius: 8px;
   margin-top: 10px;
   margin-left: 70px;
-  @media (max-width: 768px) {
-    margin-left: 60px;
-  }
 `;
 const NotComment = styled.div`
   display: flex;
@@ -240,8 +227,7 @@ const NotComment = styled.div`
 const PostComment = ({ id }) => {
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(0);
-  const [comments, setComments] = useState([]); // 초기 값을 빈 배열로 설정
-  const [commentsCount, setCommentsCount] = useState(0); // 댓글 수
+  const [comments, setComments] = useState([]);
   const [dms, setDms] = useState(0);
   const [retweets, setRetweets] = useState(0);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
@@ -266,35 +252,6 @@ const PostComment = ({ id }) => {
     setRetweets(passedRetweets || 0);
   }, [passedLikes, passedDms, passedRetweets]);
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        if (!location.state?.postId) return; // postId가 없으면 return
-        const commentsRef = collection(
-          db,
-          "contents",
-          location.state.postId,
-          "comments"
-        );
-        const q = query(commentsRef, orderBy("createdAt", "desc"));
-        const querySnapshot = await getDocs(q);
-
-        // 댓글 데이터를 배열로 변환하여 상태에 저장
-        const commentsList = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setComments(commentsList); // 댓글 리스트 저장
-        setCommentsCount(commentsList.length); // 댓글 수 저장 (이 부분을 수정)
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    };
-
-    fetchComments();
-  }, [location.state?.postId]);
-
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
@@ -310,10 +267,6 @@ const PostComment = ({ id }) => {
         videos,
         username,
         createdAt: createdAt || { seconds: Date.now() / 1000 },
-        likes,
-        dms,
-        retweets,
-        commentsCount,
       },
     });
   };
@@ -390,7 +343,7 @@ const PostComment = ({ id }) => {
               <HeartIcon width={20} /> {likes}
             </IconWrapper>
             <IconWrapper onClick={handleCommentClick}>
-              <Coment width={20} /> {commentsCount}
+              <Coment width={20} /> {comments.length}
             </IconWrapper>
             <IconWrapper>
               <DmIcon width={18} /> {dms}
@@ -444,7 +397,7 @@ const PostComment = ({ id }) => {
                     {comment.videoUrls && comment.videoUrls.length > 0 && (
                       <div>
                         {comment.videoUrls.map((videoUrl, index) => (
-                          <CommentVideo key={index} controls  autoPlay loop src={videoUrl} />
+                          <CommentVideo key={index} controls src={videoUrl} />
                         ))}
                       </div>
                     )}
