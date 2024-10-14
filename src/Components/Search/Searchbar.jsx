@@ -8,9 +8,9 @@ import styled from "styled-components";
 import { MicIcon, SoundIcon } from "../Common/Icon";
 
 const SearchWrapper = styled.div`
-  width: 540px;
+  width: 530px;
   min-width: 340px;
-  height: 44px;
+  height: 200px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,21 +20,22 @@ const SearchWrapper = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.searchBar};
   @media (max-width: 768px) {
     width: 100%;
+    padding-bottom: 10px;
   }
 
   @media (max-width: 480px) {
     width: 100%;
+    padding-bottom: 10px;
   }
 `;
 
 const SearchBar = styled.input`
   width: 100%;
   height: 100%;
+  margin-bottom: 10px;
   border: none;
-
   background: transparent;
-  color: ${(props) => props.theme.searchColor};
-  font-size: 14px;
+  color: ${(props) => props.theme.searchBar};
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -45,6 +46,10 @@ const SearchBar = styled.input`
 
   &::placeholder {
     transition: all 0.3s;
+    font-size: 16px;
+    @media (max-width: 468px) {
+      font-size: 16px;
+    }
   }
 
   &:focus::placeholder {
@@ -52,7 +57,7 @@ const SearchBar = styled.input`
   }
 
   @media (max-width: 768px) {
-    font-size: 12px;
+    font-size: 16px;
   }
 `;
 
@@ -62,12 +67,16 @@ const MicButton = styled.button`
   align-items: center;
   flex: 1;
   height: 100%;
+  margin-bottom: 10px;
   border: none;
   background: transparent;
   cursor: pointer;
   transition: all 0.3s;
   path {
-    stroke: ${(props) => props.theme.searchColor};
+    stroke: ${(props) => props.theme.searchBar};
+  }
+  @media (max-width: 468px) {
+    margin: 0;
   }
 `;
 
