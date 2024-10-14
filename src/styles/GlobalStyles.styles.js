@@ -36,6 +36,7 @@ export const lightTheme = {
   btnbottom: "1px solid rgba(204, 204, 204, 0.4)",
   // 다은 새로 추가(설정부분)
   activeBorder: "#181818",
+  modalfont: "#999999",
 };
 
 export const darkTheme = {
@@ -74,6 +75,7 @@ export const darkTheme = {
   btnbottom: "1px solid #fff",
   // 다은 새로 추가(설정부분)
   activeBorder: "#fff",
+  modalfont: "#999999",
 };
 
 const GlobalStyles = createGlobalStyle`

@@ -4,6 +4,8 @@ import GlobalStyles from "../styles/GlobalStyles.styles";
 import { useMediaQuery } from "react-responsive";
 import BorderItem from "../Components/Common/Border_de";
 import { ShareIconNew } from "../Components/Common/Icon";
+import Toggle from "./Common/Toggle";
+import MentionModal from "./Common/MentionModal";
 
 import {
   LockIcon,
@@ -221,14 +223,13 @@ const Icon = styled.div`
     }
   }
 `;
-
-const Icon2 = styled.div`
+// 테두리만 보더 주어야 하는 svg
+const IconStroke = styled.div`
   height: 20px;
   text-align: end;
   /* padding: 0 10px; */
   svg {
     path {
-      /* fill: ${(props) => props.theme.logoColor}; */
       stroke: ${(props) => props.theme.logoColor};
     }
   }
@@ -283,6 +284,24 @@ const ActiveBorder = styled.div`
   transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
 `;
 
+// 추가 레이아웃 설정
+const PrivacyAutoLayout = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const SelectedText = styled.span`
+  font-size: 14px;
+  color: ${(props) => props.theme.modalfont};
+`;
+
+const SelectLayout = styled.div`
+  display: flex;
+  gap: 14px;
+`;
+
 // 아이콘 눌렀을 때 링크로 이동
 const IconLink = styled.a`
   height: 20px;
@@ -304,7 +323,15 @@ const SettingsItem_de = () => {
       setBorderPosition({ left: offsetLeft, width: offsetWidth }); // border 위치 및 너비 업데이트
     }
   };
+  // 모달 창 구현
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOption, setSelectedOption] =
+    useState("내가 팔로우하는 프로필");
 
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+  const handleSelectOption = (option) => setSelectedOption(option);
+  // 모달 끝
   useEffect(() => {
     // 초기 상태에 대한 border 위치 설정
     const titleElement = document.getElementById("setting-title-0");
@@ -353,19 +380,36 @@ const SettingsItem_de = () => {
               <Icon>
                 <LockIcon width={"18px"} />
               </Icon>
-              <PrivacyTitle>비공개 프로필</PrivacyTitle>
+              <PrivacyAutoLayout>
+                <PrivacyTitle>비공개 프로필</PrivacyTitle>
+                {/* 토글 추가 */}
+                <Toggle />
+              </PrivacyAutoLayout>
             </PrivacyProfile>
             <PrivacyProfile>
               <Icon>
                 <Thread100Icon width={"20px"} fill={"black"} />
               </Icon>
-              <PrivacyTitle>언급</PrivacyTitle>
+              <PrivacyAutoLayout>
+                <PrivacyTitle>언급</PrivacyTitle>
+                <SelectLayout>
+                  <SelectedText>{selectedOption}</SelectedText>
+                  <IconStroke onClick={handleOpenModal}>
+                    <RightArrowIcon fill={"gray"} width={"12px"} />
+                  </IconStroke>
+                </SelectLayout>
+              </PrivacyAutoLayout>
             </PrivacyProfile>
             <PrivacyProfile>
               <Icon>
                 <EyeCloseIcon width={"24px"} />
               </Icon>
-              <PrivacyTitle>숨겨진 단어</PrivacyTitle>
+              <PrivacyAutoLayout>
+                <PrivacyTitle>숨겨진 단어</PrivacyTitle>
+                <IconStroke>
+                  <RightArrowIcon fill={"gray"} width={"12px"} />
+                </IconStroke>
+              </PrivacyAutoLayout>
             </PrivacyProfile>
             <Line />
             {/* 기타 개인정보 설정  */}
@@ -399,9 +443,9 @@ const SettingsItem_de = () => {
                 </ContentAutoLayout>
               </PrivacyProfile>
               <PrivacyProfile>
-                <Icon2>
+                <IconStroke>
                   <NotHeartIcon width={"20px"} fill={"black"} />
-                </Icon2>
+                </IconStroke>
                 <ContentAutoLayout>
                   <PrivacyTitle>좋아요 수 및 공유 수 숨기기</PrivacyTitle>
                   <IconLink
@@ -427,14 +471,14 @@ const SettingsItem_de = () => {
             <AccountSettings>
               <AccountContents>
                 <PrivacyProfile>
-                  <Icon2>
+                  <IconStroke>
                     <CloseLockIcon width={"20px"} fill={"black"} />
-                  </Icon2>
+                  </IconStroke>
                   <ContentAutoLayout>
                     <AccountTitle>웹 사이트 권한</AccountTitle>
-                    <Icon>
+                    <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
-                    </Icon>
+                    </IconStroke>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
@@ -443,9 +487,9 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <AccountTitle>프로필 비활성화 또는 삭제</AccountTitle>
-                    <Icon>
+                    <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
-                    </Icon>
+                    </IconStroke>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
@@ -454,9 +498,9 @@ const SettingsItem_de = () => {
                   </IconRadius>
                   <ContentAutoLayout>
                     <AccountTitle>페비더스 공유</AccountTitle>
-                    <Icon>
+                    <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
-                    </Icon>
+                    </IconStroke>
                   </ContentAutoLayout>
                 </PrivacyProfile>
               </AccountContents>
@@ -571,9 +615,9 @@ const SettingsItem_de = () => {
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
-                  <Icon2>
+                  <IconStroke>
                     <NotHeartIcon width={"20px"} fill={"black"} />
-                  </Icon2>
+                  </IconStroke>
                   <ContentAutoLayout>
                     <PrivacyTitle>내 정보 전송</PrivacyTitle>
                     <IconLink
@@ -602,17 +646,17 @@ const SettingsItem_de = () => {
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>개인정보 보호 및 보안 도움말</HelpTitle>
-                    <Icon>
+                    <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
-                    </Icon>
+                    </IconStroke>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>지원 요청</HelpTitle>
-                    <Icon>
+                    <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
-                    </Icon>
+                    </IconStroke>
                   </ContentAutoLayout>
                 </PrivacyProfile>
               </AccountContents>
@@ -735,6 +779,13 @@ const SettingsItem_de = () => {
           </OutherPrivacy>
         )}
       </SettingsInner>
+      {/* 모달은 PrivacyProfile 바깥에 위치 */}
+      {isModalOpen && (
+        <MentionModal
+          onClose={handleCloseModal}
+          onSelectOption={handleSelectOption}
+        />
+      )}
     </Wrapper>
   );
 };
