@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import {
-  collection,
-  getDocs,
-  orderBy,
-  query,
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 import {
   HeartIcon,
@@ -60,9 +54,6 @@ const BoederWrapper = styled.div`
 `;
 
 const PostWrapper = styled.div`
-  position: sticky;
-  top: 0;
-  left: 0px;
   position: sticky;
   top: 0;
   left: 0px;
@@ -167,7 +158,6 @@ const ComentList = styled.div`
   width: 100%;
   height: auto;
 `;
-
 const CommentWrapper = styled.div`
   width: 100%;
   height: auto;
@@ -239,7 +229,6 @@ const NotComment = styled.div`
 `;
 
 const PostComment = ({ id }) => {
-  const { customPostId } = useParams();
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState([]);
@@ -274,7 +263,7 @@ const PostComment = ({ id }) => {
   };
 
   const handleCommentClick = () => {
-    navigate(`/Comment/${customPostId}`, {
+    navigate("/Comment", {
       state: {
         postId: id,
         postContent: post,
@@ -375,9 +364,9 @@ const PostComment = ({ id }) => {
               <NotComment>로딩 중...</NotComment> // 로딩 상태 표시
             ) : comments.length > 0 ? (
               comments.map((comment) => (
-                <ScrollWrapper key={comment.id}>
+                <ScrollWrapper>
                   <ComentList>
-                    <CommentWrapper>
+                    <CommentWrapper key={comment.id}>
                       <CommentHeader>
                         <CommentUserImage src="http://localhost:5173/profile.png"></CommentUserImage>
                         <CommentUsername>{comment.username}</CommentUsername>
@@ -413,13 +402,7 @@ const PostComment = ({ id }) => {
                       {comment.videoUrls && comment.videoUrls.length > 0 && (
                         <div>
                           {comment.videoUrls.map((videoUrl, index) => (
-                            <CommentVideo
-                              key={index}
-                              controls
-                              autoPlay
-                              loop
-                              src={videoUrl}
-                            />
+                            <CommentVideo key={index} controls src={videoUrl} />
                           ))}
                         </div>
                       )}
@@ -438,4 +421,3 @@ const PostComment = ({ id }) => {
 };
 
 export default PostComment;
-

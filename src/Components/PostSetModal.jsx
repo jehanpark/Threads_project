@@ -1,13 +1,19 @@
 import React from "react";
-import GlobalStyles from "../styles/GlobalStyles.styles";
+import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
 import { color } from "framer-motion";
 
+const ContentsAll = styled.div`
+  @media (max-width: 768px) {
+    border: 1px solid red;
+    
+  }
+`;
+
 const Wrapper = styled.div`
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
+  top: 20px;
+  right: 20px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -20,24 +26,26 @@ const Wrapper = styled.div`
   transition: all 0.3s;
   z-index: 500;
   @media (max-width: 768px) {
-    position: absolute;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px 30px 0 0;
     bottom: 0;
     left: 0;
-    height: 420px;
-    width: 100%;
-    border-radius: 30px 30px 0 0;
-    background: ${(props) => props.theme.btnBgColor};
-    box-shadow: ${(props) => props.theme.bordershadow};
   }
 `;
 const Contentswrapper = styled.div`
   @media (max-width: 768px) {
+    position: fixed;
+    bottom: 0;
     width: 100%;
-    height: 100%;
+    height: 60%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin-top: 10px;
+    border:  1px solid #f00;
   }
 `;
 const TopRec = styled.div`
@@ -48,7 +56,6 @@ const TopRec = styled.div`
     border-radius: 16px;
   }
 `;
-
 
 const Optionwrapper = styled.div`
   padding: 10px;
@@ -101,7 +108,7 @@ const UpLoadButton = styled.button`
     width: 300px;
     height: 70px;
     background: ${(props) => props.theme.fontcolor};
-    color: #fff;
+    color: ${(props) => props.theme.logoColor};
     font-size: 15px;
     font-weight: bold;
     border-radius: 16px;
@@ -116,17 +123,19 @@ const UpLoadButton = styled.button`
 
 const PostSetModal = () => {
   return (
-    <Wrapper>
-      <Contentswrapper>
-        <TopRec></TopRec>
-        <Optionwrapper>
-          <Li>수정</Li>
-          <Li>리포스트</Li>
-          <Li>삭제</Li>
-        </Optionwrapper>
-        <UpLoadButton>게시글 업로드</UpLoadButton>
-      </Contentswrapper>
-    </Wrapper>
+    <ContentsAll>
+      <Wrapper>
+        <Contentswrapper>
+          <TopRec></TopRec>
+          <Optionwrapper>
+            <Li>수정</Li>
+            <Li>리포스트</Li>
+            <Li>삭제</Li>
+          </Optionwrapper>
+          <UpLoadButton>게시글 업로드</UpLoadButton>
+        </Contentswrapper>
+      </Wrapper>
+    </ContentsAll>
   );
 };
 
