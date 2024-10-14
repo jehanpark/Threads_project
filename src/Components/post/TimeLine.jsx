@@ -7,9 +7,9 @@ import {
 } from "firebase/firestore";
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { db } from "../firebase";
-import Post from "./Post";
-import { Thread100Icon } from "./Common/Icon";
+import { db } from "../../firebase";
+import Post from "../Post";
+import { Thread100Icon } from "../Common/Icon";
 
 const BoederWrapper = styled.div`
   position: fixed;

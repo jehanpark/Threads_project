@@ -460,9 +460,10 @@ export const GoBack = ({ width, fill }) => {
       >
         <path
           d="M7 13L1 7L7 1"
-          stroke="black"
+          stroke="#747474"
           stroke-linecap="round"
           stroke-linejoin="round"
+          strokeWidth={2}
         />
       </svg>
     </StyledSvg>

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import Logo from "../Logo";
-import LogoTextMark from "../LogoTextMark";
+import Logo from "../LoadingLogo/Logo";
+import LogoTextMark from "../LoadingLogo/LogoTextMark";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { FirebaseError } from "firebase/app";
 import { useMediaQuery } from "react-responsive";
 import Border from "../Common/Border_dk";
 import ReportModal from "./ReportModal";
-import Loading from "../Loading";
+import Loading from "../LoadingLogo/Loading";
 
 import {
   Wrapper,

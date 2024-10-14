@@ -7,23 +7,18 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import { auth, db, storage } from "../firebase";
+import { auth, db, storage } from "../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import Button from "../Components/Common/Button";
-import GlobalStyles from "../styles/GlobalStyles.styles";
-import Border from "./Common/Border_de";
+import Button from "../Common/Button";
+import GlobalStyles from "../../styles/GlobalStyles.styles";
+import Border from "../Common/Border_de";
 import { useNavigate } from "react-router-dom";
 
-import {
-  CameraIcon,
-  PictureIcon,
-  MicIcon,
-  HashtagIcon,
-} from "../Components/Common/Icon";
-import Modal from "./Common/Modal";
+import { CameraIcon, PictureIcon, MicIcon, HashtagIcon } from "../Common/Icon";
+import Modal from "../Common/Modal";
 import PostForm_Modal from "./PostForm_Modal";
-import Loading from "./Loading";
-import { useAuth } from "../Contexts/AuthContext";
+import Loading from "../LoadingLogo/Loading";
+import { useAuth } from "../../Contexts/AuthContext";
 
 // Styled Components
 
@@ -304,6 +299,7 @@ const PostForm = () => {
       // 제출 후 상태 초기화
       setPost("");
       setFiles([]);
+      navigate("/");
     } catch (error) {
       console.error(error);
     } finally {
