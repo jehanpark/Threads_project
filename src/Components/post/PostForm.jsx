@@ -32,7 +32,7 @@ const BoederWrapper = styled.div`
   left: 50%;
   transform: translate(-50%);
   margin: 0 auto;
-  width: 680px;
+  width: 660px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
@@ -56,9 +56,8 @@ const Form = styled.form`
   transform: translate(-50%);
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
   width: 660px;
-  height: calc(100% - 10px);
+  height: 100%;
   gap: 10px;
   background: ${(props) => props.theme.borderColor};
   border-radius: 30px 30px 0 0;

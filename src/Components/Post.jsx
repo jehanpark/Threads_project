@@ -39,12 +39,11 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
-  border-radius: 30px;
   padding: 20px;
-  width: 660px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
     width: 100%;
-    display: flex;
+    height: auto;
   }
 `;
 const ColumnWrapper = styled.div`

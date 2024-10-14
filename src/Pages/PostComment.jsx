@@ -1,8 +1,10 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { db } from "../firebase";
 import {
   HeartIcon,
   DmIcon,
@@ -15,19 +17,27 @@ const Backarea = styled.div`
   position: fixed;
   top: 12%;
   left: 25%;
-`
+`;
 
 const BoederWrapper = styled.div`
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translate(-50%);
-  margin: 0 auto;
-  width: 680px;
+  width: 660px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 전체 높이를 고정 */
+  scrollbar-width: none;
+  max-height: auto; /* 고정된 높이를 주어야 스크롤이 발생함 */
+  overflow-y: auto; /* 스크롤을 활성화 */
+  ::-webkit-scrollbar {
+    display: none;
+  }
   @media (max-width: 768px) {
     position: fixed;
     border-radius: 0;
@@ -40,22 +50,23 @@ const BoederWrapper = styled.div`
 `;
 
 const PostWrapper = styled.div`
-  margin: 10px auto 10px;
+position: sticky;
+top: 0;
+left: 0px;
   width: 100%;
   height: auto;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
-  border-radius: 30px;
   padding: 20px;
   width: 660px;
-  margin-bottom: 20px;
+  border-radius: 40px 40px 0 0;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
-    margin: 6px;
     padding: 20px;
-    gap: 5px;
+    border-radius: 0;
   }
 `;
 const Header = styled.div`
@@ -137,16 +148,22 @@ const IconWrapper = styled.div`
   align-items: center;
   gap: 6px;
 `;
-
+const ScrollWrapper = styled.div`
+  `;
+const ComentList =styled.div`
+width: 100%;
+height: auto;
+`
 const CommentWrapper = styled.div`
-  margin: 0 auto;
-  width: 90%;
+  width: 100%;
+  height: auto;
   background: ${(props) => props.theme.borderColor};
   padding: 15px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition: transform 0.3s ease-out;
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -156,8 +173,12 @@ const CommentHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-left: 20px;
 `;
-
+const CommentUserImage = styled.img`
+  width: 38px;
+  height: 38px;
+`;
 const CommentUsername = styled.span`
   font-size: 14px;
   font-weight: 600;
@@ -173,6 +194,7 @@ const CommentTimer = styled.span`
 const CommentContent = styled.div`
   font-size: 14px;
   color: ${(props) => props.theme.fontcolor};
+  margin-left: 70px;
 `;
 
 const CommentImage = styled.img`
@@ -181,6 +203,7 @@ const CommentImage = styled.img`
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
+  margin-left: 70px;
 `;
 
 const CommentVideo = styled.video`
@@ -189,24 +212,25 @@ const CommentVideo = styled.video`
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
+  margin-left: 70px;
 `;
 const NotComment = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100%;
-margin-top: 30px;
-font-size: 16px;
-color: #bababa;
-`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-top: 30px;
+  font-size: 16px;
+  color: #bababa;
+`;
 
 const PostComment = ({ id }) => {
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(0);
-  const [comments, setComments] = useState([]); // 초기 값을 빈 배열로 설정
+  const [comments, setComments] = useState([]);
   const [dms, setDms] = useState(0);
   const [retweets, setRetweets] = useState(0);
-  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -219,12 +243,13 @@ const PostComment = ({ id }) => {
     likes: passedLikes,
     dms: passedDms,
     retweets: passedRetweets,
-  } = location.state || {};
+  } = location.state || {}; // 안전하게 처리
 
+  // 좋아요, DM, 리트윗 값 초기화
   useEffect(() => {
-    setLikes(passedLikes);
-    setDms(passedDms);
-    setRetweets(passedRetweets);
+    setLikes(passedLikes || 0);
+    setDms(passedDms || 0);
+    setRetweets(passedRetweets || 0);
   }, [passedLikes, passedDms, passedRetweets]);
 
   const renderTimeAgo = () => {
@@ -246,9 +271,10 @@ const PostComment = ({ id }) => {
     });
   };
 
-  // Firestore에서 댓글 불러오기 함수
+  // Firestore에서 댓글 불러오기
   useEffect(() => {
     const fetchComments = async () => {
+      setLoading(true); // 로딩 시작
       try {
         if (location.state && location.state.postId) {
           const commentsRef = collection(
@@ -263,19 +289,25 @@ const PostComment = ({ id }) => {
             id: doc.id,
             ...doc.data(),
           }));
-          setComments(commentsList); // 불러온 댓글을 상태에 저장
+          setComments(commentsList);
+        } else {
+          console.error("postId가 없습니다.");
         }
       } catch (error) {
-        console.error("Error fetching comments:", error);
+        console.error("댓글을 불러오는 중 오류 발생:", error);
+      } finally {
+        setLoading(false); // 로딩 완료
       }
     };
 
     fetchComments();
-  }, [location.state.postId]); // postId가 변경될 때마다 댓글을 다시 불러옴
+  }, [location.state?.postId]); // postId가 변경될 때마다 댓글을 다시 불러옴
 
   return (
-<div>      
-        <Backarea><BackBtn /></Backarea>
+    <div>
+      <Backarea>
+        <BackBtn />
+      </Backarea>
       <BoederWrapper>
         <PostWrapper>
           <Header>
@@ -321,58 +353,64 @@ const PostComment = ({ id }) => {
             </IconWrapper>
           </Icons>
         </PostWrapper>
-  
+
         <div>
-          {comments.length > 0 ? (
+          {loading ? (
+            <NotComment>로딩 중...</NotComment> // 로딩 상태 표시
+          ) : comments.length > 0 ? (
             comments.map((comment) => (
-              <CommentWrapper key={comment.id}>
-                <CommentHeader>
-                  <UserImage src="http://localhost:5173/profile.png"></UserImage>
-                  <CommentUsername>{comment.username}</CommentUsername>
-                  <CommentTimer>
-                    {formatDistanceToNow(
-                      new Date(comment.createdAt.seconds * 1000),
-                      {
-                        addSuffix: true,
-                      }
+              <ScrollWrapper>
+                <ComentList>
+                  <CommentWrapper key={comment.id}>
+                    <CommentHeader>
+                      <CommentUserImage src="http://localhost:5173/profile.png"></CommentUserImage>
+                      <CommentUsername>{comment.username}</CommentUsername>
+                      <CommentTimer>
+                        {formatDistanceToNow(
+                          new Date(comment.createdAt.seconds * 1000),
+                          {
+                            addSuffix: true,
+                          }
+                        )}
+                      </CommentTimer>
+                    </CommentHeader>
+                    <CommentContent>
+                      {typeof comment.comment === "string"
+                        ? comment.comment
+                        : JSON.stringify(comment.comment)}
+                    </CommentContent>
+
+                    {/* 댓글에 이미지가 있을 경우 */}
+                    {comment.photoUrls && comment.photoUrls.length > 0 && (
+                      <div>
+                        {comment.photoUrls.map((photoUrl, index) => (
+                          <CommentImage
+                            key={index}
+                            src={photoUrl}
+                            alt={`Comment Image ${index + 1}`}
+                          />
+                        ))}
+                      </div>
                     )}
-                  </CommentTimer>
-                </CommentHeader>
-                <CommentContent>
-                  {typeof comment.comment === "string"
-                    ? comment.comment
-                    : JSON.stringify(comment.comment)}
-                </CommentContent>
-  
-                {/* 댓글에 이미지가 있을 경우 */}
-                {comment.photoUrls && comment.photoUrls.length > 0 && (
-                  <div>
-                    {comment.photoUrls.map((photoUrl, index) => (
-                      <CommentImage
-                        key={index}
-                        src={photoUrl}
-                        alt={`Comment Image ${index + 1}`}
-                      />
-                    ))}
-                  </div>
-                )}
-  
-                {/* 댓글에 비디오가 있을 경우 */}
-                {comment.videoUrls && comment.videoUrls.length > 0 && (
-                  <div>
-                    {comment.videoUrls.map((videoUrl, index) => (
-                      <CommentVideo key={index} controls src={videoUrl} />
-                    ))}
-                  </div>
-                )}
-              </CommentWrapper>
+
+                    {/* 댓글에 비디오가 있을 경우 */}
+                    {comment.videoUrls && comment.videoUrls.length > 0 && (
+                      <div>
+                        {comment.videoUrls.map((videoUrl, index) => (
+                          <CommentVideo key={index} controls src={videoUrl} />
+                        ))}
+                      </div>
+                    )}
+                  </CommentWrapper>
+                </ComentList>
+              </ScrollWrapper>
             ))
           ) : (
             <NotComment>댓글이 없습니다.</NotComment>
           )}
         </div>
       </BoederWrapper>
-</div>
+    </div>
   );
 };
 

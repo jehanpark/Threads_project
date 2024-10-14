@@ -32,8 +32,7 @@ const BoederWrapper = styled.div`
   bottom: 0;
   left: 50%;
   transform: translate(-50%);
-  margin: 0 auto;
-  width: 680px;
+  width: 660px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
@@ -46,7 +45,6 @@ const BoederWrapper = styled.div`
     bottom: 70px;
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
-    padding: 10px;
   }
 `;
 
@@ -58,13 +56,10 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  margin-top: 10px;
   @media (max-width: 768px) {
   }
 `;
 const PostWrapper = styled.div`
-  scale: 0.95;
   margin: 0px;
   width: 100%;
   height: auto;
@@ -72,14 +67,13 @@ const PostWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   background: ${(props) => props.theme.borderColor};
-  border-radius: 30px;
+  border-radius: 30px 30px 0 0;
   padding: 20px;
   width: 660px;
   @media (max-width: 768px) {
     height: auto;
     width: 98%;
     margin-top: 6px;
-    scale: 1;
     gap: 5px;
   }
 `;
@@ -194,7 +188,7 @@ const Form = styled.form`
   height: 100%;
   gap: 10px;
   background: ${(props) => props.theme.borderColor};
-  border-radius: 30px;
+
   @media (max-width: 768px) {
     top: 0;
     width: 100%;
@@ -223,13 +217,11 @@ const TextArea = styled.textarea`
   background: ${(props) => props.theme.borderColor};
   color: ${(props) => props.theme.fontcolor};
   border: none;
-  padding: 20px;
-  padding-left: 20px;
+  padding: 20px 40px;
   font-size: 16px;
-
   margin-top: 20px;
-  width: 600px;
-  height: auto;
+  width: auto;
+  height: 50%;
   resize: none;
   font-family: var(--pretendard-font);
   font-weight: 300;
