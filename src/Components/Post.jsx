@@ -436,7 +436,7 @@ const Post = ({
   };
 
   const handleCommentClick = () => {
-    navigate("/Comment", {
+    navigate("/Comment/${id}", {
       state: {
         postId: id,
         postContent: post,
@@ -452,7 +452,7 @@ const Post = ({
   };
 
   const PostCommentClick = () => {
-    navigate("/PostComment", {
+    navigate("/PostComment/${id}", {
       state: {
         postId: id,
         postContent: post,

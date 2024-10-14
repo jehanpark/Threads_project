@@ -199,6 +199,13 @@ const PostForm = () => {
 
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
   const navigate = useNavigate();
+
+  const generateCustomId = () => {
+    const timestamp = Date.now().toString();
+    const randomNum = Math.floor(Math.random() * 1000000).toString();
+    return timestamp + randomNum; // 두 값을 조합하여 고유 식별자 생성
+  };
+
   useEffect(() => {
     if (!currentUser) {
       const confirmLogin = window.confirm("로그인 하시겠습니까?");
@@ -255,6 +262,9 @@ const PostForm = () => {
     try {
       setIsLoading(true);
 
+      // 커스텀 고유 ID 생성
+      const customPostId = generateCustomId(); // 고유 식별자 생성
+
       // Firebase에 포스트 기본 정보 저장
       const docRef = await addDoc(collection(db, "contents"), {
         post,
@@ -262,6 +272,7 @@ const PostForm = () => {
         username: user?.displayName || "Anonymous",
         userId: user.uid,
         email: user.email,
+        customPostId,
         likes: randomLikes,
         comments: randomComments,
         dms: randomDms,
@@ -298,6 +309,7 @@ const PostForm = () => {
       // 제출 후 상태 초기화
       setPost("");
       setFiles([]);
+      navigate("/");
     } catch (error) {
       console.error(error);
     } finally {

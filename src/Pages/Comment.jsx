@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -14,7 +14,7 @@ import {
 } from "../Components/Common/Icon";
 import { useAuth } from "../Contexts/AuthContext";
 import { addDoc, serverTimestamp, updateDoc, doc } from "firebase/firestore";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, getDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
@@ -280,6 +280,8 @@ const SubmitBtn = styled.input`
 `;
 
 const Comment = () => {
+  const navigate = useNavigate();
+  const { postId: routePostId } = useParams(); // URL에서 postId를 받아옴
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [comments, setComments] = useState(Math.floor(Math.random() * 10));
@@ -288,8 +290,9 @@ const Comment = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState([]);
   const location = useLocation();
-
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const [customPostId, setCustomPostId] = useState(null);
+  const postId = routePostId || location.state?.postId; // postId를 URL이나 state에서 받아옴
 
   const {
     postContent,
@@ -300,7 +303,6 @@ const Comment = () => {
     likes: passedLikes,
     dms: passedDms,
     retweets: passedRetweets,
-    postId,
   } = location.state || {};
 
   // Firebase에서 전달된 값을 상태로 설정
@@ -311,9 +313,38 @@ const Comment = () => {
   }, [passedLikes, passedDms, passedRetweets]);
 
   useEffect(() => {
-    const fetchCommentsCount = async () => {
+    if (!postId) {
+      console.error("postId가 없습니다. 댓글을 불러올 수 없습니다.");
+      return;
+    }
+  }, [postId]);
+
+  // Firestore에서 customPostId 가져오는 useEffect
+  useEffect(() => {
+    if (!postId) return;
+
+    const fetchCustomPostId = async () => {
       try {
-        if (!postId) return; // postId가 없으면 return
+        const postRef = doc(db, "contents", postId);
+        const postSnap = await getDoc(postRef);
+        if (postSnap.exists()) {
+          const postData = postSnap.data();
+          setCustomPostId(postData.customPostId); // Firestore에서 customPostId를 가져옴
+        }
+      } catch (error) {
+        console.error("customPostId를 가져오는 중 오류가 발생했습니다:", error);
+      }
+    };
+
+    fetchCustomPostId();
+  }, [postId]);
+
+  // Firestore에서 댓글 데이터를 가져오는 useEffect
+  useEffect(() => {
+    if (!postId) return;
+
+    const fetchComments = async () => {
+      try {
         const commentsCollectionRef = collection(
           db,
           "contents",
@@ -321,14 +352,20 @@ const Comment = () => {
           "comments"
         );
         const commentsSnapshot = await getDocs(commentsCollectionRef);
-        setComments(commentsSnapshot.size); // 댓글 개수를 상태로 설정
+        const commentsList = commentsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setComments(commentsList);
+        setCommentsCount(commentsSnapshot.size); // 댓글 수 저장
       } catch (error) {
         console.error("Error fetching comments count:", error);
       }
     };
 
-    fetchCommentsCount();
-  }, [postId]); // postId가 변경될 때마다 실행
+    fetchComments();
+  }, [postId]);
 
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
@@ -402,9 +439,13 @@ const Comment = () => {
       // 댓글 데이터를 해당 포스트의 comments 하위 컬렉션에 추가
       await addDoc(commentsRef, commentData);
 
-      // 상태 초기화
-      setPost("");
-      setFiles([]);
+      setPost(""); // 상태 초기화
+      setFiles([]); // 업로드 파일 초기화
+
+      // 댓글을 추가한 후 customPostId가 있는 경우 페이지 이동
+      if (customPostId) {
+        navigate(`/`); // customPostId로 이동
+      }
     } catch (error) {
       console.error("Error adding comment: ", error);
     } finally {
