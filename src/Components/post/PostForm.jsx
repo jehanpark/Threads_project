@@ -299,6 +299,7 @@ const PostForm = () => {
       // 제출 후 상태 초기화
       setPost("");
       setFiles([]);
+      navigate("/");
     } catch (error) {
       console.error(error);
     } finally {

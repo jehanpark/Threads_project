@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -284,7 +284,7 @@ const Comment = ({ id }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState([]);
   const location = useLocation();
-
+  const navigate = useNavigate();
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
 
   const {
@@ -407,6 +407,7 @@ const Comment = ({ id }) => {
       // 댓글을 추가한 후 즉시 업데이트
       setComments((prevComments) => [...prevComments, commentData]);
       setCommentsCount((prevCount) => prevCount + 1);
+      navigate("/");
     } catch (error) {
       console.error("댓글 추가 중 오류가 발생했습니다:", error);
     } finally {
