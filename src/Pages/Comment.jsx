@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -14,7 +14,7 @@ import {
 } from "../Components/Common/Icon";
 import { useAuth } from "../Contexts/AuthContext";
 import { addDoc, serverTimestamp, updateDoc, doc } from "firebase/firestore";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, getDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
@@ -32,8 +32,7 @@ const BoederWrapper = styled.div`
   bottom: 0;
   left: 50%;
   transform: translate(-50%);
-  margin: 0 auto;
-  width: 680px;
+  width: 660px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
@@ -46,7 +45,6 @@ const BoederWrapper = styled.div`
     bottom: 70px;
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
-    padding: 10px;
   }
 `;
 
@@ -58,13 +56,10 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  margin-top: 10px;
   @media (max-width: 768px) {
   }
 `;
 const PostWrapper = styled.div`
-  scale: 0.95;
   margin: 0px;
   width: 100%;
   height: auto;
@@ -72,14 +67,13 @@ const PostWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   background: ${(props) => props.theme.borderColor};
-  border-radius: 30px;
+  border-radius: 30px 30px 0 0;
   padding: 20px;
   width: 660px;
   @media (max-width: 768px) {
     height: auto;
     width: 98%;
     margin-top: 6px;
-    scale: 1;
     gap: 5px;
   }
 `;
@@ -194,7 +188,7 @@ const Form = styled.form`
   height: 100%;
   gap: 10px;
   background: ${(props) => props.theme.borderColor};
-  border-radius: 30px;
+
   @media (max-width: 768px) {
     top: 0;
     width: 100%;
@@ -223,13 +217,11 @@ const TextArea = styled.textarea`
   background: ${(props) => props.theme.borderColor};
   color: ${(props) => props.theme.fontcolor};
   border: none;
-  padding: 20px;
-  padding-left: 20px;
+  padding: 20px 40px;
   font-size: 16px;
-
   margin-top: 20px;
-  width: 600px;
-  height: auto;
+  width: auto;
+  height: 50%;
   resize: none;
   font-family: var(--pretendard-font);
   font-weight: 300;
@@ -274,7 +266,9 @@ const SubmitBtn = styled.input`
   }
 `;
 
-const Comment = ({ id }) => {
+const Comment = () => {
+  const navigate = useNavigate();
+  const { postId: routePostId } = useParams(); // URL에서 postId를 받아옴
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [comments, setComments] = useState([]); // 댓글 배열
@@ -284,8 +278,9 @@ const Comment = ({ id }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState([]);
   const location = useLocation();
-
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const [customPostId, setCustomPostId] = useState(null);
+  const postId = routePostId || location.state?.postId; // postId를 URL이나 state에서 받아옴
 
   const {
     postContent,
@@ -296,9 +291,8 @@ const Comment = ({ id }) => {
     likes: passedLikes,
     dms: passedDms,
     retweets: passedRetweets,
-    postId,
   } = location.state || {};
-  console.log(location.state);
+
   // Firebase에서 전달된 값을 상태로 설정
   useEffect(() => {
     setLikes(passedLikes);
@@ -313,11 +307,31 @@ const Comment = ({ id }) => {
     }
   }, [postId]);
 
+  // Firestore에서 customPostId 가져오는 useEffect
+  useEffect(() => {
+    if (!postId) return;
+
+    const fetchCustomPostId = async () => {
+      try {
+        const postRef = doc(db, "contents", postId);
+        const postSnap = await getDoc(postRef);
+        if (postSnap.exists()) {
+          const postData = postSnap.data();
+          setCustomPostId(postData.customPostId); // Firestore에서 customPostId를 가져옴
+        }
+      } catch (error) {
+        console.error("customPostId를 가져오는 중 오류가 발생했습니다:", error);
+      }
+    };
+
+    fetchCustomPostId();
+  }, [postId]);
+
   // Firestore에서 댓글 데이터를 가져오는 useEffect
   useEffect(() => {
-    const fetchComments = async () => {
-      if (!postId) return; // postId가 없을 경우 함수 종료
+    if (!postId) return;
 
+    const fetchComments = async () => {
       try {
         const commentsCollectionRef = collection(
           db,
@@ -326,20 +340,19 @@ const Comment = ({ id }) => {
           "comments"
         );
         const commentsSnapshot = await getDocs(commentsCollectionRef);
-
         const commentsList = commentsSnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
 
-        setComments(commentsList); // 댓글 리스트 저장
+        setComments(commentsList);
         setCommentsCount(commentsSnapshot.size); // 댓글 수 저장
       } catch (error) {
         console.error("댓글을 불러오는 중 오류가 발생했습니다:", error);
       }
     };
 
-    if (postId) fetchComments();
+    fetchComments();
   }, [postId]);
 
   const renderTimeAgo = () => {
@@ -404,9 +417,10 @@ const Comment = ({ id }) => {
       setPost(""); // 상태 초기화
       setFiles([]); // 업로드 파일 초기화
 
-      // 댓글을 추가한 후 즉시 업데이트
-      setComments((prevComments) => [...prevComments, commentData]);
-      setCommentsCount((prevCount) => prevCount + 1);
+      // 댓글을 추가한 후 customPostId가 있는 경우 페이지 이동
+      if (customPostId) {
+        navigate(`/`); // customPostId로 이동
+      }
     } catch (error) {
       console.error("댓글 추가 중 오류가 발생했습니다:", error);
     } finally {

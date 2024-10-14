@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { GoBack } from '../Common/Icon';
 
 const GoBackImg = styled.div`
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   background: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   border-radius: 50%;

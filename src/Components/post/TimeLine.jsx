@@ -11,13 +11,13 @@ import { db } from "../../firebase";
 import Post from "../Post";
 import { Thread100Icon } from "../Common/Icon";
 
-const BoederWrapper = styled.div`
+const Container = styled.div`
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translate(-50%);
   margin: 0 auto;
-  width: 680px;
+  width: 660px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
@@ -39,40 +39,32 @@ const PostlistWrapper = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 10px;
   height: 100%;
   width: 100%;
-  padding: 10px 0;
-  border-radius: 20px;
+  border-radius: 20px 20px 0 0;
   overflow-y: scroll;
   ::-webkit-scrollbar {
     display: none;
   }
   scrollbar-width: none;
-  transition: transform 0.3s ease-out;
-
+  transition: transform 0.3s;
   &.bounce {
-    animation: bounce-back 1s ease-in-out;
+    animation: bounce-back 1s ease-in;
   }
-
   @keyframes bounce-back {
     0% {
       transform: translateY(0px);
     }
     50% {
-      transform: translateY(40px); /* 살짝 위로 올렸다가 */
+      transform: translateY(20px); /* 살짝 위로 올렸다가 */
     }
     100% {
       transform: translateY(0px); /* 원래 자리로 돌아오기 */
     }
   }
-
   @media (max-width: 768px) {
     width: 100%;
-    height: 100%;
-    margin-top: 6px;
-    padding: 0 5px;
-    gap: 5px;
+    border-radius:0;
   }
 `;
 const Logo = styled.img`
@@ -141,17 +133,17 @@ const TimeLine = () => {
   // console.log(posts);
 
   return (
-    <BoederWrapper>
-      <PostlistWrapper
-        ref={wrapperRef}
-        className={isBouncing ? "bounce" : ""}
-        onScroll={handleScroll}
-      >
-        {posts.map((post) => (
-          <Post key={post.id} {...post} />
-        ))}
-      </PostlistWrapper>
-    </BoederWrapper>
+<Container>
+        <PostlistWrapper
+          ref={wrapperRef}
+          className={isBouncing ? "bounce" : ""}
+          onScroll={handleScroll}
+        >
+          {posts.map((post) => (
+            <Post key={post.id} {...post} />
+          ))}
+        </PostlistWrapper>
+</Container>
   );
 };
 
