@@ -5,15 +5,15 @@ import { color } from "framer-motion";
 
 const ContentsAll = styled.div`
   @media (max-width: 768px) {
-    position: relative;
+    border: 1px solid red;
+    
   }
 `;
 
 const Wrapper = styled.div`
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
+  position: absolute;
+  top: 20px;
+  right: 20px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -27,18 +27,25 @@ const Wrapper = styled.div`
   z-index: 500;
   @media (max-width: 768px) {
     position: fixed;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px 30px 0 0;
     bottom: 0;
     left: 0;
   }
 `;
 const Contentswrapper = styled.div`
   @media (max-width: 768px) {
+    position: fixed;
+    bottom: 0;
     width: 100%;
-    height: 100%;
+    height: 60%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin-top: 10px;
+    border:  1px solid #f00;
   }
 `;
 const TopRec = styled.div`
@@ -101,7 +108,7 @@ const UpLoadButton = styled.button`
     width: 300px;
     height: 70px;
     background: ${(props) => props.theme.fontcolor};
-    color: #fff;
+    color: ${(props) => props.theme.logoColor};
     font-size: 15px;
     font-weight: bold;
     border-radius: 16px;

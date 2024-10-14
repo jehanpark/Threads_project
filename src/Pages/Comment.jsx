@@ -21,22 +21,35 @@ import Button from "../Components/Common/Button";
 import BackBtn from "../Components/post/BackBtn";
 import Loading from "../Components/LoadingLogo/Loading";
 
+const AllWrap = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const Backarea = styled.div`
-  position: fixed;
-  top: 12%;
-  left: 25%;
+  width: 700px;
 `;
 
 const BoederWrapper = styled.div`
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translate(-50%);
   width: 660px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 전체 높이를 고정 */
+  scrollbar-width: none;
+  max-height: auto; /* 고정된 높이를 주어야 스크롤이 발생함 */
+  overflow-y: auto; /* 스크롤을 활성화 */
+  ::-webkit-scrollbar {
+    display: none;
+  }
   @media (max-width: 768px) {
     position: fixed;
     border-radius: 0;
@@ -117,8 +130,8 @@ const Column = styled.div`
   gap: 10px;
 `;
 const Photo = styled.img`
-  width: 80px;
-  height: 80px;
+  width: 160px;
+  height: 160px;
   object-fit: cover/contain;
   margin-left: 0px;
   border-radius: 8px;
@@ -130,8 +143,8 @@ const Photo = styled.img`
 `;
 const Video = styled.video`
   display: flex;
-  width: 80px;
-  height: 80px;
+  width: 220px;
+  height: 160px;
   border-radius: 15px;
   object-fit: cover;
   @media (max-width: 768px) {
@@ -423,137 +436,147 @@ const Comment = () => {
   };
   return (
     <div>
-      <Backarea><BackBtn /></Backarea>
-      <BoederWrapper>
-        <Wrapper>
-          <PostWrapper>
-            <Header>
-              <UserImage src="http://localhost:5173/profile.png"></UserImage>
-              <Username>{username}</Username>
-              <Timer>{renderTimeAgo()}</Timer>
-            </Header>
-            <Column>
-              <Posted>{postContent}</Posted>
-            </Column>
-
-            <ColumnWrapper>
+      <AllWrap>
+        <Backarea>
+          <BackBtn />
+        </Backarea>
+        <BoederWrapper>
+          <Wrapper>
+            <PostWrapper>
+              <Header>
+                <UserImage src="http://localhost:5173/profile.png"></UserImage>
+                <Username>{username}</Username>
+                <Timer>{renderTimeAgo()}</Timer>
+              </Header>
               <Column>
-                {photos &&
-                  photos.length > 0 &&
-                  photos.map((photoUrl, index) => (
-                    <Photo
-                      key={index}
-                      src={photoUrl}
-                      alt={`Post Image ${index + 1}`}
-                    />
-                  ))}
+                <Posted>{postContent}</Posted>
               </Column>
 
-              <Column>
-                {videos &&
-                  videos.length > 0 &&
-                  videos.map((videoUrl, index) => (
-                    <Video key={index} controls autoPlay loop src={videoUrl} />
-                  ))}
-              </Column>
-            </ColumnWrapper>
+              <ColumnWrapper>
+                <Column>
+                  {photos &&
+                    photos.length > 0 &&
+                    photos.map((photoUrl, index) => (
+                      <Photo
+                        key={index}
+                        src={photoUrl}
+                        alt={`Post Image ${index + 1}`}
+                      />
+                    ))}
+                </Column>
 
-            <Icons>
-              <IconWrapper>
-                <HeartIcon width={14} /> {likes}
-              </IconWrapper>
-              <IconWrapper>
-                <Coment width={14} /> {comments}
-              </IconWrapper>
-              <IconWrapper>
-                <DmIcon width={12} /> {dms}
-              </IconWrapper>
-              <IconWrapper>
-                <RetweetIcon width={14} /> {retweets}
-              </IconWrapper>
-            </Icons>
-          </PostWrapper>
+                <Column>
+                  {videos &&
+                    videos.length > 0 &&
+                    videos.map((videoUrl, index) => (
+                      <Video
+                        key={index}
+                        controls
+                        autoPlay
+                        loop
+                        src={videoUrl}
+                      />
+                    ))}
+                </Column>
+              </ColumnWrapper>
 
-          <Form onSubmit={handleSubmit}>
-            {isLoading ? <Loading /> : null}
-            <TextArea
-              onChange={handlePostChange}
-              value={post}
-              name="contents"
-              id="contents"
-              placeholder="댓글을 작성하세요.."
-              required
-            />
-            <PlusImage>
-              {files.map((file, index) => (
-                <div
-                  key={index}
-                  style={{ position: "relative", margin: "5px" }}
-                >
-                  {file.type.startsWith("image/") ? (
-                    <img
-                      src={URL.createObjectURL(file)}
-                      alt={`Uploaded Preview ${index + 1}`}
-                      style={{
-                        width: "160px",
-                        height: "160px",
-                        borderRadius: "10px",
-                        objectFit: "cover",
-                      }}
-                    />
-                  ) : (
-                    <video
-                      controls
-                      style={{
-                        width: "160px",
-                        height: "160px",
-                        borderRadius: "10px",
-                        objectFit: "cover",
-                      }}
-                    >
-                      <source src={URL.createObjectURL(file)} />
-                    </video>
-                  )}
-                  <DeleteButton onClick={() => removeFile(index)}>
-                    X
-                  </DeleteButton>
-                </div>
-              ))}
-            </PlusImage>
-            <IconsBtnwrapper>
               <Icons>
-                <CameraButton htmlFor="camera">
-                  <CameraIcon width={38} />
-                  <CameraInput
+                <IconWrapper>
+                  <HeartIcon width={14} /> {likes}
+                </IconWrapper>
+                <IconWrapper>
+                  <Coment width={14} /> {comments}
+                </IconWrapper>
+                <IconWrapper>
+                  <DmIcon width={12} /> {dms}
+                </IconWrapper>
+                <IconWrapper>
+                  <RetweetIcon width={14} /> {retweets}
+                </IconWrapper>
+              </Icons>
+            </PostWrapper>
+
+            <Form onSubmit={handleSubmit}>
+              {isLoading ? <Loading /> : null}
+              <TextArea
+                onChange={handlePostChange}
+                value={post}
+                name="contents"
+                id="contents"
+                placeholder="댓글을 작성하세요.."
+                required
+              />
+              <PlusImage>
+                {files.map((file, index) => (
+                  <div
+                    key={index}
+                    style={{ position: "relative", margin: "5px" }}
+                  >
+                    {file.type.startsWith("image/") ? (
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={`Uploaded Preview ${index + 1}`}
+                        style={{
+                          width: "160px",
+                          height: "160px",
+                          borderRadius: "10px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ) : (
+                      <video
+                        controls
+                        style={{
+                          width: "160px",
+                          height: "160px",
+                          borderRadius: "10px",
+                          objectFit: "cover",
+                        }}
+                      >
+                        <source src={URL.createObjectURL(file)} />
+                      </video>
+                    )}
+                    <DeleteButton onClick={() => removeFile(index)}>
+                      X
+                    </DeleteButton>
+                  </div>
+                ))}
+              </PlusImage>
+              <IconsBtnwrapper>
+                <Icons>
+                  <CameraButton htmlFor="camera">
+                    <CameraIcon width={38} />
+                    <CameraInput
+                      onChange={handleFileChange}
+                      id="camera"
+                      type="file"
+                      accept="video/*, image/*"
+                    />
+                  </CameraButton>
+                  <PictureButton htmlFor="picture">
+                    <PictureIcon width={24} />
+                  </PictureButton>
+                  <PictureInput
                     onChange={handleFileChange}
-                    id="camera"
+                    id="picture"
                     type="file"
                     accept="video/*, image/*"
                   />
-                </CameraButton>
-                <PictureButton htmlFor="picture">
-                  <PictureIcon width={24} />
-                </PictureButton>
-                <PictureInput
-                  onChange={handleFileChange}
-                  id="picture"
-                  type="file"
-                  accept="video/*, image/*"
-                />
-                <MicIcon width={24} />
-                <HashtagIcon width={24} />
-              </Icons>
-              <Buttons>
-                <SubmitBtn
-                  text="댓글달기"
-                  type="submit"
-                  value={isLoading ? "댓글다는중..." : "댓글달기"}
-                />
-              </Buttons>
-            </IconsBtnwrapper>
-          </Form>
-        </Wrapper>
-      </BoederWrapper>
+                  <MicIcon width={24} />
+                  <HashtagIcon width={24} />
+                </Icons>
+                <Buttons>
+                  <SubmitBtn
+                    text="댓글달기"
+                    type="submit"
+                    value={isLoading ? "댓글다는중..." : "댓글달기"}
+                  />
+                </Buttons>
+              </IconsBtnwrapper>
+            </Form>
+          </Wrapper>
+        </BoederWrapper>
+      </AllWrap>
     </div>
   );
 };

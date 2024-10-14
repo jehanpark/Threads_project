@@ -30,7 +30,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
 
 import { formatDistanceToNow } from "date-fns";
-import PostSetModal from "./Common/PostSetModal";
+import PostSetModal from "./post/PostSetModal";
 
 const Wrapper = styled.div`
   position: relative;
@@ -42,6 +42,7 @@ const Wrapper = styled.div`
   padding: 20px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
+    position: "";
     width: 100%;
     height: auto;
   }

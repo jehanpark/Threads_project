@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 const Home = () => {
   return (
     <Wrapper>
-      <EtcModal/>
+      {/* <EtcModal/> */}
       <TimeLine />
     </Wrapper>
   );
