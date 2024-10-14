@@ -205,6 +205,12 @@ const ToggleBackground = styled(motion.div)`
   width: 100%;
   height: 100%;
 
+  /* border: 2px solid ${(props) => props.theme.themeIconBorder};
+
+  background-color: ${(props) => props.theme.mouseHoverBg};
+  border-radius: 12px;
+  box-shadow: ${(props) => props.theme.bordershadow}; */
+
   border: 2px solid ${(props) => props.theme.themeIconBackground};
 
   background-color: ${(props) => props.theme.mouseHoverBg};
