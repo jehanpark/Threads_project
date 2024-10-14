@@ -121,13 +121,14 @@ const Checkinner = styled.div`
 `;
 
 const Switch = styled(motion.label)`
-  width: 44px;
-  height: 28px;
+  width: 46px;
+  height: 30px;
   background-color: ${(props) => props.theme.mouseHoverBg};
   display: flex;
   justify-content: flex-start;
   border-radius: 50px;
   padding: 3px;
+  border: 2px solid ${(props) => props.theme.borderstroke};
   cursor: pointer;
   &[data-isOn="true"] {
     justify-content: flex-end;
@@ -136,8 +137,8 @@ const Switch = styled(motion.label)`
 `;
 
 const Handle = styled(motion.div)`
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   background-color: ${(props) => props.theme.btnBgColor};
   border-radius: 40px;
 `;
@@ -164,6 +165,14 @@ const Img = styled.img`
 
 const ImgInput = styled.input`
   display: none;
+`;
+
+const ButtonWrap = styled.div`
+  button {
+    color: ${(props) => props.theme.fontcolor};
+    background-color: ${(props) => props.theme.borderColor};
+    border: 2px solid ${(props) => props.theme.borderstroke};
+  }
 `;
 
 const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
@@ -298,6 +307,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
     damping: 30,
   };
   if (!open) return null;
+  console.log(avatar);
   return (
     <>
       <ModalOverlay onClick={close}>
@@ -313,10 +323,10 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
               />
             </Left>
             <ImgBox htmlFor="profileImg">
-              {avatar !== null ? (
-                <Img src={avatar} />
-              ) : (
+              {avatar == null || avatar == "" ? (
                 <UserIcon2 width="54" fill="#BABABA" />
+              ) : (
+                <Img src={avatar} />
               )}
             </ImgBox>
             <ImgInput
@@ -386,13 +396,15 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
               /> */}
             </Checkinner>
           </Box>
-          <Button
-            text={"완료"}
-            width={"100%"}
-            heith={"40px"}
-            type="edit"
-            onClick={complete}
-          />
+          <ButtonWrap>
+            <Button
+              text={"완료"}
+              width={"100%"}
+              heith={"40px"}
+              type="edit"
+              onClick={complete}
+            />
+          </ButtonWrap>
           <Box className="mobile" onClick={close}>
             모달 닫기
           </Box>

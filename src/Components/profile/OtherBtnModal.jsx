@@ -103,6 +103,7 @@ const P = styled.p`
 `;
 
 const OtherBtnModal = ({ open, close, profile }) => {
+  console.log(profile);
   if (!open) return null;
   return (
     <>
@@ -111,10 +112,10 @@ const OtherBtnModal = ({ open, close, profile }) => {
           <CloseButton onClick={close}>X</CloseButton>
           <Wrapper>
             <ImgBox htmlFor="profileImg">
-              {profile.img !== null || profile.img === "" ? (
-                <Img src={profile.img} />
-              ) : (
+              {profile.img == null || profile.img == "" ? (
                 <UserIcon2 width="60" fill="#BABABA" />
+              ) : (
+                <Img src={profile.img} />
               )}
             </ImgBox>
             <Box>
