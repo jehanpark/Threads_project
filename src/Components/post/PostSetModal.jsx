@@ -2,6 +2,7 @@ import React from "react";
 import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
 import { color } from "framer-motion";
+import EditModal from "../EditModal";
 
 const ContentsAll = styled.div`
   @media (max-width: 768px) {
@@ -114,16 +115,16 @@ const UpLoadButton = styled.button`
   }
 `;
 
-const PostSetModal = () => {
+const PostSetModal = ({ onEdit, onRepost, onDelete }) => {
   return (
     <ContentsAll>
       <Wrapper>
         <Contentswrapper>
           <TopRec></TopRec>
           <Optionwrapper>
-            <Li>수정</Li>
-            <Li>리포스트</Li>
-            <Li>삭제</Li>
+            <Li onClick={onEdit}>수정</Li>
+            <Li onClick={onRepost}>리포스트</Li>
+            <Li onClick={onDelete}>삭제</Li>
           </Optionwrapper>
           <UpLoadButton>게시글 업로드</UpLoadButton>
         </Contentswrapper>
