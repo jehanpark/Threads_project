@@ -261,7 +261,6 @@ const Post = ({
   const [retweets, setRetweets] = useState(2);
   const [isRetweets, setIsRetweets] = useState(false);
   const [openModalId, setOpenModalId] = useState(null);
-
   const navigate = useNavigate();
 
   // const user = auth.currentUser;
@@ -375,7 +374,6 @@ const Post = ({
       setEditedPhoto(files[0]);
     }
   };
-
   const onDelete = async () => {
     if (confirm("정말 이 글을 삭제하시겠습니까?") && user?.uid === userId) {
       try {

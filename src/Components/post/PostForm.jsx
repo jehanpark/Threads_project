@@ -34,7 +34,7 @@ const BoederWrapper = styled.div`
   margin: 0 auto;
   width: 660px;
   height: 85%;
-  border-radius: 40px 40px 0px 0px;
+
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
   @media (max-width: 768px) {

@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { db } from "../firebase";
 import {
   HeartIcon,
   DmIcon,
@@ -12,6 +11,7 @@ import {
   Coment,
 } from "../Components/Common/Icon";
 import BackBtn from "../Components/post/BackBtn";
+import { db } from "../firebase";
 
 const AllWrap = styled.div`
   width: 100%;
@@ -24,7 +24,6 @@ const AllWrap = styled.div`
 const Backarea = styled.div`
   width: 700px;
 `;
-
 const BoederWrapper = styled.div`
   position: fixed;
   bottom: 0;
@@ -153,11 +152,13 @@ const IconWrapper = styled.div`
   align-items: center;
   gap: 6px;
 `;
+
 const ScrollWrapper = styled.div``;
 const ComentList = styled.div`
   width: 100%;
   height: auto;
 `;
+
 const CommentWrapper = styled.div`
   width: 100%;
   height: auto;
@@ -348,7 +349,7 @@ const PostComment = ({ id }) => {
                 <HeartIcon width={20} /> {likes}
               </IconWrapper>
               <IconWrapper onClick={handleCommentClick}>
-                <Coment width={20} /> {comments.length}
+                <Coment width={20} /> {commentsCount}
               </IconWrapper>
               <IconWrapper>
                 <DmIcon width={18} /> {dms}
@@ -360,15 +361,13 @@ const PostComment = ({ id }) => {
           </PostWrapper>
 
           <div>
-            {loading ? (
-              <NotComment>로딩 중...</NotComment> // 로딩 상태 표시
-            ) : comments.length > 0 ? (
+            {comments.length > 0 ? (
               comments.map((comment) => (
                 <ScrollWrapper>
-                  <ComentList>
+                  <commentsList>
                     <CommentWrapper key={comment.id}>
                       <CommentHeader>
-                        <CommentUserImage src="http://localhost:5173/profile.png"></CommentUserImage>
+                        <UserImage src="http://localhost:5173/profile.png"></UserImage>
                         <CommentUsername>{comment.username}</CommentUsername>
                         <CommentTimer>
                           {formatDistanceToNow(
@@ -402,12 +401,18 @@ const PostComment = ({ id }) => {
                       {comment.videoUrls && comment.videoUrls.length > 0 && (
                         <div>
                           {comment.videoUrls.map((videoUrl, index) => (
-                            <CommentVideo key={index} controls src={videoUrl} />
+                            <CommentVideo
+                              key={index}
+                              controls
+                              autoPlay
+                              loop
+                              src={videoUrl}
+                            />
                           ))}
                         </div>
                       )}
                     </CommentWrapper>
-                  </ComentList>
+                  </commentsList>
                 </ScrollWrapper>
               ))
             ) : (

@@ -1,12 +1,12 @@
 import {
   collection,
-  limit,
+  query,
+  where,
   onSnapshot,
   orderBy,
-  query,
+  limit,
 } from "firebase/firestore";
 import { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
 import { db } from "../../firebase";
 import Post from "../Post";
 import { Thread100Icon } from "../Common/Icon";
@@ -85,52 +85,84 @@ const TimeLine = () => {
 
   useEffect(() => {
     let unsubscribe = null;
+
     const fetchPosts = async () => {
-      const postsQuery = query(
+      let postsQuery = query(
         collection(db, "contents"),
         orderBy("createdAt", "desc"),
         limit(25)
       );
-      unsubscribe = onSnapshot(postsQuery, (snapshot) => {
-        const posts = snapshot.docs.map((doc) => {
-          const { createdAt, photos, videos, post, userId, username, email } =
-            doc.data();
 
-          return {
-            id: doc.id,
-            createdAt,
-            photos: photos || [],
-            videos: videos || [],
-            post,
-            userId,
-            username,
-            email,
-          };
-        });
-        setPosts(posts);
+      // 실시간 데이터 구독 설정
+      unsubscribe = onSnapshot(postsQuery, (snapshot) => {
+        const livePosts = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        let filteredPosts = livePosts;
+
+        // 검색어 필터링
+        if (searchTerm && searchTerm.trim() !== "") {
+          const searchLower = searchTerm.toLowerCase();
+          filteredPosts = livePosts.filter((item) => {
+            const usernameMatch =
+              item.username &&
+              item.username.toLowerCase().includes(searchLower);
+            const emailMatch =
+              item.email && item.email.toLowerCase().includes(searchLower);
+            const userInfoMatch =
+              item.userInfo &&
+              item.userInfo.toLowerCase().includes(searchLower);
+            const postMatch =
+              item.post && item.post.toLowerCase().includes(searchLower);
+
+            return usernameMatch || emailMatch || userInfoMatch || postMatch;
+          });
+        }
+
+        //  필터링
+        if (contentType === "picture") {
+          filteredPosts = filteredPosts.filter(
+            (post) => post.photos && post.photos.length > 0
+          );
+        } else if (contentType === "video") {
+          filteredPosts = filteredPosts.filter(
+            (post) => post.videos && post.videos.length > 0
+          );
+        } else if (contentType === "both") {
+          filteredPosts = filteredPosts.filter(
+            (post) =>
+              post.photos &&
+              post.photos.length > 0 &&
+              post.videos &&
+              post.videos.length > 0
+          );
+        }
+
+        setPosts(filteredPosts);
+
+        // 데이터가 없을 때 처리
+        if (onDataEmpty) onDataEmpty(filteredPosts.length === 0);
       });
     };
+
     fetchPosts();
+
     return () => {
-      unsubscribe && unsubscribe();
+      if (unsubscribe) unsubscribe();
     };
-  }, []);
+  }, [searchTerm, contentType]);
 
   const handleScroll = () => {
     const element = wrapperRef.current;
-    // 스크롤이 가장 위에 도달했는지 확인
     if (element.scrollTop === 0) {
-      // 텐션감을 위한 애니메이션 트리거
       setIsBouncing(true);
-
-      // 0.5초 후에 애니메이션 클래스 제거
       setTimeout(() => {
         setIsBouncing(false);
       }, 500);
     }
   };
-
-  // console.log(posts);
 
   return (
 <Container>

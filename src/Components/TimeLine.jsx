@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { db } from "../firebase";
 import Post from "./Post";
 import { Thread100Icon } from "./Common/Icon";
+import styled from "styled-components";
 
 const BoederWrapper = styled.div`
   position: fixed;
@@ -17,10 +18,10 @@ const BoederWrapper = styled.div`
   left: 50%;
   transform: translate(-50%);
   margin: 0 auto;
-  width: 680px;
+  width: 660px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
+  background: ${(props) => props.theme.logoColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   overflow: hidden;
   @media (max-width: 768px) {
