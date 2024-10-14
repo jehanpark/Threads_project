@@ -12,8 +12,7 @@ import {
   Coment,
 } from "../Components/Common/Icon";
 import BackBtn from "../Components/post/BackBtn";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { db } from "../firebase";
+
 
 const Backarea = styled.div`
   position: fixed;
