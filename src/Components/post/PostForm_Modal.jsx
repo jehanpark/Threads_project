@@ -1,7 +1,6 @@
 import React from "react";
-import GlobalStyles from "../styles/GlobalStyles.styles";
+import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
-import { color } from "framer-motion";
 
 const Wrapper = styled.div`
   position: absolute;
@@ -18,7 +17,6 @@ const Wrapper = styled.div`
   background: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   transition: all 0.3s;
-  z-index: 500;
   @media (max-width: 768px) {
     position: absolute;
     bottom: 0;
@@ -48,7 +46,14 @@ const TopRec = styled.div`
     border-radius: 16px;
   }
 `;
-
+const Title = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    font-weight: 500;
+    color: #737373;
+    margin: 32px 0;
+  }
+`;
 const Optionwrapper = styled.div`
   padding: 10px;
   width: auto;
@@ -68,16 +73,10 @@ const Li = styled.div`
   text-align: center;
   transition: all 0.3s;
   border-radius: 20px;
+  color: ${(props) => props.theme.fontcolor};
   &:hover {
     background: ${(props) => props.theme.mouseHoverBg};
     color: ${(props) => props.theme.mouseHoverFontcolor};
-  }
-  &:nth-child(1) {
-  }
-  &:nth-child(2) {
-  }
-  &:nth-child(3) {
-    color: #ff3040;
   }
   @media (max-width: 768px) {
     width: 90%;
@@ -85,7 +84,6 @@ const Li = styled.div`
     text-align: center;
     font-weight: bold;
     border-radius: 16px;
-    color: ${(props) => props.theme.fontcolor};
     transition: all 0.3s;
   }
 `;
@@ -96,11 +94,10 @@ const UpLoadButton = styled.button`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 40px;
     width: 300px;
     height: 70px;
     background: ${(props) => props.theme.fontcolor};
-    color: #fff;
+    color: ${(props) => props.theme.btnBgColor};
     font-size: 15px;
     font-weight: bold;
     border-radius: 16px;
@@ -113,18 +110,22 @@ const UpLoadButton = styled.button`
   }
 `;
 
-const PostSetModal = () => {
+const PostForm_Modal = (centerChild, Button) => {
   return (
-    <Contentswrapper>
-      <TopRec></TopRec>
-      <Optionwrapper>
-        <Li>수정</Li>
-        <Li>리포스트</Li>
-        <Li>삭제</Li>
-      </Optionwrapper>
-      <UpLoadButton>게시글 업로드</UpLoadButton>
-    </Contentswrapper>
+    <Wrapper>
+      <Contentswrapper>
+        <TopRec></TopRec>
+        <Title>새로운 스레드를 원하는 사람들에게 공개하세요</Title>
+        <Optionwrapper>
+          <Li>모두에게 공개</Li>
+          <Li>내 팔로워만</Li>
+          <Li>내가 언급한 사람만</Li>
+          <Li>나만 보기</Li>
+        </Optionwrapper>
+        <UpLoadButton>게시글 업로드</UpLoadButton>
+      </Contentswrapper>
+    </Wrapper>
   );
 };
 
-export default PostSetModal;
+export default PostForm_Modal;

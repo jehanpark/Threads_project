@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
+import FollowerItem from "../Search/FollowerItem";
 
 const ModalOverlay = styled.div`
   position: fixed;

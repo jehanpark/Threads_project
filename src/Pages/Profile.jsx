@@ -1,73 +1,127 @@
-import React, { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import {
   ThreadDispatchContext,
   ThreadDataContext,
 } from "../Contexts/ThreadContext";
-import { auth, storage, db } from "../firebase";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { auth, db } from "../firebase";
 import {
   collection,
-  doc,
   onSnapshot,
-  getDocs,
   limit,
   orderBy,
   query,
   where,
 } from "firebase/firestore";
-import { motion, AnimatePresence } from "framer-motion";
 import styled from "styled-components";
-import { useMediaQuery } from "react-responsive";
 import Button from "../Components/Common/Button";
-import Modal from "../Components/Common/Modal";
 import Post from "../Components/Post";
 import {
-  InstaIcon,
   PlusIcon,
+  InstaIcon,
   FacebookIcon,
   UserIcon2,
 } from "../Components/Common/Icon";
-import {
-  ProfileInnner,
-  IdWrap,
-  IdText,
-  Tap,
-  TextInput,
-  Desk,
-} from "../styles/MobileProfile";
 import FollowModal from "../Components/profile/FollowModal";
 import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
-import TimeLine from "../Components/TimeLine";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
 
-import { useAuth } from "../Contexts/AuthContext";
-
 const BoederWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
   margin: 0 auto;
   width: 680px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
-  /* background: ${(props) => props.theme.borderWrapper}; */
   background: ${(props) => props.theme.headerBg};
   box-shadow: ${(props) => props.theme.bordershadow};
-  padding: 10px 0;
+  /* overflow: hidden; */
   @media (max-width: 768px) {
-    border-radius: 0;
+    position: static;
+    margin: 0;
     width: 100vw;
     height: calc(100% - 140px);
     box-shadow: none;
-    margin: 0px;
     border-radius: 0px;
-    background: ${(props) => props.theme.headerBg};
+    background: ${(props) => props.theme.borderColor};
+    transform: translate(0%);
   }
 `;
 
+const ProfileInnner = styled.div`
+  padding: 40px 40px 20px 40px;
+  width: calc(100% - 20px);
+  height: 306px;
+  border: 306px;
+  border-radius: 40px 40px 18px 18px;
+  background: ${(props) => props.theme.headerBg};
+  margin: 0 10px 8px;
+  @media (max-width: 768px) {
+    padding: 14px 18px;
+    width: calc(100% - 10px);
+    height: 260px;
+    border: none;
+    border-radius: 30px 30px 10px 10px;
+    background: ${(props) => props.theme.borderColor};
+    margin: 70px auto 0px;
+  }
+`;
+
+const PostlistWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  width: 100%;
+  padding: 10px 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+    margin-top: 6px;
+    padding: 0 5px;
+    gap: 5px;
+  }
+`;
 const ProfileWrap = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
+`;
+
+const Desk = styled.div`
+  height: 84px;
+  font-size: 18px;
+  color: ${(props) => props.theme.fontcolor};
+  word-break: break-all;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+`;
+
+const IdWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  @media (max-width: 768px) {
+    gap: 4px;
+  }
+`;
+
+const IdText = styled.h3`
+  font-size: 15px;
+  font-weight: 400;
+  color: ${(props) => props.theme.nomalIconColor};
 `;
 
 const ImgWrap = styled.div`
@@ -92,10 +146,17 @@ const Nick = styled.h1`
 
 const BottomWrap = styled.div`
   width: 100%;
-  height: calc(100% - 80px);
+  height: 85%;
   display: flex;
   flex-direction: column;
   gap: 25px;
+  button {
+    padding: 10px;
+    border-radius: 10px;
+    color: ${(props) => props.theme.fontcolor};
+    background-color: ${(props) => props.theme.headerBg};
+    border: 2px solid ${(props) => props.theme.borderstroke};
+  }
   @media screen and (max-width: 768px) {
     gap: 8px;
   }
@@ -108,7 +169,7 @@ const FollowLink = styled.div`
 
 const Follow = styled.div`
   font-size: 14px;
-  color: ${(props) => props.theme.nomalIconColor};
+  color: ${(props) => props.theme.searchBar};
   cursor: pointer;
   &:hover {
     text-decoration: underline;
@@ -149,6 +210,7 @@ const PulsLinkIcon = styled.div`
 
 const ThreadInner = styled.div`
   width: 100%;
+  height: 100%;
 `;
 
 const ButtonGroup = styled.div`
@@ -156,13 +218,12 @@ const ButtonGroup = styled.div`
   justify-content: space-evenly;
   align-items: center;
   gap: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 6px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+
   @media (max-width: 768px) {
     gap: 10px;
-    margin-bottom: 20px;
-  }
-  @media (max-width: 480px) {
+    margin-bottom: 0px;
   }
   button {
     flex: 0 0 auto;
@@ -172,9 +233,11 @@ const ButtonGroup = styled.div`
     font-weight: bold;
     cursor: pointer;
     transition: all;
+
     @media (max-width: 768px) {
       width: 90px;
       padding: 8px 15px;
+      background-color: ${(props) => props.theme.borderColor};
     }
     @media (max-width: 480px) {
       width: 80px;
@@ -186,45 +249,58 @@ const ButtonGroup = styled.div`
 const PostWrap = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 10px;
+  height: calc(100% - 80px);
+  padding: 10px 0px 260px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  transition: transform 0.3s ease-out;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  &.bounce {
+    animation: bounce-back 1s ease-in-out;
+  }
+
+  @keyframes bounce-back {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(40px); /* 살짝 위로 올렸다가 */
+    }
+    100% {
+      transform: translateY(0px); /* 원래 자리로 돌아오기 */
+    }
+  }
+`;
+
+const ButtonStyle = styled.button`
+  background-color: ${(props) => props.theme.headerBg};
 `;
 
 const Profile = () => {
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
   const navigate = useNavigate();
   const user = auth.currentUser; //유저정보
 
   const [avatar, setAvarta] = useState(null || undefined); //이미지관리목적
   const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
   const [editbtn, setEditbtn] = useState(true);
-  // searchParams = email 받아오기
   const [searchParams] = useSearchParams();
   const emailAdress = searchParams.get("email");
-  //console.log(emailAdress);
 
-  const data = useContext(ThreadDataContext);
-  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
-  useEffect(() => {
-    if (!currentUser) {
-      const confirmLogin = window.confirm("로그인 하시겠습니까?");
-      if (confirmLogin) {
-        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
-      } else {
-        navigate("/");
-      }
-    }
-  }, [currentUser, navigate]);
-
-  const { createThread, updateThread, deleteThread, updateProfile } =
-    useContext(ThreadDispatchContext);
-  const [lastemail, setLastEmail] = useState("");
+  // const data = useContext(ThreadDataContext);
+  // const { createThread, updateThread, deleteThread, updateProfile } =
+  //   useContext(ThreadDispatchContext);
   //모달관련 state
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
   const [otherBtn, setOtherBtn] = useState(false);
+  const [followNum, setFollowNum] = useState(Math.floor(Math.random() * 10));
   const [profile, setProfile] = useState({
     postId: "",
     username: "",
@@ -234,12 +310,15 @@ const Profile = () => {
     isLinkPublic: true,
     isProfilePublic: true,
     img: `${avatar ?? ""}`,
+    isFollowing: true,
+    followNum: followNum,
   });
 
   const [savedData, setSavedData] = useState([]); // 모든 데이터를 저장
   const [filteredData, setFilteredData] = useState([]); // 필터링된 데이터를 저장
-  const [contentType, setContentType] = useState("all"); // 선택된 필터 상태
+  const [contentType, setContentType] = useState("thresds"); // 선택된 필터 상태
   // NotificationList에서 데이터를 받아옴
+  const [isBouncing, setIsBouncing] = useState(false);
   const handleDataUpdate = (listData) => {
     if (listData.length > 0) {
       setSavedData(listData); // 전체 데이터를 저장
@@ -256,6 +335,7 @@ const Profile = () => {
   };
 
   const CheckProfile = async () => {
+    console.log("프로필 체크 가동");
     try {
       const profileQuery = query(
         collection(db, "profile"),
@@ -281,14 +361,12 @@ const Profile = () => {
               isLinkPublic: profileDoc.isLinkPublic,
               isProfilePublic: profileDoc.isProfilePublic,
               img: imgUrl,
+              isFollowing: profileDoc.isFollowing,
+              followNum: profileDoc.followNum,
             }));
-            console.log(profile);
-            console.log("있다");
           }
         } else {
           // 사람이 없다면?
-          console.log("음따");
-          console.log(profile);
           setProfile((prev) => ({
             ...prev,
             postId: "",
@@ -298,7 +376,12 @@ const Profile = () => {
             isLinkPublic: true,
             isProfilePublic: true,
             img: null,
+            isFollowing: true,
+            followNum: profile.followNum,
           }));
+          console.log("유저가 없을 때 읽기 가동 완료");
+          console.log(profile);
+          console.log("유저 없을 때 프로필 체크");
         }
       });
       return () => unsubscribe();
@@ -308,10 +391,9 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    fetchPosts();
     CheckProfile();
     buttonCheck();
-  }, []);
+  }, [emailAdress]);
 
   const onfollow = () => {
     setFollowModal((prev) => !prev);
@@ -332,66 +414,126 @@ const Profile = () => {
     setOtherBtn((prev) => !prev);
     //프로필수정모달
   };
-  const fetchPosts = async () => {
-    //하단에 띄울 쓰레드 탭에 쓰래드 state 관리 함수
-    const postQuery = query(
-      collection(db, "contents"),
-      where("email", "==", emailAdress), //파람즈 값으로 변경하자
-      orderBy("createdAt", "desc"),
-      limit(15)
-    );
-    const snapShot = await getDocs(postQuery); //필터된 포스터 가져옴
-    const post = snapShot.docs.map((doc) => {
-      const { createdAt, email, photos, post, userId, username, videos } =
-        doc.data();
-      return {
-        createdAt,
-        email,
-        photos,
-        post,
-        userId,
-        username,
-        videos,
-      };
-    });
-    setPosts(post);
-  };
+
+  useEffect(() => {
+    let unsubscribe = null;
+    const fetchPosts = async () => {
+      const postsQuery = query(
+        collection(db, "contents"),
+        where("email", "==", emailAdress),
+        orderBy("createdAt", "desc"),
+        limit(15)
+      );
+      unsubscribe = onSnapshot(postsQuery, (snapshot) => {
+        const posts = snapshot.docs.map((doc) => {
+          const { createdAt, photos, videos, post, userId, username, email } =
+            doc.data();
+          return {
+            id: doc.id,
+            createdAt,
+            photos: photos || [],
+            videos: videos || [],
+            post,
+            userId,
+            username,
+            email,
+          };
+        });
+        setPosts(posts);
+      });
+    };
+    fetchPosts();
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    let unsubscribe = null;
+    const fetchPosts = async () => {
+      const postsQuery = query(
+        collection(db, "contents"),
+        where("email", "==", emailAdress),
+        orderBy("createdAt", "desc"),
+        limit(15)
+      );
+      unsubscribe = onSnapshot(postsQuery, (snapshot) => {
+        const posts = snapshot.docs.map((doc) => {
+          const { createdAt, photos, videos, post, userId, username, email } =
+            doc.data();
+          return {
+            id: doc.id,
+            createdAt,
+            photos: photos || [],
+            videos: videos || [],
+            post,
+            userId,
+            username,
+            email,
+          };
+        });
+        setPosts(posts);
+      });
+    };
+    fetchPosts();
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, []);
 
   const handleProfileChange = (updatedProfile) => {
-    console.log("확인");
-    console.log(profile);
     setProfile(updatedProfile);
   };
 
   // 필터링
   const filterList = (type) => {
     if (type === "thresds") {
-      setFilteredData(savedData);
-    } else {
-      const filtered = savedData.filter((item) => item.type === type); // 타입에 따른 필터링
-      setFilteredData(filtered);
+      setFilteredData(posts);
+    } else if (type === "photos") {
+      const filteredPhotos = posts.filter((data) => data.photos.length > 0);
+      setFilteredData(filteredPhotos);
+    } else if (type === "videos") {
+      const filteredVideos = posts.filter((data) => data.videos.length > 0);
+      setFilteredData(filteredVideos);
     }
   };
+
   // 버튼 클릭 시 필터링 적용
   const handleButtonClick = (type) => {
     setContentType(type); // 필터 상태 업데이트
     filterList(type); // 필터링 적용
   };
 
+  const handleScroll = () => {
+    const element = wrapperRef.current;
+    // 스크롤이 가장 위에 도달했는지 확인
+    if (element.scrollTop === 0) {
+      // 텐션감을 위한 애니메이션 트리거
+      setIsBouncing(true);
+
+      // 0.5초 후에 애니메이션 클래스 제거
+      setTimeout(() => {
+        setIsBouncing(false);
+      }, 500);
+    }
+  };
+
+  const wrapperRef = useRef(null);
+
   const getButtonStyle = (type) => ({
-    background: "#fff",
     color: contentType === type ? "#000" : "rgba(204, 204, 204, 0.8)",
     borderBottom: contentType === type ? "1.5px solid #000" : "none",
   });
+
   const buttons = [
     { label: "스레드", type: "thresds" },
     { label: "답글", type: "comment" },
-    { label: "사진", type: "photo" },
-    { label: "동영상", type: "media" },
+    { label: "사진", type: "photos" },
+    { label: "동영상", type: "videos" },
   ];
-  console.log(profile);
+
   return (
-    <BoederWrapper>
+    <>
       {followModal ? (
         <FollowModal open={true} close={onfollow} />
       ) : (
@@ -407,89 +549,106 @@ const Profile = () => {
           open={true}
           close={onProfileEdite}
           profile={profile}
-          onProfileChange={handleProfileChange}
+          onProfileChange={() => handleProfileChange}
         />
       ) : (
         <ProfileEdit
           open={false}
           close={onProfileEdite}
           profile={profile}
-          onProfileChange={handleProfileChange}
+          onProfileChange={() => handleProfileChange}
         />
       )}
       {otherBtn ? (
-        <OtherBtnModal open={true} close={onOtherbtn} profile={profile} />
+        <OtherBtnModal
+          open={true}
+          close={onOtherbtn}
+          profile={profile}
+          onProfileChange={() => handleProfileChange}
+        />
       ) : (
-        <OtherBtnModal open={false} close={onOtherbtn} profile={profile} />
+        <OtherBtnModal
+          open={false}
+          close={onOtherbtn}
+          profile={profile}
+          onProfileChange={() => handleProfileChange}
+        />
       )}
-      <>
-        <ProfileInnner isSmallScreen={isSmallScreen}>
-          <ProfileWrap>
-            <IdWrap isSmallScreen={isSmallScreen}>
-              <Nick> {profile.username}</Nick>
-              <IdText isSmallScreen={isSmallScreen}>{emailAdress}</IdText>
-            </IdWrap>
-            <ImgWrap isSmallScreen={isSmallScreen}>
-              {Boolean(avatar) ? (
-                <Img src={avatar} />
-              ) : (
-                <UserIcon2 width="54" fill="#BABABA" />
-              )}
-            </ImgWrap>
-          </ProfileWrap>
-          <BottomWrap>
-            <Desk isSmallScreen={isSmallScreen}>
-              {profile.bio ?? "프로필을 꾸며보세요!"}
-            </Desk>
-            <FollowLink>
-              <Follow onClick={onfollow}>팔로워 1234</Follow>
-              {profile.isLinkPublic ? (
-                <Links>
-                  {user?.email === emailAdress ? (
-                    <LinkPlus onClick={onLinkPlus}>
-                      <PlusIcon width="16px" />
-                    </LinkPlus>
-                  ) : null}
+      <BoederWrapper>
+        <PostlistWrapper>
+          <ProfileInnner>
+            <ProfileWrap>
+              <IdWrap>
+                <Nick> {profile.username}</Nick>
+                <IdText>{emailAdress}</IdText>
+              </IdWrap>
+              <ImgWrap>
+                {Boolean(avatar) ? (
+                  <Img src={avatar} />
+                ) : (
+                  <UserIcon2 width="54" fill="#BABABA" />
+                )}
+              </ImgWrap>
+            </ProfileWrap>
+            <BottomWrap>
+              <Desk>{profile.bio ?? "프로필을 꾸며보세요!"}</Desk>
+              <FollowLink>
+                <Follow onClick={onfollow}>팔로워 {profile.followNum}</Follow>
+                {profile.isLinkPublic ? (
+                  <Links>
+                    {user?.email === emailAdress ? (
+                      <LinkPlus onClick={onLinkPlus}>
+                        <PlusIcon width="16px" />
+                      </LinkPlus>
+                    ) : null}
 
-                  <PulsLinkIcon>
-                    <InstaIcon />
-                    <FacebookIcon />
-                  </PulsLinkIcon>
-                </Links>
-              ) : null}
-            </FollowLink>
-            {user?.email === emailAdress ? (
-              <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
-            ) : (
-              <Button type="edit" text="팔로잉" onClick={onOtherbtn} />
-            )}
-          </BottomWrap>
-        </ProfileInnner>
-        <ThreadInner>
-          <ButtonGroup>
-            {buttons.map((button) => (
-              <button
-                key={button.type}
-                style={getButtonStyle(button.type)}
-                onClick={() => handleButtonClick(button.type)}
-              >
-                {button.label}
-              </button>
-            ))}
-          </ButtonGroup>
-          <PostWrap>
-            {posts.map((post, index) => (
-              <Post key={index} {...post} />
-            ))}
-          </PostWrap>
-        </ThreadInner>
-      </>
-    </BoederWrapper>
+                    <PulsLinkIcon>
+                      <InstaIcon />
+                      <FacebookIcon />
+                    </PulsLinkIcon>
+                  </Links>
+                ) : null}
+              </FollowLink>
+              {user?.email === emailAdress ? (
+                <Button
+                  type="edit"
+                  text="프로필 수정"
+                  onClick={onProfileEdite}
+                  heith={"40px"}
+                />
+              ) : (
+                <Button type="edit" text="팔로잉" onClick={onOtherbtn} />
+              )}
+            </BottomWrap>
+          </ProfileInnner>
+          <ThreadInner>
+            <ButtonGroup>
+              {buttons.map((button) => (
+                <ButtonStyle
+                  key={button.type}
+                  style={getButtonStyle(button.type)}
+                  onClick={() => handleButtonClick(button.type)}
+                >
+                  {button.label}
+                </ButtonStyle>
+              ))}
+            </ButtonGroup>
+            <PostWrap
+              ref={wrapperRef}
+              className={isBouncing ? "bounce" : ""}
+              onScroll={handleScroll}
+            >
+              {contentType === "thresds"
+                ? posts.map((post) => <Post key={post.id} {...post} />)
+                : filteredData.map((filter) => (
+                    <Post key={filter.id} {...filter} />
+                  ))}
+            </PostWrap>
+          </ThreadInner>
+        </PostlistWrapper>
+      </BoederWrapper>
+    </>
   );
 };
 
 export default Profile;
-
-{
-  /* <Nick> {profile.username ?? user.uid ?? emailAdress}</Nick> */
-}

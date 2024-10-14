@@ -7,25 +7,31 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import { auth, db, storage } from "../firebase";
+import { auth, db, storage } from "../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import Button from "../Common/Button";
+import GlobalStyles from "../../styles/GlobalStyles.styles";
+import Border from "../Common/Border_de";
 import { useNavigate } from "react-router-dom";
+
 import {
   CameraIcon,
   PictureIcon,
   MicIcon,
   HashtagIcon,
   RecoderIcon,
-} from "../Components/Common/Icon";
-import { useAuth } from "../Contexts/AuthContext";
-import Loading from "./Loading";
+} from "../Common/Icon";
+import Modal from "../Common/Modal";
+import PostForm_Modal from "./PostForm_Modal";
+import Loading from "../LoadingLogo/Loading";
+import { useAuth } from "../../Contexts/AuthContext";
 
 // Styled Components
+
 const Wrapper = styled.div`
   width: 100%;
   height: calc(100vh - 120px);
 `;
-
 const BoederWrapper = styled.div`
   position: fixed;
   bottom: 0;
@@ -34,7 +40,7 @@ const BoederWrapper = styled.div`
   margin: 0 auto;
   width: 680px;
   height: 85%;
-  border-radius: 40px 40px 0px 0px;
+
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
   @media (max-width: 768px) {
@@ -123,7 +129,6 @@ const CameraButton = styled.label`
   cursor: pointer;
   fill: none;
 `;
-
 const CameraInput = styled.input`
   display: none;
 `;
@@ -131,7 +136,6 @@ const CameraInput = styled.input`
 const PictureButton = styled.label`
   cursor: pointer;
 `;
-
 const PictureInput = styled.input`
   display: none;
 `;
@@ -159,7 +163,6 @@ const DeleteButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
 `;
-
 const OpenButton = styled.button`
   width: 300px;
   height: 80px;
@@ -178,7 +181,6 @@ const OpenButton = styled.button`
     display: none;
   }
 `;
-
 const SubmitBtn = styled.input`
   width: 300px;
   height: 80px;
@@ -206,20 +208,21 @@ const IconBtn = styled.button`
 
 const PostForm = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [post, setPost] = useState(""); // 게시글 상태
-  const [files, setFiles] = useState([]); // 파일 상태
+  const [post, setPost] = useState("");
+  const [files, setFiles] = useState([]);
+
   const [audioBlob, setAudioBlob] = useState(null); // 녹음 파일 상태
   const [isRecording, setIsRecording] = useState(false); // 녹음 중 상태
   const mediaRecorderRef = useRef(null); // MediaRecorder 참조
-  const { currentUser } = useAuth();
-  const navigate = useNavigate();
   const [audioURL, setAudioURL] = useState(null); // 녹음 파일 미리보기 URL 상태
 
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const navigate = useNavigate();
   useEffect(() => {
     if (!currentUser) {
       const confirmLogin = window.confirm("로그인 하시겠습니까?");
       if (confirmLogin) {
-        navigate("/login");
+        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
       } else {
         navigate("/");
       }
@@ -307,6 +310,7 @@ const PostForm = () => {
     const user = auth.currentUser;
     if (!user || isLoading || post === "" || post.length > 180) return;
 
+    // 랜덤으로 아이콘 값 생성
     const randomLikes = Math.floor(Math.random() * 100);
     const randomComments = Math.floor(Math.random() * 10);
     const randomDms = Math.floor(Math.random() * 50);
@@ -315,6 +319,7 @@ const PostForm = () => {
     try {
       setIsLoading(true);
 
+      // Firebase에 포스트 기본 정보 저장
       const docRef = await addDoc(collection(db, "contents"), {
         post,
         createdAt: serverTimestamp(),
@@ -324,13 +329,13 @@ const PostForm = () => {
         likes: randomLikes,
         comments: randomComments,
         dms: randomDms,
-        retweets: randomRetweets,
+        retweets: randomRetweets, // 랜덤 아이콘 값 저장
       });
 
       const photoUrls = [];
       const videoUrls = [];
 
-      // 파일 업로드
+      // 파일이 있을 경우 업로드
       await Promise.all(
         files.map(async (file) => {
           const locationRef = ref(
@@ -344,8 +349,6 @@ const PostForm = () => {
             photoUrls.push(url);
           } else if (file.type.startsWith("video/")) {
             videoUrls.push(url);
-          } else if (file.type.startsWith("audio/")) {
-            await updateDoc(docRef, { audioURL: url });
           }
         })
       );
@@ -366,10 +369,11 @@ const PostForm = () => {
         videos: videoUrls,
       });
 
-      // 상태 초기화
+      // 제출 후 상태 초기화
       setPost("");
       setFiles([]);
       setAudioBlob(null);
+      navigate("/");
     } catch (error) {
       console.error(error);
     } finally {
@@ -446,12 +450,6 @@ const PostForm = () => {
             </CameraButton>
             <PictureButton htmlFor="picture">
               <PictureIcon width={24} />
-              <PictureInput
-                onChange={handleFileChange}
-                id="picture"
-                type="file"
-                accept="video/*, image/*"
-              />
             </PictureButton>
             {/* 녹음 기능 */}
 
