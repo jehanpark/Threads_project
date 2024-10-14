@@ -553,7 +553,7 @@ const Profile = () => {
             <BottomWrap>
               <Desk>{profile.bio ?? "프로필을 꾸며보세요!"}</Desk>
               <FollowLink>
-                <Follow onClick={onfollow}>팔로워 1234</Follow>
+                <Follow onClick={onfollow}>팔로워 {profile.followNum}</Follow>
                 {profile.isLinkPublic ? (
                   <Links>
                     {user?.email === emailAdress ? (
