@@ -110,7 +110,8 @@ const MentionModal = ({ onClose, onSelectOption }) => {
   const handleOptionClick = (option) => {
     setActiveOption(option);
     setIsOptionSelected(true);
-    onSelectOption(option);
+    onSelectOption(option); // 부모 컴포넌트에 선택된 옵션 전달
+    onClose(); // 모달 닫기
   };
 
   // 모달 외부 클릭 시 닫히는 함수

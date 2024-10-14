@@ -125,10 +125,14 @@ const Checkbox = styled.input`
   }
 `;
 
-const HiddenWordModal = ({ onClose, onSelectOption }) => {
-  const [activeOption1, setActiveOption1] = useState(null); // 첫 번째 옵션 상태
-  const [activeOption2, setActiveOption2] = useState(null); // 두 번째 옵션 상태
-  const [isOptionSelected, setIsOptionSelected] = useState(false);
+const HiddenWordModal = ({
+  onClose,
+  onSelectOption,
+  selectedOption1,
+  selectedOption2,
+}) => {
+  const [activeOption1, setActiveOption1] = useState(selectedOption1); // 첫 번째 옵션 상태
+  const [activeOption2, setActiveOption2] = useState(selectedOption2); // 두 번째 옵션 상태
 
   const handleOptionClick = (option, listIndex) => {
     if (listIndex === 1) {
@@ -136,15 +140,11 @@ const HiddenWordModal = ({ onClose, onSelectOption }) => {
     } else {
       setActiveOption2(option);
     }
-    setIsOptionSelected(true);
-    onSelectOption(option);
+    onSelectOption(option); // 선택된 옵션을 부모 컴포넌트에 전달
   };
 
-  // 모달 외부 클릭 시 닫히는 함수
   const handleOverlayClick = () => {
-    if (isOptionSelected) {
-      onClose();
-    }
+    onClose(); // 모달 닫기
   };
 
   return (
@@ -160,7 +160,7 @@ const HiddenWordModal = ({ onClose, onSelectOption }) => {
           <MoveLink>더 알아보기</MoveLink>
         </Info>
         <OptionList>
-          {["설정됨", "해제됨"].map((option) => (
+          {["가려진 섹션 설정", "가려진 섹션 해제"].map((option) => (
             <OptionItem
               key={option}
               onClick={() => handleOptionClick(option, 1)}
@@ -182,7 +182,7 @@ const HiddenWordModal = ({ onClose, onSelectOption }) => {
           표시됩니다.
         </Info>
         <OptionList>
-          {["설정됨", "해제됨"].map((option) => (
+          {["맞춤 단어 설정", "맞춤 단어 해제"].map((option) => (
             <OptionItem
               key={option}
               onClick={() => handleOptionClick(option, 2)}

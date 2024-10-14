@@ -324,25 +324,55 @@ const SettingsItem_de = () => {
       setBorderPosition({ left: offsetLeft, width: offsetWidth }); // border 위치 및 너비 업데이트
     }
   };
-  // 모달 창 구현
+  // 언급 모달 (MentionModal)
+  // 언급 모달 상태
   const [isMentionModalOpen, setMentionModalOpen] = useState(false);
-  const [isHiddenWordModalOpen, setHiddenWordModalOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null); // selectedOption 상태 추가
-
   const openMentionModal = () => {
     setMentionModalOpen(true);
-    setHiddenWordModalOpen(false); // HiddenWordModal 닫기
+    setHiddenWordModalOpen(false);
   };
+  const [selectedOption, setSelectedOption] = useState("모든 사람"); // selectedOption 상태 추가
+
+  // 숨겨진 단어 모달 상태
+  const [isHiddenWordModalOpen, setHiddenWordModalOpen] = useState(false);
+  const [selectedOption1, setSelectedOption1] = useState("가려진 섹션 설정");
+  const [selectedOption2, setSelectedOption2] = useState("맞춤 단어 설정");
+  const [isOption1Selected, setIsOption1Selected] = useState(false);
+  const [isOption2Selected, setIsOption2Selected] = useState(false);
 
   const openHiddenWordModal = () => {
     setHiddenWordModalOpen(true);
-    setMentionModalOpen(false); // MentionModal 닫기
+    // 모달 열 때 선택 상태 초기화
+    setIsOption1Selected(false);
+    setIsOption2Selected(false);
+  };
+
+  const closeHiddenWordModal = () => {
+    // 두 옵션이 모두 선택된 경우에만 모달 닫기
+    if (isOption1Selected && isOption2Selected) {
+      setHiddenWordModalOpen(false);
+    }
+  };
+
+  const handleSelectOption = (option) => {
+    // 선택된 옵션에 따라 상태 업데이트
+    if (option === "가려진 섹션 설정" || option === "가려진 섹션 해제") {
+      setSelectedOption1(option);
+      setIsOption1Selected(true); // 첫 번째 옵션 선택됨
+    } else {
+      setSelectedOption2(option);
+      setIsOption2Selected(true); // 두 번째 옵션 선택됨
+    }
+
+    // 두 옵션이 모두 선택된 경우 모달 닫기
+    closeHiddenWordModal(); // 선택 후 항상 닫기 함수 호출
   };
 
   const closeModals = () => {
     setMentionModalOpen(false);
-    setHiddenWordModalOpen(false);
+    setHiddenWordModalOpen(false); // 숨겨진 단어 모달도 닫기
   };
+
   // 모달 끝
   useEffect(() => {
     // 초기 상태에 대한 border 위치 설정
@@ -419,7 +449,8 @@ const SettingsItem_de = () => {
               <PrivacyAutoLayout>
                 <PrivacyTitle>숨겨진 단어</PrivacyTitle>
                 <SelectLayout>
-                  <SelectedText>{selectedOption}</SelectedText>
+                  <SelectedText>{selectedOption1}</SelectedText>
+                  <SelectedText>{selectedOption2}</SelectedText>
                   <IconStroke onClick={openHiddenWordModal}>
                     <RightArrowIcon fill={"gray"} width={"12px"} />
                   </IconStroke>
@@ -795,8 +826,23 @@ const SettingsItem_de = () => {
         )}
       </SettingsInner>
       {/* 모달은 PrivacyProfile 바깥에 위치 */}
-      {isMentionModalOpen && <MentionModal onClose={closeModals} />}
-      {isHiddenWordModalOpen && <HiddenWordModal onClose={closeModals} />}
+      {isMentionModalOpen && (
+        <MentionModal
+          onClose={closeModals}
+          onSelectOption={(option) => {
+            setSelectedOption(option); // 선택된 옵션 값을 상태에 설정
+            closeModals(); // 모달 닫기
+          }}
+        />
+      )}
+      {isHiddenWordModalOpen && (
+        <HiddenWordModal
+          onClose={closeHiddenWordModal}
+          onSelectOption={handleSelectOption} // 옵션 선택 시 상태 업데이트
+          selectedOption1={selectedOption1} // 선택된 옵션을 전달
+          selectedOption2={selectedOption2} // 선택된 옵션을 전달
+        />
+      )}
     </Wrapper>
   );
 };
