@@ -67,7 +67,7 @@ const UserContex = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 5px;
+  gap: 7px;
 `;
 
 const UserName = styled.p`
@@ -87,7 +87,7 @@ const UserName = styled.p`
 `;
 
 const UserInfo = styled.p`
-  font-size: 14px;
+  font-size: 12px;
   color: ${(props) =>
     props.isRead ? props.theme.readTextColor : props.theme.followerfont};
   margin: 0;
@@ -162,14 +162,21 @@ const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
           )}
         </UserWrapper>
         <UserContex>
-          <UserName>{follower.username}</UserName>
-          <UserInfo>{follower.bio || "소개 없음"}</UserInfo>
+          <UserName>{follower.email || "알수없음"}</UserName>
+          <UserInfo>{follower.bio || "노래하는 고양이"}</UserInfo>
           <UserFollowerNum>{`팔로워 ${
             follower.followers || 0
           }명`}</UserFollowerNum>
         </UserContex>
       </Wrapper>
-      <FollowerButton isFollowing={follower.isFollowing} onClick={toggleFollow}>
+      <FollowerButton
+        isFollowing={follower.isFollowing}
+        onClick={(e) => {
+          console.log("click");
+          e.stopPropagation(); // 상위 이벤트 전달 x
+          toggleFollow();
+        }}
+      >
         {follower.isFollowing ? "팔로잉" : "팔로우"}
       </FollowerButton>
     </FollowerContain>

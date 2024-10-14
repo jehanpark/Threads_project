@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import {
   collection,
   query,
@@ -13,6 +17,7 @@ import FollowerItem from "./FollowerItem";
 
 const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
   const [followers, setFollowers] = useState([]);
+  const [filteredFollowers, setFilteredFollowers] = useState([]);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const emailAdress = searchParams.get("email");
@@ -20,11 +25,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
   // Firestore에서 데이터를 가져오는 함수
 
   const fetchPosts = async () => {
-    let postsQuery = query(
-      collection(db, "contents"),
-      orderBy("createdAt", "desc"),
-      limit(5)
-    );
+    let postsQuery = query(collection(db, "profile"));
 
     // 이메일 주소가 있는 경우 해당 이메일만 필터링
     if (emailAdress) {
@@ -32,10 +33,18 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
     }
 
     const unsubscribe = onSnapshot(postsQuery, (snapshot) => {
-      let data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      let data = snapshot.docs.map((doc) => {
+        const docData = doc.data();
+        return {
+          id: doc.id,
+          bio: docData.bio,
+          username: docData.username,
+          profileImg: docData.img,
+          isFollowing: docData.isFollowing,
+          email: docData.userEmail,
+          followers: docData.followNum,
+        };
+      });
 
       // 클라이언트에서 필터링
       // 1. 검색어 필터링
@@ -57,6 +66,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
       } else if (contentType === "all") {
       }
 
+      setFilteredFollowers(data);
       setFollowers(data);
       onDataEmpty && onDataEmpty(data.length === 0);
     });
@@ -70,17 +80,36 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
 
   // 팔로워 아이템 클릭 시 프로필 페이지로 이동
   const handleProfileClick = (email) => {
+    console.log(emailAdress);
     if (email) {
-      navigate(`/profile/${email}`);
+      navigate({
+        pathname: "/profile",
+        search: `${createSearchParams({
+          email: email,
+        })}`,
+      });
     }
   };
+
+  // 팔로우 상태를 변경하는 함수
+  const handleToggleFollow = (isFollowing) => {
+    setFilteredFollowers((prevFollowers) =>
+      prevFollowers.map((follower) =>
+        follower.isFollowing === isFollowing
+          ? { ...follower, isFollowing: !follower.isFollowing }
+          : follower
+      )
+    );
+  };
+
   return (
     <div>
       {followers.map((follower) => (
         <FollowerItem
           key={follower.id}
           follower={follower}
-          onClick={() => handleProfileClick(follower.email)}
+          toggleFollow={() => handleToggleFollow(follower.id)}
+          onProfileClick={() => handleProfileClick(follower.email)}
         />
       ))}
     </div>
