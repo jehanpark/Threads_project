@@ -4,6 +4,8 @@ import Nav from "../Components/Nav";
 import Intro from "../Components/LoadingLogo/Intro";
 import PostForm from "../Components/post/PostForm";
 import TimeLine from "../Components/post/TimeLine";
+import EtcModal from "../Components/post/EtcModal";
+
 
 const Wrapper = styled.div`
   width: 100%;
@@ -14,6 +16,7 @@ const Wrapper = styled.div`
 const Home = () => {
   return (
     <Wrapper>
+      {/* <EtcModal/> */}
       <TimeLine />
     </Wrapper>
   );

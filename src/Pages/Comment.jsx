@@ -21,22 +21,35 @@ import Button from "../Components/Common/Button";
 import BackBtn from "../Components/post/BackBtn";
 import Loading from "../Components/LoadingLogo/Loading";
 
+const AllWrap = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const Backarea = styled.div`
-  position: fixed;
-  top: 12%;
-  left: 25%;
+  width: 700px;
 `;
 
 const BoederWrapper = styled.div`
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translate(-50%);
   width: 660px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 전체 높이를 고정 */
+  scrollbar-width: none;
+  max-height: auto; /* 고정된 높이를 주어야 스크롤이 발생함 */
+  overflow-y: auto; /* 스크롤을 활성화 */
+  ::-webkit-scrollbar {
+    display: none;
+  }
   @media (max-width: 768px) {
     position: fixed;
     border-radius: 0;
@@ -117,8 +130,8 @@ const Column = styled.div`
   gap: 10px;
 `;
 const Photo = styled.img`
-  width: 80px;
-  height: 80px;
+  width: 160px;
+  height: 160px;
   object-fit: cover/contain;
   margin-left: 0px;
   border-radius: 8px;
@@ -130,8 +143,8 @@ const Photo = styled.img`
 `;
 const Video = styled.video`
   display: flex;
-  width: 80px;
-  height: 80px;
+  width: 220px;
+  height: 160px;
   border-radius: 15px;
   object-fit: cover;
   @media (max-width: 768px) {
@@ -271,8 +284,7 @@ const Comment = () => {
   const { postId: routePostId } = useParams(); // URL에서 postId를 받아옴
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
-  const [comments, setComments] = useState([]); // 댓글 배열
-  const [commentsCount, setCommentsCount] = useState(0); // 댓글 수
+  const [comments, setComments] = useState(Math.floor(Math.random() * 10));
   const [dms, setDms] = useState(Math.floor(Math.random() * 50));
   const [retweets, setRetweets] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
@@ -348,7 +360,7 @@ const Comment = () => {
         setComments(commentsList);
         setCommentsCount(commentsSnapshot.size); // 댓글 수 저장
       } catch (error) {
-        console.error("댓글을 불러오는 중 오류가 발생했습니다:", error);
+        console.error("Error fetching comments count:", error);
       }
     };
 
@@ -371,22 +383,30 @@ const Comment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!currentUser || isLoading || !post.trim() || post.length > 180) return;
+    const user = auth.currentUser;
+    if (!user || isLoading || post === "" || post.length > 180) return;
 
     try {
       setIsLoading(true);
 
       const commentData = {
-        comment: post.trim(),
+        comment: post,
         createdAt: serverTimestamp(),
-        username: currentUser?.displayName || "Anonymous",
-        userId: currentUser.uid,
-        photoUrls: [],
-        videoUrls: [],
+        username: user?.displayName || "Anonymous",
+        userId: user.uid,
+        photoUrls: [], // 이미지를 저장할 배열
+        videoUrls: [], // 비디오를 저장할 배열
       };
 
-      const commentsRef = collection(db, "contents", postId, "comments");
+      // Firestore에서 해당 포스트 문서 참조 가져오기
+      const commentsRef = collection(
+        db,
+        "contents",
+        location.state.postId,
+        "comments"
+      );
 
+      // 파일이 있을 경우 업로드 처리
       const photoUrls = [];
       const videoUrls = [];
 
@@ -395,23 +415,28 @@ const Comment = () => {
           files.map(async (file) => {
             const storageRef = ref(
               storage,
-              `comments/${currentUser.uid}/${file.name}`
+              `comments/${user.uid}/${file.name}`
             );
             const snapshot = await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(snapshot.ref);
 
+            // 파일이 이미지면 photoUrls에 저장
             if (file.type.startsWith("image/")) {
               photoUrls.push(downloadURL);
-            } else if (file.type.startsWith("video/")) {
+            }
+            // 파일이 비디오면 videoUrls에 저장
+            if (file.type.startsWith("video/")) {
               videoUrls.push(downloadURL);
             }
           })
         );
 
+        // 업로드된 파일의 URL을 댓글 데이터에 추가
         commentData.photoUrls = photoUrls;
         commentData.videoUrls = videoUrls;
       }
 
+      // 댓글 데이터를 해당 포스트의 comments 하위 컬렉션에 추가
       await addDoc(commentsRef, commentData);
 
       setPost(""); // 상태 초기화
@@ -422,7 +447,7 @@ const Comment = () => {
         navigate(`/`); // customPostId로 이동
       }
     } catch (error) {
-      console.error("댓글 추가 중 오류가 발생했습니다:", error);
+      console.error("Error adding comment: ", error);
     } finally {
       setIsLoading(false);
     }
@@ -450,142 +475,149 @@ const Comment = () => {
       setFiles((prevFiles) => [...prevFiles, ...newFiles]);
     }
   };
-
   return (
     <div>
-      <Backarea>
-        <BackBtn />
-      </Backarea>
-      <BoederWrapper>
-        <Wrapper>
-          <PostWrapper>
-            <Header>
-              <UserImage src="http://localhost:5173/profile.png"></UserImage>
-              <Username>{username}</Username>
-              <Timer>{renderTimeAgo()}</Timer>
-            </Header>
-            <Column>
-              <Posted>{postContent}</Posted>
-            </Column>
-
-            <ColumnWrapper>
+      <AllWrap>
+        <Backarea>
+          <BackBtn />
+        </Backarea>
+        <BoederWrapper>
+          <Wrapper>
+            <PostWrapper>
+              <Header>
+                <UserImage src="http://localhost:5173/profile.png"></UserImage>
+                <Username>{username}</Username>
+                <Timer>{renderTimeAgo()}</Timer>
+              </Header>
               <Column>
-                {photos &&
-                  photos.length > 0 &&
-                  photos.map((photoUrl, index) => (
-                    <Photo
-                      key={index}
-                      src={photoUrl}
-                      alt={`Post Image ${index + 1}`}
-                    />
-                  ))}
+                <Posted>{postContent}</Posted>
               </Column>
 
-              <Column>
-                {videos &&
-                  videos.length > 0 &&
-                  videos.map((videoUrl, index) => (
-                    <Video key={index} controls autoPlay loop src={videoUrl} />
-                  ))}
-              </Column>
-            </ColumnWrapper>
+              <ColumnWrapper>
+                <Column>
+                  {photos &&
+                    photos.length > 0 &&
+                    photos.map((photoUrl, index) => (
+                      <Photo
+                        key={index}
+                        src={photoUrl}
+                        alt={`Post Image ${index + 1}`}
+                      />
+                    ))}
+                </Column>
 
-            <Icons>
-              <IconWrapper>
-                <HeartIcon width={14} /> {likes}
-              </IconWrapper>
-              <IconWrapper>
-                <Coment width={14} /> {commentsCount}
-              </IconWrapper>
-              <IconWrapper>
-                <DmIcon width={12} /> {dms}
-              </IconWrapper>
-              <IconWrapper>
-                <RetweetIcon width={14} /> {retweets}
-              </IconWrapper>
-            </Icons>
-          </PostWrapper>
+                <Column>
+                  {videos &&
+                    videos.length > 0 &&
+                    videos.map((videoUrl, index) => (
+                      <Video
+                        key={index}
+                        controls
+                        autoPlay
+                        loop
+                        src={videoUrl}
+                      />
+                    ))}
+                </Column>
+              </ColumnWrapper>
 
-          <Form onSubmit={handleSubmit}>
-            {isLoading ? <Loading /> : null}
-            <TextArea
-              onChange={handlePostChange}
-              value={post}
-              name="contents"
-              id="contents"
-              placeholder="댓글을 작성하세요.."
-              required
-            />
-            <PlusImage>
-              {files.map((file, index) => (
-                <div
-                  key={index}
-                  style={{ position: "relative", margin: "5px" }}
-                >
-                  {file.type.startsWith("image/") ? (
-                    <img
-                      src={URL.createObjectURL(file)}
-                      alt={`Uploaded Preview ${index + 1}`}
-                      style={{
-                        width: "160px",
-                        height: "160px",
-                        borderRadius: "10px",
-                        objectFit: "cover",
-                      }}
-                    />
-                  ) : (
-                    <video
-                      controls
-                      style={{
-                        width: "160px",
-                        height: "160px",
-                        borderRadius: "10px",
-                        objectFit: "cover",
-                      }}
-                    >
-                      <source src={URL.createObjectURL(file)} />
-                    </video>
-                  )}
-                  <DeleteButton onClick={() => removeFile(index)}>
-                    X
-                  </DeleteButton>
-                </div>
-              ))}
-            </PlusImage>
-            <IconsBtnwrapper>
               <Icons>
-                <CameraButton htmlFor="camera">
-                  <CameraIcon width={38} />
-                  <CameraInput
+                <IconWrapper>
+                  <HeartIcon width={14} /> {likes}
+                </IconWrapper>
+                <IconWrapper>
+                  <Coment width={14} /> {comments}
+                </IconWrapper>
+                <IconWrapper>
+                  <DmIcon width={12} /> {dms}
+                </IconWrapper>
+                <IconWrapper>
+                  <RetweetIcon width={14} /> {retweets}
+                </IconWrapper>
+              </Icons>
+            </PostWrapper>
+
+            <Form onSubmit={handleSubmit}>
+              {isLoading ? <Loading /> : null}
+              <TextArea
+                onChange={handlePostChange}
+                value={post}
+                name="contents"
+                id="contents"
+                placeholder="댓글을 작성하세요.."
+                required
+              />
+              <PlusImage>
+                {files.map((file, index) => (
+                  <div
+                    key={index}
+                    style={{ position: "relative", margin: "5px" }}
+                  >
+                    {file.type.startsWith("image/") ? (
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={`Uploaded Preview ${index + 1}`}
+                        style={{
+                          width: "160px",
+                          height: "160px",
+                          borderRadius: "10px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ) : (
+                      <video
+                        controls
+                        style={{
+                          width: "160px",
+                          height: "160px",
+                          borderRadius: "10px",
+                          objectFit: "cover",
+                        }}
+                      >
+                        <source src={URL.createObjectURL(file)} />
+                      </video>
+                    )}
+                    <DeleteButton onClick={() => removeFile(index)}>
+                      X
+                    </DeleteButton>
+                  </div>
+                ))}
+              </PlusImage>
+              <IconsBtnwrapper>
+                <Icons>
+                  <CameraButton htmlFor="camera">
+                    <CameraIcon width={38} />
+                    <CameraInput
+                      onChange={handleFileChange}
+                      id="camera"
+                      type="file"
+                      accept="video/*, image/*"
+                    />
+                  </CameraButton>
+                  <PictureButton htmlFor="picture">
+                    <PictureIcon width={24} />
+                  </PictureButton>
+                  <PictureInput
                     onChange={handleFileChange}
-                    id="camera"
+                    id="picture"
                     type="file"
                     accept="video/*, image/*"
                   />
-                </CameraButton>
-                <PictureButton htmlFor="picture">
-                  <PictureIcon width={24} />
-                </PictureButton>
-                <PictureInput
-                  onChange={handleFileChange}
-                  id="picture"
-                  type="file"
-                  accept="video/*, image/*"
-                />
-                <MicIcon width={24} />
-                <HashtagIcon width={24} />
-              </Icons>
-              <Buttons>
-                <SubmitBtn
-                  text="댓글달기"
-                  type="submit"
-                  value={isLoading ? "댓글다는중..." : "댓글달기"}
-                />
-              </Buttons>
-            </IconsBtnwrapper>
-          </Form>
-        </Wrapper>
-      </BoederWrapper>
+                  <MicIcon width={24} />
+                  <HashtagIcon width={24} />
+                </Icons>
+                <Buttons>
+                  <SubmitBtn
+                    text="댓글달기"
+                    type="submit"
+                    value={isLoading ? "댓글다는중..." : "댓글달기"}
+                  />
+                </Buttons>
+              </IconsBtnwrapper>
+            </Form>
+          </Wrapper>
+        </BoederWrapper>
+      </AllWrap>
     </div>
   );
 };

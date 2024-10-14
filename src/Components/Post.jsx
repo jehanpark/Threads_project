@@ -30,8 +30,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
 
 import { formatDistanceToNow } from "date-fns";
-import PostSetModal from "./Common/PostSetModal";
-import EditModal from "./EditModal";
+import PostSetModal from "./post/PostSetModal";
 
 const Wrapper = styled.div`
   position: relative;
@@ -43,6 +42,7 @@ const Wrapper = styled.div`
   padding: 20px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
+    position: "";
     width: 100%;
     height: auto;
   }
@@ -182,7 +182,7 @@ const Button = styled.button`
 `;
 
 const EditPostFormTextArea = styled.textarea`
-  background: #fff;
+  background: #000;
   color: #fff;
   width: 94%;
   height: 50%;
@@ -330,8 +330,8 @@ const Post = ({
     fetchPostAndCommentsData();
   }, [id, likes, dms, retweets]); // 의존성 배열에 필요한 상태 추가
 
-  // 모달 외부 클릭 감지 이벤트 등록
   useEffect(() => {
+    // 모달 외부 클릭 감지 이벤트 등록
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -350,23 +350,6 @@ const Post = ({
 
   const handleEdit = () => {
     setIsEditing(true);
-  };
-
-  const handleSave = async (newContent) => {
-    setPostContent(newContent);
-
-    // Firebase에 업데이트
-    try {
-      await updateDoc(doc(db, "contents", id), {
-        post: newContent,
-      });
-    } catch (error) {
-      console.error("Error updating document: ", error);
-    }
-  };
-
-  const handleClose = () => {
-    setIsEditing(false);
   };
 
   const onClickSetContent = (e) => {
@@ -393,39 +376,48 @@ const Post = ({
   };
 
   const onUpdate = async () => {
-    try {
-      if (user?.uid !== userId) return;
+    if (user?.uid !== userId) return alert("수정할 권한이 없습니다.");
 
+    try {
       const postDoc = await getDoc(doc(db, "contents", id));
-      if (!postDoc.exists()) throw new Error("Documents does not exist");
+      if (!postDoc.exists()) throw new Error("Document does not exist");
+
+      const postData = postDoc.data();
+      const existingFileType = postData?.fileType || null;
+      const newFileType = editedPhoto?.type.startsWith("image/")
+        ? "image"
+        : "video";
 
       if (editedPhoto) {
-        const newFileType = editedPhoto.type.startsWith("image/")
-          ? "image"
-          : "video";
+        if (existingFileType && existingFileType !== newFileType) {
+          alert("기존 파일 유형과 다른 유형을 업로드할 수 없습니다.");
+          return;
+        }
 
         const locationRef = ref(storage, `contents/${user.uid}/${id}`);
         const uploadTask = uploadBytesResumable(locationRef, editedPhoto);
+
         if (editedPhoto.size >= 5 * 1024 * 1024) {
           uploadTask.cancel();
           throw new Error("File Size is over 5MB");
         }
-        const result = await uploadBytes(locationRef, editedPhoto);
+
+        const result = await uploadTask;
         const url = await getDownloadURL(result.ref);
 
         await updateDoc(doc(db, "contents", id), {
           post: editedPost,
-          photo: newFileType === "image" ? url : "",
-          video: newFileType === "video" ? url : "",
+          photos: newFileType === "image" ? [...photos, url] : photos,
+          video: newFileType === "video" ? url : videos,
           fileType: newFileType,
         });
       } else {
         await updateDoc(doc(db, "contents", id), { post: editedPost });
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     } finally {
-      setIsEditing(false); // 수정 완료 후 입력창 닫기
+      setIsEditing(false);
     }
   };
 
@@ -434,10 +426,10 @@ const Post = ({
 
     if (isLiked) {
       setLikes((prevLikes) => prevLikes - 1);
-      await updateDoc(postRef, { likes: likes - 1 });
+      await updateDoc(postRef, { likes: likes - 1 }); // Firebase에 업데이트
     } else {
       setLikes((prevLikes) => prevLikes + 1);
-      await updateDoc(postRef, { likes: likes + 1 });
+      await updateDoc(postRef, { likes: likes + 1 }); // Firebase에 업데이트
     }
 
     setIsLiked((prevLiked) => !prevLiked);
@@ -454,7 +446,7 @@ const Post = ({
         createdAt: createdAt || { seconds: Date.now() / 1000 },
         likes,
         dms,
-        retweets,
+        retweets, // 기본값 설정
       },
     });
   };
@@ -470,7 +462,7 @@ const Post = ({
         createdAt: createdAt || { seconds: Date.now() / 1000 },
         likes,
         dms,
-        retweets,
+        retweets, // 기본값 설정
       },
     });
   };
@@ -481,10 +473,10 @@ const Post = ({
 
     if (isDms) {
       setDms((prevDms) => prevDms - 1);
-      await updateDoc(postRef, { dms: dms - 1 });
+      await updateDoc(postRef, { dms: dms - 1 }); // Firebase에 업데이트
     } else {
       setDms((prevDms) => prevDms + 1);
-      await updateDoc(postRef, { dms: dms + 1 });
+      await updateDoc(postRef, { dms: dms + 1 }); // Firebase에 업데이트
     }
 
     setIsDms((prevDms) => !prevDms);
@@ -534,23 +526,21 @@ const Post = ({
         <Etc onClick={() => openModal(id)}>
           <EtcIcon width={20} fill="gray" />
         </Etc>
-
         {openModalId === id && (
           <div className="modal-content">
             <PostSetModal
               onClose={closeModal}
               onDelete={onDelete}
-              onEdit={handleEdit}
+              onEdit={onUpdate}
               isAuthor={user?.uid === userId}
             />
           </div>
         )}
       </Header>
-
       <Column onClick={PostCommentClick}>
         {isEditing ? (
           <EditPostFormTextArea
-            onChange={(e) => setEditedPost(e.target.value)}
+            onChange={onChange}
             value={editedPost}
             placeholder={post}
           />
@@ -558,7 +548,6 @@ const Post = ({
           <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
         )}
       </Column>
-
       <ColumnWrapper onClick={PostCommentClick}>
         {/* Render multiple photos */}
         {photos && photos.length > 0 && (
