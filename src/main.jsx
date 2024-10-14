@@ -1,3 +1,5 @@
+import "regenerator-runtime/runtime"; // 추가
+
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./Routes";

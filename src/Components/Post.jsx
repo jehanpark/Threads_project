@@ -32,6 +32,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import PostSetModal from "./Common/PostSetModal";
 import EditModal from "./EditModal";
+import AudioMessage from "./AudioMessage";
 
 const Wrapper = styled.div`
   position: relative;
@@ -250,6 +251,7 @@ const Post = ({
   id,
   createdAt,
   email,
+  audioURL,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
@@ -557,7 +559,7 @@ const Post = ({
           <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
         )}
       </Column>
-
+      {/* AudioMessage 컴포넌트를 audioURL이 있을 때만 렌더링 */}
       <ColumnWrapper onClick={PostCommentClick}>
         {/* Render multiple photos */}
         {photos && photos.length > 0 && (
@@ -580,6 +582,8 @@ const Post = ({
           </Column>
         )}
       </ColumnWrapper>
+      <AudioMessage audioURL={audioURL} />
+
       <Icons>
         <IconWrapper onClick={handleLike}>
           <HeartIcon width={20} /> {likes}

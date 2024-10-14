@@ -20,6 +20,8 @@ export const lightTheme = {
   userIcon: "#595959",
   followerfont: "#737373",
   searchColor: "#000",
+  themeIconBackground: "#F3F3F3",
+  themeIconBorder: "#E4E4E4",
   searchButton: "#e9e9e9",
   buttonbackground: "#fff",
   buttonText: "#000",
@@ -58,6 +60,7 @@ export const darkTheme = {
   followerfont: "#bababa",
   searchColor: "#1D1D1D",
   themeIconBackground: "#363636",
+  themeIconBorder: "#363636",
   navIconColor: undefined,
   buttonbackground: "#000",
   buttonText: "#fff",
@@ -72,8 +75,9 @@ export const darkTheme = {
   readBG: "linear-gradient(145deg, #555, #666)",
   readTextColor: "#bbb",
   btnbottom: "1px solid #fff",
-  // 다은 새로 추가(설정부분)
-  activeBorder: "#181818",
+    // 다은 새로 추가(설정부분)
+    activeBorder: "#fff",
+    modalfont: "#999999",
 };
 
 const GlobalStyles = createGlobalStyle`
