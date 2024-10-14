@@ -10,7 +10,7 @@ import {
   Home,
   GoBack,
 } from "./Common/Icon";
-import Logo from "./Logo";
+import Logo from "./LoadingLogo/Logo";
 import { useNavigate } from "react-router-dom";
 
 // BottomNav 스타일 정의

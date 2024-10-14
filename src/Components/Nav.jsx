@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
-import Logo from "./Logo";
+import Logo from "./LoadingLogo/Logo";
 import { useAuth } from "../Contexts/AuthContext";
 import MobileNav from "./MobileNav";
 
@@ -273,7 +273,7 @@ const Nav = () => {
           />
         </svg>
       ),
-      path: "",
+      path: "/profile",
     },
   ];
 

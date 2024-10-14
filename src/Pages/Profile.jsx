@@ -32,6 +32,10 @@ const BoederWrapper = styled.div`
   bottom: 0;
   left: 50%;
   transform: translate(-50%);
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
   margin: 0 auto;
   width: 680px;
   height: 85%;
@@ -88,7 +92,6 @@ const PostlistWrapper = styled.div`
     gap: 5px;
   }
 `;
-
 const ProfileWrap = styled.div`
   display: flex;
   width: 100%;
@@ -332,6 +335,7 @@ const Profile = () => {
   };
 
   const CheckProfile = async () => {
+    console.log("프로필 체크 가동");
     try {
       const profileQuery = query(
         collection(db, "profile"),
@@ -375,6 +379,9 @@ const Profile = () => {
             isFollowing: true,
             followNum: profile.followNum,
           }));
+          console.log("유저가 없을 때 읽기 가동 완료");
+          console.log(profile);
+          console.log("유저 없을 때 프로필 체크");
         }
       });
       return () => unsubscribe();
@@ -407,6 +414,39 @@ const Profile = () => {
     setOtherBtn((prev) => !prev);
     //프로필수정모달
   };
+
+  useEffect(() => {
+    let unsubscribe = null;
+    const fetchPosts = async () => {
+      const postsQuery = query(
+        collection(db, "contents"),
+        where("email", "==", emailAdress),
+        orderBy("createdAt", "desc"),
+        limit(15)
+      );
+      unsubscribe = onSnapshot(postsQuery, (snapshot) => {
+        const posts = snapshot.docs.map((doc) => {
+          const { createdAt, photos, videos, post, userId, username, email } =
+            doc.data();
+          return {
+            id: doc.id,
+            createdAt,
+            photos: photos || [],
+            videos: videos || [],
+            post,
+            userId,
+            username,
+            email,
+          };
+        });
+        setPosts(posts);
+      });
+    };
+    fetchPosts();
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     let unsubscribe = null;

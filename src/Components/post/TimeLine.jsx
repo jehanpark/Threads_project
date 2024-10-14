@@ -7,13 +7,14 @@ import {
   limit,
 } from "firebase/firestore";
 import { useState, useEffect, useRef } from "react";
-import { db } from "../firebase";
-import Post from "./Post";
+import { db } from "../../firebase";
+import Post from "../Post";
 
 const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
   const [posts, setPosts] = useState([]);
   const [isBouncing, setIsBouncing] = useState(false);
   const wrapperRef = useRef(null);
+
   useEffect(() => {
     let unsubscribe = null;
 
@@ -107,4 +108,5 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
     </div>
   );
 };
+
 export default TimeLine;
