@@ -841,10 +841,10 @@ export const CloseIcon = ({ width, fill, border, borderRadius }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={width || "12px"}
-      height={height}
+      width={width || "24px"}
+      height={width || "24px"}
+      fill={fill || "#000000"} // fill Prop을 사용하여 색상을 설정
       viewBox="0 0 14 14"
-      fill="none"
     >
       <path
         d="M13 1L1 13"
@@ -1004,7 +1004,7 @@ export const LockIcon = ({ width, fill }) => {
       height={height}
       viewBox="0 0 14 16"
       xmlns="http://www.w3.org/2000/svg"
-      fill="black" // 다은 수정
+      fill="${(props) => props.theme.borderColor}" // 다은 수정
     >
       <path
         d="M11.375 5.6V4C11.375 2.93913 10.9141 1.92172 10.0936 1.17157C9.27312 0.421427 8.16032 0 7 0C5.83968 0 4.72688 0.421427 3.90641 1.17157C3.08594 1.92172 2.625 2.93913 2.625 4V5.6C1.92881 5.6 1.26113 5.85286 0.768845 6.30294C0.276562 6.75303 0 7.36348 0 8V13.6C0 14.2365 0.276562 14.847 0.768845 15.2971C1.26113 15.7471 1.92881 16 2.625 16H11.375C12.0712 16 12.7389 15.7471 13.2312 15.2971C13.7234 14.847 14 14.2365 14 13.6V8C14 7.36348 13.7234 6.75303 13.2312 6.30294C12.7389 5.85286 12.0712 5.6 11.375 5.6ZM4.375 4C4.375 3.36348 4.65156 2.75303 5.14384 2.30294C5.63613 1.85286 6.30381 1.6 7 1.6C7.69619 1.6 8.36387 1.85286 8.85616 2.30294C9.34844 2.75303 9.625 3.36348 9.625 4V5.6H4.375V4ZM12.25 13.6C12.25 13.8122 12.1578 14.0157 11.9937 14.1657C11.8296 14.3157 11.6071 14.4 11.375 14.4H2.625C2.39294 14.4 2.17038 14.3157 2.00628 14.1657C1.84219 14.0157 1.75 13.8122 1.75 13.6V8C1.75 7.78783 1.84219 7.58434 2.00628 7.43431C2.17038 7.28429 2.39294 7.2 2.625 7.2H11.375C11.6071 7.2 11.8296 7.28429 11.9937 7.43431C12.1578 7.58434 12.25 7.78783 12.25 8V13.6Z"
@@ -1612,7 +1612,7 @@ export const DeleteProfileIcon = (props) => {
 export const EalthIcon = (props) => {
   return (
     <svg
-      viewBox="0 0 24 24"
+      viewBox="2 0 17 24"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       {...props}
@@ -1620,7 +1620,7 @@ export const EalthIcon = (props) => {
       <circle
         cx="12"
         cy="12"
-        r="9"
+        // r="9"
         stroke="#000000"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1697,18 +1697,26 @@ export const SecurityIcon = (props) => {
     </svg>
   );
 };
+
 // 계정상태
-export const AccountStatusIcon = (props) => {
+export const AccountStatusIcon = ({
+  width = "24px",
+  height = "24px",
+  fill = "currentColor",
+  ...props
+}) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      fill={props.fill || "#000000"} // 기본 색상 설정
-      width={props.width || "24px"} // 기본 너비 설정
-      height={props.height || "24px"} // 기본 높이 설정
+      width={width}
+      height={height}
       viewBox="0 0 24 24"
       {...props}
     >
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
+        fill={fill} // props로 전달받은 fill 사용
+      />
     </svg>
   );
 };
