@@ -175,6 +175,9 @@ const CommentHeader = styled.div`
   align-items: center;
   gap: 10px;
   margin-left: 20px;
+  @media (max-width: 768px) {
+    margin-left: 10px;
+  }
 `;
 const CommentUserImage = styled.img`
   width: 38px;
@@ -196,6 +199,9 @@ const CommentContent = styled.div`
   font-size: 14px;
   color: ${(props) => props.theme.fontcolor};
   margin-left: 70px;
+    @media (max-width: 768px) {
+    margin-left: 60px;
+  }
 `;
 
 const CommentImage = styled.img`
@@ -205,6 +211,9 @@ const CommentImage = styled.img`
   border-radius: 8px;
   margin-top: 10px;
   margin-left: 70px;
+  @media (max-width: 768px) {
+    margin-left: 60px;
+  }
 `;
 
 const CommentVideo = styled.video`
@@ -214,6 +223,9 @@ const CommentVideo = styled.video`
   border-radius: 8px;
   margin-top: 10px;
   margin-left: 70px;
+  @media (max-width: 768px) {
+    margin-left: 60px;
+  }
 `;
 const NotComment = styled.div`
   display: flex;
