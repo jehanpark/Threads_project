@@ -145,6 +145,8 @@ const UserPost = styled.div`
   margin-left: 20px;
 `;
 
+const VideoWrapper = styled.div``;
+
 const Displayitem = ({ display }) => {
   const { createdAt, photos, post, profileimg, username, videos } = display;
 
