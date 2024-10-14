@@ -30,7 +30,7 @@ const BoederWrapper = styled.div`
   width: 660px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
+  background: ${(props) => props.theme.btnBgColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   display: flex;
   flex-direction: column;
