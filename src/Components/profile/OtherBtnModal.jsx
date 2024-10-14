@@ -1,5 +1,16 @@
 import styled from "styled-components";
-import { BellOffIcon, StarIcon, UserIcon2 } from "../Common/Icon";
+import { BellOffIcon, StarIcon, UserIcon2, UserPlusIcon } from "../Common/Icon";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { db } from "../../firebase";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -102,9 +113,58 @@ const P = styled.p`
   font-size: 14px;
 `;
 
-const OtherBtnModal = ({ open, close, profile }) => {
-  console.log(profile);
+const OtherBtnModal = ({ open, close, profile, onProfileChange }) => {
+  const [searchParams] = useSearchParams();
+  const emailAdress = searchParams.get("email");
+  const [follow, setFollow] = useState(profile.isFollowing);
+  const [followNum, setFollowNum] = useState(Math.floor(Math.random() * 10));
+
   if (!open) return null;
+
+  const followButton = async () => {
+    try {
+      const profileQuery = query(
+        collection(db, "profile"),
+        where("userEmail", "==", emailAdress)
+      );
+      const querySnapshot = await getDocs(profileQuery);
+
+      let newFollowState = !follow;
+      setFollow(newFollowState);
+
+      if (querySnapshot.empty) {
+        // 유저 데이터가 없을 때
+        const newDocRef = await addDoc(collection(db, "profile"), {
+          username: emailAdress,
+          userId: "",
+          userEmail: emailAdress,
+          bio: "",
+          isLinkPublic: "",
+          isProfilePublic: "",
+          img: "",
+          isFollowing: true,
+          followNum: followNum,
+        });
+        await updateDoc(newDocRef, { postId: newDocRef.id });
+      } else {
+        //데이터가 있을 떄 업로드
+        const docRef = querySnapshot.docs[0].ref;
+        await updateDoc(docRef, {
+          isFollowing: newFollowState,
+        });
+      }
+      //여기에 있는 profile state값 변경
+      const updatedProfile = {
+        ...profile,
+        isFollowing: newFollowState,
+      };
+      onProfileChange(updatedProfile); // 상위 컴포넌트로 변경된 프로필 전달
+      console.log(profile);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <>
       <ModalOverlay onClick={close}>
@@ -125,7 +185,10 @@ const OtherBtnModal = ({ open, close, profile }) => {
             <Box>
               <BellOffIcon width="16px" /> 알림 설정 취소
             </Box>
-            <Box>팔로잉 취소</Box>
+            <Box onClick={followButton}>
+              <UserPlusIcon width="16px" />
+              팔로우
+            </Box>
             <Box className="mobile" onClick={close}>
               모달 닫기
             </Box>

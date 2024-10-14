@@ -180,6 +180,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   const [inputData, setInputDate] = useState({}); //>> 인풋 값을 받을 state
   const user = auth.currentUser; //유저 계정 내용 ( displayName , email , photoURL  , uid)
   const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
+  const [followNum, setFollowNum] = useState(Math.floor(Math.random() * 10));
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -249,6 +250,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
 
       const querySnapshot = await getDocs(profileQuery);
       if (querySnapshot.empty) {
+        // 유저 데이터가 없을 때
         const newDocRef = await addDoc(collection(db, "profile"), {
           username: nameToSave,
           userId: user.uid,
@@ -257,11 +259,12 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           isLinkPublic: profileData.isLinkPublic,
           isProfilePublic: profileData.isProfilePublic,
           img: imgToSave,
+          isFollowing: profile.isFollowing,
+          followNum: followNum,
         });
-
-        // postId 업데이트
         await updateDoc(newDocRef, { postId: newDocRef.id });
       } else {
+        //데이터가 있을 떄 업로드
         const docRef = querySnapshot.docs[0].ref;
         await updateDoc(docRef, {
           username: nameToSave,
@@ -271,6 +274,8 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           isLinkPublic: profileData.isLinkPublic,
           isProfilePublic: profileData.isProfilePublic,
           img: imgToSave,
+          isFollowing: profile.isFollowing,
+          followNum: docRef.followNum,
         });
       }
       // auth 정보 수정
@@ -297,8 +302,8 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
     }
   };
 
-  const [isOn, setIsOn] = useState(true);
-  const [isOn2, setIsOn2] = useState(true);
+  const [isOn, setIsOn] = useState(profileData.isLinkPublic);
+  const [isOn2, setIsOn2] = useState(profileData.isProfilePublic);
   const toggleSwitch = () => setIsOn(!isOn);
   const toggleSwitch2 = () => setIsOn2(!isOn2);
   const spring = {

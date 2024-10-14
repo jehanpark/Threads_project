@@ -57,7 +57,7 @@ const ProfileInnner = styled.div`
   height: 306px;
   border: 306px;
   border-radius: 40px 40px 18px 18px;
-  background: ${(props) => props.theme.borderColor};
+  background: ${(props) => props.theme.headerBg};
   margin: 0 10px 8px;
   @media (max-width: 768px) {
     padding: 14px 18px;
@@ -151,7 +151,7 @@ const BottomWrap = styled.div`
     padding: 10px;
     border-radius: 10px;
     color: ${(props) => props.theme.fontcolor};
-    background-color: ${(props) => props.theme.borderColor};
+    background-color: ${(props) => props.theme.headerBg};
     border: 2px solid ${(props) => props.theme.borderstroke};
   }
   @media screen and (max-width: 768px) {
@@ -286,10 +286,8 @@ const Profile = () => {
   const [avatar, setAvarta] = useState(null || undefined); //이미지관리목적
   const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
   const [editbtn, setEditbtn] = useState(true);
-  // searchParams = email 받아오기
   const [searchParams] = useSearchParams();
   const emailAdress = searchParams.get("email");
-  //console.log(emailAdress);
 
   // const data = useContext(ThreadDataContext);
   // const { createThread, updateThread, deleteThread, updateProfile } =
@@ -299,6 +297,7 @@ const Profile = () => {
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
   const [otherBtn, setOtherBtn] = useState(false);
+  const [followNum, setFollowNum] = useState(Math.floor(Math.random() * 10));
   const [profile, setProfile] = useState({
     postId: "",
     username: "",
@@ -308,6 +307,8 @@ const Profile = () => {
     isLinkPublic: true,
     isProfilePublic: true,
     img: `${avatar ?? ""}`,
+    isFollowing: true,
+    followNum: followNum,
   });
 
   const [savedData, setSavedData] = useState([]); // 모든 데이터를 저장
@@ -356,6 +357,8 @@ const Profile = () => {
               isLinkPublic: profileDoc.isLinkPublic,
               isProfilePublic: profileDoc.isProfilePublic,
               img: imgUrl,
+              isFollowing: profileDoc.isFollowing,
+              followNum: profileDoc.followNum,
             }));
           }
         } else {
@@ -369,6 +372,8 @@ const Profile = () => {
             isLinkPublic: true,
             isProfilePublic: true,
             img: null,
+            isFollowing: true,
+            followNum: profile.followNum,
           }));
         }
       });
@@ -439,11 +444,6 @@ const Profile = () => {
   const handleProfileChange = (updatedProfile) => {
     setProfile(updatedProfile);
   };
-  let filter;
-  //console.log(
-  //   "필터데이터",
-  // posts.filter((data) => data.photos.length > 0)
-  // );
 
   // 필터링
   const filterList = (type) => {
@@ -519,9 +519,19 @@ const Profile = () => {
         />
       )}
       {otherBtn ? (
-        <OtherBtnModal open={true} close={onOtherbtn} profile={profile} />
+        <OtherBtnModal
+          open={true}
+          close={onOtherbtn}
+          profile={profile}
+          onProfileChange={() => handleProfileChange}
+        />
       ) : (
-        <OtherBtnModal open={false} close={onOtherbtn} profile={profile} />
+        <OtherBtnModal
+          open={false}
+          close={onOtherbtn}
+          profile={profile}
+          onProfileChange={() => handleProfileChange}
+        />
       )}
       <BoederWrapper>
         <PostlistWrapper>
@@ -601,7 +611,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-{
-  /* <Nick> {profile.username ?? user.uid ?? emailAdress}</Nick> */
-}
