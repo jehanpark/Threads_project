@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -442,10 +442,10 @@ const Comment = () => {
       setPost(""); // 상태 초기화
       setFiles([]); // 업로드 파일 초기화
 
-      // 댓글을 추가한 후 customPostId가 있는 경우 페이지 이동
-      if (customPostId) {
-        navigate(`/`); // customPostId로 이동
-      }
+      // 댓글을 추가한 후 즉시 업데이트
+      setComments((prevComments) => [...prevComments, commentData]);
+      setCommentsCount((prevCount) => prevCount + 1);
+      navigate("/");
     } catch (error) {
       console.error("Error adding comment: ", error);
     } finally {
