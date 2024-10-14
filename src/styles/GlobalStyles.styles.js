@@ -37,6 +37,7 @@ export const lightTheme = {
   // 다은 새로 추가(설정부분)
   activeBorder: "#181818",
   modalfont: "#999999",
+  modalhoverbg: "#f6f6f6",
 };
 
 export const darkTheme = {
@@ -76,6 +77,7 @@ export const darkTheme = {
   // 다은 새로 추가(설정부분)
   activeBorder: "#fff",
   modalfont: "#999999",
+  modalhoverbg: "#f6f6f6",
 };
 
 const GlobalStyles = createGlobalStyle`

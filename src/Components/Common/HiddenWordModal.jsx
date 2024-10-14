@@ -1,6 +1,8 @@
 // src/components/MentionModal.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
+import { RightArrowIcon } from "../../Components/Common/Icon";
+import { Line } from "../../Components/SettingsItem_de";
 
 // 스타일 정의
 // 스타일 정의
@@ -20,17 +22,25 @@ const Overlay = styled.div`
 
 const ModalContainer = styled.div`
   width: 420px;
-  height: 320px;
+  height: 620px;
   background-color: ${(props) => props.theme.borderColor};
   border: 1px solid ${(props) => props.theme.borderstroke};
   border-radius: 8px;
   padding: 24px;
 `;
 
-const Title = styled.h2`
-  margin-bottom: 16px;
+const HeadTitle = styled.h1`
+  margin-bottom: 14px;
   display: flex;
-  justify-content: center;
+  justify-content: start;
+  align-items: center;
+  font-weight: 600;
+`;
+
+const Title = styled.h2`
+  margin: 14px 0;
+  display: flex;
+  justify-content: start;
   align-items: center;
   font-weight: 500;
 `;
@@ -45,9 +55,22 @@ const Info = styled.div`
   padding: 12px;
 `;
 
+const MoveLink = styled.a``;
+
 const OptionList = styled.ul`
   list-style-type: none;
   padding-top: 12px;
+`;
+
+const AutoLayout = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-right: 18px;
+  @media (max-width: 768px) {
+    padding-right: 28px;
+  }
 `;
 
 const OptionItem = styled.li`
@@ -60,17 +83,16 @@ const OptionItem = styled.li`
   position: relative; /* Positioning for the ::after element */
   color: ${(props) => props.theme.fontcolor};
   background-color: transparent; /* 초기 배경색 설정 */
-  border-radius: 8px;
+  border-radius: 6px;
 
   // 호버 시 배경색 변경
   &:hover {
-    color: #181818;
+    color: #000;
     background-color: ${(props) =>
       props.theme.modalhoverbg}; /* 호버 시 백그라운드 색상 */
     transition: background-color 0.3s ease; /* 배경색 변화 애니메이션 */
   }
 `;
-
 // 체크박스 스타일 컴포넌트 추가
 const Checkbox = styled.input`
   width: 20px;
@@ -103,12 +125,17 @@ const Checkbox = styled.input`
   }
 `;
 
-const MentionModal = ({ onClose, onSelectOption }) => {
-  const [activeOption, setActiveOption] = useState(null);
+const HiddenWordModal = ({ onClose, onSelectOption }) => {
+  const [activeOption1, setActiveOption1] = useState(null); // 첫 번째 옵션 상태
+  const [activeOption2, setActiveOption2] = useState(null); // 두 번째 옵션 상태
   const [isOptionSelected, setIsOptionSelected] = useState(false);
 
-  const handleOptionClick = (option) => {
-    setActiveOption(option);
+  const handleOptionClick = (option, listIndex) => {
+    if (listIndex === 1) {
+      setActiveOption1(option);
+    } else {
+      setActiveOption2(option);
+    }
     setIsOptionSelected(true);
     onSelectOption(option);
   };
@@ -123,35 +150,60 @@ const MentionModal = ({ onClose, onSelectOption }) => {
   return (
     <Overlay onClick={handleOverlayClick}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <Title>@언급 허용 대상</Title>
+        <HeadTitle>숨겨진 단어</HeadTitle>
+        <Info>Instagram에서 받은 댓글에도 이 설정이 적용됩니다.</Info>
+        <Line />
+        <Title>불쾌한 단어 및 문구</Title>
         <Info>
-          회원님을 @언급하여 스레드, 답글 또는 소개글에 회원님의 프로필을 연결할
-          수 있도록 허용할 사람을 선택하세요. 회원님이 선택한 옵션에 해당하지
-          않는 사람이 회원님을 @언급하려고 시도하면 회원님이 @언급을 허용하지
-          않는다는 메시지가 표시됩니다.
+          게시물에서 불쾌한 단어, 문구 또는 이모티콘이 포함된 답글은 누구나 볼
+          수 있는 가려진 섹션으로 이동됩니다.
+          <MoveLink>더 알아보기</MoveLink>
         </Info>
         <OptionList>
-          {/* 옵션 배열을 순회하며 리스트 항목 생성 */}
-          {["모든 사람", "내가 팔로우하는 프로필", "아무도 언급할 수 없음"].map(
-            (option) => (
-              <OptionItem
-                key={option}
-                onClick={() => handleOptionClick(option)}
-              >
-                {/* 체크박스 추가 */}
-                {option}
-                <Checkbox
-                  type="radio" // 라디오 버튼으로 설정
-                  checked={activeOption === option} // 현재 선택된 옵션과 비교하여 체크 상태 설정
-                  readOnly // 사용자가 직접 체크할 수 없도록 설정
-                />
-              </OptionItem>
-            )
-          )}
+          {["설정됨", "해제됨"].map((option) => (
+            <OptionItem
+              key={option}
+              onClick={() => handleOptionClick(option, 1)}
+            >
+              {option}
+              <Checkbox
+                type="radio"
+                checked={activeOption1 === option}
+                readOnly
+              />
+            </OptionItem>
+          ))}
         </OptionList>
+        <Line />
+        <Title>맞춤 단어 및 문구</Title>
+        <Info>
+          이 단어, 문구 또는 이모티콘이 포함된 게시물이나 답글이 피드에 표시되지
+          않습니다. 검색에서는 해당 콘텐츠를 계속 볼 수 있지만, 가려진 상태로
+          표시됩니다.
+        </Info>
+        <OptionList>
+          {["설정됨", "해제됨"].map((option) => (
+            <OptionItem
+              key={option}
+              onClick={() => handleOptionClick(option, 2)}
+            >
+              {option}
+              <Checkbox
+                type="radio"
+                checked={activeOption2 === option}
+                readOnly
+              />
+            </OptionItem>
+          ))}
+        </OptionList>
+        <Line />
+        <AutoLayout>
+          <Title>맞춤 단어 및 문구 관리</Title>
+          <RightArrowIcon fill={"gray"} width={"12px"} />
+        </AutoLayout>
       </ModalContainer>
     </Overlay>
   );
 };
 
-export default MentionModal;
+export default HiddenWordModal;

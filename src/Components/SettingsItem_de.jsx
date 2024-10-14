@@ -6,6 +6,7 @@ import BorderItem from "../Components/Common/Border_de";
 import { ShareIconNew } from "../Components/Common/Icon";
 import Toggle from "./Common/Toggle";
 import MentionModal from "./Common/MentionModal";
+import HiddenWordModal from "./Common/HiddenWordModal";
 
 import {
   LockIcon,
@@ -263,7 +264,7 @@ const IconRadius = styled.div`
 `;
 
 // 줄
-const Line = styled.hr`
+export const Line = styled.hr`
   width: 98%;
   display: flex;
   justify-content: start;
@@ -297,7 +298,7 @@ const SelectedText = styled.span`
   color: ${(props) => props.theme.modalfont};
 `;
 
-const SelectLayout = styled.div`
+export const SelectLayout = styled.div`
   display: flex;
   gap: 14px;
 `;
@@ -324,13 +325,24 @@ const SettingsItem_de = () => {
     }
   };
   // 모달 창 구현
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOption, setSelectedOption] =
-    useState("내가 팔로우하는 프로필");
+  const [isMentionModalOpen, setMentionModalOpen] = useState(false);
+  const [isHiddenWordModalOpen, setHiddenWordModalOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null); // selectedOption 상태 추가
 
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
-  const handleSelectOption = (option) => setSelectedOption(option);
+  const openMentionModal = () => {
+    setMentionModalOpen(true);
+    setHiddenWordModalOpen(false); // HiddenWordModal 닫기
+  };
+
+  const openHiddenWordModal = () => {
+    setHiddenWordModalOpen(true);
+    setMentionModalOpen(false); // MentionModal 닫기
+  };
+
+  const closeModals = () => {
+    setMentionModalOpen(false);
+    setHiddenWordModalOpen(false);
+  };
   // 모달 끝
   useEffect(() => {
     // 초기 상태에 대한 border 위치 설정
@@ -394,7 +406,7 @@ const SettingsItem_de = () => {
                 <PrivacyTitle>언급</PrivacyTitle>
                 <SelectLayout>
                   <SelectedText>{selectedOption}</SelectedText>
-                  <IconStroke onClick={handleOpenModal}>
+                  <IconStroke onClick={openMentionModal}>
                     <RightArrowIcon fill={"gray"} width={"12px"} />
                   </IconStroke>
                 </SelectLayout>
@@ -406,9 +418,12 @@ const SettingsItem_de = () => {
               </Icon>
               <PrivacyAutoLayout>
                 <PrivacyTitle>숨겨진 단어</PrivacyTitle>
-                <IconStroke>
-                  <RightArrowIcon fill={"gray"} width={"12px"} />
-                </IconStroke>
+                <SelectLayout>
+                  <SelectedText>{selectedOption}</SelectedText>
+                  <IconStroke onClick={openHiddenWordModal}>
+                    <RightArrowIcon fill={"gray"} width={"12px"} />
+                  </IconStroke>
+                </SelectLayout>
               </PrivacyAutoLayout>
             </PrivacyProfile>
             <Line />
@@ -719,7 +734,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -780,12 +795,8 @@ const SettingsItem_de = () => {
         )}
       </SettingsInner>
       {/* 모달은 PrivacyProfile 바깥에 위치 */}
-      {isModalOpen && (
-        <MentionModal
-          onClose={handleCloseModal}
-          onSelectOption={handleSelectOption}
-        />
-      )}
+      {isMentionModalOpen && <MentionModal onClose={closeModals} />}
+      {isHiddenWordModalOpen && <HiddenWordModal onClose={closeModals} />}
     </Wrapper>
   );
 };
