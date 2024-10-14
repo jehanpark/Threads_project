@@ -273,7 +273,7 @@ const Nav = () => {
           />
         </svg>
       ),
-      path: "",
+      path: "/profile",
     },
   ];
 

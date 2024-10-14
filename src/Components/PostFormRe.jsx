@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import {
@@ -15,7 +14,6 @@ import {
   PictureIcon,
   MicIcon,
   HashtagIcon,
-  RecoderIcon,
 } from "../Components/Common/Icon";
 import { useAuth } from "../Contexts/AuthContext";
 import Loading from "./Loading";
@@ -197,23 +195,16 @@ const SubmitBtn = styled.input`
   }
 `;
 
-const IconBtn = styled.button`
-  background-color: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-`;
-
 const PostForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState(""); // 게시글 상태
   const [files, setFiles] = useState([]); // 파일 상태
   const [audioBlob, setAudioBlob] = useState(null); // 녹음 파일 상태
+  const [audioURL, setAudioURL] = useState(null); // 녹음 파일 미리보기 URL 상태
   const [isRecording, setIsRecording] = useState(false); // 녹음 중 상태
   const mediaRecorderRef = useRef(null); // MediaRecorder 참조
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  const [audioURL, setAudioURL] = useState(null); // 녹음 파일 미리보기 URL 상태
 
   useEffect(() => {
     if (!currentUser) {
@@ -265,24 +256,10 @@ const PostForm = () => {
       mediaRecorder.start();
       setIsRecording(true);
 
-      let chunks = [];
-
       mediaRecorder.ondataavailable = (e) => {
-        chunks.push(e.data);
-      };
-
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(chunks, { type: "audio/mp3" });
-        setAudioBlob(audioBlob); // 녹음이 끝나면 audioBlob 상태 설정
-
-        const audioFile = new File([audioBlob], "recording.mp3", {
-          type: "audio/mp3",
-        });
-
-        // 녹음 파일을 files 배열에 추가
-        setFiles((prevFiles) => [...prevFiles, audioFile]);
-
-        chunks = []; // 녹음 후 chunks 초기화
+        const url = URL.createObjectURL(e.data);
+        setAudioBlob(e.data); // 녹음 완료 시 audioBlob에 데이터 저장
+        setAudioURL(url); // 미리보기용 URL 생성
       };
     });
   };
@@ -291,15 +268,6 @@ const PostForm = () => {
   const stopRecording = () => {
     mediaRecorderRef.current.stop();
     setIsRecording(false);
-
-    if (audioBlob) {
-      const audioFile = new File([audioBlob], "recording.mp3", {
-        type: "audio/mp3",
-      });
-
-      // 녹음 파일을 files 배열에 추가
-      setFiles((prevFiles) => [...prevFiles, audioFile]);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -344,8 +312,6 @@ const PostForm = () => {
             photoUrls.push(url);
           } else if (file.type.startsWith("video/")) {
             videoUrls.push(url);
-          } else if (file.type.startsWith("audio/")) {
-            await updateDoc(docRef, { audioURL: url });
           }
         })
       );
@@ -404,7 +370,7 @@ const PostForm = () => {
                       objectFit: "contain",
                     }}
                   />
-                ) : file.type.startsWith("video/") ? (
+                ) : (
                   <video
                     controls
                     style={{
@@ -416,19 +382,6 @@ const PostForm = () => {
                   >
                     <source src={URL.createObjectURL(file)} />
                   </video>
-                ) : (
-                  <audio
-                    controls
-                    src={URL.createObjectURL(file)}
-                    style={{
-                      width: "140px", // 오디오 컨트롤러의 너비를 이미지/비디오와 맞춤
-                      height: "40px", // 오디오 컨트롤러의 높이 설정
-                      borderRadius: "10px", // 일관성을 위해 오디오에도 경계 반경 적용
-                      objectFit: "contain",
-                    }}
-                  >
-                    Your browser does not support the audio element.
-                  </audio>
                 )}
                 <DeleteButton onClick={() => removeFile(index)}>X</DeleteButton>
               </div>
@@ -453,19 +406,25 @@ const PostForm = () => {
                 accept="video/*, image/*"
               />
             </PictureButton>
-            {/* 녹음 기능 */}
 
             {!isRecording ? (
-              <IconBtn onClick={startRecording}>
-                <MicIcon width={24} />
-              </IconBtn>
+              <button type="button" onClick={startRecording}>
+                녹음 시작
+              </button>
             ) : (
-              <IconBtn onClick={stopRecording}>
-                <RecoderIcon width={24} />
-              </IconBtn>
+              <button type="button" onClick={stopRecording}>
+                녹음 중지
+              </button>
             )}
-            <HashtagIcon width={24} />
           </Icons>
+          {/* 녹음 완료된 오디오 미리보기 */}
+          {audioURL && (
+            <div>
+              <audio controls src={audioURL} style={{ width: "100%" }}>
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          )}
           <Buttons>
             <OpenButton>팔로워에게만 허용</OpenButton>
             <SubmitBtn
