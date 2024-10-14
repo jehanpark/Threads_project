@@ -274,7 +274,7 @@ const SubmitBtn = styled.input`
   }
 `;
 
-const Comment = () => {
+const Comment = ({ id }) => {
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [comments, setComments] = useState([]); // 댓글 배열
