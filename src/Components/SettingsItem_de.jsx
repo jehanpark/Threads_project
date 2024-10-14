@@ -303,6 +303,13 @@ export const SelectLayout = styled.div`
   gap: 14px;
 `;
 
+const SelectDirection = styled.div`
+  display: flex;
+  flex-direction: ${({ isMobile }) =>
+    isMobile ? "column" : "row"}; /* 'none'에서 'row'로 변경 */
+  gap: ${({ isMobile }) => (isMobile ? "6px" : "6px")};
+`;
+
 // 아이콘 눌렀을 때 링크로 이동
 const IconLink = styled.a`
   height: 20px;
@@ -383,7 +390,9 @@ const SettingsItem_de = () => {
     }
   }, []);
   const [isDarkMode, setIsDarkMode] = useState(false); // 기본값은 라이트 모드
-
+  const isMobile = useMediaQuery({
+    query: "(max-width: 768px)", // 닫는 괄호 추가
+  });
   return (
     <Wrapper>
       <SettingsInner>
@@ -449,8 +458,10 @@ const SettingsItem_de = () => {
               <PrivacyAutoLayout>
                 <PrivacyTitle>숨겨진 단어</PrivacyTitle>
                 <SelectLayout>
-                  <SelectedText>{selectedOption1}</SelectedText>
-                  <SelectedText>{selectedOption2}</SelectedText>
+                  <SelectDirection isMobile={isMobile}>
+                    <SelectedText>{selectedOption1}</SelectedText>
+                    <SelectedText>{selectedOption2}</SelectedText>
+                  </SelectDirection>
                   <IconStroke onClick={openHiddenWordModal}>
                     <RightArrowIcon fill={"gray"} width={"12px"} />
                   </IconStroke>

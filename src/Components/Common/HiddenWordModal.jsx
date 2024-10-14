@@ -3,29 +3,32 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { RightArrowIcon } from "../../Components/Common/Icon";
 import { Line } from "../../Components/SettingsItem_de";
+import { useMediaQuery } from "react-responsive";
 
 // 스타일 정의
 // 스타일 정의
 const Overlay = styled.div`
   position: fixed; // 모달을 화면에 고정
-  top: 45%; // 세로 중앙 정렬 기준
-  left: 50%; // 가로 중앙 정렬 기준
-  transform: translate(-50%, -50%); // 요소의 중심을 기준으로 이동
+  top: ${({ isMobile }) => (isMobile ? "0" : "45%")}; // 세로 중앙 정렬 기준
+  left: ${({ isMobile }) => (isMobile ? "0" : "50%")}; // 가로 중앙 정렬 기준
+  transform: ${({ isMobile }) =>
+    isMobile ? "0" : "translate(-50%, -50%)"}; // 요소의 중심을 기준으로 이동
   width: 100vw; // 전체 화면 너비
-  height: 100vh; // 전체 화면 높이
+  height: ${({ isMobile }) => (isMobile ? `calc(100vh - 70px)` : "100vh")};
   display: flex; // 플렉스 박스 사용
   justify-content: center; // 수평 중앙 정렬
   align-items: center; // 수직 중앙 정렬
-  z-index: 1000; // 다른 요소보다 위에 표시 (필요 시 조정)
+  z-index: ${({ isMobile }) =>
+    isMobile ? "1000" : "0"}; // 다른 요소보다 위에 표시 (필요 시 조정)
   background-color: rgba(0, 0, 0, 0.7); // 반투명 배경 (필요 시 조정)
 `;
 
 const ModalContainer = styled.div`
-  width: 420px;
-  height: 620px;
+  width: ${({ isMobile }) => (isMobile ? "100%" : "420px")};
+  height: ${({ isMobile }) => (isMobile ? "100%" : "620px")};
   background-color: ${(props) => props.theme.borderColor};
   border: 1px solid ${(props) => props.theme.borderstroke};
-  border-radius: 8px;
+  border-radius: ${({ isMobile }) => (isMobile ? "none" : "8px")};
   padding: 24px;
 `;
 
@@ -35,6 +38,7 @@ const HeadTitle = styled.h1`
   justify-content: start;
   align-items: center;
   font-weight: 600;
+  font-size: ${({ isMobile }) => (isMobile ? "14px" : "")};
 `;
 
 const Title = styled.h2`
@@ -42,6 +46,7 @@ const Title = styled.h2`
   display: flex;
   justify-content: start;
   align-items: center;
+  font-size: ${({ isMobile }) => (isMobile ? "14px" : "")};
   font-weight: 500;
 `;
 
@@ -52,14 +57,14 @@ const Info = styled.div`
   background: ${(props) => props.theme.borderstroke};
   border-radius: 8px;
   line-height: 20px;
-  padding: 12px;
+  padding: ${({ isMobile }) => (isMobile ? "8px" : "12px")};
 `;
 
 const MoveLink = styled.a``;
 
 const OptionList = styled.ul`
   list-style-type: none;
-  padding-top: 12px;
+  padding-top: ${({ isMobile }) => (isMobile ? "8px" : "12px")};
 `;
 
 const AutoLayout = styled.div`
@@ -69,7 +74,7 @@ const AutoLayout = styled.div`
   width: 100%;
   padding-right: 18px;
   @media (max-width: 768px) {
-    padding-right: 28px;
+    padding-right: 20px;
   }
 `;
 
@@ -146,20 +151,22 @@ const HiddenWordModal = ({
   const handleOverlayClick = () => {
     onClose(); // 모달 닫기
   };
-
+  const isMobile = useMediaQuery({
+    query: "(max-width: 768px)", // 닫는 괄호 추가
+  });
   return (
-    <Overlay onClick={handleOverlayClick}>
-      <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <HeadTitle>숨겨진 단어</HeadTitle>
+    <Overlay onClick={handleOverlayClick} isMobile={isMobile}>
+      <ModalContainer onClick={(e) => e.stopPropagation()} isMobile={isMobile}>
+        <HeadTitle isMobile={isMobile}>숨겨진 단어</HeadTitle>
         <Info>Instagram에서 받은 댓글에도 이 설정이 적용됩니다.</Info>
         <Line />
-        <Title>불쾌한 단어 및 문구</Title>
-        <Info>
+        <Title isMobile={isMobile}>불쾌한 단어 및 문구</Title>
+        <Info isMobile={isMobile}>
           게시물에서 불쾌한 단어, 문구 또는 이모티콘이 포함된 답글은 누구나 볼
           수 있는 가려진 섹션으로 이동됩니다.
           <MoveLink>더 알아보기</MoveLink>
         </Info>
-        <OptionList>
+        <OptionList isMobile={isMobile}>
           {["가려진 섹션 설정", "가려진 섹션 해제"].map((option) => (
             <OptionItem
               key={option}
@@ -175,13 +182,13 @@ const HiddenWordModal = ({
           ))}
         </OptionList>
         <Line />
-        <Title>맞춤 단어 및 문구</Title>
-        <Info>
+        <Title isMobile={isMobile}>맞춤 단어 및 문구</Title>
+        <Info isMobile={isMobile}>
           이 단어, 문구 또는 이모티콘이 포함된 게시물이나 답글이 피드에 표시되지
           않습니다. 검색에서는 해당 콘텐츠를 계속 볼 수 있지만, 가려진 상태로
           표시됩니다.
         </Info>
-        <OptionList>
+        <OptionList isMobile={isMobile}>
           {["맞춤 단어 설정", "맞춤 단어 해제"].map((option) => (
             <OptionItem
               key={option}
@@ -198,7 +205,7 @@ const HiddenWordModal = ({
         </OptionList>
         <Line />
         <AutoLayout>
-          <Title>맞춤 단어 및 문구 관리</Title>
+          <Title isMobile={isMobile}>맞춤 단어 및 문구 관리</Title>
           <RightArrowIcon fill={"gray"} width={"12px"} />
         </AutoLayout>
       </ModalContainer>
