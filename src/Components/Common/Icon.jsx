@@ -844,7 +844,7 @@ export const CloseIcon = ({ width, fill, border, borderRadius }) => {
       width={width || "24px"}
       height={width || "24px"}
       fill={fill || "#000000"} // fill Prop을 사용하여 색상을 설정
-      viewBox="0 0 24 24"
+      viewBox="0 0 14 14"
     >
       <path
         d="M13 1L1 13"
@@ -1612,7 +1612,7 @@ export const DeleteProfileIcon = (props) => {
 export const EalthIcon = (props) => {
   return (
     <svg
-      viewBox="0 0 24 24"
+      viewBox="2 0 17 24"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       {...props}
@@ -1620,7 +1620,7 @@ export const EalthIcon = (props) => {
       <circle
         cx="12"
         cy="12"
-        r="9"
+        // r="9"
         stroke="#000000"
         strokeLinecap="round"
         strokeLinejoin="round"

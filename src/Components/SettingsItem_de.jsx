@@ -214,7 +214,34 @@ const Icon = styled.div`
   height: 20px;
   text-align: end;
   /* padding: 0 10px; */
-  fill: ${({ theme }) => (theme === "dark" ? "white" : "black")};
+  svg {
+    path {
+      fill: ${(props) => props.theme.logoColor};
+      /* stroke: ${(props) => props.theme.logoColor}; */
+    }
+  }
+`;
+
+const Icon2 = styled.div`
+  height: 20px;
+  text-align: end;
+  /* padding: 0 10px; */
+  svg {
+    path {
+      /* fill: ${(props) => props.theme.logoColor}; */
+      stroke: ${(props) => props.theme.logoColor};
+    }
+  }
+`;
+const Icon3 = styled.div`
+  height: 20px;
+  text-align: end;
+  /* padding: 0 10px; */
+  svg {
+    path {
+      stroke: ${(props) => props.theme.logoColor};
+    }
+  }
 `;
 const IconRadius = styled.div`
   width: 20px;
@@ -223,9 +250,15 @@ const IconRadius = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  border: 2px solid #000;
+  border: 2px solid ${(props) => props.theme.logoColor};
   border-radius: 100%;
-  fill: ${({ theme }) => (theme === "dark" ? "#fff" : "#000")};
+  svg {
+    justify-content: center;
+    path {
+      /* fill: ${(props) => props.theme.logoColor}; */
+      stroke: ${(props) => props.theme.logoColor};
+    }
+  }
 `;
 
 // 줄
@@ -366,9 +399,9 @@ const SettingsItem_de = () => {
                 </ContentAutoLayout>
               </PrivacyProfile>
               <PrivacyProfile>
-                <Icon>
+                <Icon2>
                   <NotHeartIcon width={"20px"} fill={"black"} />
-                </Icon>
+                </Icon2>
                 <ContentAutoLayout>
                   <PrivacyTitle>좋아요 수 및 공유 수 숨기기</PrivacyTitle>
                   <IconLink
@@ -394,9 +427,9 @@ const SettingsItem_de = () => {
             <AccountSettings>
               <AccountContents>
                 <PrivacyProfile>
-                  <Icon>
+                  <Icon2>
                     <CloseLockIcon width={"20px"} fill={"black"} />
-                  </Icon>
+                  </Icon2>
                   <ContentAutoLayout>
                     <AccountTitle>웹 사이트 권한</AccountTitle>
                     <Icon>
@@ -416,9 +449,9 @@ const SettingsItem_de = () => {
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
-                  <Icon>
+                  <IconRadius>
                     <EalthIcon width={"22px"} />
-                  </Icon>
+                  </IconRadius>
                   <ContentAutoLayout>
                     <AccountTitle>페비더스 공유</AccountTitle>
                     <Icon>
@@ -538,9 +571,9 @@ const SettingsItem_de = () => {
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
-                  <Icon>
+                  <Icon2>
                     <NotHeartIcon width={"20px"} fill={"black"} />
-                  </Icon>
+                  </Icon2>
                   <ContentAutoLayout>
                     <PrivacyTitle>내 정보 전송</PrivacyTitle>
                     <IconLink
