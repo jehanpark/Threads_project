@@ -30,6 +30,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
 import ExModal from "./Common/ExModal";
 import { formatDistanceToNow } from "date-fns";
+import { ko } from "date-fns/locale";
 import PostSetModal from "./Common/PostSetModal";
 import EditModal from "./EditModal";
 import AudioMessage from "./AudioMessage";
@@ -277,7 +278,7 @@ const Post = ({
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전"; // createdAt가 유효하지 않을 때 처리
     const date = new Date(createdAt.seconds * 1000);
-    return formatDistanceToNow(date, { addSuffix: true });
+    return formatDistanceToNow(date, { addSuffix: true, locale: ko });
   };
 
   //PostSetModal
@@ -291,6 +292,7 @@ const Post = ({
   // EtcModal
   const handleEdit = () => {
     setIsEtcModalOpen(true);
+    setOpenModalId(null);
   };
   const closeEtcModal = () => {
     setIsEtcModalOpen(false);

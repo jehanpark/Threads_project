@@ -110,17 +110,23 @@ const UpLoadButton = styled.button`
   }
 `;
 
-const PostForm_Modal = (centerChild, Button) => {
+const PostForm_Modal = ({ centerChild, Button, onClose, onSelect }) => {
+  const handleSelect = (text) => {
+    onSelect(text); // 선택된 텍스트를 상위 컴포넌트로 전달
+    onClose(); // 모달 닫기
+  };
   return (
     <Wrapper>
       <Contentswrapper>
         <TopRec></TopRec>
         <Title>새로운 스레드를 원하는 사람들에게 공개하세요</Title>
         <Optionwrapper>
-          <Li>모두에게 공개</Li>
-          <Li>내 팔로워만</Li>
-          <Li>내가 언급한 사람만</Li>
-          <Li>나만 보기</Li>
+          <Li onClick={() => handleSelect("모두에게 공개")}>모두에게 공개</Li>
+          <Li onClick={() => handleSelect("내 팔로워만")}>내 팔로워만</Li>
+          <Li onClick={() => handleSelect("내가 언급한 사람만")}>
+            내가 언급한 사람만
+          </Li>
+          <Li onClick={() => handleSelect("나만 보기")}>나만 보기</Li>
         </Optionwrapper>
         <UpLoadButton>게시글 업로드</UpLoadButton>
       </Contentswrapper>
