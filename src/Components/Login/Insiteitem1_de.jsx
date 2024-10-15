@@ -4,19 +4,16 @@ import styled from "styled-components";
 import BorderItem from "../Common/Border_de";
 import { IconWrapper, InformationIcon, FollowerIcon } from "../Common/Icon";
 
-// 스타일 정의
-
 const BorderWrapper = styled.div`
   display: flex;
-  flex-direction: ${(props) =>
-    props.isSmallScreen ? "column" : props.isTablet ? "column" : "row"};
+  flex-direction: ${(props) => (props.isSmallScreen ? "column" : "row")};
   align-items: flex-start;
   justify-content: center;
   width: ${(props) =>
     props.isSmallScreen ? "100vw" : props.isTablet ? "800px" : "1200px"};
   height: auto;
   padding: ${(props) =>
-    props.isSmallScreen ? "20px" : props.isTablet ? "0 30px" : "0px"};
+    props.isSmallScreen ? "20px" : props.isTablet ? "0 30px" : "0"};
   gap: ${(props) =>
     props.isSmallScreen ? "20px" : props.isTablet ? "20px" : "40px"};
   box-sizing: border-box;
@@ -29,23 +26,17 @@ const InsitesWrapper = styled.div`
   justify-content: center;
   align-items: center;
   padding: ${(props) =>
-    props.isSmallScreen ? "0px" : props.isTablet ? "0 20px" : "0px"};
+    props.isSmallScreen ? "" : props.isTablet ? "0 20px" : ""};
   width: ${(props) =>
-    props.isSmallScreen ? "100%" : props.isTablet ? "650px" : "auto"};
+    props.isSmallScreen ? "100%" : props.isTablet ? "500px" : "auto"};
   gap: ${(props) => (props.isSmallScreen ? "0" : "10px")};
-  margin: ${(props) =>
-    props.isSmallScreen
-      ? "20px 0"
-      : props.isTablet
-      ? "20px 0"
-      : "0"}; /* 박스 간 간격 제거 */
+  margin: 0; /* 박스 간 간격 제거 */
   background: ${(props) => props.theme.borderColor};
   border-radius: 20px;
 `;
 
 const InsitesTitle = styled.div`
-  margin-top: ${(props) =>
-    props.isSmallScreen ? "20px" : props.isTablet ? "30px" : "40px"};
+  margin-top: ${(props) => (props.isSmallScreen ? "4px" : "20px")};
   font-size: ${(props) =>
     props.isSmallScreen ? "16px" : props.isTablet ? "16px" : "18px"};
   font-weight: 500;
@@ -82,8 +73,7 @@ const FollowerWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props) =>
-    props.isSmallScreen ? "100%" : props.isTablet ? "100%" : "auto"};
+  width: ${(props) => (props.isSmallScreen ? "100%" : "600px")};
   height: ${(props) => (props.isSmallScreen ? "100%" : "100%")};
   padding: ${(props) => (props.isSmallScreen ? "20px 0" : "0 ")};
   box-sizing: border-box; // 크기 조정
@@ -94,40 +84,22 @@ const TotalInfo = styled.div`
   flex-direction: column;
 `;
 
-const FollowerInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  justify-self: start;
-  padding: 10px 30px;
-`;
-
 const FollowerInfo = styled.div`
-  width: ${(props) =>
-    props.isSmallScreen ? "200px" : props.isTablet ? "100%" : "436px"};
-  height: ${(props) =>
-    props.isSmallScreen ? "200px" : props.isTablet ? "100%" : "317px"};
-  margin: ${(props) =>
-    props.isSmallScreen ? "0" : props.isTablet ? "0" : "16px 0"};
+  width: 436px;
+  height: 317px;
+  margin: 16px 0;
 `;
 
 const TotalNum = styled.div`
-  font-size: ${(props) =>
-    props.isSmallScreen ? "16px" : props.isTablet ? "30px" : "40px"};
-  margin-bottom: ${(props) =>
-    props.isSmallScreen ? "16px" : props.isTablet ? "16px" : "0"};
+  font-size: 40px;
   font-weight: bold;
   margin-left: 8px;
 `;
 
 const TotalFollow = styled.div`
   color: #bababa;
-  font-size: ${(props) =>
-    props.isSmallScreen ? "0.8rem" : props.isTablet ? "1rem" : "1rem"};
-  margin-top: ${(props) =>
-    props.isSmallScreen ? "0" : props.isTablet ? "0" : "12px"};
-  margin-bottom: ${(props) =>
-    props.isSmallScreen ? "12px" : props.isTablet ? "12px" : "0"};
+  font-size: 1rem;
+  margin: 12px 0;
 `;
 
 export const Line = styled.hr`
@@ -176,7 +148,6 @@ const Insiteitem_de = () => {
     <BorderWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
       {/* 1번째 인사이트 박스 */}
       <InsitesWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
-        {" "}
         <InsitesTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
           인사이트
         </InsitesTitle>
@@ -190,7 +161,7 @@ const Insiteitem_de = () => {
             <BorderItemTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
               {item.title}
             </BorderItemTitle>
-            <Info>
+            <Info isSmallScreen={isSmallScreen} isTablet={isTablet}>
               <IconWrapper
                 background={"#e9e9e9"}
                 borderRadius={"100%"}
@@ -209,27 +180,68 @@ const Insiteitem_de = () => {
       {/* 2번째 인사이트 */}
       <InsitesWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
         <InsitesTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
-          팔로워
+          인사이트
         </InsitesTitle>
-        <FollowerWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
-          <FollowerInner isSmallScreen={isSmallScreen} isTablet={isTablet}>
-            <TotalInfo isSmallScreen={isSmallScreen} isTablet={isTablet}>
-              <TotalNum isSmallScreen={isSmallScreen} isTablet={isTablet}>
-                1
-              </TotalNum>
-              <TotalFollow isSmallScreen={isSmallScreen} isTablet={isTablet}>
-                총 팔로워
-              </TotalFollow>
-            </TotalInfo>
-            <FollowerIcon /> <Line />
-            <Info>
+        {itemsSecondBox.map((item) => (
+          <BorderItem
+            key={item.title}
+            type="insitesWrapper"
+            isSmallScreen={isSmallScreen}
+            isTablet={isTablet}
+          >
+            <BorderItemTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
+              {item.title}
+            </BorderItemTitle>
+            <Info isSmallScreen={isSmallScreen} isTablet={isTablet}>
+              <IconWrapper
+                background={"#e9e9e9"}
+                borderRadius={"100%"}
+                wrapperSize={"32px"}
+                wrapperPadding={"8px"}
+              >
+                <InformationIcon width={"30px"} fill={"black"} zindex={"1"} />
+              </IconWrapper>
               <BorderItemInfo isSmallScreen={isSmallScreen} isTablet={isTablet}>
-                팔로워가 100명 이상이 되면 어떤 사람들이 회원님의 콘텐츠를
-                조회했는지에 관한 정보를 더 확인할 수 있습니다.
+                {item.info}
               </BorderItemInfo>
             </Info>
-          </FollowerInner>
-        </FollowerWrapper>
+          </BorderItem>
+        ))}
+        <BorderItem
+          type="followWrapper"
+          isSmallScreen={isSmallScreen}
+          isTablet={isTablet}
+        >
+          <BorderItemTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
+            팔로워
+          </BorderItemTitle>
+          <Info isSmallScreen={isSmallScreen} isTablet={isTablet}>
+            <FollowerWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
+              <FollowerInfo>
+                <TotalInfo>
+                  <TotalNum>1</TotalNum>
+                  <TotalFollow>총 팔로워</TotalFollow>
+                </TotalInfo>
+                <FollowerIcon />
+              </FollowerInfo>
+            </FollowerWrapper>
+          </Info>
+          <Line />
+          <Info>
+            <IconWrapper
+              background={"#e9e9e9"}
+              borderRadius={"100%"}
+              wrapperSize={"32px"}
+              wrapperPadding={"8px"}
+            >
+              <InformationIcon width={"30px"} fill={"black"} zindex={"1"} />
+            </IconWrapper>
+            <BorderItemInfo isSmallScreen={isSmallScreen} isTablet={isTablet}>
+              팔로워가 100명 이상이 되면 어떤 사람들이 회원님의 콘텐츠를
+              조회했는지에 관한 정보를 더 확인할 수 있습니다.
+            </BorderItemInfo>
+          </Info>
+        </BorderItem>
       </InsitesWrapper>
     </BorderWrapper>
   );

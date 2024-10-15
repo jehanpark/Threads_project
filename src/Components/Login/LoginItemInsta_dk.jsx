@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import InstaTextLogo from "./InstaTextLogo";
-import LogoTextMark from "../LogoTextMark";
+import LogoTextMark from "../LoadingLogo/LogoTextMark";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { FirebaseError } from "firebase/app";

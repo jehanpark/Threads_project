@@ -9,14 +9,14 @@ import LoginInsta from "../Pages/LoginInsta";
 import Follow from "../Pages/Follow";
 import Activity from "../Pages/Activity";
 import Profile from "../Pages/Profile";
-import PostForm from "../Components/PostForm";
+import PostForm from "../Components/post/PostForm";
 import Insites from "../Pages/Insites";
 // import CreateAccount from "../Components/Login/CreateAccount_de";
 import CreateAccount from "../Components/Login/CreateAccountItem_dk";
 // import CreateAccount from "../Pages/CreateAccount";
 import Settings from "../Pages/Settings";
-import Comment from "../Components/Comment";
-import PostComment from "../Components/PostComment";
+import Comment from "../Pages/Comment";
+import PostComment from "../Pages/PostComment";
 // import CreateAccount from "../Components/Login/CreateAccount";
 
 export const router = createBrowserRouter([

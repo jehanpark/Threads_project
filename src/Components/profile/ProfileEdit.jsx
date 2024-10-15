@@ -5,6 +5,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import { storage, auth, db } from "../../firebase";
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import Button from "../Common/Button";
 import {
   collection,
@@ -66,6 +67,19 @@ const Box = styled.div`
   padding: 15px;
   background: ${(props) => props.theme.borderColor};
   margin-bottom: 10px;
+  &.mobile {
+    display: none;
+    margin-top: 8px;
+    @media screen and (max-width: 768px) {
+      display: block;
+      text-align: center;
+      background: ${(props) => props.theme.borderstroke};
+      &:hover {
+        background: ${(props) => props.theme.followerfont};
+        color: ${(props) => props.theme.btnBgColor};
+      }
+    }
+  }
 `;
 
 const Left = styled.div`
@@ -78,6 +92,7 @@ const NameInput = styled.input`
   background-color: inherit;
   border-bottom: 1px solid ${(props) => props.theme.nomalIconColor};
   width: 100%;
+  color: ${(props) => props.theme.userIcon};
   &::placeholder {
     opacity: 1;
     transition: opacity 0.3s;
@@ -105,6 +120,29 @@ const Checkinner = styled.div`
   align-items: center;
 `;
 
+const Switch = styled(motion.label)`
+  width: 46px;
+  height: 30px;
+  background-color: ${(props) => props.theme.mouseHoverBg};
+  display: flex;
+  justify-content: flex-start;
+  border-radius: 50px;
+  padding: 3px;
+  border: 2px solid ${(props) => props.theme.borderstroke};
+  cursor: pointer;
+  &[data-isOn="true"] {
+    justify-content: flex-end;
+    background-color: ${(props) => props.theme.searchBar};
+  }
+`;
+
+const Handle = styled(motion.div)`
+  width: 20px;
+  height: 20px;
+  background-color: ${(props) => props.theme.btnBgColor};
+  border-radius: 40px;
+`;
+
 const SubTitle = styled.h3`
   font-size: 16px;
   font-weight: 600;
@@ -129,29 +167,41 @@ const ImgInput = styled.input`
   display: none;
 `;
 
+const ButtonWrap = styled.div`
+  button {
+    color: ${(props) => props.theme.fontcolor};
+    background-color: ${(props) => props.theme.borderColor};
+    border: 2px solid ${(props) => props.theme.borderstroke};
+  }
+`;
+
 const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
-  const [profileData, setProfileData] = useState({ ...profile }); //전체적인 프로필 내용
+  const [profileData, setProfileData] = useState(profile); //전체적인 프로필 내용
   const [inputData, setInputDate] = useState({}); //>> 인풋 값을 받을 state
   const user = auth.currentUser; //유저 계정 내용 ( displayName , email , photoURL  , uid)
   const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" }); // 미디어 쿼리
+  const [followNum, setFollowNum] = useState(Math.floor(Math.random() * 10));
 
-  // const handleKeyDown = (e) => {
-  //   if (e.key === "Enter") {
-  //     complete();
-  //   } else if (e.key === "Escape") {
-  //     close();
-  //   }
-  // };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      complete();
+    } else if (e.key === "Escape") {
+      close();
+    }
+  };
 
-  // useEffect(() => {
-  //   if (open) {
-  //     window.addEventListener("keydown", handleKeyDown);
-  //   }
-  //   return () => {
-  //     window.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, [open]);
+  useEffect(() => {
+    if (open) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    setProfileData({ ...profile });
+  }, [profile]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -182,7 +232,6 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
       const result = await uploadBytes(locationRef, file);
       const avatarUrl = await getDownloadURL(result.ref);
       setAvarta(avatarUrl);
-      //console.log(avatar); << 잘나옴
       await updateProfile(user, { photoURL: avatar });
     } else return;
   };
@@ -190,8 +239,6 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   const complete = async () => {
     if (!user) return;
     try {
-      console.log("Uploaded avatar URL:");
-      console.log(avatar);
       const nameToSave =
         inputData.username || profile.username || user.displayName;
       const bioToSave = inputData.bio || profile.bio || "";
@@ -203,10 +250,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
 
       const querySnapshot = await getDocs(profileQuery);
       if (querySnapshot.empty) {
-        console.log("빔");
-        console.log(imgToSave);
-        console.log(nameToSave);
-        console.log(bioToSave);
+        // 유저 데이터가 없을 때
         const newDocRef = await addDoc(collection(db, "profile"), {
           username: nameToSave,
           userId: user.uid,
@@ -215,14 +259,13 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           isLinkPublic: profileData.isLinkPublic,
           isProfilePublic: profileData.isProfilePublic,
           img: imgToSave,
+          isFollowing: profile.isFollowing,
+          followNum: followNum,
         });
-
-        // postId 업데이트
         await updateDoc(newDocRef, { postId: newDocRef.id });
       } else {
-        console.log("안빔");
+        //데이터가 있을 떄 업로드
         const docRef = querySnapshot.docs[0].ref;
-        console.log(docRef);
         await updateDoc(docRef, {
           username: nameToSave,
           userId: user.uid,
@@ -231,6 +274,8 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           isLinkPublic: profileData.isLinkPublic,
           isProfilePublic: profileData.isProfilePublic,
           img: imgToSave,
+          isFollowing: profile.isFollowing,
+          followNum: docRef.followNum,
         });
       }
       // auth 정보 수정
@@ -241,90 +286,37 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
       //여기에 있는 profile state값 변경
       setProfileData({
         ...profileData,
-        name: nameToSave,
+        username: nameToSave,
         bio: bioToSave,
         img: avatar,
       });
-      // onProfileChange({
-      //   ...profileData,
-      //   name: nameToSave,
-      //   bio: bioToSave,
-      //   img: avatar,
-      // });
+      onProfileChange({
+        ...profileData,
+        username: nameToSave,
+        bio: bioToSave,
+        img: avatar,
+      });
       close();
     } catch (e) {
-      console.log("업뎃 에러");
       console.log(e);
-      console.log("업뎃 에러");
     }
   };
 
-  // const CheckProfile = async () => {
-  //   try {
-  //     const profileQuery = query(
-  //       collection(db, "profile"),
-  //       where("userEmail", "==", emailAdress)
-  //     );
-  //     const unsubscribe = onSnapshot(profileQuery, (querySnapshot) => {
-  //       //db에 firebase에 사람이 있다면 ?
-  //       if (!querySnapshot.empty) {
-  //         const profileDoc = querySnapshot.docs[0].data(); //이메일이 프로필db에 있는 사람의 데이터.
-  //         const imgUrl = profileDoc.img;
-  //         // const imgUrl = ref(storage, `avatars/${profileDoc.userId}`);
-
-  //         // 에러
-  //         setAvarta(imgUrl);
-  //         //유저 정보가 있다면
-  //         if (!profileDoc.empty) {
-  //           setProfileData((prev) => ({
-  //             ...prev,
-  //             postId: profileDoc.postId,
-  //             username: profileDoc.username,
-  //             userEmail: profileDoc.userEmail,
-  //             bio: profileDoc.bio,
-  //             isLinkPublic: profileDoc.isLinkPublic,
-  //             isProfilePublic: profileDoc.isProfilePublic,
-  //             img: imgUrl,
-  //           }));
-  //           console.log(profile);
-  //           console.log("있다");
-  //         }
-  //       } else {
-  //         // 사람이 없다면?
-  //         console.log("음따");
-  //         console.log(profile);
-  //         setProfileData((prev) => ({
-  //           ...prev,
-  //           postId: "",
-  //           username: emailAdress,
-  //           userEmail: emailAdress,
-  //           bio: "",
-  //           isLinkPublic: true,
-  //           isProfilePublic: true,
-  //           img: null,
-  //         }));
-  //       }
-  //     });
-  //     return () => unsubscribe();
-  //   } catch (error) {
-  //     console.error("Error fetching profile: ", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   CheckProfile();
-  // }, []);
-
-  console.log(profileData.isLinkPublic);
-
+  const [isOn, setIsOn] = useState(profileData.isLinkPublic);
+  const [isOn2, setIsOn2] = useState(profileData.isProfilePublic);
+  const toggleSwitch = () => setIsOn(!isOn);
+  const toggleSwitch2 = () => setIsOn2(!isOn2);
+  const spring = {
+    type: "spring",
+    stiffness: 700,
+    damping: 30,
+  };
   if (!open) return null;
+  console.log(avatar);
   return (
     <>
       <ModalOverlay onClick={close}>
-        <PofileModalBox
-          isSmallScreen={isSmallScreen}
-          onClick={(e) => e.stopPropagation()}
-        >
+        <PofileModalBox onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={close}>X</CloseButton>
           <Box style={{ height: "97px" }}>
             <Left style={{ width: "90%" }}>
@@ -336,10 +328,10 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
               />
             </Left>
             <ImgBox htmlFor="profileImg">
-              {avatar !== null ? (
-                <Img src={avatar} />
-              ) : (
+              {avatar == null || avatar == "" ? (
                 <UserIcon2 width="54" fill="#BABABA" />
+              ) : (
+                <Img src={avatar} />
               )}
             </ImgBox>
             <ImgInput
@@ -356,15 +348,25 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
                 name="bio"
                 placeholder={profileData.bio || "자기소개를 입력하세요"}
                 onKeyUp={handleInputChange}
+                maxlength="120"
               />
             </Full>
           </Box>
           <Box style={{ height: "60px" }}>
             <Checkinner>
               <SubTitle>연동 링크 공개</SubTitle>
+              <Switch
+                data-isOn={isOn}
+                onClick={toggleSwitch}
+                htmlFor="isLinkPublic"
+              >
+                <Handle layout transition={spring} />
+              </Switch>
               <input
+                style={{ display: "none" }}
                 type="checkbox"
                 name="isLinkPublic"
+                id="isLinkPublic"
                 checked={profileData.isLinkPublic}
                 onChange={handleInputChange}
               />
@@ -373,21 +375,44 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           <Box style={{ height: "60px" }}>
             <Checkinner>
               <SubTitle>비공개 프로필</SubTitle>
+              <Switch
+                data-isOn={isOn2}
+                onClick={toggleSwitch2}
+                htmlFor="isProfilePublic"
+              >
+                <Handle layout transition={spring} />
+              </Switch>
+              <input
+                style={{ display: "none" }}
+                type="checkbox"
+                name="isProfilePublic"
+                id="isProfilePublic"
+                checked={profileData.isProfilePublic}
+                onChange={handleInputChange}
+              />
+              {/* <Switch data-isOn={isOn} onClick={toggleSwitch}>
+                <Handle layout transition={spring} />
+              </Switch>
               <input
                 type="checkbox"
                 name="isProfilePublic"
                 checked={profileData.isProfilePublic}
                 onChange={handleInputChange}
-              />
+              /> */}
             </Checkinner>
           </Box>
-          <Button
-            text={"완료"}
-            width={"100%"}
-            heith={"40px"}
-            type="edit"
-            onClick={complete}
-          />
+          <ButtonWrap>
+            <Button
+              text={"완료"}
+              width={"100%"}
+              heith={"40px"}
+              type="edit"
+              onClick={complete}
+            />
+          </ButtonWrap>
+          <Box className="mobile" onClick={close}>
+            모달 닫기
+          </Box>
         </PofileModalBox>
       </ModalOverlay>
     </>
