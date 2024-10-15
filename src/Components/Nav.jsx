@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useLocation,
+  createSearchParams,
+} from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./LoadingLogo/Logo";
 import { useAuth } from "../Contexts/AuthContext";
 import MobileNav from "./MobileNav";
+import { auth } from "../firebase";
 
 const AllWrapper = styled.div`
   width: 100%;
@@ -140,6 +146,7 @@ const Nav = () => {
   const location = useLocation(); // 현재 경로 가져오기
 
   const [selectedMenu, setSelectedMenu] = useState(0);
+  const [userAdress, setUserAdress] = useState("");
 
   const menuItems = [
     {
@@ -273,10 +280,17 @@ const Nav = () => {
           />
         </svg>
       ),
-      path: "/profile",
     },
   ];
-
+  useEffect(() => {
+    const userEmail = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        setUserAdress(user.email);
+      }
+    };
+    userEmail();
+  }, []);
   // URL이 변경될 때마다 현재 경로에 맞는 메뉴 선택
   useEffect(() => {
     const currentPath = location.pathname;
@@ -290,7 +304,17 @@ const Nav = () => {
 
   const onSelected = (index, path) => {
     setSelectedMenu(index);
-    navigate(path); // path에 따라 페이지 이동
+
+    if (index === 4) {
+      navigate({
+        pathname: "/profile",
+        search: `${createSearchParams({
+          email: userAdress,
+        })}`,
+      });
+    } else {
+      navigate(path); // path에 따라 페이지 이동
+    }
   };
 
   return (
@@ -317,9 +341,18 @@ const Nav = () => {
         </Ul>
         {currentUser ? (
           <MyProfileImgs>
-            <Link to="/profile">
+            <div
+              onClick={() => {
+                navigate({
+                  pathname: "/profile",
+                  search: `${createSearchParams({
+                    email: userAdress,
+                  })}`,
+                });
+              }}
+            >
               <Img src="/profile.png" alt="Profile" />
-            </Link>
+            </div>
           </MyProfileImgs>
         ) : (
           <NavLoginBtn>

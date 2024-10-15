@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
+import FollowersList from "../Search/FollowerList";
 import FollowerItem from "../Search/FollowerItem";
 
 const ModalOverlay = styled.div`
@@ -49,6 +50,9 @@ const FollowModal = ({ open, close }) => {
           onClick={(e) => e.stopPropagation()}
         >
           <CloseButton onClick={close}>X</CloseButton>
+          <FollowersList>
+            <FollowerItem />
+          </FollowersList>
         </FollowModalBox>
       </ModalOverlay>
     </>

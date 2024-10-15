@@ -1,8 +1,4 @@
 import { useState, useContext, useEffect, useRef } from "react";
-import {
-  ThreadDispatchContext,
-  ThreadDataContext,
-} from "../Contexts/ThreadContext";
 import { auth, db } from "../firebase";
 import {
   collection,
@@ -291,11 +287,6 @@ const Profile = () => {
   const [editbtn, setEditbtn] = useState(true);
   const [searchParams] = useSearchParams();
   const emailAdress = searchParams.get("email");
-
-  // const data = useContext(ThreadDataContext);
-  // const { createThread, updateThread, deleteThread, updateProfile } =
-  //   useContext(ThreadDispatchContext);
-  //모달관련 state
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
@@ -335,7 +326,6 @@ const Profile = () => {
   };
 
   const CheckProfile = async () => {
-    console.log("프로필 체크 가동");
     try {
       const profileQuery = query(
         collection(db, "profile"),
@@ -379,9 +369,6 @@ const Profile = () => {
             isFollowing: true,
             followNum: profile.followNum,
           }));
-          console.log("유저가 없을 때 읽기 가동 완료");
-          console.log(profile);
-          console.log("유저 없을 때 프로필 체크");
         }
       });
       return () => unsubscribe();
