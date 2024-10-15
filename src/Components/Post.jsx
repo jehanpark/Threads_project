@@ -30,7 +30,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
 
 import { formatDistanceToNow } from "date-fns";
-import PostSetModal from "./Common/PostSetModal";
+import PostSetModal from "./post/PostSetModal";
 import EditModal from "./EditModal";
 import AudioMessage from "./AudioMessage";
 
@@ -42,11 +42,10 @@ const Wrapper = styled.div`
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
   padding: 20px;
-
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
     width: 100%;
-    display: flex;
+    height: auto;
   }
 `;
 const ColumnWrapper = styled.div`
@@ -57,6 +56,7 @@ const Column = styled.div`
   margin-left: 50px;
   margin-bottom: 12px;
   gap: 10px;
+  cursor: pointer;
 `;
 
 const Photo = styled.img`
@@ -97,11 +97,13 @@ const UserImage = styled.img`
   height: 40px;
   border: none;
   border-radius: 50%;
+  cursor: pointer;
 `;
 const Username = styled.span`
   font-size: 14px;
   font-weight: 600;
   color: ${(props) => props.theme.fontcolor};
+  cursor: pointer;
 `;
 
 const Timer = styled.span`
@@ -111,8 +113,11 @@ const Timer = styled.span`
 `;
 
 const Etc = styled.div`
+  width: 25px;
+  height: 25px;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   margin-right: 20px;
   cursor: pointer;
 `;
@@ -121,7 +126,6 @@ const Payload = styled.p`
   font-size: 15px;
   font-weight: 600;
   margin-left: 0px;
-  margin-top: 5px;
   margin-bottom: 5px;
 `;
 
@@ -445,7 +449,7 @@ const Post = ({
   };
 
   const handleCommentClick = () => {
-    navigate("/Comment", {
+    navigate("/Comment/${id}", {
       state: {
         postId: id,
         postContent: post,
@@ -461,7 +465,7 @@ const Post = ({
   };
 
   const PostCommentClick = () => {
-    navigate("/PostComment", {
+    navigate("/PostComment/${id}", {
       state: {
         postId: id,
         postContent: post,

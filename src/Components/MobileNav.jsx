@@ -116,6 +116,8 @@ const MobileNav = () => {
     } else if (location.pathname.includes("insites")) {
       return "인사이트";
     } else if (location.pathname.includes("PostComment")) {
+      return "게시글";
+    } else if (location.pathname.includes("Comment")) {
       return "댓글 달기";
     } else {
       return "홈";

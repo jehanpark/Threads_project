@@ -3,7 +3,7 @@ import { useMediaQuery } from "react-responsive";
 import { UserIcon2 } from "../Common/Icon";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
-import { storage, auth, db } from "../../firebase";
+import { auth, db, storage } from "../../firebase";
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Button from "../Common/Button";
