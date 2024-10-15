@@ -56,6 +56,7 @@ const Column = styled.div`
   margin-left: 50px;
   margin-bottom: 12px;
   gap: 10px;
+  cursor: pointer;
 `;
 
 const Photo = styled.img`
@@ -96,11 +97,13 @@ const UserImage = styled.img`
   height: 40px;
   border: none;
   border-radius: 50%;
+  cursor: pointer;
 `;
 const Username = styled.span`
   font-size: 14px;
   font-weight: 600;
   color: ${(props) => props.theme.fontcolor};
+  cursor: pointer;
 `;
 
 const Timer = styled.span`
@@ -110,8 +113,11 @@ const Timer = styled.span`
 `;
 
 const Etc = styled.div`
+  width: 25px;
+  height: 25px;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   margin-right: 20px;
   cursor: pointer;
 `;
@@ -120,7 +126,6 @@ const Payload = styled.p`
   font-size: 15px;
   font-weight: 600;
   margin-left: 0px;
-  margin-top: 5px;
   margin-bottom: 5px;
 `;
 

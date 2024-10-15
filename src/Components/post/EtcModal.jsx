@@ -26,12 +26,24 @@ const ModalWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  @media (max-width: 768px) {
+    height: 340px;
+    margin: 10px;
+  }
 `;
 const TextAreaWrapper = styled.div`
 width: 100%;
 height: 100%;
   padding: 30px;
-`
+  @media (max-width: 768px) {
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
+    border-radius: 0px 0px 0px 0px;
+  }
+`;
+
 const TextArea = styled.textarea`
   background: ${(props) => props.theme.borderColor};
   color: ${(props) => props.theme.fontcolor};
@@ -83,7 +95,7 @@ const UploadButton = styled.button`
 `;
 const DelButton = styled.button`
   background: ${(props) => props.theme.mouseHoverBg};
-  color: ${(props) => props.theme.fontColor};
+  color: ${(props) => props.theme.fontcolor};
   padding: 10px 20px;
   border: none;
   border-radius: 12px;

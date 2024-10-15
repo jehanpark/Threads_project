@@ -3,7 +3,6 @@ import styled, { useTheme } from "styled-components";
 import { motion } from "framer-motion";
 import Searchbar from "../Components/Search/Searchbar";
 import FollowersList from "../Components/Search/FollowerList";
-
 import TimeLine from "../Components/post/TimeLine";
 
 const Contain = styled.div`

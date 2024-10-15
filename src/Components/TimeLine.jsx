@@ -39,10 +39,8 @@ const PostlistWrapper = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 10px;
   height: 100%;
   width: 100%;
-  padding: 10px 0;
   border-radius: 20px;
   overflow-y: scroll;
   ::-webkit-scrollbar {

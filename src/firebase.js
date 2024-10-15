@@ -9,13 +9,7 @@ const firebaseConfig = {
   projectId: "sns-flatform0924",
   storageBucket: "sns-flatform0924.appspot.com",
   messagingSenderId: "289974252711",
-  appId: "1:289974252711:web:4775f362e7c70700af1782",
-  apiKey: "AIzaSyCP08XJZ_rankYpiK0GW0hoNxxLH2PtyLk",
-  authDomain: "team-e519e.firebaseapp.com",
-  projectId: "team-e519e",
-  storageBucket: "team-e519e.appspot.com",
-  messagingSenderId: "393886202214",
-  appId: "1:393886202214:web:debc29ad4f98df548fb0a7",
+  appId: "1:289974252711:web:4775f362e7c70700af1782"
 };
 
 // Initialize Firebase

@@ -10,13 +10,13 @@ const draw = keyframes`
 
 // 스타일 컴포넌트 정의
 const LoadingContainer = styled.div`
-  width: 660px;
+  width: 680px;
   height: 100%;
   position: absolute;
   left: 50%;
   bottom: 0;
   transform: translate(-50%);
-  border-radius: 30px;
+  border-radius: 40px 40px 0 0;
   display: flex;
   flex-direction: column;
   justify-content: center;

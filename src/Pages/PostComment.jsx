@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import {
   HeartIcon,
   DmIcon,
@@ -11,6 +10,7 @@ import {
   Coment,
 } from "../Components/Common/Icon";
 import BackBtn from "../Components/post/BackBtn";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 
 const AllWrap = styled.div`
@@ -22,15 +22,15 @@ const AllWrap = styled.div`
   align-items: center;
 `;
 const Backarea = styled.div`
-  width: 700px;
+  width: 760px;
 `;
 const BoederWrapper = styled.div`
   position: fixed;
   bottom: 0;
-  width: 660px;
+  width: 680px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.btnBgColor};
+  background: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   display: flex;
   flex-direction: column;
@@ -62,7 +62,6 @@ const PostWrapper = styled.div`
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
   padding: 20px;
-  width: 660px;
   border-radius: 40px 40px 0 0;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
@@ -97,8 +96,7 @@ const Timer = styled.span`
 const Posted = styled.div`
   font-size: 15px;
   font-weight: 600;
-  margin-left: 30px;
-  margin-top: 5px;
+  margin-top: 8px;
   margin-bottom: 5px;
 `;
 const ColumnWrapper = styled.div`
@@ -106,14 +104,15 @@ const ColumnWrapper = styled.div`
 `;
 const Column = styled.div`
   display: flex;
-  margin-left: 30px;
+  margin-left: 50px;
   margin-bottom: 12px;
   gap: 10px;
+  cursor: pointer;
 `;
 
 const Photo = styled.img`
-  width: 160px;
-  height: 160px;
+  width: 120px;
+  height: 120px;
   object-fit: cover/contain;
   margin-left: 0px;
   border-radius: 8px;
@@ -125,11 +124,10 @@ const Photo = styled.img`
 `;
 const Video = styled.video`
   display: flex;
-  width: 220px;
-  height: 160px;
+  width: 180px;
+  height: 120px;
   border-radius: 15px;
   object-fit: cover;
-  margin-left: 0;
   @media (max-width: 768px) {
     margin-right: 8px;
     width: 120px;
@@ -181,8 +179,8 @@ const CommentHeader = styled.div`
   margin-left: 20px;
 `;
 const CommentUserImage = styled.img`
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
 `;
 const CommentUsername = styled.span`
   font-size: 14px;
@@ -232,10 +230,11 @@ const NotComment = styled.div`
 const PostComment = ({ id }) => {
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(0);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState([]); // 초기 값을 빈 배열로 설정
+  const [commentsCount, setCommentsCount] = useState(0); // 댓글 수
   const [dms, setDms] = useState(0);
   const [retweets, setRetweets] = useState(0);
-  const [loading, setLoading] = useState(true); // 로딩 상태 추가
+  const [files, setFiles] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -248,14 +247,42 @@ const PostComment = ({ id }) => {
     likes: passedLikes,
     dms: passedDms,
     retweets: passedRetweets,
-  } = location.state || {}; // 안전하게 처리
+  } = location.state || {};
 
-  // 좋아요, DM, 리트윗 값 초기화
   useEffect(() => {
-    setLikes(passedLikes || 0);
-    setDms(passedDms || 0);
-    setRetweets(passedRetweets || 0);
+    setLikes(passedLikes);
+    setDms(passedDms);
+    setRetweets(passedRetweets);
   }, [passedLikes, passedDms, passedRetweets]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        if (!location.state?.postId) return; // postId가 없으면 return
+        const commentsRef = collection(
+          db,
+          "contents",
+          location.state.postId,
+          "comments"
+        );
+        const q = query(commentsRef, orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+
+        // 댓글 데이터를 배열로 변환하여 상태에 저장
+        const commentsList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setComments(commentsList); // 댓글 리스트 저장
+        setCommentsCount(commentsList.length); // 댓글 수 저장 (이 부분을 수정)
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
+    fetchComments();
+  }, [location.state?.postId]);
 
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
@@ -272,41 +299,13 @@ const PostComment = ({ id }) => {
         videos,
         username,
         createdAt: createdAt || { seconds: Date.now() / 1000 },
+        likes,
+        dms,
+        retweets,
+        commentsCount,
       },
     });
   };
-
-  // Firestore에서 댓글 불러오기
-  useEffect(() => {
-    const fetchComments = async () => {
-      setLoading(true); // 로딩 시작
-      try {
-        if (location.state && location.state.postId) {
-          const commentsRef = collection(
-            db,
-            "contents",
-            location.state.postId,
-            "comments"
-          );
-          const q = query(commentsRef, orderBy("createdAt", "desc"));
-          const querySnapshot = await getDocs(q);
-          const commentsList = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setComments(commentsList);
-        } else {
-          console.error("postId가 없습니다.");
-        }
-      } catch (error) {
-        console.error("댓글을 불러오는 중 오류 발생:", error);
-      } finally {
-        setLoading(false); // 로딩 완료
-      }
-    };
-
-    fetchComments();
-  }, [location.state?.postId]); // postId가 변경될 때마다 댓글을 다시 불러옴
 
   return (
     <div>
@@ -367,7 +366,7 @@ const PostComment = ({ id }) => {
                   <commentsList>
                     <CommentWrapper key={comment.id}>
                       <CommentHeader>
-                        <UserImage src="http://localhost:5173/profile.png"></UserImage>
+                        <CommentUserImage src="http://localhost:5173/profile.png"></CommentUserImage>
                         <CommentUsername>{comment.username}</CommentUsername>
                         <CommentTimer>
                           {formatDistanceToNow(
