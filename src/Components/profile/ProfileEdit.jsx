@@ -180,7 +180,6 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   const [inputData, setInputDate] = useState({}); //>> 인풋 값을 받을 state
   const user = auth.currentUser; //유저 계정 내용 ( displayName , email , photoURL  , uid)
   const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
-  const [followNum, setFollowNum] = useState(Math.floor(Math.random() * 10));
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -235,7 +234,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
       await updateProfile(user, { photoURL: avatar });
     } else return;
   };
-
+  console.log(profile);
   const complete = async () => {
     if (!user) return;
     try {
@@ -260,7 +259,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           isProfilePublic: profileData.isProfilePublic,
           img: imgToSave,
           isFollowing: profile.isFollowing,
-          followNum: followNum,
+          followNum: profile.followNum,
         });
         await updateDoc(newDocRef, { postId: newDocRef.id });
       } else {
@@ -275,7 +274,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           isProfilePublic: profileData.isProfilePublic,
           img: imgToSave,
           isFollowing: profile.isFollowing,
-          followNum: docRef.followNum,
+          followNum: profile.followNum,
         });
       }
       // auth 정보 수정

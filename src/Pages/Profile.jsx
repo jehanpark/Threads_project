@@ -7,6 +7,8 @@ import {
   orderBy,
   query,
   where,
+  documentId,
+  getDocs,
 } from "firebase/firestore";
 import styled from "styled-components";
 import Button from "../Components/Common/Button";
@@ -22,6 +24,7 @@ import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
+import { useLocation } from "react-router-dom";
 
 const BoederWrapper = styled.div`
   position: fixed;
@@ -310,6 +313,10 @@ const Profile = () => {
   const [contentType, setContentType] = useState("thresds"); // 선택된 필터 상태
   // NotificationList에서 데이터를 받아옴
   const [isBouncing, setIsBouncing] = useState(false);
+  const [comments, setComments] = useState([]);
+
+  const location = useLocation();
+
   const handleDataUpdate = (listData) => {
     if (listData.length > 0) {
       setSavedData(listData); // 전체 데이터를 저장
@@ -367,7 +374,7 @@ const Profile = () => {
             isProfilePublic: true,
             img: null,
             isFollowing: true,
-            followNum: profile.followNum,
+            followNum: Math.floor(Math.random() * 10),
           }));
         }
       });
@@ -376,11 +383,51 @@ const Profile = () => {
       console.error("Error fetching profile: ", error);
     }
   };
-
   useEffect(() => {
     CheckProfile();
     buttonCheck();
   }, [emailAdress]);
+
+  const fetchComments = async () => {
+    try {
+      // 이메일이 없으면 종료
+      if (!emailAdress) return;
+
+      // 'contents' 컬렉션에서 이메일이 일치하는 문서 가져오기
+      const commentsRef = collection(db, "contents");
+      const q = query(commentsRef, where("email", "==", emailAdress));
+      const querySnapshot = await getDocs(q);
+
+      // 각 문서에서 'comments' 서브 컬렉션 가져오기
+      const commentsPromises = querySnapshot.docs.map(async (doc) => {
+        const commentsCollectionRef = collection(doc.ref, "comments");
+        const commentsQuery = query(
+          commentsCollectionRef,
+          orderBy("createdAt", "desc")
+        );
+        const commentsSnapshot = await getDocs(commentsQuery);
+
+        // 댓글 데이터를 배열로 변환
+        return commentsSnapshot.docs.map((commentDoc) => ({
+          id: commentDoc.id,
+          ...commentDoc.data(),
+        }));
+      });
+
+      // 모든 댓글을 가져오고 평탄화하여 단일 배열로 만듭니다.
+      const commentsLists = await Promise.all(commentsPromises);
+      const flattenedComments = commentsLists.flat();
+
+      // 댓글 리스트 상태에 저장
+      setComments(flattenedComments);
+
+      if (flattenedComments.length === 0) {
+        console.log("No comments found for the provided email.");
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  };
 
   const onfollow = () => {
     setFollowModal((prev) => !prev);
@@ -403,6 +450,8 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    fetchComments();
+
     let unsubscribe = null;
     const fetchPosts = async () => {
       const postsQuery = query(
@@ -482,6 +531,8 @@ const Profile = () => {
     } else if (type === "videos") {
       const filteredVideos = posts.filter((data) => data.videos.length > 0);
       setFilteredData(filteredVideos);
+    } else if (type === "comment") {
+      setFilteredData(comments);
     }
   };
 
@@ -506,7 +557,6 @@ const Profile = () => {
   };
 
   const wrapperRef = useRef(null);
-
   const getButtonStyle = (type) => ({
     color: contentType === type ? "#000" : "rgba(204, 204, 204, 0.8)",
     borderBottom: contentType === type ? "1.5px solid #000" : "none",
@@ -522,9 +572,9 @@ const Profile = () => {
   return (
     <>
       {followModal ? (
-        <FollowModal open={true} close={onfollow} />
+        <FollowModal open={true} close={onfollow} profile={profile} />
       ) : (
-        <FollowModal open={false} close={onfollow} />
+        <FollowModal open={false} close={onfollow} profile={profile} />
       )}
       {linkmodal ? (
         <LinkPluse open={true} close={onLinkPlus} />

@@ -25,6 +25,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
   // Firestore에서 데이터를 가져오는 함수
 
   const fetchPosts = async () => {
+    console.log(contentType);
     let postsQuery = query(collection(db, "profile"));
 
     // 이메일 주소가 있는 경우 해당 이메일만 필터링
@@ -42,7 +43,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
           profileImg: docData.img,
           isFollowing: docData.isFollowing,
           email: docData.userEmail,
-          followers: docData.followNum,
+          followerNum: docData.followNum,
         };
       });
 
@@ -80,7 +81,6 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
 
   // 팔로워 아이템 클릭 시 프로필 페이지로 이동
   const handleProfileClick = (email) => {
-    console.log(emailAdress);
     if (email) {
       navigate({
         pathname: "/profile",
