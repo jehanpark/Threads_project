@@ -198,7 +198,7 @@ const SubmitBtn = styled.input`
   }
 `;
 
-const IconBtn = styled.button`
+const IconBtn = styled.div`
   background-color: transparent;
   border: none;
   outline: none;
