@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "Search",
+        path: "search",
         element: <Search />,
       },
       {
@@ -61,7 +61,7 @@ export const router = createBrowserRouter([
         element: <Comment />,
       },
       {
-        path: "PostComment",
+        path: "postcomment",
         element: <PostComment />,
       },
     ],
