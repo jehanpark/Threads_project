@@ -151,33 +151,33 @@ const FollowerButton = styled.button`
 `;
 
 const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
+  const { ProfileImg, email, bio, followNum, isFollowing } = follower;
+
   return (
     <FollowerContain onClick={onProfileClick}>
       <Wrapper>
         <UserWrapper>
-          {follower.profileImg ? (
-            <img src={follower.profileImg} alt="User profile" />
+          {ProfileImg ? (
+            <img src={ProfileImg} alt="User profile" />
           ) : (
             <UserIcon2 width={50} height={50} />
           )}
         </UserWrapper>
         <UserContex>
-          <UserName>{follower.email || "알수없음"}</UserName>
-          <UserInfo>{follower.bio || "노래하는 고양이"}</UserInfo>
-          <UserFollowerNum>{`팔로워 ${
-            follower.followers || 0
-          }명`}</UserFollowerNum>
+          <UserName>{email || "daljag@gmail.com"}</UserName>
+          <UserInfo>{bio || "노래하는 고양이"}</UserInfo>
+          <UserFollowerNum>{`팔로워 ${followNum || 7}명`}</UserFollowerNum>
         </UserContex>
       </Wrapper>
       <FollowerButton
-        isFollowing={follower.isFollowing}
+        isFollowing={isFollowing}
         onClick={(e) => {
           console.log("click");
           e.stopPropagation(); // 상위 이벤트 전달 x
           toggleFollow();
         }}
       >
-        {follower.isFollowing ? "팔로잉" : "팔로우"}
+        {isFollowing ? "팔로잉" : "팔로우"}
       </FollowerButton>
     </FollowerContain>
   );

@@ -67,7 +67,7 @@ const NotificationList = ({ onUpdate }) => {
 
           return {
             id: docSnapshot.id,
-            username: docData.nikname || "알수없음",
+            username: docData.email || "알수없음",
             createdAt,
             isRead: false,
             message,
@@ -93,7 +93,7 @@ const NotificationList = ({ onUpdate }) => {
   // 알림 읽음 처리 함수
   const markAsRead = async (id) => {
     try {
-      const notificationRef = doc(db, "notifications", id);
+      const notificationRef = doc(db, "contents", id);
       await updateDoc(notificationRef, { isRead: true });
 
       setNotifications((prevNotifications) =>
