@@ -26,8 +26,6 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  position: fixed;
-  left: 50px;
   width: 580px;
   height: 360px;
   border-radius: 12px;

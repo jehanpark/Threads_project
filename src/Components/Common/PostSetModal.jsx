@@ -78,12 +78,12 @@ const Li = styled.div`
     color: ${(props) => props.theme.mouseHoverFontcolor};
   }
   &:nth-child(1) {
-    color: #0396f6;
+    color: #ff3040;
   }
   &:nth-child(2) {
   }
   &:nth-child(3) {
-    color: #ff3040;
+    color: #0396f6;
   }
   @media (max-width: 768px) {
     width: 90%;
@@ -136,11 +136,11 @@ const PostSetModal = ({
         <Contentswrapper onClick={handleModalClick}>
           <TopRec></TopRec>
           <Optionwrapper>
-            {isAuthor && <Li onClick={() => setIsEtcModalOpen(true)}>수정</Li>}
+            {isAuthor && <Li onClick={onDelete}>삭제</Li>}
             <Li onClick={() => alert("신고하기 기능은 구현되지 않았습니다.")}>
               신고하기
             </Li>
-            {isAuthor && <Li onClick={onDelete}>삭제</Li>}
+            {isAuthor && <Li onClick={onEdit}>수정</Li>}
           </Optionwrapper>
           <UpLoadButton onClick={onClose}>닫기</UpLoadButton>
         </Contentswrapper>

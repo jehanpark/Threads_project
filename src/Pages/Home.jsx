@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   /* overflow: hidden; */
   overflow-y: hidden;
   @media (max-width: 768px) {
-    height: calc(100vh - 120px);
+    height: calc(100vh - 100px);
     ::-webkit-scrollbar {
       overflow-y: hidden;
       display: none;

@@ -210,6 +210,8 @@ const PostForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState("");
   const [files, setFiles] = useState([]);
+  const [opendForm, setOpenForm] = useState(false);
+  const [selectedText, setSelectedText] = useState("팔로워에게만 허용");
 
   const [audioBlob, setAudioBlob] = useState(null); // 녹음 파일 상태
   const [isRecording, setIsRecording] = useState(false); // 녹음 중 상태
@@ -391,6 +393,15 @@ const PostForm = () => {
     }
   };
 
+  const openFormModal = () => {
+    setOpenForm(true);
+  };
+  const closeFormModal = () => {
+    setOpenForm(false);
+  };
+  const handleSelect = (text) => {
+    setSelectedText(text);
+  };
   return (
     <Wrapper>
       <BoederWrapper>
@@ -460,6 +471,12 @@ const PostForm = () => {
             </CameraButton>
             <PictureButton htmlFor="picture">
               <PictureIcon width={24} />
+              <CameraInput
+                onChange={handleFileChange}
+                id="picture"
+                type="file"
+                accept="video/*, image/*"
+              />
             </PictureButton>
             {/* 녹음 기능 */}
 
@@ -475,7 +492,7 @@ const PostForm = () => {
             <HashtagIcon width={24} />
           </Icons>
           <Buttons>
-            <OpenButton>팔로워에게만 허용</OpenButton>
+            <OpenButton onClick={openFormModal}>{selectedText}</OpenButton>
             <SubmitBtn
               text="스레드 업로드"
               type="submit"
@@ -484,6 +501,9 @@ const PostForm = () => {
           </Buttons>
         </Form>
       </BoederWrapper>
+      {opendForm && (
+        <PostForm_Modal onClose={closeFormModal} onSelect={handleSelect} />
+      )}
     </Wrapper>
   );
 };
