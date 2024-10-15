@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./LoadingLogo/Logo";
-import { auth, db } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import { useAuth } from "../Contexts/AuthContext";
 import MobileNav from "./MobileNav";
+import { UserIcon2 } from "./Common/Icon";
+
+import { ref } from "firebase/storage";
 
 const AllWrapper = styled.div`
   width: 100%;
@@ -135,12 +138,47 @@ const RightDiv = styled.div`
   width: 40px;
 `;
 
+const ImgBox = styled.label`
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  border-radius: 50px;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.mouseHoverBg};
+`;
+
 const Nav = () => {
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const user = auth.currentUser;
+  const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
   const navigate = useNavigate();
   const location = useLocation(); // 현재 경로 가져오기
-
   const [selectedMenu, setSelectedMenu] = useState(0);
+
+  // 비동기 함수로 분리하여 useEffect에서 호출
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      if (!user) return; // 사용자가 없는 경우 중단
+      try {
+        const locationRef = ref(storage, `avatars/${user?.uid}}`);
+        const result = await uploadBytes(locationRef, file);
+        const avatarUrl = await getDownloadURL(result.ref);
+        setAvarta(avatarUrl);
+      } catch (error) {
+        console.error("Error fetching avatar:", error);
+      }
+    };
+
+    fetchAvatar(); // 비동기 함수 호출
+
+    return () => {
+      // 컴포넌트 언마운트 시 클린업
+      setAvarta(""); // 클린업 작업으로 아바타 초기화
+    };
+  }, [user]);
 
   const menuItems = [
     {
@@ -319,7 +357,13 @@ const Nav = () => {
         {currentUser ? (
           <MyProfileImgs>
             <Link to="/profile">
-              <Img src="/profile.png" alt="Profile" />
+              <ImgBox htmlFor="profileImg">
+                {avatar == null || avatar == "" ? (
+                  <UserIcon2 width="54" fill="#BABABA" />
+                ) : (
+                  <Img src={avatar} />
+                )}
+              </ImgBox>
             </Link>
           </MyProfileImgs>
         ) : (
