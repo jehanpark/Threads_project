@@ -136,19 +136,34 @@ const Video = styled.video`
 `;
 const Icons = styled.div`
   display: flex;
-  gap: 15px;
+  gap: 0px;
   justify-content: start;
   align-items: center;
   margin-left: 50px;
-  margin-top: 10px;
+  margin-bottom: 5px;
   cursor: pointer;
   color: #bababa;
 `;
 
 const IconWrapper = styled.div`
+  width: 50px;
+  height: auto;
   display: flex;
   align-items: center;
   gap: 6px;
+  transition: all 0.2s;
+  &:nth-child(1){
+    margin-left: 0;
+  }
+  &:nth-child(2){
+    margin-left: 5px;
+  }
+  &:nth-child(3){
+    margin-left: 5px;
+  }
+  &:nth-child(4){
+    margin-left: 5px;
+  }
 `;
 
 const ScrollWrapper = styled.div``;

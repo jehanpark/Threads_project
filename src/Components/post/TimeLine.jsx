@@ -10,7 +10,6 @@ import styled from "styled-components";
 import { db } from "../../firebase";
 import Post from "../Post";
 
-
 const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
   const [posts, setPosts] = useState([]);
   const [isBouncing, setIsBouncing] = useState(false);
@@ -85,15 +84,18 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
     }
   };
   return (
-    <div
-      ref={wrapperRef}
-      className={isBouncing ? "bounce" : ""}
-      onScroll={handleScroll}
-    >
-      {posts.map((post) => (
-        <Post key={post.id} {...post} />
-      ))}
-    </div>
+    <>
+      <div
+        ref={wrapperRef}
+        className={isBouncing ? "bounce" : ""}
+        onScroll={handleScroll}
+      >
+        {posts.map((post) => (
+          <Post key={post.id} {...post} />
+        ))}
+      </div>
+      
+    </>
   );
 };
 export default TimeLine;

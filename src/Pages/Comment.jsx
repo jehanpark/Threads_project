@@ -150,6 +150,7 @@ const Icons = styled.div`
   display: flex;
   gap: 15px;
   justify-content: start;
+  
   align-items: center;
   margin-left: 50px;
   margin-top: 10px;
@@ -202,8 +203,10 @@ const Form = styled.form`
   }
 `;
 const Buttons = styled.div`
+height: auto;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin: 0 auto;
   gap: 20px;
   border-top: ${(props) => props.theme.borderstroke};
@@ -554,7 +557,7 @@ const Comment = ({ id }) => {
                 <IconsBtnwrapper>
                   <Icons>
                     <CameraButton htmlFor="camera">
-                      <CameraIcon width={38} />
+                      <CameraIcon width={36} />
                       <CameraInput
                         onChange={handleFileChange}
                         id="camera"
