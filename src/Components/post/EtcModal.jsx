@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { updateDoc, doc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const AllWrapp = styled.div`
   /* position: relative;  */
@@ -116,8 +118,13 @@ const DelButton = styled.button`
   margin-right: 10px;
 `;
 
-const EtcModal = ({ post, onCancel, setIsEtcModalOpen }) => {
+const EtcModal = ({ onSave, post, onCancel, setIsEtcModalOpen }) => {
   const [newContent, setNewContent] = useState(post); // 수정할 내용을 상태로 관리
+
+  const handleSave = () => {
+    onSave(newContent); // 수정된 내용을 부모 컴포넌트로 전달
+    setIsEtcModalOpen(false); // 모달 닫기
+  };
 
   return (
     <AllWrapp>
@@ -133,6 +140,7 @@ const EtcModal = ({ post, onCancel, setIsEtcModalOpen }) => {
             />
           </TextAreaWrapper>
           <Buttons>
+            <UploadButton onClick={handleSave}>저장</UploadButton>
             <DelButton cancel onClick={onCancel}>
               취소
             </DelButton>

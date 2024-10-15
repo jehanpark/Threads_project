@@ -261,9 +261,6 @@ const SetContentInputButton = styled.input`
   display: none;
 `;
 
-
-
-
 const Post = ({
   post,
   userId,
@@ -404,40 +401,53 @@ const Post = ({
     }
   };
 
-  const onUpdate = async () => {
+  // const onUpdate = async () => {
+  //   try {
+  //     if (user?.uid !== userId) return;
+
+  //     const postDoc = await getDoc(doc(db, "contents", id));
+  //     if (!postDoc.exists()) throw new Error("Documents does not exist");
+
+  //     if (editedPhoto) {
+  //       const newFileType = editedPhoto.type.startsWith("image/")
+  //         ? "image"
+  //         : "video";
+
+  //       const locationRef = ref(storage, `contents/${user.uid}/${id}`);
+  //       const uploadTask = uploadBytesResumable(locationRef, editedPhoto);
+  //       if (editedPhoto.size >= 5 * 1024 * 1024) {
+  //         uploadTask.cancel();
+  //         throw new Error("File Size is over 5MB");
+  //       }
+  //       const result = await uploadBytes(locationRef, editedPhoto);
+  //       const url = await getDownloadURL(result.ref);
+
+  //       await updateDoc(doc(db, "contents", id), {
+  //         post: editedPost,
+  //         photo: newFileType === "image" ? url : "",
+  //         video: newFileType === "video" ? url : "",
+  //         fileType: newFileType,
+  //       });
+  //     } else {
+  //       await updateDoc(doc(db, "contents", id), { post: editedPost });
+  //     }
+  //   } catch (e) {
+  //     console.error(e);
+  //   } finally {
+  //     setIsEditing(false); // 수정 완료 후 입력창 닫기
+  //   }
+  // };
+
+  const handleSave = async (newContent) => {
     try {
-      if (user?.uid !== userId) return;
-
-      const postDoc = await getDoc(doc(db, "contents", id));
-      if (!postDoc.exists()) throw new Error("Documents does not exist");
-
-      if (editedPhoto) {
-        const newFileType = editedPhoto.type.startsWith("image/")
-          ? "image"
-          : "video";
-
-        const locationRef = ref(storage, `contents/${user.uid}/${id}`);
-        const uploadTask = uploadBytesResumable(locationRef, editedPhoto);
-        if (editedPhoto.size >= 5 * 1024 * 1024) {
-          uploadTask.cancel();
-          throw new Error("File Size is over 5MB");
-        }
-        const result = await uploadBytes(locationRef, editedPhoto);
-        const url = await getDownloadURL(result.ref);
-
-        await updateDoc(doc(db, "contents", id), {
-          post: editedPost,
-          photo: newFileType === "image" ? url : "",
-          video: newFileType === "video" ? url : "",
-          fileType: newFileType,
-        });
-      } else {
-        await updateDoc(doc(db, "contents", id), { post: editedPost });
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsEditing(false); // 수정 완료 후 입력창 닫기
+      const postRef = doc(db, "contents", id);
+      // Firebase에 수정된 내용 업데이트
+      await updateDoc(postRef, {
+        post: newContent,
+      });
+      setEditedPost(newContent); // 수정된 내용을 상태에 반영
+    } catch (error) {
+      console.error("Error updating post:", error);
     }
   };
 
@@ -567,7 +577,7 @@ const Post = ({
           {isEtcModalOpen && (
             <EtcModal
               post={post}
-              // onSave={handleSave}
+              onSave={handleSave}
               onCancel={closeEtcModal}
               setIsEtcModalOpen={setIsEtcModalOpen}
             />

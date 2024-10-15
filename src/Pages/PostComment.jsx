@@ -152,16 +152,16 @@ const IconWrapper = styled.div`
   align-items: center;
   gap: 6px;
   transition: all 0.2s;
-  &:nth-child(1){
+  &:nth-child(1) {
     margin-left: 0;
   }
-  &:nth-child(2){
+  &:nth-child(2) {
     margin-left: 5px;
   }
-  &:nth-child(3){
+  &:nth-child(3) {
     margin-left: 5px;
   }
-  &:nth-child(4){
+  &:nth-child(4) {
     margin-left: 5px;
   }
 `;
@@ -306,7 +306,7 @@ const PostComment = ({ id }) => {
   };
 
   const handleCommentClick = () => {
-    navigate("/Comment", {
+    navigate("/", {
       state: {
         postId: id,
         postContent: post,
@@ -362,7 +362,7 @@ const PostComment = ({ id }) => {
               <IconWrapper>
                 <HeartIcon width={20} /> {likes}
               </IconWrapper>
-              <IconWrapper onClick={handleCommentClick}>
+              <IconWrapper>
                 <Coment width={20} /> {commentsCount}
               </IconWrapper>
               <IconWrapper>
