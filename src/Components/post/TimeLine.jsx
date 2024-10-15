@@ -74,26 +74,21 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
   const [posts, setPosts] = useState([]);
   const [isBouncing, setIsBouncing] = useState(false);
   const wrapperRef = useRef(null);
-
   useEffect(() => {
     let unsubscribe = null;
-
     const fetchPosts = async () => {
       let postsQuery = query(
         collection(db, "contents"),
         orderBy("createdAt", "desc"),
         limit(25)
       );
-
       // 실시간 데이터 구독 설정
       unsubscribe = onSnapshot(postsQuery, (snapshot) => {
         const livePosts = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-
         let filteredPosts = livePosts;
-
         // 검색어 필터링
         if (searchTerm && searchTerm.trim() !== "") {
           const searchLower = searchTerm.toLowerCase();
@@ -108,11 +103,9 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
               item.userInfo.toLowerCase().includes(searchLower);
             const postMatch =
               item.post && item.post.toLowerCase().includes(searchLower);
-
             return usernameMatch || emailMatch || userInfoMatch || postMatch;
           });
         }
-
         //  필터링
         if (contentType === "picture") {
           filteredPosts = filteredPosts.filter(
@@ -131,21 +124,16 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
               post.videos.length > 0
           );
         }
-
         setPosts(filteredPosts);
-
         // 데이터가 없을 때 처리
         if (onDataEmpty) onDataEmpty(filteredPosts.length === 0);
       });
     };
-
     fetchPosts();
-
     return () => {
       if (unsubscribe) unsubscribe();
     };
   }, [searchTerm, contentType]);
-
   const handleScroll = () => {
     const element = wrapperRef.current;
     if (element.scrollTop === 0) {
@@ -155,20 +143,16 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
       }, 500);
     }
   };
-
   return (
-    <BoederWrapper>
-      <PostlistWrapper
-        ref={wrapperRef}
-        className={isBouncing ? "bounce" : ""}
-        onScroll={handleScroll}
-      >
-        {posts.map((post) => (
-          <Post key={post.id} {...post} />
-        ))}
-      </PostlistWrapper>
-    </BoederWrapper>
+    <div
+      ref={wrapperRef}
+      className={isBouncing ? "bounce" : ""}
+      onScroll={handleScroll}
+    >
+      {posts.map((post) => (
+        <Post key={post.id} {...post} />
+      ))}
+    </div>
   );
 };
-
 export default TimeLine;

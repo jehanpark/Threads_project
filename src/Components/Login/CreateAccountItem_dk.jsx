@@ -24,9 +24,10 @@ import {
 const CreateAccountItemDk = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [nickname, setNickname] = useState("");
+
   const navigate = useNavigate();
 
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -104,6 +105,21 @@ const CreateAccountItemDk = () => {
           <span>계정 생성하기</span>
         </LoginP>
         <Form onSubmit={onSubmit}>
+          <InputWrapper>
+            <StyledInput
+              onChange={onChange}
+              type="email"
+              id="id"
+              name="id"
+              placeholder=""
+              required
+              value={id}
+            />
+            <StyledLabel htmlFor="id">
+              사용자 이름, 전화번호 또는 이메일 주소
+            </StyledLabel>
+          </InputWrapper>
+
           <InputWrapper>
             <StyledInput
               onChange={onChange}
