@@ -5,6 +5,11 @@ import styled from "styled-components";
 // 오디오 메세지 플레이어용 스타일
 const AudioWrapper = styled.div`
   margin-top: 10px;
+  width: 30%;
+  margin-left: 30px;
+  @media (max-width: 768px) {
+    width: 50%;
+  }
 `;
 
 const AudioPlayer = styled.audio`

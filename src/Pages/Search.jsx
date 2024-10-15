@@ -3,7 +3,6 @@ import styled, { useTheme } from "styled-components";
 import { motion } from "framer-motion";
 import Searchbar from "../Components/Search/Searchbar";
 import FollowersList from "../Components/Search/FollowerList";
-
 import TimeLine from "../Components/post/TimeLine";
 
 const Contain = styled.div`
@@ -37,14 +36,13 @@ const Border = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 auto;
-  padding: 20px;
-  max-width: 680px;
+  /* margin: 0 auto; */
+  /* padding: 20px; */
   height: 600px;
   border-radius: 40px 40px 0px 0px;
   background-color: ${(props) => props.theme.borderColor};
   @media (max-width: 768px) {
-    width: 90%;
+    width: 100%;
     border-radius: 20px 20px 0px 0px;
   }
   @media (max-width: 480px) {
@@ -135,9 +133,12 @@ const ContentsBorder = styled.div`
   justify-content: flex-start;
   align-content: center;
   width: 100%;
-  max-height: 600px;
+  /* max-height: 600px; */
+  height: calc(100vh - 120px);
+
   overflow-y: auto;
   padding: 0 20px;
+
   padding-bottom: 20px;
   ::-webkit-scrollbar {
     display: none;
@@ -160,7 +161,7 @@ const BoederWrapper = styled.div`
   left: 50%;
   transform: translate(-50%);
   margin: 0 auto;
-  width: 680px;
+  /* width: 680px; */
   height: 85%;
   border-radius: 40px 40px 0px 0px;
   background-color: ${(props) => props.theme.borderColor};
@@ -256,84 +257,82 @@ const Search = () => {
   ];
 
   return (
-    <div>
-      <BoederWrapper>
-        <Contain>
-          <MenuTitle>{searchTerm || "검색"}</MenuTitle>
-          <Border>
-            <SearchBox>
-              {showSearchBar ? (
-                <Searchbar addSearch={handleSearch} />
-              ) : isMobile ? (
-                <ButtonGroup
-                  className="mobile-buttons"
-                  whileTap="click"
-                  drag="x"
-                  dragMomentum={false}
-                  dragConstraints={{ left: -100, right: 0 }}
-                >
-                  {buttons.map((button) => (
-                    <SelectButton
-                      key={button.type}
-                      style={getButtonStyle(button.type)}
-                      onClick={() => handleButtonClick(button.type)}
-                    >
-                      {button.label}
-                    </SelectButton>
-                  ))}
-                </ButtonGroup>
-              ) : (
-                <ButtonGroupPC className="desktop-buttons">
-                  {buttons.map((button) => (
-                    <SelectButtonPC
-                      key={button.type}
-                      style={getPCButtonStyle(button.type)}
-                      onClick={() => handleButtonClick(button.type)}
-                    >
-                      {button.label}
-                    </SelectButtonPC>
-                  ))}
-                </ButtonGroupPC>
-              )}
-            </SearchBox>
-            <ContentsBorder>
-              {contentType !== "picture" && contentType !== "video" && (
-                <FollowersList
-                  searchTerm={searchTerm}
-                  contentType={contentType}
-                  onDataEmpty={(isEmpty) => setFollowersEmpty(isEmpty)}
-                />
+    <BoederWrapper>
+      <Contain>
+        <MenuTitle>{searchTerm || "검색"}</MenuTitle>
+        <Border>
+          <SearchBox>
+            {showSearchBar ? (
+              <Searchbar addSearch={handleSearch} />
+            ) : isMobile ? (
+              <ButtonGroup
+                className="mobile-buttons"
+                whileTap="click"
+                drag="x"
+                dragMomentum={false}
+                dragConstraints={{ left: -100, right: 0 }}
+              >
+                {buttons.map((button) => (
+                  <SelectButton
+                    key={button.type}
+                    style={getButtonStyle(button.type)}
+                    onClick={() => handleButtonClick(button.type)}
+                  >
+                    {button.label}
+                  </SelectButton>
+                ))}
+              </ButtonGroup>
+            ) : (
+              <ButtonGroupPC className="desktop-buttons">
+                {buttons.map((button) => (
+                  <SelectButtonPC
+                    key={button.type}
+                    style={getPCButtonStyle(button.type)}
+                    onClick={() => handleButtonClick(button.type)}
+                  >
+                    {button.label}
+                  </SelectButtonPC>
+                ))}
+              </ButtonGroupPC>
+            )}
+          </SearchBox>
+          <ContentsBorder>
+            {contentType !== "picture" && contentType !== "video" && (
+              <FollowersList
+                searchTerm={searchTerm}
+                contentType={contentType}
+                onDataEmpty={(isEmpty) => setFollowersEmpty(isEmpty)}
+              />
+            )}
+
+            {contentType !== "profile" && (
+              <TimeLine
+                searchTerm={searchTerm}
+                contentType={contentType}
+                onDataEmpty={(isEmpty) => setDisplaysEmpty(isEmpty)}
+              />
+            )}
+
+            {contentType === "profile" && followersEmpty && (
+              <NoResults>프로필이 존재하지 않습니다.</NoResults>
+            )}
+
+            {(contentType === "picture" || contentType === "video") &&
+              displaysEmpty && (
+                <NoResults>게시글이 존재하지 않습니다.</NoResults>
               )}
 
-              {contentType !== "profile" && (
-                <TimeLine
-                  searchTerm={searchTerm}
-                  contentType={contentType}
-                  onDataEmpty={(isEmpty) => setDisplaysEmpty(isEmpty)}
-                />
+            {contentType !== "profile" &&
+              contentType !== "picture" &&
+              contentType !== "video" &&
+              followersEmpty &&
+              displaysEmpty && (
+                <NoResults>게시글 및 프로필이 존재하지 않습니다.</NoResults>
               )}
-
-              {contentType === "profile" && followersEmpty && (
-                <NoResults>프로필이 존재하지 않습니다.</NoResults>
-              )}
-
-              {(contentType === "picture" || contentType === "video") &&
-                displaysEmpty && (
-                  <NoResults>게시글이 존재하지 않습니다.</NoResults>
-                )}
-
-              {contentType !== "profile" &&
-                contentType !== "picture" &&
-                contentType !== "video" &&
-                followersEmpty &&
-                displaysEmpty && (
-                  <NoResults>게시글 및 프로필이 존재하지 않습니다.</NoResults>
-                )}
-            </ContentsBorder>
-          </Border>
-        </Contain>
-      </BoederWrapper>
-    </div>
+          </ContentsBorder>
+        </Border>
+      </Contain>
+    </BoederWrapper>
   );
 };
 export default Search;
