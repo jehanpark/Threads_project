@@ -115,6 +115,7 @@ const TextArea = styled.textarea`
 
 const Icons = styled.div`
   display: flex;
+  align-items: center;
   margin: 20px 0;
   margin-left: 20px;
   gap: 20px;
@@ -450,7 +451,7 @@ const PostForm = () => {
           </PlusImage>
           <Icons>
             <CameraButton htmlFor="camera">
-              <CameraIcon width={38} />
+              <CameraIcon width={36} />
               <CameraInput
                 onChange={handleFileChange}
                 id="camera"

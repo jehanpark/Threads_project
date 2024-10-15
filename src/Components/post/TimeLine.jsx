@@ -10,7 +10,6 @@ import styled from "styled-components";
 import { db } from "../../firebase";
 import Post from "../Post";
 
-
 const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
   const [posts, setPosts] = useState([]);
   const [isBouncing, setIsBouncing] = useState(false);
