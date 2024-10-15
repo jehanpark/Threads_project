@@ -28,7 +28,6 @@ import {
 
 import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
-import ExModal from "./Common/ExModal";
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
 import PostSetModal from "./Common/PostSetModal";
@@ -577,6 +576,8 @@ const Post = ({
           {isEtcModalOpen && (
             <EtcModal
               post={post}
+              photos={photos}
+              id={id}
               onSave={handleSave}
               onCancel={closeEtcModal}
               setIsEtcModalOpen={setIsEtcModalOpen}
@@ -613,7 +614,14 @@ const Post = ({
           {videos && videos.length > 0 && (
             <Column>
               {videos.map((videoUrl, index) => (
-                <Video key={index} controls autoPlay loop src={videoUrl} />
+                <Video
+                  key={index}
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                  src={videoUrl}
+                />
               ))}
             </Column>
           )}

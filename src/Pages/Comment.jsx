@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { formatDistanceToNow } from "date-fns";
+import { ko } from "date-fns/locale";
 import {
   HeartIcon,
   DmIcon,
@@ -150,7 +151,7 @@ const Icons = styled.div`
   display: flex;
   gap: 15px;
   justify-content: start;
-  
+
   align-items: center;
   margin-left: 50px;
   margin-top: 10px;
@@ -203,7 +204,7 @@ const Form = styled.form`
   }
 `;
 const Buttons = styled.div`
-height: auto;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -352,7 +353,7 @@ const Comment = ({ id }) => {
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
-    return formatDistanceToNow(date, { addSuffix: true });
+    return formatDistanceToNow(date, { addSuffix: true, locale: ko });
   };
 
   const handlePostChange = (e) => {
@@ -486,6 +487,7 @@ const Comment = ({ id }) => {
                           controls
                           autoPlay
                           loop
+                          muted
                           src={videoUrl}
                         />
                       ))}
@@ -538,6 +540,7 @@ const Comment = ({ id }) => {
                       ) : (
                         <video
                           controls
+                          muted
                           style={{
                             width: "160px",
                             height: "160px",

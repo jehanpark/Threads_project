@@ -328,7 +328,7 @@ const PostForm = () => {
                     width: "160px",
                     height: "160px",
                     borderRadius: "10px",
-                    objectFit: "contain",
+                    objectFit: "cover",
                   }}
                 />
               ) : (

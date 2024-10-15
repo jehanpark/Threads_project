@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { updateDoc, doc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, storage } from "../../firebase";
+import { CameraIcon, PictureIcon } from "../Common/Icon";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const AllWrapp = styled.div`
   /* position: relative;  */
@@ -82,6 +84,13 @@ const TextArea = styled.textarea`
     outline: none;
   }
 `;
+const PlusImage = styled.div`
+  display: flex;
+  margin: 10px 20px;
+  gap: 10px;
+  width: 90%;
+  height: 300px;
+`;
 
 const Buttons = styled.div`
   width: 100%;
@@ -89,8 +98,37 @@ const Buttons = styled.div`
   height: auto;
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: space-between;
   padding: 10px;
+`;
+const Icons = styled.div`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-left: 10px;
+  justify-content: center;
+`;
+
+const CameraButton = styled.label`
+  cursor: pointer;
+  fill: none;
+`;
+const CameraInput = styled.input`
+  display: none;
+`;
+
+const PictureButton = styled.label`
+  cursor: pointer;
+`;
+const PictureInput = styled.input`
+  display: none;
+`;
+
+const EditButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
 `;
 
 const UploadButton = styled.button`
@@ -118,12 +156,65 @@ const DelButton = styled.button`
   margin-right: 10px;
 `;
 
-const EtcModal = ({ onSave, post, onCancel, setIsEtcModalOpen }) => {
+const DeleteButton = styled.button`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+`;
+const EtcModal = ({
+  onSave,
+  post,
+  photos,
+  id,
+  onCancel,
+  setIsEtcModalOpen,
+}) => {
   const [newContent, setNewContent] = useState(post); // 수정할 내용을 상태로 관리
+  const [files, setFiles] = useState([]);
 
-  const handleSave = () => {
-    onSave(newContent); // 수정된 내용을 부모 컴포넌트로 전달
-    setIsEtcModalOpen(false); // 모달 닫기
+  const handleSave = async () => {
+    try {
+      let newFileUrls = [];
+
+      // 선택된 파일이 있으면 Firebase Storage에 업로드
+      if (files.length > 0) {
+        for (const file of files) {
+          const fileRef = ref(storage, `posts/${id}/${file.name}`);
+          await uploadBytes(fileRef, file);
+          const fileUrl = await getDownloadURL(fileRef);
+          newFileUrls.push(fileUrl);
+        }
+      }
+
+      // Firestore에 수정된 내용 및 사진 업데이트
+      const postRef = doc(db, "contents", id);
+      await updateDoc(postRef, {
+        post: newContent,
+        photos: newFileUrls.length > 0 ? newFileUrls : photos, // 새로운 사진이 있으면 업데이트
+      });
+
+      onSave(newContent); // 부모 컴포넌트로 수정된 내용을 전달
+      setIsEtcModalOpen(false); // 모달 닫기
+    } catch (error) {
+      console.error("Error updating post:", error);
+    }
+  };
+
+  const maxFileSize = 5 * 1024 * 1024; // 5MB
+  const maxFilesCount = 3;
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+  };
+
+  const removeFile = (index) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
   return (
@@ -139,11 +230,77 @@ const EtcModal = ({ onSave, post, onCancel, setIsEtcModalOpen }) => {
               placeholder="내용을 입력하세요 ..."
             />
           </TextAreaWrapper>
+          <PlusImage>
+            {files.map((file, index) => (
+              <div key={index} style={{ position: "relative", margin: "5px" }}>
+                {file.type.startsWith("image/") ? (
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={`Uploaded Preview ${index + 1}`}
+                    style={{
+                      width: "160px",
+                      height: "160px",
+                      borderRadius: "10px",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : file.type.startsWith("video/") ? (
+                  <video
+                    controls
+                    style={{
+                      width: "160px",
+                      height: "160px",
+                      borderRadius: "10px",
+                      objectFit: "cover",
+                    }}
+                  >
+                    <source src={URL.createObjectURL(file)} />
+                  </video>
+                ) : (
+                  <audio
+                    controls
+                    src={URL.createObjectURL(file)}
+                    style={{
+                      width: "140px", // 오디오 컨트롤러의 너비를 이미지/비디오와 맞춤
+                      height: "40px", // 오디오 컨트롤러의 높이 설정
+                      borderRadius: "10px", // 일관성을 위해 오디오에도 경계 반경 적용
+                      objectFit: "contain",
+                    }}
+                  >
+                    Your browser does not support the audio element.
+                  </audio>
+                )}
+                <DeleteButton onClick={() => removeFile(index)}>X</DeleteButton>
+              </div>
+            ))}
+          </PlusImage>
           <Buttons>
-            <UploadButton onClick={handleSave}>저장</UploadButton>
-            <DelButton cancel onClick={onCancel}>
-              취소
-            </DelButton>
+            <Icons>
+              <CameraButton htmlFor="camera">
+                <CameraIcon width={36} />
+                <CameraInput
+                  onChange={handleFileChange}
+                  id="camera"
+                  type="file"
+                  accept="video/*, image/*"
+                />
+              </CameraButton>
+              <PictureButton htmlFor="picture">
+                <PictureIcon width={24} />
+                <PictureInput
+                  onChange={handleFileChange}
+                  id="picture"
+                  type="file"
+                  accept="video/*, image/*"
+                />
+              </PictureButton>
+            </Icons>
+            <EditButton>
+              <UploadButton onClick={handleSave}>저장</UploadButton>
+              <DelButton cancel onClick={onCancel}>
+                취소
+              </DelButton>
+            </EditButton>
           </Buttons>
         </ModalWrapper>
       </ModalOverlay>

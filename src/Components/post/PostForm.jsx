@@ -427,7 +427,7 @@ const PostForm = () => {
                       width: "160px",
                       height: "160px",
                       borderRadius: "10px",
-                      objectFit: "contain",
+                      objectFit: "cover",
                     }}
                   />
                 ) : file.type.startsWith("video/") ? (
@@ -472,7 +472,7 @@ const PostForm = () => {
             </CameraButton>
             <PictureButton htmlFor="picture">
               <PictureIcon width={24} />
-              <CameraInput
+              <PictureInput
                 onChange={handleFileChange}
                 id="picture"
                 type="file"

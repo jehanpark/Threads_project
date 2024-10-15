@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
+import { ko } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
 import {
   HeartIcon,
@@ -302,7 +303,7 @@ const PostComment = ({ id }) => {
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
-    return formatDistanceToNow(date, { addSuffix: true });
+    return formatDistanceToNow(date, { addSuffix: true, locale: ko });
   };
 
   const handleCommentClick = () => {
@@ -388,6 +389,7 @@ const PostComment = ({ id }) => {
                             new Date(comment.createdAt.seconds * 1000),
                             {
                               addSuffix: true,
+                              locale: ko,
                             }
                           )}
                         </CommentTimer>
@@ -420,6 +422,7 @@ const PostComment = ({ id }) => {
                               controls
                               autoPlay
                               loop
+                              muted
                               src={videoUrl}
                             />
                           ))}
