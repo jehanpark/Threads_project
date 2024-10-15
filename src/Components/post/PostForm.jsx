@@ -198,7 +198,7 @@ const SubmitBtn = styled.input`
   }
 `;
 
-const IconBtn = styled.button`
+const IconBtn = styled.div`
   background-color: transparent;
   border: none;
   outline: none;
@@ -268,6 +268,12 @@ const PostForm = () => {
 
   // 녹음 시작
   const startRecording = () => {
+    // 기존 녹음 파일 초기화
+    setAudioBlob(null); // 이전 녹음 파일 제거
+    setFiles((prevFiles) =>
+      prevFiles.filter((file) => file.type !== "audio/mp3")
+    ); // 기존 오디오 파일 삭제
+
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
@@ -298,17 +304,10 @@ const PostForm = () => {
 
   // 녹음 중지
   const stopRecording = () => {
-    mediaRecorderRef.current.stop();
-    setIsRecording(false);
-
-    if (audioBlob) {
-      const audioFile = new File([audioBlob], "recording.mp3", {
-        type: "audio/mp3",
-      });
-
-      // 녹음 파일을 files 배열에 추가
-      setFiles((prevFiles) => [...prevFiles, audioFile]);
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
     }
+    setIsRecording(false);
   };
 
   const handleSubmit = async (e) => {

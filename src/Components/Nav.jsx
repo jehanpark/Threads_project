@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./LoadingLogo/Logo";
+import { auth, db } from "../firebase";
 import { useAuth } from "../Contexts/AuthContext";
 import MobileNav from "./MobileNav";
 
