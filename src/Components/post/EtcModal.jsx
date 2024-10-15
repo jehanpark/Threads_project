@@ -32,8 +32,8 @@ const ModalWrapper = styled.div`
   }
 `;
 const TextAreaWrapper = styled.div`
-width: 100%;
-height: 100%;
+  width: 100%;
+  height: 100%;
   padding: 30px;
   @media (max-width: 768px) {
     border-radius: 0;

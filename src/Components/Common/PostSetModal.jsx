@@ -2,21 +2,19 @@ import React from "react";
 import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
 import { color } from "framer-motion";
-const WrapperAll = styled.div`
-width: 100%;
-height: 100%;
-@media (max-width: 768px) {
+const ContentsAll = styled.div`
+  @media (max-width: 768px) {
   }
-`
+`;
+
 const Wrapper = styled.div`
   position: absolute;
   top: 20px;
   right: 20px;
-  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 200px;
+  width: 250px;
   height: auto;
   padding: 10px 0;
   border-radius: 30px;
@@ -25,24 +23,24 @@ const Wrapper = styled.div`
   transition: all 0.3s;
   z-index: 500;
   @media (max-width: 768px) {
-    position: absolute;
-    bottom: 70px;
-    left: 0;
-    height: 420px;
+    position: fixed;
     width: 100%;
+    height: 40%;
+    bottom: calc(0px + 70px);
+    right: 0;
+    top: auto;
     border-radius: 30px 30px 0 0;
-    background: ${(props) => props.theme.btnBgColor};
-    box-shadow: ${(props) => props.theme.bordershadow};
   }
 `;
-
 const Contentswrapper = styled.div`
   @media (max-width: 768px) {
+    bottom: 0;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin-top: 10px;
   }
 `;
@@ -71,15 +69,16 @@ const Optionwrapper = styled.div`
 const Li = styled.div`
   padding: 18px;
   width: 100%;
-  padding: 20px 50px;
   text-align: center;
   transition: all 0.3s;
   border-radius: 20px;
+  cursor: pointer;
   &:hover {
     background: ${(props) => props.theme.mouseHoverBg};
     color: ${(props) => props.theme.mouseHoverFontcolor};
   }
   &:nth-child(1) {
+    color: #0396f6;
   }
   &:nth-child(2) {
   }
@@ -107,7 +106,7 @@ const UpLoadButton = styled.button`
     width: 300px;
     height: 70px;
     background: ${(props) => props.theme.fontcolor};
-    color: #fff;
+    color: ${(props) => props.theme.logoColor};
     font-size: 15px;
     font-weight: bold;
     border-radius: 16px;
@@ -126,21 +125,21 @@ const PostSetModal = ({ onClose, onEdit, onDelete, isAuthor }) => {
   };
 
   return (
-    <WrapperAll>
+    <ContentsAll>
       <Wrapper onClick={onClose}>
         <Contentswrapper onClick={handleModalClick}>
           <TopRec></TopRec>
           <Optionwrapper>
             {isAuthor && <Li onClick={onEdit}>수정</Li>}
-            <Li onClick={() => alert("리포스트 기능은 구현되지 않았습니다.")}>
-              리포스트
+            <Li onClick={() => alert("신고하기 기능은 구현되지 않았습니다.")}>
+              신고하기
             </Li>
             {isAuthor && <Li onClick={onDelete}>삭제</Li>}
           </Optionwrapper>
           <UpLoadButton onClick={onClose}>닫기</UpLoadButton>
         </Contentswrapper>
       </Wrapper>
-    </WrapperAll>
+    </ContentsAll>
   );
 };
 export default PostSetModal;
