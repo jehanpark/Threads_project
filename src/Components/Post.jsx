@@ -30,7 +30,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
 
 import { formatDistanceToNow } from "date-fns";
-import PostSetModal from "./post/PostSetModal";
+import PostSetModal from "./Common/PostSetModal";
 import EditModal from "./EditModal";
 import AudioMessage from "./AudioMessage";
 
@@ -241,6 +241,7 @@ const SetContentButton = styled.label`
     cursor: pointer;
   }
 `;
+const EtcModal = styled.div``;
 
 const SetContentInputButton = styled.input`
   display: none;
@@ -258,7 +259,6 @@ const Post = ({
   audioURL,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedPost, setEditedPost] = useState(post);
   const [editedPhoto, setEditedPhoto] = useState(null);
   const [commentsCount, setCommentsCount] = useState(0); // 댓글 수 상태 추가
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
@@ -268,6 +268,8 @@ const Post = ({
   const [retweets, setRetweets] = useState(2);
   const [isRetweets, setIsRetweets] = useState(false);
   const [openModalId, setOpenModalId] = useState(null);
+  const [isEtcModalOpen, setIsEtcModalOpen] = useState(false);
+  const [editedPost, setEditedPost] = useState(post);
   const navigate = useNavigate();
 
   // const user = auth.currentUser;
@@ -278,13 +280,19 @@ const Post = ({
     return formatDistanceToNow(date, { addSuffix: true });
   };
 
+  //PostSetModal
   const openModal = (postId) => {
     setOpenModalId(postId); // 특정 포스트의 ID로 모달 열기
   };
-
   const closeModal = () => {
     setOpenModalId(null);
   };
+
+  // EtcModal
+  const handleEdit = () => {
+    setIsEtcModalOpen(true);
+  };
+  const closeEtcModal = () => setIsEtcModalOpen(false);
 
   const handleClickOutside = (e) => {
     if (openModalId && !e.target.closest(".modal-content")) {
@@ -354,13 +362,8 @@ const Post = ({
     setIsEditing(false);
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
   const handleSave = async (newContent) => {
-    setPostContent(newContent);
-
+    setEditedPost(newContent);
     // Firebase에 업데이트
     try {
       await updateDoc(doc(db, "contents", id), {
@@ -549,6 +552,14 @@ const Post = ({
               isAuthor={user?.uid === userId}
             />
           </div>
+        )}
+        {/* EtcModal - 수정 모달 */}
+        {isEtcModalOpen && (
+          <EtcModal
+            post={editedPost}
+            onSave={handleSave}
+            onCancel={closeEtcModal}
+          />
         )}
       </Header>
 
