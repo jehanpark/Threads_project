@@ -17,6 +17,10 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
   width: 580px;
   height: 360px;
   border-radius: 12px;
@@ -26,6 +30,7 @@ const ModalWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  z-index: 1000;
   @media (max-width: 768px) {
     height: 340px;
     margin: 10px;
@@ -103,31 +108,28 @@ const DelButton = styled.button`
   margin-right: 10px;
 `;
 
-const EtcModal = ({ post, onSave, onCancel }) => {
-  const [newContent, setNewContent] = useState(post); // 수정할 내용을 상태로 관리
-
-  const handleSave = () => {
-    onSave(newContent); // 부모 컴포넌트로 수정된 내용 전달
-  };
+const EtcModal = ({ post, onCancel, setIsEtcModalOpen }) => {
+  const [newContent, setNewContent] = useState(post); //
 
   return (
-    <ModalOverlay>
+    <>
+      <ModalOverlay onClick={() => setIsEtcModalOpen(false)}></ModalOverlay>
       <ModalWrapper>
         <TextAreaWrapper>
           <TextArea
-            value={newContent}
+            value={post}
+            style={{ width: "100%", height: "70%" }}
             onChange={(e) => setNewContent(e.target.value)}
             placeholder="내용을 입력하세요 ..."
           />
         </TextAreaWrapper>
         <Buttons>
-          <UploadButton onClick={handleSave}>게시</UploadButton>
           <DelButton cancel onClick={onCancel}>
             취소
           </DelButton>
         </Buttons>
       </ModalWrapper>
-    </ModalOverlay>
+    </>
   );
 };
 

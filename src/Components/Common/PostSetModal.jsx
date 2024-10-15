@@ -8,7 +8,7 @@ const ContentsAll = styled.div`
 `;
 
 const Wrapper = styled.div`
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 20px;
   flex-direction: column;
@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   background: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   transition: all 0.3s;
-  z-index: 500;
+  z-index: 9999;
   @media (max-width: 768px) {
     position: fixed;
     width: 100%;
@@ -72,6 +72,7 @@ const Li = styled.div`
   text-align: center;
   transition: all 0.3s;
   border-radius: 20px;
+  cursor: pointer;
   &:hover {
     background: ${(props) => props.theme.mouseHoverBg};
     color: ${(props) => props.theme.mouseHoverFontcolor};
@@ -118,7 +119,13 @@ const UpLoadButton = styled.button`
   }
 `;
 
-const PostSetModal = ({ onClose, onEdit, onDelete, isAuthor }) => {
+const PostSetModal = ({
+  onClose,
+  onEdit,
+  onDelete,
+  isAuthor,
+  setIsEtcModalOpen,
+}) => {
   const handleModalClick = (e) => {
     e.stopPropagation(); // 클릭이 배경으로 전파되지 않도록 방지
   };
@@ -129,7 +136,7 @@ const PostSetModal = ({ onClose, onEdit, onDelete, isAuthor }) => {
         <Contentswrapper onClick={handleModalClick}>
           <TopRec></TopRec>
           <Optionwrapper>
-            {isAuthor && <Li onClick={onEdit}>수정</Li>}
+            {isAuthor && <Li onClick={() => setIsEtcModalOpen(true)}>수정</Li>}
             <Li onClick={() => alert("신고하기 기능은 구현되지 않았습니다.")}>
               신고하기
             </Li>

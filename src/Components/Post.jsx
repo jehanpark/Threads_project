@@ -28,11 +28,12 @@ import {
 
 import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
-
+import ExModal from "./Common/ExModal";
 import { formatDistanceToNow } from "date-fns";
 import PostSetModal from "./Common/PostSetModal";
 import EditModal from "./EditModal";
 import AudioMessage from "./AudioMessage";
+import EtcModal from "./post/EtcModal";
 
 const Wrapper = styled.div`
   position: relative;
@@ -241,7 +242,6 @@ const SetContentButton = styled.label`
     cursor: pointer;
   }
 `;
-const EtcModal = styled.div``;
 
 const SetContentInputButton = styled.input`
   display: none;
@@ -292,7 +292,9 @@ const Post = ({
   const handleEdit = () => {
     setIsEtcModalOpen(true);
   };
-  const closeEtcModal = () => setIsEtcModalOpen(false);
+  const closeEtcModal = () => {
+    setIsEtcModalOpen(false);
+  };
 
   const handleClickOutside = (e) => {
     if (openModalId && !e.target.closest(".modal-content")) {
@@ -354,25 +356,9 @@ const Post = ({
 
   const user = auth.currentUser;
 
-  const onChange = (e) => {
-    setEditedPost(e.target.value);
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-  };
-
-  const handleSave = async (newContent) => {
-    setEditedPost(newContent);
-    // Firebase에 업데이트
-    try {
-      await updateDoc(doc(db, "contents", id), {
-        post: newContent,
-      });
-    } catch (error) {
-      console.error("Error updating document: ", error);
-    }
-  };
+  // const onChange = (e) => {
+  //   setEditedPost(e.target.value);
+  // };
 
   const handleClose = () => {
     setIsEditing(false);
@@ -512,6 +498,10 @@ const Post = ({
 
     setIsRetweets((prevRet) => !prevRet);
   };
+  useEffect(() => {
+    console.log("isEtcModalOpen changed:", isEtcModalOpen);
+  }, [isEtcModalOpen]);
+
   return (
     <Wrapper>
       <Header>
@@ -547,18 +537,20 @@ const Post = ({
           <div className="modal-content">
             <PostSetModal
               onClose={closeModal}
-              onDelete={onDelete}
               onEdit={handleEdit}
+              onDelete={onDelete}
               isAuthor={user?.uid === userId}
+              setIsEtcModalOpen={setIsEtcModalOpen}
             />
           </div>
         )}
         {/* EtcModal - 수정 모달 */}
         {isEtcModalOpen && (
           <EtcModal
-            post={editedPost}
-            onSave={handleSave}
+            post={post}
+            // onSave={handleSave}
             onCancel={closeEtcModal}
+            setIsEtcModalOpen={setIsEtcModalOpen}
           />
         )}
       </Header>
