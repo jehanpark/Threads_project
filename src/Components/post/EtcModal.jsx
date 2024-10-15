@@ -1,7 +1,16 @@
-// EtcModal.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useMediaQuery } from "react-responsive";
+
+const AllWrapp = styled.div`
+  /* position: relative;  */
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  height: 100%;
+  width: 100%;
+  z-index: 900;
+  border: 1px solid red;
+`;
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -17,24 +26,27 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
+  position: fixed;
+  left: 50px;
   width: 580px;
   height: 360px;
   border-radius: 12px;
   background: ${(props) => props.theme.borderColor};
   color: ${(props) => props.theme.fontcolor};
-  position: relative;
   display: flex;
   flex-direction: column;
-  position: relative;
+  z-index: 1000;
   @media (max-width: 768px) {
     height: 340px;
     margin: 10px;
   }
 `;
+
 const TextAreaWrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 30px;
+  z-index: 999999;
   @media (max-width: 768px) {
     border-radius: 0;
     width: 100%;
@@ -93,6 +105,7 @@ const UploadButton = styled.button`
     color: ${(props) => props.theme.mouseHoverFontcolor};
   }
 `;
+
 const DelButton = styled.button`
   background: ${(props) => props.theme.mouseHoverBg};
   color: ${(props) => props.theme.fontcolor};
@@ -103,31 +116,30 @@ const DelButton = styled.button`
   margin-right: 10px;
 `;
 
-const EtcModal = ({ post, onSave, onCancel }) => {
+const EtcModal = ({ post, onCancel, setIsEtcModalOpen }) => {
   const [newContent, setNewContent] = useState(post); // 수정할 내용을 상태로 관리
 
-  const handleSave = () => {
-    onSave(newContent); // 부모 컴포넌트로 수정된 내용 전달
-  };
-
   return (
-    <ModalOverlay>
-      <ModalWrapper>
-        <TextAreaWrapper>
-          <TextArea
-            value={newContent}
-            onChange={(e) => setNewContent(e.target.value)}
-            placeholder="내용을 입력하세요 ..."
-          />
-        </TextAreaWrapper>
-        <Buttons>
-          <UploadButton onClick={handleSave}>게시</UploadButton>
-          <DelButton cancel onClick={onCancel}>
-            취소
-          </DelButton>
-        </Buttons>
-      </ModalWrapper>
-    </ModalOverlay>
+    <AllWrapp>
+      {/* 어두운 배경을 클릭하면 모달이 닫히도록 설정 */}
+      <ModalOverlay onClick={() => setIsEtcModalOpen(false)}>
+        {/* ModalWrapper는 ModalOverlay 안에 위치하여 화면 중앙에 배치됩니다 */}
+        <ModalWrapper onClick={(e) => e.stopPropagation()}>
+          <TextAreaWrapper>
+            <TextArea
+              value={newContent}
+              onChange={(e) => setNewContent(e.target.value)}
+              placeholder="내용을 입력하세요 ..."
+            />
+          </TextAreaWrapper>
+          <Buttons>
+            <DelButton cancel onClick={onCancel}>
+              취소
+            </DelButton>
+          </Buttons>
+        </ModalWrapper>
+      </ModalOverlay>
+    </AllWrapp>
   );
 };
 

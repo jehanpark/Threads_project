@@ -9,24 +9,32 @@ import EtcModal from "../Components/post/EtcModal";
 const Wrapper = styled.div`
   width: 100%;
   height: calc(100vh - 120px);
-  overflow: hidden;
+  /* overflow: hidden; */
+  overflow-y: hidden;
   @media (max-width: 768px) {
-    height: 100vh;
+    height: calc(100vh - 120px);
+    ::-webkit-scrollbar {
+      overflow-y: hidden;
+      display: none;
+    }
   }
 `;
 
 const BoederWrapper = styled.div`
+  /* bottom: 0;
   position: fixed;
-  bottom: 0;
   left: 50%;
   transform: translate(-50%);
   margin: 0;
+  overflow: hidden;
+  height: 85%; */
+  margin: 0 auto;
   width: 680px;
-  height: 85%;
+  height: 100%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
-  overflow: hidden;
+
   @media (max-width: 768px) {
     position: absolute;
     bottom: 0;
@@ -44,10 +52,11 @@ const PostlistWrapper = styled.div`
   justify-content: flex-start;
   height: 100%;
   width: 100%;
-  border-radius: 20px;
+  border-radius: 40px 40px 0 0;
   overflow-y: scroll;
   ::-webkit-scrollbar {
-    display: none;
+    overflow-y: hidden;
+    display: none !important;
   }
   scrollbar-width: none;
   transition: transform 0.3s ease-out;
