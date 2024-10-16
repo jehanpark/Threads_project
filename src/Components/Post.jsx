@@ -38,11 +38,11 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
-  padding: 35px 40px;
-  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  border-bottom: 1px solid rgba(172, 172, 172, 0.4);
   @media (max-width: 768px) {
     width: 100%;
     height: auto;

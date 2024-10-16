@@ -20,9 +20,8 @@ const BoederWrapper = styled.div`
   width: 680px;
   height: 100%;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
+  background: ${(props) => props.theme.border};
   box-shadow: ${(props) => props.theme.bordershadow};
-
   @media (max-width: 768px) {
     position: absolute;
     bottom: 0;
