@@ -8,7 +8,12 @@ import { useMediaQuery } from "react-responsive";
 import Border from "../Common/Border_dk";
 import ReportModal from "./ReportModal";
 import Loading from "../LoadingLogo/Loading";
-import { EyeOpenIcon, EyeCloseIcon, AttentionNote } from "../Common/Icon";
+import {
+  EyeOpenIcon,
+  EyeCloseIcon,
+  AttentionNote,
+  RightArrowIcon,
+} from "../Common/Icon";
 import styled from "styled-components";
 
 import {
@@ -30,12 +35,35 @@ import {
   StyledSpan,
   FooterMenuUl,
   FooterMenuLi,
+  FooterMenubasic,
 } from "./RecycleStyles/login_dk";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+import { keyframes } from "styled-components";
+
 // 다은 추가 스타일 여기부터
 
+// 오른쪽으로 이동하는 애니메이션 정의
+const MoveRight = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(5px);
+  }
+`;
+
+// IconWrapper 스타일 정의
+const IconWrapper = styled.div`
+  display: inline-block;
+  transition: transform 0.3s ease;
+
+  // 호버 시 애니메이션 적용
+  ${Border}:hover & {
+    animation: ${MoveRight} 0.3s forwards;
+  }
+`;
 const PasswordInput = styled.input`
   padding: 20px;
   width: 100%;
@@ -96,15 +124,7 @@ const EyeIconWrapper = styled.div`
     fill: #000; /* 호버 시 색상 */
   }
 `;
-const CapsLockWarning = styled.div`
-  color: red;
-  font-size: 12px;
-  font-weight: 400;
-  display: flex;
-  justify-content: end;
-  margin-top: -12px;
-  /* margin-bottom: 6px; */
-`;
+
 const PasswordError = styled.div`
   color: red;
   font-size: 12px;
@@ -215,7 +235,6 @@ const LoginItemDk = () => {
   };
   // 다은 변경 각 텍스트 클릭시 특정 링크로 수정
   const footerMenuList = [
-    { label: "© 2024", url: "#" },
     {
       label: "Threads 약관",
       url: "https://help.instagram.com/769983657850450",
@@ -305,23 +324,29 @@ const LoginItemDk = () => {
             <Hr $isSmallScreen={isSmallScreen} />
           </Linebreak>
           <Link to="/login-insta">
-            <Border type="loginborder" text="instagram으로 계속"></Border>
+            <Border type="loginborder" text="instagram으로 계속">
+              <IconWrapper>
+                {" "}
+                <RightArrowIcon width="28px" />
+              </IconWrapper>
+            </Border>
           </Link>
           {error !== "" ? <Error>{error}</Error> : null}
         </Form>
-        <FooterMenuUl>
-          {footerMenuList.map((menu, index) => (
-            // 다은 이부분 수정
-            <FooterMenuLi
-              key={index}
-              onClick={() => (window.location.href = menu.url)} // URL로 이동
-            >
-              {menu.label}
-            </FooterMenuLi>
-            // 다은 이부분 수정
-          ))}
-        </FooterMenuUl>
       </LoginInner>
+      <FooterMenuUl>
+        <FooterMenubasic>© 2024</FooterMenubasic>
+        {footerMenuList.map((menu, index) => (
+          // 다은 이부분 수정oo
+          <FooterMenuLi
+            key={index}
+            onClick={() => (window.location.href = menu.url)} // URL로 이동
+          >
+            {menu.label}
+          </FooterMenuLi>
+          // 다은 이부분 수정
+        ))}
+      </FooterMenuUl>
       <ReportModal
         width="100%"
         height="100vh"

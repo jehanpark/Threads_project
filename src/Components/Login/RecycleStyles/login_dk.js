@@ -21,7 +21,7 @@ export const BgImg = styled.img`
 export const LoginInner = styled.div`
   position: relative;
   margin: 0 auto;
-  margin-top: 13%;
+  margin-top: 14%;
   width: 370px;
   height: 407px;
   display: flex;
@@ -40,7 +40,7 @@ export const LoginP = styled.p`
   display: flex;
   align-items: center;
   gap: 1px;
-  margin-bottom: 16px;
+  margin-bottom: 26px;
 `;
 
 export const Form = styled.form`
@@ -52,7 +52,7 @@ export const Form = styled.form`
 export const InputWrapper = styled.div`
   position: relative;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
 export const StyledInput = styled.input`
@@ -197,13 +197,28 @@ export const LoginInstaLi = styled.li`
 `;
 
 export const FooterMenuUl = styled.ul`
-  width: 100%;
+  width: 370px;
   display: flex;
   justify-content: space-between;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 30px;
 `;
-
+// 다은 © 2024만 안눌리도록 따로 스타일 줌
+export const FooterMenubasic = styled.li`
+  cursor: pointer;
+  font-size: 12px;
+  color: ${(props) => props.theme.nomalIconColor};
+`;
+// 호버시 색상 변화 추가
 export const FooterMenuLi = styled.li`
   cursor: pointer;
   font-size: 12px;
   color: ${(props) => props.theme.nomalIconColor};
+  transition: all 0.3s;
+  &:hover {
+    color: #181818;
+    font-weight: 500;
+  }
 `;

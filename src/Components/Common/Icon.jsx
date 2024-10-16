@@ -1536,6 +1536,28 @@ export const RightArrowIcon = ({ width, fill }) => {
     </svg>
   );
 };
+
+export const RightNewArrowIcon = ({ width = "21px", fill = "#000000" }) => {
+  const height = (parseInt(width) / 21) * 12; // width에 따라 height 계산
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 23 30"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+    >
+      <path
+        d="M1 1L10.5 10.5L1 20"
+        stroke={fill}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 // 권한
 export const CloseLockIcon = ({ width }) => {
   const height = width ? (width * 23) / 19 : "22px";
@@ -1729,7 +1751,7 @@ const AttentionNoteContainer = styled.div`
   }
 `;
 
-// 경고 메시지 Wrapper
+// 경고 메시지 창 스타일
 export const AttentionNote = ({ children }) => {
   return (
     <AttentionNoteContainer>
