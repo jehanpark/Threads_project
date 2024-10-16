@@ -41,7 +41,6 @@ const PostlistWrapper = styled.div`
   height: 100%;
   width: 100%;
   border-radius: 40px 40px 0 0;
-  margin-top: 18px;
   overflow-y: scroll;
   ::-webkit-scrollbar {
     display: none;

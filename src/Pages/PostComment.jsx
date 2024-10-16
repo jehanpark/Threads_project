@@ -190,7 +190,7 @@ const CommentWrapper = styled.div`
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+
   transition: transform 0.3s ease-out;
   @media (max-width: 768px) {
     width: 100%;
@@ -218,11 +218,33 @@ const CommentTimer = styled.span`
   color: #9a9a9a;
   flex: 1;
 `;
+const DeletAll = styled.div`
+  height: 100%;
+  width: auto;
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const DeletComment = styled.div`
-  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 25px;
+  font-size: 18px;
   margin-right: 4px;
+  width: 34px;
+  height: 100%;
+  border-radius: 50%;
+  transition: all 0.2s;
   cursor: pointer;
+  &:hover {
+    opacity: 0.3;
+  }
+`;
+const DeletIcon = styled.img`
+  opacity: 1;
 `;
 
 const CommentContent = styled.div`
@@ -447,7 +469,6 @@ const PostComment = () => {
               </IconWrapper>
             </Icons>
           </PostWrapper>
-
           <div>
             {comments.length > 0 ? (
               comments.map((comment) => (
@@ -467,11 +488,13 @@ const PostComment = () => {
                           )}
                         </CommentTimer>
                         {currentUser?.uid === postOwnerId && (
-                          <DeletComment
-                            onClick={() => handleDeleteComment(comment.id)} // 댓글 삭제 클릭 시
-                          >
-                            x
-                          </DeletComment>
+                          <DeletAll>
+                            <DeletComment
+                              onClick={() => handleDeleteComment(comment.id)} // 댓글 삭제 클릭 시
+                            >
+                              <DeletIcon src="/x-circle.png" alt="circle" />
+                            </DeletComment>
+                          </DeletAll>
                         )}
                       </CommentHeader>
                       <CommentContent>
