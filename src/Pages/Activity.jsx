@@ -36,7 +36,7 @@ const ButtonGroup = styled.div`
   width: 100%;
   justify-content: center;
   align-content: center;
-  gap: 20px;
+  gap: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
   transition: all 0.3s ease;
@@ -46,11 +46,14 @@ const SelectButton = styled.button`
   display: flex;
   flex: 0 0 auto;
   width: 110px;
+  border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px 20px;
-  background: ${(props) => props.theme.buttonbackground};
-  border: 1px solid ${(props) => props.theme.searchButton};
-  color: ${(props) => props.theme.buttonText};
+  color: ${(props) =>
+    props.selected ? props.theme.borderColor : props.theme.buttonText};
+  font-weight: 700;
+  background: ${(props) =>
+    props.selected ? props.theme.buttonText : props.theme.buttonbackground};
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
@@ -75,19 +78,24 @@ const ButtonGroupPC = styled.div`
   align-items: center;
   gap: 10px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  background: transparent;
   @media (max-width: 768px) {
     display: none;
   }
 `;
 
 const SelectButtonPC = styled.button`
+  background: transparent;
   flex: 0 0 auto;
   width: 140px;
   padding: 10px 20px;
   border: none;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s;
+  color: ${(props) =>
+    props.selected ? props.theme.selectedbtn : props.theme.notSelectbtn};
+  border-bottom: ${(props) =>
+    props.selected ? `1px solid ${props.theme.selectedbtn}` : "none"};
 `;
 
 const ContentsBorder = styled.div`
@@ -232,21 +240,6 @@ const Activity = () => {
   });
 
   // 버튼 스타일 동적 적용
-  const getPCButtonStyle = (type, isNightMode) => ({
-    background: "transparent",
-    color:
-      contentType === type
-        ? isNightMode
-          ? "#FFF"
-          : "#000"
-        : isNightMode
-        ? "rgba(255, 255, 255, 0.8)"
-        : "rgba(204, 204, 204, 0.8)",
-    borderBottom:
-      contentType === type
-        ? `1.5px solid ${isNightMode ? "#fff" : "#000"}`
-        : "none",
-  });
 
   const buttons = [
     { label: "모두", type: "all" },
@@ -279,7 +272,7 @@ const Activity = () => {
             {buttons.map((button) => (
               <SelectButton
                 key={button.type}
-                style={getButtonStyle(button.type)}
+                selected={contentType === button.type}
                 onClick={() => handleButtonClick(button.type)}
               >
                 {button.label}
@@ -291,7 +284,7 @@ const Activity = () => {
             {buttons.map((button) => (
               <SelectButtonPC
                 key={button.type}
-                style={getPCButtonStyle(button.type)}
+                selected={contentType === button.type}
                 onClick={() => handleButtonClick(button.type)}
               >
                 {button.label}
