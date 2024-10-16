@@ -247,7 +247,7 @@ const Title = styled.div`
   font-size: 18px;
   color: #ffffff;
 `;
-const PostcommentModal = ({
+const ComentModal = ({
   onSave,
   post,
   photos,
@@ -396,4 +396,4 @@ const PostcommentModal = ({
   );
 };
 
-export default PostcommentModal;
+export default ComentModal;

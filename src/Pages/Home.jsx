@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import TimeLine from "../Components/post/TimeLine";
 import EtcModal from "../Components/post/EtcModal";
-import PostcommentModal from "../Components/post/PostCommentModal";
+import ComentModal from "../Components/post/ComentModal";
 
 const Wrapper = styled.div`
   /* width: 100%; */
@@ -17,11 +17,7 @@ const Wrapper = styled.div`
   }
 `;
 const BoederWrapper = styled.div`
-  /* position: fixed; */
   bottom: 0;
-  /* left: 50%; */
-  /* transform: translate(-50%); */
-  /* margin: 0; */
   width: 680px;
   height: 100%;
   padding: 10px;
@@ -116,7 +112,7 @@ const Home = () => {
 
   return (
     <Wrapper>
-      {/* <PostcommentModal /> */}
+      {/* <ComentModal /> */}
       <BoederWrapper>
         <PostlistWrapper
           ref={wrapperRef}

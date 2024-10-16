@@ -114,10 +114,11 @@ const TextArea = styled.textarea`
 `;
 
 const Icons = styled.div`
+  border-top: 1px solid rgba(204, 204, 204, 0.4);
   display: flex;
   align-items: center;
-  margin: 20px 0;
-  margin-left: 20px;
+  padding-top: 20px;
+  padding-left: 20px;
   gap: 20px;
   @media (max-width: 768px) {
     margin: 0;

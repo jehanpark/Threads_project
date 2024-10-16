@@ -18,6 +18,6 @@
   // "exclude": ["node_modules"] // node_modules 폴더 제외
 
   // NEW
-  "include": ["src/**/*"], // 포함할 파일 경로
+  "include": ["src/**/*", "src/Components/post/.jsx"], // 포함할 파일 경로
   "exclude": ["node_modules", "build"] // 빌드된 파일이나 node_modules는 제외
 }

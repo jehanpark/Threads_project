@@ -35,6 +35,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: auto;
   padding: 40px;
+  margin-bottom: 10px;
   display: flex;
   border-radius: 30px;
   flex-direction: column;
@@ -44,12 +45,14 @@ const Wrapper = styled.div`
     height: auto;
     border-radius: 0px;
     padding: 30px;
+    margin-bottom: 0px;
   }
 `;
 const ColumnWrapper = styled.div`
   display: flex;
 `;
 const Column = styled.div`
+  margin-left: 20px;
   display: flex;
   margin-left: 50px;
   margin-bottom: 12px;
