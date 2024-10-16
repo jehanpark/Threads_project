@@ -4,13 +4,9 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 300px;
+  bottom: 120px;
+  margin-left: 35%;
+  width: 260px;
   height: auto;
   padding: 10px 0;
   border-radius: 30px;
@@ -29,6 +25,10 @@ const Wrapper = styled.div`
   }
 `;
 const Contentswrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   @media (max-width: 768px) {
     width: 100%;
     height: 100%;
@@ -56,7 +56,11 @@ const Title = styled.div`
 `;
 const Optionwrapper = styled.div`
   padding: 10px;
-  width: auto;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   @media (max-width: 768px) {
     height: 100%;
     width: 100%;
@@ -69,7 +73,7 @@ const Optionwrapper = styled.div`
 `;
 const Li = styled.div`
   padding: 18px;
-  width: 280px;
+  width: 90%;
   text-align: center;
   transition: all 0.3s;
   border-radius: 20px;
@@ -110,17 +114,23 @@ const UpLoadButton = styled.button`
   }
 `;
 
-const PostForm_Modal = (centerChild, Button) => {
+const PostForm_Modal = ({ centerChild, Button, onClose, onSelect }) => {
+  const handleSelect = (text) => {
+    onSelect(text); // 선택된 텍스트를 상위 컴포넌트로 전달
+    onClose(); // 모달 닫기
+  };
   return (
     <Wrapper>
       <Contentswrapper>
         <TopRec></TopRec>
         <Title>새로운 스레드를 원하는 사람들에게 공개하세요</Title>
         <Optionwrapper>
-          <Li>모두에게 공개</Li>
-          <Li>내 팔로워만</Li>
-          <Li>내가 언급한 사람만</Li>
-          <Li>나만 보기</Li>
+          <Li onClick={() => handleSelect("모두에게 공개")}>모두에게 공개</Li>
+          <Li onClick={() => handleSelect("내 팔로워만")}>내 팔로워만</Li>
+          <Li onClick={() => handleSelect("내가 언급한 사람만")}>
+            내가 언급한 사람만
+          </Li>
+          <Li onClick={() => handleSelect("나만 보기")}>나만 보기</Li>
         </Optionwrapper>
         <UpLoadButton>게시글 업로드</UpLoadButton>
       </Contentswrapper>
