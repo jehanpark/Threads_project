@@ -28,6 +28,7 @@ import PostSetModal from "./Common/PostSetModal";
 import AudioMessage from "./AudioMessage";
 import EtcModal from "./post/EtcModal";
 import fetchUserProfileImage from "../Utils/fetchProfile";
+import PostCommentModal from "../Pages/PostComment";
 
 const Wrapper = styled.div`
   position: relative;
@@ -36,9 +37,9 @@ const Wrapper = styled.div`
   padding: 40px;
   padding: 40px;
   display: flex;
+  border-radius: 30px;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
-  border-bottom: 1px solid rgba(172, 172, 172, 0.4);
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
