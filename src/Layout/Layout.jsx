@@ -8,9 +8,13 @@ import BottomNav from "../Components/MobileNav";
 // 레이아웃 스타일
 const LayoutWrapper = styled.div`
   width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(156, 200, 255, 0.2);
   overflow: hidden;
   /* padding: 20px 20px; */
-  position: relative;
+  /* position: relative; */
   @media screen and (max-width: 768px) {
     padding: 0px;
   }

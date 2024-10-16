@@ -3,6 +3,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout/Layout";
 import Home from "../Pages/Home";
+import HomeDK from "../Pages/Home_dk";
 import Search from "../Pages/Search";
 import Login from "../Pages/Login";
 import LoginInsta from "../Pages/LoginInsta";
@@ -26,7 +27,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/", // 각 경로는 Outlet을 통해 렌더링됨
-        element: <Home />,
+        element: <HomeDK />,
       },
       {
         path: "search",

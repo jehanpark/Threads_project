@@ -27,31 +27,68 @@ import ProfileEdit from "../Components/profile/ProfileEdit";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
 
+const Wrapper = styled.div`
+  /* width: 100%; */
+  /* height: calc(100vh - 120px); */
+  /* overflow: hidden; */
+
+  height: 100vh;
+  margin-top: 120px;
+  @media (max-width: 768px) {
+    height: 100vh;
+  }
+`;
+
+// const BoederWrapper = styled.div`
+//   /* position: fixed; */
+//   /* position: fixed; */
+//   /* bottom: 0; */
+//   /* left: 50%; */
+//   /* transform: translate(-50%); */
+//   /* bottom: 0;
+//   left: 50%; */
+//   /* transform: translate(-50%); */
+//   /* margin: 0 auto; */
+//   /* height: 85%; */
+//   width: 680px;
+//   height: 100%;
+//   border-radius: 40px 40px 0px 0px;
+//   background: ${(props) => props.theme.headerBg};
+//   box-shadow: ${(props) => props.theme.bordershadow};
+//   /* overflow: hidden; */
+//   @media (max-width: 768px) {
+//     position: static;
+//     margin: 0;
+//     width: 100vw;
+//     height: calc(100% - 140px);
+//     box-shadow: none;
+//     border-radius: 0px;
+//     background: ${(props) => props.theme.borderColor};
+//     transform: translate(0%);
+//   }
+// `;
 const BoederWrapper = styled.div`
-  position: fixed;
+  /* position: fixed; */
   bottom: 0;
-  left: 50%;
-  transform: translate(-50%);
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%);
-  margin: 0 auto;
+  /* left: 50%; */
+  /* transform: translate(-50%); */
+  /* margin: 0; */
   width: 680px;
-  height: 85%;
+  height: 100%;
+  /* height: 85%; */
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.headerBg};
+  background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
   /* overflow: hidden; */
   @media (max-width: 768px) {
-    position: static;
-    margin: 0;
-    width: 100vw;
-    height: calc(100% - 140px);
+    /* position: absolute; */
+    width: 100%;
+    bottom: 0;
+    border-radius: 0;
+    width: 100%;
+    height: calc(100% - 70px);
     box-shadow: none;
-    border-radius: 0px;
-    background: ${(props) => props.theme.borderColor};
-    transform: translate(0%);
+    border-radius: 0px 0px 0px 0px;
   }
 `;
 
@@ -533,7 +570,7 @@ const Profile = () => {
   ];
 
   return (
-    <>
+    <div>
       {followModal ? (
         <FollowModal open={true} close={onfollow} />
       ) : (
@@ -574,80 +611,82 @@ const Profile = () => {
           onProfileChange={() => handleProfileChange}
         />
       )}
-      <BoederWrapper>
-        <PostlistWrapper>
-          <ProfileInnner>
-            <ProfileWrap>
-              <IdWrap>
-                <Nick> {profile.username}</Nick>
-                <IdText>{emailAdress}</IdText>
-              </IdWrap>
-              <ImgWrap>
-                {Boolean(avatar) ? (
-                  <Img src={avatar} />
-                ) : (
-                  <UserIcon2 width="54" fill="#BABABA" />
-                )}
-              </ImgWrap>
-            </ProfileWrap>
-            <BottomWrap>
-              <Desk>{profile.bio ?? "프로필을 꾸며보세요!"}</Desk>
-              <FollowLink>
-                <Follow onClick={onfollow}>팔로워 {profile.followNum}</Follow>
-                {profile.isLinkPublic ? (
-                  <Links>
-                    {user?.email === emailAdress ? (
-                      <LinkPlus onClick={onLinkPlus}>
-                        <PlusIcon width="16px" />
-                      </LinkPlus>
-                    ) : null}
+      <Wrapper>
+        <BoederWrapper>
+          <PostlistWrapper>
+            <ProfileInnner>
+              <ProfileWrap>
+                <IdWrap>
+                  <Nick> {profile.username}</Nick>
+                  <IdText>{emailAdress}</IdText>
+                </IdWrap>
+                <ImgWrap>
+                  {Boolean(avatar) ? (
+                    <Img src={avatar} />
+                  ) : (
+                    <UserIcon2 width="54" fill="#BABABA" />
+                  )}
+                </ImgWrap>
+              </ProfileWrap>
+              <BottomWrap>
+                <Desk>{profile.bio ?? "프로필을 꾸며보세요!"}</Desk>
+                <FollowLink>
+                  <Follow onClick={onfollow}>팔로워 {profile.followNum}</Follow>
+                  {profile.isLinkPublic ? (
+                    <Links>
+                      {user?.email === emailAdress ? (
+                        <LinkPlus onClick={onLinkPlus}>
+                          <PlusIcon width="16px" />
+                        </LinkPlus>
+                      ) : null}
 
-                    <PulsLinkIcon>
-                      <InstaIcon />
-                      <FacebookIcon />
-                    </PulsLinkIcon>
-                  </Links>
-                ) : null}
-              </FollowLink>
-              {user?.email === emailAdress ? (
-                <Button
-                  type="edit"
-                  text="프로필 수정"
-                  onClick={onProfileEdite}
-                  heith={"40px"}
-                />
-              ) : (
-                <Button type="edit" text="팔로잉" onClick={onOtherbtn} />
-              )}
-            </BottomWrap>
-          </ProfileInnner>
-          <ThreadInner>
-            <ButtonGroup>
-              {buttons.map((button) => (
-                <ButtonStyle
-                  key={button.type}
-                  style={getButtonStyle(button.type)}
-                  onClick={() => handleButtonClick(button.type)}
-                >
-                  {button.label}
-                </ButtonStyle>
-              ))}
-            </ButtonGroup>
-            <PostWrap
-              ref={wrapperRef}
-              className={isBouncing ? "bounce" : ""}
-              onScroll={handleScroll}
-            >
-              {contentType === "thresds"
-                ? posts.map((post) => <Post key={post.id} {...post} />)
-                : filteredData.map((filter) => (
-                    <Post key={filter.id} {...filter} />
-                  ))}
-            </PostWrap>
-          </ThreadInner>
-        </PostlistWrapper>
-      </BoederWrapper>
-    </>
+                      <PulsLinkIcon>
+                        <InstaIcon />
+                        <FacebookIcon />
+                      </PulsLinkIcon>
+                    </Links>
+                  ) : null}
+                </FollowLink>
+                {user?.email === emailAdress ? (
+                  <Button
+                    type="edit"
+                    text="프로필 수정"
+                    onClick={onProfileEdite}
+                    heith={"40px"}
+                  />
+                ) : (
+                  <Button type="edit" text="팔로잉" onClick={onOtherbtn} />
+                )}
+              </BottomWrap>
+            </ProfileInnner>
+            <ThreadInner>
+              <ButtonGroup>
+                {buttons.map((button) => (
+                  <ButtonStyle
+                    key={button.type}
+                    style={getButtonStyle(button.type)}
+                    onClick={() => handleButtonClick(button.type)}
+                  >
+                    {button.label}
+                  </ButtonStyle>
+                ))}
+              </ButtonGroup>
+              <PostWrap
+                ref={wrapperRef}
+                className={isBouncing ? "bounce" : ""}
+                onScroll={handleScroll}
+              >
+                {contentType === "thresds"
+                  ? posts.map((post) => <Post key={post.id} {...post} />)
+                  : filteredData.map((filter) => (
+                      <Post key={filter.id} {...filter} />
+                    ))}
+              </PostWrap>
+            </ThreadInner>
+          </PostlistWrapper>
+        </BoederWrapper>
+      </Wrapper>
+    </div>
   );
 };
 

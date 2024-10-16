@@ -13,6 +13,7 @@ const AllWrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 20px 0px;
+  position: fixed;
 `;
 
 const Wrapper = styled.nav`
@@ -148,6 +149,11 @@ const ImgBox = styled.label`
   border-radius: 50px;
   overflow: hidden;
   background-color: ${(props) => props.theme.mouseHoverBg};
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 const Nav = () => {
