@@ -16,6 +16,7 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
+import { useSearchParams } from "react-router-dom";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -27,7 +28,7 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 1100;
 `;
 
 const PofileModalBox = styled.div`
@@ -130,7 +131,7 @@ const Switch = styled(motion.label)`
   padding: 3px;
   border: 2px solid ${(props) => props.theme.borderstroke};
   cursor: pointer;
-  &[data-isOn="true"] {
+  &[data-ison="true"] {
     justify-content: flex-end;
     background-color: ${(props) => props.theme.searchBar};
   }
@@ -181,13 +182,27 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   const user = auth.currentUser; //유저 계정 내용 ( displayName , email , photoURL  , uid)
   const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      complete();
-    } else if (e.key === "Escape") {
-      close();
+  // isOn 값
+  const [isOn, setIsOn] = useState(true);
+  const [isOn2, setIsOn2] = useState(true);
+  console.log(profileData.isLinkPublic);
+  console.log("토글", isOn);
+
+  useEffect(() => {
+    // // 파이어베이스 값
+    // const toggelbase = profileData.isLinkPublic;
+    // const toggelbase2 = profileData.isProfilePublic;
+
+    if (profileData.isLinkPublic === false) {
+      toggleSwitch();
+      setIsOn(false);
     }
-  };
+  }, []);
+
+  // const toggle = () => {
+  //   if (isOn === false) {
+  //   }
+  // };
 
   useEffect(() => {
     if (open) {
@@ -201,6 +216,23 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   useEffect(() => {
     setProfileData({ ...profile });
   }, [profile]);
+
+  // const toggle = () => {
+  //   if (isOn === false) {
+  //     toggleSwitch();
+  //   }
+  //   if (isOn2 === false) {
+  //     toggleSwitch2();
+  //   }
+  // };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      complete();
+    } else if (e.key === "Escape") {
+      close();
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -234,7 +266,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
       await updateProfile(user, { photoURL: avatar });
     } else return;
   };
-  console.log(profile);
+
   const complete = async () => {
     if (!user) return;
     try {
@@ -244,7 +276,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
       const imgToSave = avatar || "";
       const profileQuery = query(
         collection(db, "profile"),
-        where("userId", "==", user.uid)
+        where("userEmail", "==", user.email)
       );
 
       const querySnapshot = await getDocs(profileQuery);
@@ -301,17 +333,16 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
     }
   };
 
-  const [isOn, setIsOn] = useState(profileData.isLinkPublic);
-  const [isOn2, setIsOn2] = useState(profileData.isProfilePublic);
   const toggleSwitch = () => setIsOn(!isOn);
   const toggleSwitch2 = () => setIsOn2(!isOn2);
+
   const spring = {
     type: "spring",
     stiffness: 700,
     damping: 30,
   };
   if (!open) return null;
-  console.log(avatar);
+
   return (
     <>
       <ModalOverlay onClick={close}>
@@ -355,14 +386,14 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
             <Checkinner>
               <SubTitle>연동 링크 공개</SubTitle>
               <Switch
-                data-isOn={isOn}
+                data-ison={isOn}
                 onClick={toggleSwitch}
                 htmlFor="isLinkPublic"
               >
                 <Handle layout transition={spring} />
               </Switch>
               <input
-                style={{ display: "none" }}
+                // style={{ display: "none" }}
                 type="checkbox"
                 name="isLinkPublic"
                 id="isLinkPublic"

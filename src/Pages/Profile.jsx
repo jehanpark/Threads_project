@@ -55,7 +55,7 @@ const BoederWrapper = styled.div`
 `;
 
 const ProfileInnner = styled.div`
-  padding: 40px 40px 20px 40px;
+  padding: 30px 40px 4px 40px;
   width: calc(100% - 20px);
   height: 306px;
   border: 306px;
@@ -289,6 +289,9 @@ const Profile = () => {
   const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
   const [editbtn, setEditbtn] = useState(true);
   const [searchParams] = useSearchParams();
+  //emailAdress
+  // const [emailAdress, setEmailAdress] = useState("");
+  // const adress = searchParams.get("email");
   const emailAdress = searchParams.get("email");
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
@@ -315,7 +318,13 @@ const Profile = () => {
   const [isBouncing, setIsBouncing] = useState(false);
   const [comments, setComments] = useState([]);
 
-  const location = useLocation();
+  // const PickProfile = ()=>{
+  //   if(!프롭스 == "") {
+  //     setEmailAdress(프롭스)
+  //   } else {
+  //     setEmailAdress(adress)
+  //   }
+  // }
 
   const handleDataUpdate = (listData) => {
     if (listData.length > 0) {
@@ -568,7 +577,6 @@ const Profile = () => {
     { label: "사진", type: "photos" },
     { label: "동영상", type: "videos" },
   ];
-
   return (
     <>
       {followModal ? (

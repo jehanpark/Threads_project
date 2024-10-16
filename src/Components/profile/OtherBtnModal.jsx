@@ -22,7 +22,7 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 1100;
 `;
 
 const OtherModalBox = styled.div`
@@ -129,7 +129,7 @@ const OtherBtnModal = ({ open, close, profile, onProfileChange }) => {
       );
       const querySnapshot = await getDocs(profileQuery);
 
-      let newFollowState = !follow;
+      let newFollowState = follow === true ? false : true;
       setFollow(newFollowState);
 
       if (querySnapshot.empty) {
@@ -139,8 +139,8 @@ const OtherBtnModal = ({ open, close, profile, onProfileChange }) => {
           userId: "",
           userEmail: emailAdress,
           bio: "",
-          isLinkPublic: "",
-          isProfilePublic: "",
+          isLinkPublic: true,
+          isProfilePublic: true,
           img: "",
           isFollowing: true,
           followNum: followNum,
