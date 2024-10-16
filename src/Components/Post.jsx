@@ -16,15 +16,7 @@ import {
   getDownloadURL,
   uploadBytesResumable,
 } from "firebase/storage";
-import {
-  HeartIcon,
-  DmIcon,
-  MagnifyingGlassIcon,
-  BellOffIcon,
-  RetweetIcon,
-  EtcIcon,
-  Coment,
-} from "./Common/Icon";
+import { HeartIcon, DmIcon, RetweetIcon, EtcIcon, Coment } from "./Common/Icon";
 
 import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
@@ -273,10 +265,11 @@ const Post = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPhoto, setEditedPhoto] = useState(null);
-  const [commentsCount, setCommentsCount] = useState(0); // 댓글 수 상태 추가
+  const [commentsCount, setCommentsCount] = useState(0);
+  const [isCopied, setIsCopied] = useState(false);
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [isLiked, setIsLiked] = useState(false);
-  const [dms, setDms] = useState(Math.floor(Math.random() * 50));
+  const [dms, setDms] = useState(Math.floor(Math.random() * 20));
   const [isDms, setIsDms] = useState(false);
   const [retweets, setRetweets] = useState(2);
   const [isRetweets, setIsRetweets] = useState(false);
@@ -384,6 +377,7 @@ const Post = ({
       setEditedPhoto(files[0]);
     }
   };
+
   const onDelete = async () => {
     if (confirm("정말 이 글을 삭제하시겠습니까?") && user?.uid === userId) {
       try {
@@ -399,43 +393,6 @@ const Post = ({
       alert("삭제할 권한이 없습니다.");
     }
   };
-
-  // const onUpdate = async () => {
-  //   try {
-  //     if (user?.uid !== userId) return;
-
-  //     const postDoc = await getDoc(doc(db, "contents", id));
-  //     if (!postDoc.exists()) throw new Error("Documents does not exist");
-
-  //     if (editedPhoto) {
-  //       const newFileType = editedPhoto.type.startsWith("image/")
-  //         ? "image"
-  //         : "video";
-
-  //       const locationRef = ref(storage, `contents/${user.uid}/${id}`);
-  //       const uploadTask = uploadBytesResumable(locationRef, editedPhoto);
-  //       if (editedPhoto.size >= 5 * 1024 * 1024) {
-  //         uploadTask.cancel();
-  //         throw new Error("File Size is over 5MB");
-  //       }
-  //       const result = await uploadBytes(locationRef, editedPhoto);
-  //       const url = await getDownloadURL(result.ref);
-
-  //       await updateDoc(doc(db, "contents", id), {
-  //         post: editedPost,
-  //         photo: newFileType === "image" ? url : "",
-  //         video: newFileType === "video" ? url : "",
-  //         fileType: newFileType,
-  //       });
-  //     } else {
-  //       await updateDoc(doc(db, "contents", id), { post: editedPost });
-  //     }
-  //   } catch (e) {
-  //     console.error(e);
-  //   } finally {
-  //     setIsEditing(false); // 수정 완료 후 입력창 닫기
-  //   }
-  // };
 
   const handleSave = async (newContent) => {
     try {
@@ -492,6 +449,7 @@ const Post = ({
         likes,
         dms,
         retweets,
+        userId,
       },
     });
   };
@@ -500,15 +458,23 @@ const Post = ({
   const handleDmClick = async () => {
     const postRef = doc(db, "contents", id);
 
-    if (isDms) {
-      setDms((prevDms) => prevDms - 1);
-      await updateDoc(postRef, { dms: dms - 1 });
-    } else {
+    // 최초 클릭 시 DM 카운트 증가 및 Firebase 업데이트
+    if (!isCopied) {
       setDms((prevDms) => prevDms + 1);
       await updateDoc(postRef, { dms: dms + 1 });
-    }
 
-    setIsDms((prevDms) => !prevDms);
+      const pageUrl = window.location.href;
+
+      try {
+        await navigator.clipboard.writeText(pageUrl);
+        setIsCopied(true);
+        alert("링크가 복사되었습니다.");
+      } catch (err) {
+        console.error("링크 복사 실패:", err);
+      }
+    } else {
+      alert("이미 링크가 복사되었습니다.");
+    }
   };
 
   // Retweets 상태가 변경될 때 Firebase에 업데이트
@@ -635,11 +601,11 @@ const Post = ({
           <IconWrapper onClick={handleCommentClick}>
             <Coment width={20} /> {commentsCount}
           </IconWrapper>
-          <IconWrapper onClick={handleDmClick}>
-            <DmIcon width={18} /> {dms}
-          </IconWrapper>
           <IconWrapper onClick={handleRetweetClick}>
             <RetweetIcon width={20} /> {retweets}
+          </IconWrapper>
+          <IconWrapper onClick={handleDmClick}>
+            <DmIcon width={18} /> {dms}
           </IconWrapper>
         </Icons>
       </Wrapper>

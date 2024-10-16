@@ -431,14 +431,14 @@ const Comment = ({ id }) => {
     if (selectedFiles) {
       const newFiles = Array.from(selectedFiles).filter((file) => {
         if (file.size > maxFileSize) {
-          alert("The maximum file size is 5MB.");
+          alert("업로드 가능한 파일의 최대 크기는 5MB입니다.");
           return false;
         }
         return true;
       });
 
       if (files.length + newFiles.length > maxFilesCount) {
-        alert(`You can upload a maximum of ${maxFilesCount} files.`);
+        alert(`파일은 최대 ${maxFilesCount}장까지만 업로드할 수 있습니다.`);
         return;
       }
 
@@ -502,10 +502,10 @@ const Comment = ({ id }) => {
                     <Coment width={14} /> {commentsCount}
                   </IconWrapper>
                   <IconWrapper>
-                    <DmIcon width={12} /> {dms}
+                    <RetweetIcon width={14} /> {retweets}
                   </IconWrapper>
                   <IconWrapper>
-                    <RetweetIcon width={14} /> {retweets}
+                    <DmIcon width={12} /> {dms}
                   </IconWrapper>
                 </Icons>
               </PostWrapper>

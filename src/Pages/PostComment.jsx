@@ -11,8 +11,17 @@ import {
   Coment,
 } from "../Components/Common/Icon";
 import BackBtn from "../Components/post/BackBtn";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  doc,
+  deleteDoc,
+  getDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
+import { useAuth } from "../Contexts/AuthContext";
 
 const AllWrap = styled.div`
   width: 100%;
@@ -168,7 +177,7 @@ const IconWrapper = styled.div`
 `;
 
 const ScrollWrapper = styled.div``;
-const ComentList = styled.div`
+const CommentsList = styled.div`
   width: 100%;
   height: auto;
 `;
@@ -210,6 +219,12 @@ const CommentTimer = styled.span`
   flex: 1;
 `;
 
+const DeletComment = styled.div`
+  font-size: 14px;
+  margin-right: 4px;
+  cursor: pointer;
+`;
+
 const CommentContent = styled.div`
   font-size: 14px;
   color: ${(props) => props.theme.fontcolor};
@@ -243,18 +258,23 @@ const NotComment = styled.div`
   color: #bababa;
 `;
 
-const PostComment = ({ id }) => {
+const PostComment = () => {
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(0);
-  const [comments, setComments] = useState([]); // 초기 값을 빈 배열로 설정
-  const [commentsCount, setCommentsCount] = useState(0); // 댓글 수
+  const [comments, setComments] = useState([]);
+  const [commentsCount, setCommentsCount] = useState(0);
   const [dms, setDms] = useState(0);
   const [retweets, setRetweets] = useState(0);
   const [files, setFiles] = useState([]);
+  const [postOwnerId, setPostOwnerId] = useState("");
+  const { currentUser } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
   const {
+    postId,
+    userId,
+    id,
     postContent,
     photos,
     videos,
@@ -264,6 +284,12 @@ const PostComment = ({ id }) => {
     dms: passedDms,
     retweets: passedRetweets,
   } = location.state || {};
+
+  useEffect(() => {
+    if (userId) {
+      setPostOwnerId(userId); // 포스트 작성자의 ID를 설정
+    }
+  }, [userId]);
 
   useEffect(() => {
     setLikes(passedLikes);
@@ -323,6 +349,53 @@ const PostComment = ({ id }) => {
     });
   };
 
+  useEffect(() => {
+    const fetchPostOwner = async () => {
+      try {
+        if (!id) {
+          console.error("포스트 ID가 없습니다.");
+          return;
+        }
+
+        // Firestore에서 포스트 데이터를 가져와 userId 확인
+        const postRef = doc(db, "contents", id);
+        const postSnapshot = await getDoc(postRef);
+        if (postSnapshot.exists()) {
+          const postData = postSnapshot.data();
+          console.log("포스트 데이터:", postData);
+
+          if (postData.userId) {
+            setPostOwnerId(postData.userId); // userId를 상태로 저장
+          } else {
+            console.error("userId 필드가 문서에 없습니다.");
+          }
+        } else {
+          console.error("해당 포스트가 Firestore에 존재하지 않습니다.");
+        }
+      } catch (error) {
+        console.error(
+          "포스트 작성자 정보를 가져오는 중 오류가 발생했습니다:",
+          error
+        );
+      }
+    };
+
+    fetchPostOwner(); // 포스트 작성자의 ID 가져오기
+  }, [id]); // id가 변경될 때마다 실행
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const commentRef = doc(db, "contents", postId, "comments", commentId);
+      await deleteDoc(commentRef); // Firebase에서 댓글 삭제
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
+      ); // UI에서 삭제된 댓글 제거
+      setCommentsCount((prevCount) => prevCount - 1); // 댓글 수 감소
+    } catch (error) {
+      console.error("댓글 삭제 중 오류 발생:", error);
+    }
+  };
+
   return (
     <div>
       <AllWrap>
@@ -367,10 +440,10 @@ const PostComment = ({ id }) => {
                 <Coment width={20} /> {commentsCount}
               </IconWrapper>
               <IconWrapper>
-                <DmIcon width={18} /> {dms}
+                <RetweetIcon width={20} /> {retweets}
               </IconWrapper>
               <IconWrapper>
-                <RetweetIcon width={20} /> {retweets}
+                <DmIcon width={18} /> {dms}
               </IconWrapper>
             </Icons>
           </PostWrapper>
@@ -379,7 +452,7 @@ const PostComment = ({ id }) => {
             {comments.length > 0 ? (
               comments.map((comment) => (
                 <ScrollWrapper>
-                  <commentsList>
+                  <CommentsList>
                     <CommentWrapper key={comment.id}>
                       <CommentHeader>
                         <CommentUserImage src="http://localhost:5173/profile.png"></CommentUserImage>
@@ -393,6 +466,13 @@ const PostComment = ({ id }) => {
                             }
                           )}
                         </CommentTimer>
+                        {currentUser?.uid === postOwnerId && (
+                          <DeletComment
+                            onClick={() => handleDeleteComment(comment.id)} // 댓글 삭제 클릭 시
+                          >
+                            x
+                          </DeletComment>
+                        )}
                       </CommentHeader>
                       <CommentContent>
                         {typeof comment.comment === "string"
@@ -429,7 +509,7 @@ const PostComment = ({ id }) => {
                         </div>
                       )}
                     </CommentWrapper>
-                  </commentsList>
+                  </CommentsList>
                 </ScrollWrapper>
               ))
             ) : (
