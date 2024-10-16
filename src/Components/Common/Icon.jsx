@@ -1706,6 +1706,64 @@ export const FamilyIcon = ({
     </svg>
   );
 };
+// AttentionNote 스타일 컴포넌트
+const AttentionNoteContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  position: absolute;
+  margin-top: -88px;
+  margin-left: 12px;
+  background-color: black;
+  border-radius: 15px;
+  padding: 2px 6px;
+  ::after {
+    display: block;
+    width: 5px;
+    height: 5px;
+    background-color: black;
+    position: absolute;
+    top: 18px;
+    left: 10px;
+    transform: rotate(45deg);
+    content: "";
+  }
+`;
+
+// AttentionNote 컴포넌트
+export const AttentionNote = ({ children }) => {
+  return (
+    <AttentionNoteContainer>
+      {/* 경고 아이콘 추가 */}
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect x="2" y="2" width="20" height="20" rx="10" fill="none" />
+        <path
+          d="M12 8v4"
+          stroke="#FFF"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M12 16h.01"
+          stroke="#FFF"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <span style={{ color: "#FFF", fontSize: "10px" }}>
+        {children} {/* 경고 메시지를 자식으로 전달 */}
+      </span>
+    </AttentionNoteContainer>
+  );
+};
 
 // 도경 => 모바일 메뉴 아이콘 생성
 

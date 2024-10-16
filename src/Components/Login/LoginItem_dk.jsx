@@ -8,7 +8,7 @@ import { useMediaQuery } from "react-responsive";
 import Border from "../Common/Border_dk";
 import ReportModal from "./ReportModal";
 import Loading from "../LoadingLogo/Loading";
-import { EyeOpenIcon, EyeCloseIcon } from "../Common/Icon";
+import { EyeOpenIcon, EyeCloseIcon, AttentionNote } from "../Common/Icon";
 import styled from "styled-components";
 
 import {
@@ -48,6 +48,7 @@ const PasswordInput = styled.input`
   box-shadow: 0 0 0 0 ${(props) => props.theme.loginInputSelectColor};
   transition: all 0.2s ease-in-out;
   margin-bottom: 24px;
+  margin-right: 30px;
   &:focus + label,
   &:not(:placeholder-shown) + label {
     opacity: 0;
@@ -104,6 +105,15 @@ const CapsLockWarning = styled.div`
   margin-top: -12px;
   /* margin-bottom: 6px; */
 `;
+const PasswordError = styled.div`
+  color: red;
+  font-size: 12px;
+  font-weight: 400;
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  margin-top: -12px; /* 아이콘과의 간격 조정 */
+`;
+
 // 다은 추가 스타일 여기까지!
 
 const LoginItemDk = () => {
@@ -129,6 +139,24 @@ const LoginItemDk = () => {
   const handleCapsLock = (e) => {
     const isCaps = e.getModifierState && e.getModifierState("CapsLock");
     setIsCapsLockOn(isCaps); // CapsLock이 켜지면 true로 설정
+  };
+  // PassWord 조건 안 맞았을 때 상태 변화
+  const [passwordError, setPasswordError] = useState(""); // 비밀번호 오류 메시지 상태
+  // 비밀번호 입력 핸들링
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+
+    // 비밀번호 조건 체크
+    if (newPassword.length === 0) {
+      setPasswordError(""); // 비밀번호가 비어있을 때 경고 메시지 제거
+    } else if (newPassword.length < 6) {
+      setPasswordError("비밀번호는 최소 6자여야 합니다."); // 6자 미만 경고
+    } else if (newPassword.length > 12) {
+      setPasswordError("비밀번호는 최대 12자여야 합니다."); // 12자 초과 경고
+    } else {
+      setPasswordError(""); // 조건을 만족할 경우 경고 메시지 지우기
+    }
   };
   // 다은 추가
 
@@ -226,18 +254,17 @@ const LoginItemDk = () => {
           </InputWrapper>
           <InputWrapper>
             <PasswordInput
-              onChange={onChange}
-              type={isPasswordVisible ? "text" : "password"} // 다은
+              onChange={handlePasswordChange} // 비밀번호 입력 시 상태 변경
+              type={isPasswordVisible ? "text" : "password"}
               id="password"
               name="password"
               placeholder=""
               required
               value={password}
-              onKeyDown={handleCapsLock} // 다은 캡스락
-              onBlur={() => setIsCapsLockOn(false)} // 다은 캡스락
+              onKeyDown={handleCapsLock} // 캡스락 핸들링
+              onBlur={() => setIsCapsLockOn(false)} // 캡스락 상태 초기화
             />
             <StyledLabel htmlFor="password">비밀번호</StyledLabel>
-            {/* 다은 눈 아이콘 추가 */}
             {/* Eye 아이콘: 비밀번호가 보이는 경우 EyeCloseIcon, 보이지 않는 경우 EyeOpenIcon */}
             <EyeIconWrapper onClick={togglePasswordVisibility}>
               {isPasswordVisible ? (
@@ -246,12 +273,12 @@ const LoginItemDk = () => {
                 <EyeOpenIcon width="28px" />
               )}
             </EyeIconWrapper>
-            {/* 다은 캡스락 추가 */}
+            {/* CapsLock 경고 메시지 */}
             {isCapsLockOn && (
-              <CapsLockWarning>Caps Lock이 켜져 있습니다.</CapsLockWarning>
+              <AttentionNote>Caps Lock이 켜져 있습니다.</AttentionNote>
             )}
-            {/* 다은 캡스락 추가 */}
-            {/* 다은 눈 아이콘 추가 */}
+            {/* 비밀번호 오류 메시지 */}
+            {passwordError && <PasswordError>{passwordError}</PasswordError>}
           </InputWrapper>
           <InputWrapper>
             <StyledInput
