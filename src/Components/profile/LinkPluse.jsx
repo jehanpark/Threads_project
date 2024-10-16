@@ -36,6 +36,13 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
+const P = styled.p`
+  color: ${(props) => props.theme.followerfont};
+  font-size: 14px;
+  text-align: center;
+  margin: 20px;
+`;
+
 const LinkPluse = ({ open, close }) => {
   if (!open) return null;
 
@@ -48,6 +55,7 @@ const LinkPluse = ({ open, close }) => {
           onClick={(e) => e.stopPropagation()}
         >
           <CloseButton onClick={close}>X</CloseButton>
+          <P>해당 유저의 Insta 혹은 FaceBook으로 이동하는 버튼</P>
         </LinkModalBox>
       </ModalOverlay>
     </>

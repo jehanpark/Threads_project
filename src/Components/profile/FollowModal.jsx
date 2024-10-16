@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import Searchbar from "../Search/Searchbar";
 import FollowersList from "../Search/FollowerList";
+import FollowerItem from "../Search/FollowerItem";
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -72,14 +73,16 @@ const FollowModal = ({ open, close, profile }) => {
           onClick={(e) => e.stopPropagation()}
         >
           <CloseButton onClick={close}>X</CloseButton>
-          <Searchbar addSearch={handleSearch} />
+          {/* <Searchbar addSearch={handleSearch} /> */}
           <FollowersList
             searchTerm={searchTerm}
             onDataEmpty={(isEmpty) => setFollowersEmpty(isEmpty)}
           />
-          {contentType === "profile" && followersEmpty && (
+          {/*{contentType === "profile" && followersEmpty && (
             <NoResults>프로필이 존재하지 않습니다.</NoResults>
-          )}
+          )} */}
+
+          {/* <FollowerItem /> */}
         </FollowModalBox>
       </ModalOverlay>
     </>
