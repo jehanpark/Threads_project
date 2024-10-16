@@ -16,9 +16,9 @@ const BorderWrapper = styled.div`
     props.isSmallScreen ? "100vw" : props.isTablet ? "800px" : "1200px"};
   height: auto;
   padding: ${(props) =>
-    props.isSmallScreen ? "20px" : props.isTablet ? "0 30px" : "0px"};
+    props.isSmallScreen ? "0" : props.isTablet ? "0 30px" : "0px"};
   gap: ${(props) =>
-    props.isSmallScreen ? "20px" : props.isTablet ? "20px" : "40px"};
+    props.isSmallScreen ? "0" : props.isTablet ? "20px" : "40px"};
   box-sizing: border-box;
   /* overflow-x: hidden; */
 `;
@@ -28,32 +28,52 @@ const InsitesWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
   padding: ${(props) =>
     props.isSmallScreen ? "0px" : props.isTablet ? "0 20px" : "0px"};
-  width: ${(props) =>
+  max-width: ${(props) =>
     props.isSmallScreen ? "100%" : props.isTablet ? "650px" : "auto"};
+  min-height: ${(props) => (props.isSmallScreen ? "auto" : "300px")};
   gap: ${(props) => (props.isSmallScreen ? "0" : "10px")};
   margin: ${(props) =>
     props.isSmallScreen
-      ? "20px 0"
+      ? "0"
       : props.isTablet
       ? "20px 0"
       : "0"}; /* 박스 간 간격 제거 */
   background: ${(props) => props.theme.borderColor};
-  border-radius: 20px;
+  border-radius: ${(props) => (props.isSmallScreen ? "0" : "20px")};
+  box-sizing: border-box;
+  transition: all 0.3s ease; /* 애니메이션 효과 추가 */
+  padding: 20px;
 `;
 
 const InsitesTitle = styled.div`
   margin-top: ${(props) =>
-    props.isSmallScreen ? "20px" : props.isTablet ? "30px" : "40px"};
+    props.isSmallScreen ? "20px" : props.isTablet ? "20px" : "10px"};
   font-size: ${(props) =>
     props.isSmallScreen ? "16px" : props.isTablet ? "16px" : "18px"};
   font-weight: 500;
+  padding-top: ${(props) =>
+    props.isSmallScreen ? "20px" : props.isTablet ? "10px" : "10px"};
+`;
+const FollowerTitle = styled.div`
+  margin-top: ${(props) =>
+    props.isSmallScreen ? "20px" : props.isTablet ? "20px" : "10px"};
+  font-size: ${(props) =>
+    props.isSmallScreen ? "16px" : props.isTablet ? "16px" : "18px"};
+  font-weight: 500;
+  padding-top: ${(props) =>
+    props.isSmallScreen ? "4px" : props.isTablet ? "10px" : "10px"};
 `;
 
 const BorderItemTitle = styled.div`
-  width: ${(props) => (props.isSmallScreen ? "calc(100% - 40px)" : "480px")};
-  height: ${(props) => (props.isSmallScreen ? "100%" : "25px")};
+  flex-grow: 1; /* 자식 요소가 유연하게 공간 채움 */
+  width: 100%;
+  /* max-width: ${(props) =>
+    props.isSmallScreen ? "calc(100% - 40px)" : "480px"}; */
+  height: auto; /* 고정된 높이 제거 */
+  max-height: ${(props) => (props.isSmallScreen ? "100%" : "25px")};
   font-size: ${(props) =>
     props.isSmallScreen ? "14px" : props.isTablet ? "14px" : "18px"};
   padding: 0 20px;
@@ -63,14 +83,27 @@ const BorderItemTitle = styled.div`
 `;
 
 const Info = styled.div`
-  width: ${(props) =>
+  width: 100%; /* 부모 요소의 너비를 따름 */
+  display: flex;
+  flex-wrap: wrap; /* 요소가 화면에 맞게 줄바꿈됨 */
+  align-items: center;
+  /* width: ${(props) =>
     props.isSmallScreen ? "100%" : props.isTablet ? "auto" : "auto"};
   display: flex;
-  gap: 20px;
+  gap: 20px; */
+  padding: 0 20px;
 `;
 
 const BorderItemInfo = styled.div`
-  height: 42px;
+  height: auto; /* 고정된 높이 대신 */
+  width: ${(props) =>
+    props.isSmallScreen
+      ? "calc(100% - 10%)"
+      : props.isTablet
+      ? "calc(100% - 10%)"
+      : "calc(100% - 10%)"};
+  padding-left: 10px;
+  max-height: 42px;
   color: #999;
   font-size: ${(props) =>
     props.isSmallScreen ? "12px" : props.isTablet ? "12px" : "14px"};
@@ -86,7 +119,9 @@ const FollowerWrapper = styled.div`
     props.isSmallScreen ? "100%" : props.isTablet ? "100%" : "auto"};
   height: ${(props) => (props.isSmallScreen ? "100%" : "100%")};
   padding: ${(props) => (props.isSmallScreen ? "20px 0" : "0 ")};
-  box-sizing: border-box; // 크기 조정
+  box-sizing: border-box; // 크기
+  margin-bottom: ${(props) =>
+    props.isSmallScreen ? "40px" : props.isTablet ? "0" : "0"};
 `;
 
 const TotalInfo = styled.div`
@@ -100,6 +135,8 @@ const FollowerInner = styled.div`
   width: 100%;
   justify-self: start;
   padding: 10px 30px;
+  margin-bottom: ${(props) =>
+    props.isSmallScreen ? "40px" : props.isTablet ? "0" : "0"};
 `;
 
 const FollowerInfo = styled.div`
@@ -113,7 +150,7 @@ const FollowerInfo = styled.div`
 
 const TotalNum = styled.div`
   font-size: ${(props) =>
-    props.isSmallScreen ? "16px" : props.isTablet ? "30px" : "40px"};
+    props.isSmallScreen ? "16px" : props.isTablet ? "20px" : "30px"};
   margin-bottom: ${(props) =>
     props.isSmallScreen ? "16px" : props.isTablet ? "16px" : "0"};
   font-weight: bold;
@@ -131,6 +168,7 @@ const TotalFollow = styled.div`
 `;
 
 export const Line = styled.hr`
+  display: ${(props) => (props.isSmallScreen ? "flex" : "none")};
   width: 96%;
   margin: 20px 0;
   border: none;
@@ -176,10 +214,9 @@ const Insiteitem_de = () => {
     <BorderWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
       {/* 1번째 인사이트 박스 */}
       <InsitesWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
-        {" "}
         <InsitesTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
           인사이트
-        </InsitesTitle>
+        </InsitesTitle>{" "}
         {items.map((item) => (
           <BorderItem
             key={item.title}
@@ -190,7 +227,7 @@ const Insiteitem_de = () => {
             <BorderItemTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
               {item.title}
             </BorderItemTitle>
-            <Info>
+            <Info isSmallScreen={isSmallScreen} isTablet={isTablet}>
               <IconWrapper
                 background={"#e9e9e9"}
                 borderRadius={"100%"}
@@ -206,11 +243,12 @@ const Insiteitem_de = () => {
           </BorderItem>
         ))}
       </InsitesWrapper>
+      <Line />
       {/* 2번째 인사이트 */}
       <InsitesWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
-        <InsitesTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
+        <FollowerTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
           팔로워
-        </InsitesTitle>
+        </FollowerTitle>
         <FollowerWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
           <FollowerInner isSmallScreen={isSmallScreen} isTablet={isTablet}>
             <TotalInfo isSmallScreen={isSmallScreen} isTablet={isTablet}>

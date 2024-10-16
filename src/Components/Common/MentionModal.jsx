@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 // 스타일 정의
-// 스타일 정의
-const Overlay = styled.div`
+export const Overlay = styled.div`
   position: fixed; // 모달을 화면에 고정
   top: 45%; // 세로 중앙 정렬 기준
   left: 50%; // 가로 중앙 정렬 기준
@@ -18,7 +17,7 @@ const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.7); // 반투명 배경 (필요 시 조정)
 `;
 
-const ModalContainer = styled.div`
+export const ModalContainer = styled.div`
   width: 420px;
   height: 320px;
   background-color: ${(props) => props.theme.borderColor};
@@ -27,7 +26,7 @@ const ModalContainer = styled.div`
   padding: 24px;
 `;
 
-const Title = styled.h2`
+export const Title = styled.h2`
   margin-bottom: 16px;
   display: flex;
   justify-content: center;
@@ -35,7 +34,7 @@ const Title = styled.h2`
   font-weight: 500;
 `;
 
-const Info = styled.div`
+export const Info = styled.div`
   color: ${(props) => props.theme.modalfont};
   font-size: 12px;
   font-weight: normal;
@@ -45,12 +44,12 @@ const Info = styled.div`
   padding: 12px;
 `;
 
-const OptionList = styled.ul`
+export const OptionList = styled.ul`
   list-style-type: none;
   padding-top: 12px;
 `;
 
-const OptionItem = styled.li`
+export const OptionItem = styled.li`
   cursor: pointer;
   padding: 8px 10px;
   display: flex;
@@ -72,7 +71,7 @@ const OptionItem = styled.li`
 `;
 
 // 체크박스 스타일 컴포넌트 추가
-const Checkbox = styled.input`
+export const Checkbox = styled.input`
   width: 20px;
   height: 20px;
   appearance: none;
