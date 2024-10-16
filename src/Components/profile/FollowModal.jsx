@@ -14,7 +14,7 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 1100;
 `;
 
 const FollowModalBox = styled.div`
@@ -37,6 +37,11 @@ const CloseButton = styled.button`
   color: ${(props) => props.theme.fontcolor};
   font-size: 18px;
   cursor: pointer;
+`;
+
+const Top = styled.div`
+  height: 100px;
+  width: 430px;
 `;
 
 const NoResults = styled.p`

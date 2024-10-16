@@ -10,39 +10,35 @@ import {
   collection,
   getDocs,
 } from "firebase/firestore";
-import {
-  deleteObject,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-} from "firebase/storage";
+import { deleteObject, ref } from "firebase/storage";
 import {
   HeartIcon,
   DmIcon,
-  MagnifyingGlassIcon,
-  BellOffIcon,
   RetweetIcon,
   EtcIcon,
   Coment,
+  UserIcon2,
 } from "./Common/Icon";
 
 import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
-
 import { formatDistanceToNow } from "date-fns";
-import PostSetModal from "./post/PostSetModal";
-import EditModal from "./EditModal";
+import { ko } from "date-fns/locale";
+import PostSetModal from "./Common/PostSetModal";
 import AudioMessage from "./AudioMessage";
+import EtcModal from "./post/EtcModal";
+import fetchUserProfileImage from "../Utils/fetchProfile";
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
+  padding: 40px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
-  padding: 20px;
-  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  border-bottom: 1px solid rgba(172, 172, 172, 0.4);
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
@@ -131,7 +127,6 @@ const Payload = styled.p`
 
 const Icons = styled.div`
   display: flex;
-  gap: 15px;
   justify-content: start;
   align-items: center;
   margin-left: 50px;
@@ -169,10 +164,24 @@ const EditButton = styled.button`
 `;
 
 const IconWrapper = styled.div`
+  width: 50px;
+  height: auto;
   display: flex;
   align-items: center;
   gap: 6px;
   transition: all 0.2s;
+  &:nth-child(1) {
+    margin-left: 0;
+  }
+  &:nth-child(2) {
+    margin-left: 5px;
+  }
+  &:nth-child(3) {
+    margin-left: 5px;
+  }
+  &:nth-child(4) {
+    margin-left: 5px;
+  }
 `;
 
 const Button = styled.button`
@@ -259,7 +268,6 @@ const Post = ({
   comment,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedPost, setEditedPost] = useState(post);
   const [editedPhoto, setEditedPhoto] = useState(null);
   const [commentsCount, setCommentsCount] = useState(0); // 댓글 수 상태 추가
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
@@ -269,22 +277,50 @@ const Post = ({
   const [retweets, setRetweets] = useState(2);
   const [isRetweets, setIsRetweets] = useState(false);
   const [openModalId, setOpenModalId] = useState(null);
+  const [isEtcModalOpen, setIsEtcModalOpen] = useState(false);
+  const [editedPost, setEditedPost] = useState(post);
   const navigate = useNavigate();
+  const [profileImg, setProfileImg] = useState("");
+
+  useEffect(() => {
+    const getUserProfileImage = async () => {
+      try {
+        const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
+        setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+      }
+    };
+
+    // userId가 있을 때만 프로필 이미지 가져오기
+    if (userId) {
+      getUserProfileImage();
+    }
+  }, [userId]);
 
   // const user = auth.currentUser;
 
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전"; // createdAt가 유효하지 않을 때 처리
     const date = new Date(createdAt.seconds * 1000);
-    return formatDistanceToNow(date, { addSuffix: true });
+    return formatDistanceToNow(date, { addSuffix: true, locale: ko });
   };
 
+  //PostSetModal
   const openModal = (postId) => {
     setOpenModalId(postId); // 특정 포스트의 ID로 모달 열기
   };
-
   const closeModal = () => {
     setOpenModalId(null);
+  };
+
+  // EtcModal
+  const handleEdit = () => {
+    setIsEtcModalOpen(true);
+    setOpenModalId(null);
+  };
+  const closeEtcModal = () => {
+    setIsEtcModalOpen(false);
   };
 
   const handleClickOutside = (e) => {
@@ -347,30 +383,9 @@ const Post = ({
 
   const user = auth.currentUser;
 
-  const onChange = (e) => {
-    setEditedPost(e.target.value);
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-  };
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleSave = async (newContent) => {
-    setPostContent(newContent);
-
-    // Firebase에 업데이트
-    try {
-      await updateDoc(doc(db, "contents", id), {
-        post: newContent,
-      });
-    } catch (error) {
-      console.error("Error updating document: ", error);
-    }
-  };
+  // const onChange = (e) => {
+  //   setEditedPost(e.target.value);
+  // };
 
   const handleClose = () => {
     setIsEditing(false);
@@ -461,6 +476,7 @@ const Post = ({
         likes,
         dms,
         retweets,
+        userId,
       },
     });
   };
@@ -477,6 +493,7 @@ const Post = ({
         likes,
         dms,
         retweets,
+        userId,
         comment,
       },
     });
@@ -511,100 +528,122 @@ const Post = ({
 
     setIsRetweets((prevRet) => !prevRet);
   };
+  useEffect(() => {
+    console.log("isEtcModalOpen changed:", isEtcModalOpen);
+  }, [isEtcModalOpen]);
+
   return (
-    <Wrapper>
-      <Header>
-        <UserImage
-          onClick={() => {
-            navigate({
-              pathname: "/profile",
-              search: `${createSearchParams({
-                email: email,
-              })}`,
-            });
-          }}
-          src="http://localhost:5173/profile.png"
-        ></UserImage>
-        <Username
-          onClick={() => {
-            navigate({
-              pathname: "/profile",
-              search: `${createSearchParams({
-                email: email,
-              })}`,
-            });
-          }}
-        >
-          {username}
-        </Username>
-        <Timer>{renderTimeAgo()}</Timer>
-        <Etc onClick={() => openModal(id)}>
-          <EtcIcon width={20} fill="gray" />
-        </Etc>
+    <>
+      <Wrapper>
+        <Header>
+          {profileImg ? (
+            <UserImage
+              onClick={() => {
+                navigate({
+                  pathname: "/profile",
+                  search: `${createSearchParams({
+                    email: email,
+                  })}`,
+                });
+              }}
+              src={profileImg}
+              alt="User Profile"
+            ></UserImage>
+          ) : (
+            <UserIcon2 />
+          )}
 
-        {openModalId === id && (
-          <div className="modal-content">
-            <PostSetModal
-              onClose={closeModal}
-              onDelete={onDelete}
-              onEdit={handleEdit}
-              isAuthor={user?.uid === userId}
-            />
-          </div>
-        )}
-      </Header>
+          <Username
+            onClick={() => {
+              navigate({
+                pathname: "/profile",
+                search: `${createSearchParams({
+                  email: email,
+                })}`,
+              });
+            }}
+          >
+            {username}
+          </Username>
+          <Timer>{renderTimeAgo()}</Timer>
+          <Etc onClick={() => openModal(id)}>
+            <EtcIcon width={20} fill="gray" />
+          </Etc>
 
-      <Column onClick={PostCommentClick}>
-        {isEditing ? (
-          <EditPostFormTextArea
-            onChange={(e) => setEditedPost(e.target.value)}
-            value={editedPost}
-            placeholder={post}
-          />
-        ) : (
-          <Payload>{post ?? comment}</Payload> // 하나의 Payload만 남겨두기
-        )}
-      </Column>
-      {/* AudioMessage 컴포넌트를 audioURL이 있을 때만 렌더링 */}
-      <ColumnWrapper onClick={PostCommentClick}>
-        {/* Render multiple photos */}
-        {photos && photos.length > 0 && (
-          <Column>
-            {photos.map((photoUrl, index) => (
-              <Photo
-                key={index}
-                src={photoUrl}
-                alt={`Post Image ${index + 1}`}
+          {openModalId === id && (
+            <div className="modal-content">
+              <PostSetModal
+                onClose={closeModal}
+                onEdit={handleEdit}
+                onDelete={onDelete}
+                isAuthor={user?.uid === userId}
+                setIsEtcModalOpen={setIsEtcModalOpen}
               />
-            ))}
-          </Column>
-        )}
+            </div>
+          )}
+          {/* EtcModal - 수정 모달 */}
+          {isEtcModalOpen && (
+            <EtcModal
+              post={post}
+              // onSave={handleSave}
+              onCancel={closeEtcModal}
+              setIsEtcModalOpen={setIsEtcModalOpen}
+            />
+          )}
+        </Header>
 
-        {videos && videos.length > 0 && (
-          <Column>
-            {videos.map((videoUrl, index) => (
-              <Video key={index} controls autoPlay loop src={videoUrl} />
-            ))}
-          </Column>
-        )}
-      </ColumnWrapper>
-      <AudioMessage audioURL={audioURL} />
+        <Column onClick={PostCommentClick}>
+          {isEditing ? (
+            <EditPostFormTextArea
+              onChange={(e) => setEditedPost(e.target.value)}
+              value={editedPost}
+              placeholder={post}
+            />
+          ) : (
+            <Payload>{post ?? comment}</Payload> // 하나의 Payload만 남겨두기
+          )}
+        </Column>
+        {/* AudioMessage 컴포넌트를 audioURL이 있을 때만 렌더링 */}
+        <ColumnWrapper onClick={PostCommentClick}>
+          {/* Render multiple photos */}
+          {photos && photos.length > 0 && (
+            <Column>
+              {photos.map((photoUrl, index) => (
+                <Photo
+                  key={index}
+                  src={photoUrl}
+                  alt={`Post Image ${index + 1}`}
+                />
+              ))}
+            </Column>
+          )}
 
-      <Icons>
-        <IconWrapper onClick={handleLike}>
-          <HeartIcon width={20} /> {likes}
-        </IconWrapper>
-        <IconWrapper onClick={handleCommentClick}>
-          <Coment width={20} /> {commentsCount}
-        </IconWrapper>
-        <IconWrapper onClick={handleDmClick}>
-          <DmIcon width={18} /> {dms}
-        </IconWrapper>
-        <IconWrapper onClick={handleRetweetClick}>
-          <RetweetIcon width={20} /> {retweets}
-        </IconWrapper>
-      </Icons>
-    </Wrapper>
+          {videos && videos.length > 0 && (
+            <Column>
+              {videos.map((videoUrl, index) => (
+                <Video key={index} controls autoPlay loop src={videoUrl} />
+              ))}
+            </Column>
+          )}
+        </ColumnWrapper>
+        <AudioMessage audioURL={audioURL} />
+
+        <Icons>
+          <IconWrapper onClick={handleLike}>
+            <HeartIcon width={20} /> {likes}
+          </IconWrapper>
+          <IconWrapper onClick={handleCommentClick}>
+            <Coment width={20} /> {commentsCount}
+          </IconWrapper>
+          <IconWrapper onClick={handleDmClick}>
+            <DmIcon width={18} /> {dms}
+          </IconWrapper>
+          <IconWrapper onClick={handleRetweetClick}>
+            <RetweetIcon width={20} /> {retweets}
+          </IconWrapper>
+        </Icons>
+      </Wrapper>
+    </>
   );
 };
 

@@ -251,7 +251,7 @@ const Search = () => {
                 whileTap="click"
                 drag="x"
                 dragMomentum={false}
-                dragConstraints={{ left: -100, right: 0 }}
+                dragConstraints={{ left: -70, right: 0 }}
               >
                 {buttons.map((button) => (
                   <SelectButton

@@ -2,16 +2,28 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
+import { ko } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
 import {
   HeartIcon,
   DmIcon,
   RetweetIcon,
   Coment,
+  UserIcon2,
 } from "../Components/Common/Icon";
 import BackBtn from "../Components/post/BackBtn";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  doc,
+  deleteDoc,
+  getDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
+import { useAuth } from "../Contexts/AuthContext";
+import fetchUserProfileImage from "../Utils/fetchProfile";
 
 const AllWrap = styled.div`
   width: 100%;
@@ -136,23 +148,38 @@ const Video = styled.video`
 `;
 const Icons = styled.div`
   display: flex;
-  gap: 15px;
+  gap: 0px;
   justify-content: start;
   align-items: center;
   margin-left: 50px;
-  margin-top: 10px;
+  margin-bottom: 5px;
   cursor: pointer;
   color: #bababa;
 `;
 
 const IconWrapper = styled.div`
+  width: 50px;
+  height: auto;
   display: flex;
   align-items: center;
   gap: 6px;
+  transition: all 0.2s;
+  &:nth-child(1) {
+    margin-left: 0;
+  }
+  &:nth-child(2) {
+    margin-left: 5px;
+  }
+  &:nth-child(3) {
+    margin-left: 5px;
+  }
+  &:nth-child(4) {
+    margin-left: 5px;
+  }
 `;
 
 const ScrollWrapper = styled.div``;
-const ComentList = styled.div`
+const CommentsList = styled.div`
   width: 100%;
   height: auto;
 `;
@@ -165,7 +192,7 @@ const CommentWrapper = styled.div`
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+
   transition: transform 0.3s ease-out;
   @media (max-width: 768px) {
     width: 100%;
@@ -181,6 +208,7 @@ const CommentHeader = styled.div`
 const CommentUserImage = styled.img`
   width: 34px;
   height: 34px;
+  border-radius: 50%;
 `;
 const CommentUsername = styled.span`
   font-size: 14px;
@@ -192,6 +220,34 @@ const CommentTimer = styled.span`
   font-size: 10px;
   color: #9a9a9a;
   flex: 1;
+`;
+const DeletAll = styled.div`
+  height: 100%;
+  width: auto;
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const DeletComment = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 25px;
+  font-size: 18px;
+  margin-right: 4px;
+  width: 34px;
+  height: 100%;
+  border-radius: 50%;
+  transition: all 0.2s;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.3;
+  }
+`;
+const DeletIcon = styled.img`
+  opacity: 1;
 `;
 
 const CommentContent = styled.div`
@@ -227,18 +283,25 @@ const NotComment = styled.div`
   color: #bababa;
 `;
 
-const PostComment = ({ id }) => {
+const PostComment = () => {
   const [post, setPost] = useState("");
   const [likes, setLikes] = useState(0);
-  const [comments, setComments] = useState([]); // 초기 값을 빈 배열로 설정
-  const [commentsCount, setCommentsCount] = useState(0); // 댓글 수
+  const [comments, setComments] = useState([]);
+  const [commentsCount, setCommentsCount] = useState(0);
   const [dms, setDms] = useState(0);
   const [retweets, setRetweets] = useState(0);
   const [files, setFiles] = useState([]);
+  const [postOwnerId, setPostOwnerId] = useState("");
+  const { currentUser } = useAuth();
+  const [profileImg, setProfileImg] = useState("");
+  const [profileImages, setProfileImages] = useState({}); // 댓글
   const location = useLocation();
   const navigate = useNavigate();
 
   const {
+    postId,
+    userId,
+    id,
     postContent,
     photos,
     videos,
@@ -248,6 +311,28 @@ const PostComment = ({ id }) => {
     dms: passedDms,
     retweets: passedRetweets,
   } = location.state || {};
+
+  useEffect(() => {
+    const getUserProfileImage = async () => {
+      try {
+        const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
+        setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+      }
+    };
+
+    // userId가 있을 때만 프로필 이미지 가져오기
+    if (userId) {
+      getUserProfileImage();
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (userId) {
+      setPostOwnerId(userId); // 포스트 작성자의 ID를 설정
+    }
+  }, [userId]);
 
   useEffect(() => {
     setLikes(passedLikes);
@@ -275,7 +360,13 @@ const PostComment = ({ id }) => {
         }));
 
         setComments(commentsList); // 댓글 리스트 저장
-        setCommentsCount(commentsList.length); // 댓글 수 저장 (이 부분을 수정)
+        setCommentsCount(commentsList.length);
+        const profileImagesMap = {};
+        for (let comment of commentsList) {
+          const profileImg = await fetchUserProfileImage(comment.userId);
+          profileImagesMap[comment.userId] = profileImg || ""; // 프로필 이미지가 없으면 빈 문자열
+        }
+        setProfileImages(profileImagesMap);
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
@@ -287,11 +378,11 @@ const PostComment = ({ id }) => {
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
-    return formatDistanceToNow(date, { addSuffix: true });
+    return formatDistanceToNow(date, { addSuffix: true, locale: ko });
   };
 
   const handleCommentClick = () => {
-    navigate("/Comment", {
+    navigate("/", {
       state: {
         postId: id,
         postContent: post,
@@ -307,6 +398,53 @@ const PostComment = ({ id }) => {
     });
   };
 
+  useEffect(() => {
+    const fetchPostOwner = async () => {
+      try {
+        if (!id) {
+          console.error("포스트 ID가 없습니다.");
+          return;
+        }
+
+        // Firestore에서 포스트 데이터를 가져와 userId 확인
+        const postRef = doc(db, "contents", id);
+        const postSnapshot = await getDoc(postRef);
+        if (postSnapshot.exists()) {
+          const postData = postSnapshot.data();
+          console.log("포스트 데이터:", postData);
+
+          if (postData.userId) {
+            setPostOwnerId(postData.userId); // userId를 상태로 저장
+          } else {
+            console.error("userId 필드가 문서에 없습니다.");
+          }
+        } else {
+          console.error("해당 포스트가 Firestore에 존재하지 않습니다.");
+        }
+      } catch (error) {
+        console.error(
+          "포스트 작성자 정보를 가져오는 중 오류가 발생했습니다:",
+          error
+        );
+      }
+    };
+
+    fetchPostOwner(); // 포스트 작성자의 ID 가져오기
+  }, [id]); // id가 변경될 때마다 실행
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const commentRef = doc(db, "contents", postId, "comments", commentId);
+      await deleteDoc(commentRef); // Firebase에서 댓글 삭제
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
+      ); // UI에서 삭제된 댓글 제거
+      setCommentsCount((prevCount) => prevCount - 1); // 댓글 수 감소
+    } catch (error) {
+      console.error("댓글 삭제 중 오류 발생:", error);
+    }
+  };
+
   return (
     <div>
       <AllWrap>
@@ -316,7 +454,11 @@ const PostComment = ({ id }) => {
         <BoederWrapper>
           <PostWrapper>
             <Header>
-              <UserImage src="http://localhost:5173/profile.png"></UserImage>
+              {profileImg ? (
+                <UserImage src={profileImg} alt="User Profile"></UserImage>
+              ) : (
+                <UserIcon2 />
+              )}
               <Username>{username}</Username>
               <Timer>{renderTimeAgo()}</Timer>
             </Header>
@@ -347,35 +489,47 @@ const PostComment = ({ id }) => {
               <IconWrapper>
                 <HeartIcon width={20} /> {likes}
               </IconWrapper>
-              <IconWrapper onClick={handleCommentClick}>
-                <Coment width={20} /> {commentsCount}
-              </IconWrapper>
               <IconWrapper>
-                <DmIcon width={18} /> {dms}
+                <Coment width={20} /> {commentsCount}
               </IconWrapper>
               <IconWrapper>
                 <RetweetIcon width={20} /> {retweets}
               </IconWrapper>
+              <IconWrapper>
+                <DmIcon width={18} /> {dms}
+              </IconWrapper>
             </Icons>
           </PostWrapper>
-
           <div>
             {comments.length > 0 ? (
               comments.map((comment) => (
                 <ScrollWrapper>
-                  <commentsList>
+                  <CommentsList>
                     <CommentWrapper key={comment.id}>
                       <CommentHeader>
-                        <CommentUserImage src="http://localhost:5173/profile.png"></CommentUserImage>
+                        <CommentUserImage
+                          src={profileImages[comment.userId]}
+                          alt="User Profile"
+                        ></CommentUserImage>
                         <CommentUsername>{comment.username}</CommentUsername>
                         <CommentTimer>
                           {formatDistanceToNow(
                             new Date(comment.createdAt.seconds * 1000),
                             {
                               addSuffix: true,
+                              locale: ko,
                             }
                           )}
                         </CommentTimer>
+                        {currentUser?.uid === postOwnerId && (
+                          <DeletAll>
+                            <DeletComment
+                              onClick={() => handleDeleteComment(comment.id)} // 댓글 삭제 클릭 시
+                            >
+                              <DeletIcon src="/x-circle.png" alt="circle" />
+                            </DeletComment>
+                          </DeletAll>
+                        )}
                       </CommentHeader>
                       <CommentContent>
                         {typeof comment.comment === "string"
@@ -405,13 +559,14 @@ const PostComment = ({ id }) => {
                               controls
                               autoPlay
                               loop
+                              muted
                               src={videoUrl}
                             />
                           ))}
                         </div>
                       )}
                     </CommentWrapper>
-                  </commentsList>
+                  </CommentsList>
                 </ScrollWrapper>
               ))
             ) : (

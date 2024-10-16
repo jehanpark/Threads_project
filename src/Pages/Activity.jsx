@@ -38,7 +38,7 @@ const ButtonGroup = styled.div`
   align-content: center;
   gap: 10px;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   transition: all 0.3s ease;
 `;
 
@@ -103,11 +103,9 @@ const ContentsBorder = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  height: 100%;
   max-height: 700px;
   overflow-y: auto;
   padding: 0 20px;
-  padding-bottom: 20px;
   margin-top: 20px;
   ::-webkit-scrollbar {
     display: none;
@@ -179,9 +177,11 @@ const Activity = () => {
           : notification
       );
 
-      setFilteredData(updatedData);
+      const updatedFilteredData = updatedData.filter(
+        (item) => contentType === "all" || item.type === contentType
+      );
 
-      console.log("업데이트된 데이터:", updatedData);
+      setFilteredData(updatedFilteredData); // 업데이트 필터데이터
 
       return updatedData;
     });
@@ -215,9 +215,10 @@ const Activity = () => {
     setContentType(type);
   };
 
+  //필터링된 데이터 바로 업데이트
   useEffect(() => {
-    filterList(contentType);
-  }, [contentType]);
+    filterList(contentType); // savadata에서 filter된 데이터(내가 선택한 데이터)
+  }, [contentType, savedData]);
 
   // 미디어 사이즈 변화시 버튼 종류 변경
   useEffect(() => {
@@ -232,14 +233,6 @@ const Activity = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  // 버튼 스타일 동적 처리
-  const getButtonStyle = (type) => ({
-    backgroundColor: contentType === type ? "#000" : "#fff",
-    color: contentType === type ? "#fff" : "#000",
-  });
-
-  // 버튼 스타일 동적 적용
 
   const buttons = [
     { label: "모두", type: "all" },

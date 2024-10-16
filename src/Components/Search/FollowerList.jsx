@@ -13,14 +13,16 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
+import { getAuth } from "firebase/auth";
 import FollowerItem from "./FollowerItem";
 
 const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
   const [followers, setFollowers] = useState([]);
-  // const wrapperRef = useRef(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const emailAdress = searchParams.get("email");
+  const auth = getAuth();
+  const currentUser = auth.currentUser; // 로그인 정보
 
   useEffect(() => {
     let unsubscribe = null;
@@ -41,6 +43,14 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
           id: doc.id,
           ...doc.data(),
         }));
+
+        // 로그인 회원 정보와 이메일 정보 동일
+
+        if (currentUser && currentUser.email) {
+          liveFollowers = liveFollowers.filter(
+            (follower) => follower.userEmail !== currentUser.email
+          );
+        }
 
         // 검색어 필터링
         if (searchTerm && searchTerm.trim() !== "") {
@@ -98,7 +108,6 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
 
       //클릭전환
       await updateDoc(followerRef, { isFollowing: updatedStatus });
-
       setFollowers((prevFollowers) =>
         prevFollowers.map((follower) =>
           follower.id === id
@@ -110,8 +119,6 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
       console.error("오류 발생:", error);
     }
   };
-
-  //본인 아이디 제외
 
   return (
     <div>
@@ -128,5 +135,4 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
     </div>
   );
 };
-
 export default FollowersList;
