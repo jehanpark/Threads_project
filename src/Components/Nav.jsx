@@ -12,10 +12,12 @@ import { useAuth } from "../Contexts/AuthContext";
 import MobileNav from "./MobileNav";
 import { UserIcon2 } from "./Common/Icon";
 import { ref } from "firebase/storage";
+
 const AllWrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 20px 0px;
+  background-color: #00000020;
   position: fixed;
 `;
 const Wrapper = styled.nav`

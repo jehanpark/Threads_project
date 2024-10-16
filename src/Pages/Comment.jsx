@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { formatDistanceToNow } from "date-fns";
+import { ko } from "date-fns/locale";
 import {
   HeartIcon,
   DmIcon,
@@ -11,6 +12,7 @@ import {
   PictureIcon,
   MicIcon,
   HashtagIcon,
+  UserIcon2,
 } from "../Components/Common/Icon";
 import { useAuth } from "../Contexts/AuthContext";
 import { addDoc, serverTimestamp, updateDoc, doc } from "firebase/firestore";
@@ -20,6 +22,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
 import BackBtn from "../Components/post/BackBtn";
 import Loading from "../Components/LoadingLogo/Loading";
+import fetchUserProfileImage from "../Utils/fetchProfile";
 
 const AllDesc = styled.div``;
 
@@ -150,6 +153,7 @@ const Icons = styled.div`
   display: flex;
   gap: 15px;
   justify-content: start;
+
   align-items: center;
   margin-left: 50px;
   margin-top: 10px;
@@ -202,8 +206,10 @@ const Form = styled.form`
   }
 `;
 const Buttons = styled.div`
+  height: auto;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin: 0 auto;
   gap: 20px;
   border-top: ${(props) => props.theme.borderstroke};
@@ -290,6 +296,7 @@ const Comment = ({ id }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const [profileImg, setProfileImg] = useState("");
 
   const {
     postContent,
@@ -301,8 +308,9 @@ const Comment = ({ id }) => {
     dms: passedDms,
     retweets: passedRetweets,
     postId,
+    userId,
   } = location.state || {};
-  console.log(location.state);
+
   // Firebase에서 전달된 값을 상태로 설정
   useEffect(() => {
     setLikes(passedLikes);
@@ -316,6 +324,22 @@ const Comment = ({ id }) => {
       return;
     }
   }, [postId]);
+
+  useEffect(() => {
+    const getUserProfileImage = async () => {
+      try {
+        const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
+        setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+      }
+    };
+
+    // userId가 있을 때만 프로필 이미지 가져오기
+    if (userId) {
+      getUserProfileImage();
+    }
+  }, [userId]);
 
   // Firestore에서 댓글 데이터를 가져오는 useEffect
   useEffect(() => {
@@ -349,7 +373,7 @@ const Comment = ({ id }) => {
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
-    return formatDistanceToNow(date, { addSuffix: true });
+    return formatDistanceToNow(date, { addSuffix: true, locale: ko });
   };
 
   const handlePostChange = (e) => {
@@ -427,14 +451,14 @@ const Comment = ({ id }) => {
     if (selectedFiles) {
       const newFiles = Array.from(selectedFiles).filter((file) => {
         if (file.size > maxFileSize) {
-          alert("The maximum file size is 5MB.");
+          alert("업로드 가능한 파일의 최대 크기는 5MB입니다.");
           return false;
         }
         return true;
       });
 
       if (files.length + newFiles.length > maxFilesCount) {
-        alert(`You can upload a maximum of ${maxFilesCount} files.`);
+        alert(`파일은 최대 ${maxFilesCount}장까지만 업로드할 수 있습니다.`);
         return;
       }
 
@@ -453,7 +477,11 @@ const Comment = ({ id }) => {
             <Wrapper>
               <PostWrapper>
                 <Header>
-                  <UserImage src="http://localhost:5173/profile.png"></UserImage>
+                  {profileImg ? (
+                    <UserImage src={profileImg} alt="User Profile"></UserImage>
+                  ) : (
+                    <UserIcon2 />
+                  )}
                   <Username>{username}</Username>
                   <Timer>{renderTimeAgo()}</Timer>
                 </Header>
@@ -483,6 +511,7 @@ const Comment = ({ id }) => {
                           controls
                           autoPlay
                           loop
+                          muted
                           src={videoUrl}
                         />
                       ))}
@@ -497,10 +526,10 @@ const Comment = ({ id }) => {
                     <Coment width={14} /> {commentsCount}
                   </IconWrapper>
                   <IconWrapper>
-                    <DmIcon width={12} /> {dms}
+                    <RetweetIcon width={14} /> {retweets}
                   </IconWrapper>
                   <IconWrapper>
-                    <RetweetIcon width={14} /> {retweets}
+                    <DmIcon width={12} /> {dms}
                   </IconWrapper>
                 </Icons>
               </PostWrapper>
@@ -535,6 +564,7 @@ const Comment = ({ id }) => {
                       ) : (
                         <video
                           controls
+                          muted
                           style={{
                             width: "160px",
                             height: "160px",
@@ -554,7 +584,7 @@ const Comment = ({ id }) => {
                 <IconsBtnwrapper>
                   <Icons>
                     <CameraButton htmlFor="camera">
-                      <CameraIcon width={38} />
+                      <CameraIcon width={36} />
                       <CameraInput
                         onChange={handleFileChange}
                         id="camera"

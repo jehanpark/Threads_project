@@ -15,6 +15,9 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 
 // BottomNav 스타일 정의
 const Wrapper = styled.div`
+  position: fixed;
+  top: 0;
+  z-index: 10000000;
   @media (min-width: 768px) {
     display: none; // 768px 이상의 화면에서는 숨기기
   }

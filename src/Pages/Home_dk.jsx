@@ -22,6 +22,7 @@ const Wrapper = styled.div`
   /* overflow: hidden; */
   @media (max-width: 768px) {
     height: 100vh;
+    width: 100%;
   }
 `;
 
@@ -47,6 +48,7 @@ const BoederWrapper = styled.div`
     height: calc(100% - 70px);
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
+    background-color: red;
   }
 `;
 

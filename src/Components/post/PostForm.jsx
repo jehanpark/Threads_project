@@ -115,6 +115,7 @@ const TextArea = styled.textarea`
 
 const Icons = styled.div`
   display: flex;
+  align-items: center;
   margin: 20px 0;
   margin-left: 20px;
   gap: 20px;
@@ -162,13 +163,15 @@ const DeleteButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
 `;
-const OpenButton = styled.button`
+const OpenButton = styled.div`
   width: 300px;
   height: 80px;
   background: #d6d6d6;
   border: none;
   color: #000;
   font-size: 15px;
+  text-align: center;
+  line-height: 5.5;
   font-weight: bold;
   border-radius: 30px;
   transition: all 0.3s;
@@ -209,6 +212,8 @@ const PostForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState("");
   const [files, setFiles] = useState([]);
+  const [opendForm, setOpenForm] = useState(false);
+  const [selectedText, setSelectedText] = useState("팔로워에게만 허용");
 
   const [audioBlob, setAudioBlob] = useState(null); // 녹음 파일 상태
   const [isRecording, setIsRecording] = useState(false); // 녹음 중 상태
@@ -247,14 +252,14 @@ const PostForm = () => {
     if (selectedFiles) {
       const newFiles = Array.from(selectedFiles).filter((file) => {
         if (file.size > maxFileSize) {
-          alert("The maximum file size is 5MB.");
+          alert("업로드 가능한 파일의 최대 크기는 5MB입니다.");
           return false;
         }
         return true;
       });
 
       if (files.length + newFiles.length > maxFilesCount) {
-        alert(`You can upload a maximum of ${maxFilesCount} files.`);
+        alert(`파일은 최대 ${maxFilesCount}장까지만 업로드할 수 있습니다.`);
         return;
       }
 
@@ -390,6 +395,15 @@ const PostForm = () => {
     }
   };
 
+  const openFormModal = () => {
+    setOpenForm(true);
+  };
+  const closeFormModal = () => {
+    setOpenForm(false);
+  };
+  const handleSelect = (text) => {
+    setSelectedText(text);
+  };
   return (
     <Wrapper>
       <BoederWrapper>
@@ -414,7 +428,7 @@ const PostForm = () => {
                       width: "160px",
                       height: "160px",
                       borderRadius: "10px",
-                      objectFit: "contain",
+                      objectFit: "cover",
                     }}
                   />
                 ) : file.type.startsWith("video/") ? (
@@ -449,7 +463,7 @@ const PostForm = () => {
           </PlusImage>
           <Icons>
             <CameraButton htmlFor="camera">
-              <CameraIcon width={38} />
+              <CameraIcon width={36} />
               <CameraInput
                 onChange={handleFileChange}
                 id="camera"
@@ -459,6 +473,12 @@ const PostForm = () => {
             </CameraButton>
             <PictureButton htmlFor="picture">
               <PictureIcon width={24} />
+              <PictureInput
+                onChange={handleFileChange}
+                id="picture"
+                type="file"
+                accept="video/*, image/*"
+              />
             </PictureButton>
             {/* 녹음 기능 */}
 
@@ -474,7 +494,7 @@ const PostForm = () => {
             <HashtagIcon width={24} />
           </Icons>
           <Buttons>
-            <OpenButton>팔로워에게만 허용</OpenButton>
+            <OpenButton onClick={openFormModal}>{selectedText}</OpenButton>
             <SubmitBtn
               text="스레드 업로드"
               type="submit"
@@ -483,6 +503,9 @@ const PostForm = () => {
           </Buttons>
         </Form>
       </BoederWrapper>
+      {opendForm && (
+        <PostForm_Modal onClose={closeFormModal} onSelect={handleSelect} />
+      )}
     </Wrapper>
   );
 };
