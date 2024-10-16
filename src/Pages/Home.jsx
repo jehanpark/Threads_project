@@ -8,8 +8,9 @@ const Wrapper = styled.div`
   /* width: 100%; */
   /* height: calc(100vh - 120px); */
   height: 100vh;
-  margin-top: 120px;
+  /* margin-top: 120px; */
   /* overflow: hidden; */
+  /* z-index: -1; */
   @media (max-width: 768px) {
     height: 100vh;
     width: 100%;
@@ -32,6 +33,7 @@ const BoederWrapper = styled.div`
     position: absolute;
     width: 100%;
     bottom: 0;
+    padding: 0;
     border-radius: 0;
     height: calc(100% - 70px);
     box-shadow: none;
@@ -114,7 +116,7 @@ const Home = () => {
 
   return (
     <Wrapper>
-      <PostcommentModal />
+      {/* <PostcommentModal /> */}
       <BoederWrapper>
         <PostlistWrapper
           ref={wrapperRef}

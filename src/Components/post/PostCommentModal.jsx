@@ -23,68 +23,104 @@ const ModalOverlay = styled.div`
   height: 100vh;
   background: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 999;
+  @media (max-width: 768px) {
+  }
 `;
+
 const PostComentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 80%;
-  width: 50%;
-  margin-bottom: 100px;
-  background: #f00;
+  height: auto;
+  width: auto;
+  margin-top: 10px;
+  border-radius: 40px;
+  background: ${(props) => props.theme.borderWrapper};
+  @media (max-width: 768px) {
+    width: 90%;
+    height: auto;
+    margin: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
 `;
-
+const PostAll = styled.div`
+  display: grid;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+  }
+`;
+//여기에 포스트가 들어가면됩니다 ..^^
 const PostArea = styled.div`
-  height: 70vh;
-  width: 100%;
-  border: 1px solid #000;
-`;
-const CommentArea = styled.div`
-  height: 30vh;
-  width: 100%;
+  margin: 10px;
+  display: grid;
+  flex: 2;
+  border: 1px solid #f00;
+  background: ${(props) => props.theme.borderWrapper};
+  height: 160px;
+  max-height: 200px;
+  width: 600px;
+  border-radius: 30px;
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 0;
+  }
 `;
 
-const ModalWrapper = styled.div`
+const CommentArea = styled.div`
   width: 100%;
-  height: 360px;
-  border-radius: 12px;
-  background: ${(props) => props.theme.borderColor};
+  height: 230px;
+  background: ${(props) => props.theme.borderWrapper};
   color: ${(props) => props.theme.fontcolor};
   display: flex;
   flex-direction: column;
+  border-radius: 0 0 30px 30px;
   z-index: 1000;
   @media (max-width: 768px) {
-    margin: 10px;
+    @media (max-width: 768px) {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
   }
 `;
 
 const TextAreaWrapper = styled.div`
   width: 100%;
   height: 100%;
-  padding: 30px;
+  padding: 10px 20px;
   z-index: 999999;
+  margin: 0;
+  border-radius: 30px;
+  background: ${(props) => props.theme.borderWrapper};
   @media (max-width: 768px) {
-    border-radius: 0;
+    border-radius: 30px;
     width: 100%;
-    height: 100%;
+    height: auto;
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
   }
 `;
 
 const TextArea = styled.textarea`
-  background: ${(props) => props.theme.borderColor};
+  background: ${(props) => props.theme.borderWrapper};
   color: ${(props) => props.theme.fontcolor};
   border: none;
   font-size: 16px;
   width: 100%;
   height: 100%;
+  margin: 0;
   resize: none;
-  padding: 0px;
   font-family: var(--pretendard-font);
   font-weight: 300;
   &::placeholder {
@@ -99,6 +135,13 @@ const TextArea = styled.textarea`
     }
     outline: none;
   }
+  @media (max-width: 768px) {
+    border-radius: 30px;
+    width: 100%;
+    height: auto;
+    box-shadow: none;
+    border-radius: 0px 0px 0px 0px;
+  }
 `;
 const PlusImage = styled.div`
   display: flex;
@@ -110,30 +153,33 @@ const PlusImage = styled.div`
   object-fit: cover;
 `;
 const Img = styled.img`
-  width: 140px;
-  height: 140px;
+  width: 80px;
+  height: 80px;
   border-radius: 10px;
-  object-fit: cover;
+  object-fit: contain/ cover;
   @media (max-width: 768px) {
     width: 100px;
     height: 100px;
   }
 `;
 
-const Buttons = styled.div`
+const BottomWrapp = styled.div`
   width: 100%;
-  border-top: 1px solid rgba(204, 204, 204, 0.4);
   height: auto;
+  padding: 10px 0 0 0;
+  margin-bottom: 10px;
+  background: ${(props) => props.theme.borderWrapper};
+  border-radius: 0 0 30px 30px;
+  border-top: 1px solid rgba(204, 204, 204, 0.4);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
 `;
 const Icons = styled.div`
   display: flex;
   gap: 20px;
   align-items: center;
-  margin-left: 10px;
+  margin-left: 18px;
   justify-content: center;
 `;
 
@@ -194,6 +240,13 @@ const DeleteButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
 `;
+const Title = styled.div`
+  width: 100%;
+  height: auto;
+  text-align: center;
+  font-size: 18px;
+  color: #ffffff;
+`;
 const PostcommentModal = ({
   onSave,
   post,
@@ -250,10 +303,12 @@ const PostcommentModal = ({
       {/* 어두운 배경을 클릭하면 모달이 닫히도록 설정 */}
       <ModalOverlay onClick={() => setIsEtcModalOpen(false)}>
         {/* ModalWrapper는 ModalOverlay 안에 위치하여 화면 중앙에 배치됩니다 */}
+        <Title>댓글</Title>
         <PostComentWrapper>
-          <PostArea></PostArea>
-          <CommentArea>
-            <ModalWrapper onClick={(e) => e.stopPropagation()}>
+          <PostAll>
+            <PostArea></PostArea>
+
+            <CommentArea onClick={(e) => e.stopPropagation()}>
               <TextAreaWrapper>
                 <TextArea
                   value={newContent}
@@ -305,7 +360,7 @@ const PostcommentModal = ({
                   </div>
                 ))}
               </PlusImage>
-              <Buttons>
+              <BottomWrapp>
                 <Icons>
                   <CameraButton htmlFor="camera">
                     <CameraIcon width={36} />
@@ -332,9 +387,9 @@ const PostcommentModal = ({
                     취소
                   </DelButton>
                 </EditButton>
-              </Buttons>
-            </ModalWrapper>
-          </CommentArea>
+              </BottomWrapp>
+            </CommentArea>
+          </PostAll>
         </PostComentWrapper>
       </ModalOverlay>
     </AllWrapp>

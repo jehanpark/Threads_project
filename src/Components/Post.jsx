@@ -35,7 +35,6 @@ const Wrapper = styled.div`
   width: 100%;
   height: auto;
   padding: 40px;
-  padding: 40px;
   display: flex;
   border-radius: 30px;
   flex-direction: column;
@@ -43,6 +42,8 @@ const Wrapper = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
+    border-radius: 0px;
+    padding: 30px;
   }
 `;
 const ColumnWrapper = styled.div`

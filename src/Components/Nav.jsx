@@ -8,6 +8,8 @@ import {
 import styled, { css } from "styled-components";
 import Logo from "./LoadingLogo/Logo";
 import { auth, db, storage } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth"; // onAuthStateChanged 추가
+
 import { useAuth } from "../Contexts/AuthContext";
 import MobileNav from "./MobileNav";
 import { UserIcon2 } from "./Common/Icon";
@@ -15,9 +17,9 @@ import { ref } from "firebase/storage";
 
 const AllWrapper = styled.div`
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   padding: 20px 0px;
-  position: fixed;
+  /* position: fixed; */
 `;
 const Wrapper = styled.nav`
   width: 100%;
@@ -25,10 +27,18 @@ const Wrapper = styled.nav`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+  z-index: 10;
   /* padding: 0px 20px; */
   @media screen and (max-width: 768px) {
     display: none;
   }
+`;
+
+const MobileWrapper = styled.div`
+  position: fixed;
+  top: 0px;
+  background-color: red;
+  z-index: 100;
 `;
 const LogoWrapper = styled.div`
   width: 40px;
@@ -43,11 +53,15 @@ const MyProfileImgs = styled.div`
   right: 20px;
   width: 60px;
   height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
   @media screen and (width: 390px) {
     display: none;
   }
 `;
+
 const NavLoginBtn = styled.button`
   position: absolute;
   right: 20px;
@@ -136,7 +150,7 @@ const ImgBox = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
   border-radius: 50px;
   overflow: hidden;
   background-color: ${(props) => props.theme.mouseHoverBg};
@@ -154,45 +168,6 @@ const Nav = () => {
   const location = useLocation(); // 현재 경로 가져오기
   const [selectedMenu, setSelectedMenu] = useState(0);
   const [userAdress, setUserAdress] = useState("");
-
-  // 비동기 함수로 분리하여 useEffect에서 호출
-  useEffect(() => {
-    const fetchAvatar = async () => {
-      if (!user) return; // 사용자가 없는 경우 중단
-      try {
-        const locationRef = ref(storage, `avatars/${user?.uid}}`);
-        const result = await uploadBytes(locationRef, file);
-        const avatarUrl = await getDownloadURL(result.ref);
-        setAvarta(avatarUrl);
-      } catch (error) {
-        console.error("Error fetching avatar:", error);
-      }
-    };
-    fetchAvatar(); // 비동기 함수 호출
-    return () => {
-      // 컴포넌트 언마운트 시 클린업
-      setAvarta(""); // 클린업 작업으로 아바타 초기화
-    };
-  }, [user]);
-  useEffect(() => {
-    const userEmail = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        setUserAdress(user.email);
-      }
-    };
-    userEmail();
-  }, []);
-
-  useEffect(() => {
-    const userEmail = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        setUserAdress(user.email);
-      }
-    };
-    userEmail();
-  }, []);
 
   const menuItems = [
     {
@@ -326,8 +301,31 @@ const Nav = () => {
           />
         </svg>
       ),
+      // path: `/profile?email=${userAdress}`,
+      path: `/profile`,
     },
   ];
+
+  // 비동기 함수로 분리하여 useEffect에서 호출
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      if (!user) return; // 사용자가 없는 경우 중단
+      try {
+        const locationRef = ref(storage, `avatars/${user?.uid}}`);
+        const result = await uploadBytes(locationRef, file);
+        const avatarUrl = await getDownloadURL(result.ref);
+        setAvarta(avatarUrl);
+      } catch (error) {
+        console.error("Error fetching avatar:", error);
+      }
+    };
+    fetchAvatar(); // 비동기 함수 호출
+    return () => {
+      // 컴포넌트 언마운트 시 클린업
+      setAvarta(""); // 클린업 작업으로 아바타 초기화
+    };
+  }, [user]);
+
   useEffect(() => {
     const userEmail = async () => {
       const user = auth.currentUser;
@@ -337,15 +335,7 @@ const Nav = () => {
     };
     userEmail();
   }, []);
-  useEffect(() => {
-    const userEmail = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        setUserAdress(user.email);
-      }
-    };
-    userEmail();
-  }, []);
+
   // URL이 변경될 때마다 현재 경로에 맞는 메뉴 선택
   useEffect(() => {
     const currentPath = location.pathname;
@@ -356,6 +346,37 @@ const Nav = () => {
       setSelectedMenu(selectedIndex);
     }
   }, [location.pathname, menuItems]);
+
+  // 사용자 상태가 변경될 때마다 avatar와 email을 갱신
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserAdress(user.email); // 로그인한 사용자의 이메일 저장
+        if (user.photoURL) {
+          setAvarta(user.photoURL); // 사용자가 설정한 아바타가 있으면 바로 설정
+        } else {
+          await fetchAvatar(user); // 아바타가 없으면 Firebase Storage에서 가져오기
+        }
+      } else {
+        setAvarta(""); // 로그아웃된 경우 아바타 초기화
+      }
+    });
+
+    return () => unsubscribe(); // 컴포넌트 언마운트 시 구독 해제
+  }, []);
+
+  // Firebase Storage에서 아바타 가져오기 함수
+  const fetchAvatar = async (user) => {
+    if (!user) return; // 사용자가 없는 경우 중단
+    try {
+      const locationRef = ref(storage, `avatars/${user?.uid}`);
+      const avatarUrl = await getDownloadURL(locationRef);
+      setAvarta(avatarUrl);
+    } catch (error) {
+      console.error("Error fetching avatar:", error);
+    }
+  };
+
   const onSelected = (index, path) => {
     setSelectedMenu(index);
     if (index === 4) {
@@ -381,39 +402,29 @@ const Nav = () => {
     }
   };
   return (
-    <AllWrapper>
-      <MobileNav />
-      <Wrapper>
-        <Link to="/">
-          <LogoWrapper>
-            <Logo width={40} />
-          </LogoWrapper>
-        </Link>
-        <Ul>
-          {menuItems.map((menu, index) => (
-            <Li
-              key={index}
-              $itemCount={menuItems.length}
-              $isSelected={selectedMenu === index}
-              onClick={() => onSelected(index, menu.path)}
-              aria-current={selectedMenu === index ? "page" : undefined} // 접근성 향상
-            >
-              {menu.svg}
-            </Li>
-          ))}
-        </Ul>
-        {currentUser ? (
-          <MyProfileImgs>
-            <div
-              onClick={() => {
-                navigate({
-                  pathname: "/profile",
-                  search: `${createSearchParams({
-                    email: userAdress,
-                  })}`,
-                });
-              }}
-            >
+    <>
+      <AllWrapper>
+        <Wrapper>
+          <Link to="/">
+            <LogoWrapper>
+              <Logo width={40} />
+            </LogoWrapper>
+          </Link>
+          <Ul>
+            {menuItems.map((menu, index) => (
+              <Li
+                key={index}
+                $itemCount={menuItems.length}
+                $isSelected={selectedMenu === index}
+                onClick={() => onSelected(index, menu.path)}
+                aria-current={selectedMenu === index ? "page" : undefined} // 접근성 향상
+              >
+                {menu.svg}
+              </Li>
+            ))}
+          </Ul>
+          {currentUser ? (
+            <MyProfileImgs>
               <div
                 onClick={() => {
                   navigate({
@@ -424,24 +435,38 @@ const Nav = () => {
                   });
                 }}
               >
-                <ImgBox htmlFor="profileImg">
-                  {avatar == null || avatar == "" ? (
-                    <UserIcon2 width="54" fill="#BABABA" />
-                  ) : (
-                    <Img src={avatar} />
-                  )}
-                </ImgBox>
+                <div
+                  onClick={() => {
+                    navigate({
+                      pathname: "/profile",
+                      search: `${createSearchParams({
+                        email: userAdress,
+                      })}`,
+                    });
+                  }}
+                >
+                  <ImgBox htmlFor="profileImg">
+                    {avatar ? (
+                      <Img src={avatar} />
+                    ) : (
+                      <UserIcon2 width="54" fill="#BABABA" />
+                    )}
+                  </ImgBox>
+                </div>
               </div>
-            </div>
-          </MyProfileImgs>
-        ) : (
-          <NavLoginBtn>
-            <Link to="/login">로그인</Link>
-          </NavLoginBtn>
-        )}
-        <RightDiv />
-      </Wrapper>
-    </AllWrapper>
+            </MyProfileImgs>
+          ) : (
+            <NavLoginBtn>
+              <Link to="/login">로그인</Link>
+            </NavLoginBtn>
+          )}
+          <RightDiv />
+        </Wrapper>
+        <MobileWrapper>
+          <MobileNav />
+        </MobileWrapper>
+      </AllWrapper>
+    </>
   );
 };
 export default Nav;
