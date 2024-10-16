@@ -9,14 +9,8 @@ import LoginInsta from "../Pages/LoginInsta";
 import Follow from "../Pages/Follow";
 import Activity from "../Pages/Activity";
 import Profile from "../Pages/Profile";
-import PostForm from "../Components/post/PostForm";
-import Insites from "../Pages/Insites";
-// import CreateAccount from "../Components/Login/CreateAccount_de";
-import CreateAccount from "../Components/Login/CreateAccountItem_dk";
-// import CreateAccount from "../Pages/CreateAccount";
-import Settings from "../Pages/Settings";
-import Comment from "../Pages/Comment";
-import PostComment from "../Pages/PostComment";
+import CreateAccount from "../Pages/CreateAccount";
+import PostForm from "../Components/PostForm";
 // import CreateAccount from "../Components/Login/CreateAccount";
 
 export const router = createBrowserRouter([
@@ -29,7 +23,7 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "search",
+        path: "Search",
         element: <Search />,
       },
       {
@@ -48,26 +42,6 @@ export const router = createBrowserRouter([
         path: "PostForm",
         element: <PostForm />,
       },
-      {
-        path: "Insites", // 다은 추가
-        element: <Insites />,
-      },
-      {
-        path: "Settings", // 다은 추가
-        element: <Settings />,
-      },
-      {
-        path: "Comment/:customPostId",
-        element: <Comment />,
-      },
-      {
-        path: "PostComment/:customPostId",
-        element: <PostComment />,
-      },
-      // {
-      //   path: "PostComment",
-      //   element: <PostComment />,
-      // },
     ],
   },
   {
@@ -75,19 +49,13 @@ export const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "LoginInsta", // 이 라우트도 Layout 바깥에 있음
-    element: <LoginInsta />,
-  },
-  {
-    path: "Create-Account", // dan 추가한 라우트
+    path: "Create-account", // 이 라우트는 Layout 바깥에 있음
     element: <CreateAccount />,
   },
-
   {
     path: "Login-insta", // 이 라우트도 Layout 바깥에 있음
     element: <LoginInsta />,
   },
-
   // {
   //   path: "CreateAccount", // dan 추가한 라우트
   //   element: <CreateAccount />,

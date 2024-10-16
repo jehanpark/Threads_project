@@ -19,6 +19,7 @@ const Aside = styled.aside`
   position: fixed;
   bottom: 20px;
   left: 20px;
+  z-index: 1000;
 `;
 
 const BtnWrapper = styled.div`
@@ -204,6 +205,12 @@ const ThemeToggleBtnBox = styled(motion.div)`
 const ToggleBackground = styled(motion.div)`
   width: 100%;
   height: 100%;
+
+  /* border: 2px solid ${(props) => props.theme.themeIconBorder};
+
+  background-color: ${(props) => props.theme.mouseHoverBg};
+  border-radius: 12px;
+  box-shadow: ${(props) => props.theme.bordershadow}; */
 
   border: 2px solid ${(props) => props.theme.themeIconBackground};
 

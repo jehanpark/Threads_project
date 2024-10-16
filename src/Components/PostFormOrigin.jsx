@@ -7,40 +7,33 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import { auth, db, storage } from "../../firebase";
+import { auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import Button from "../Common/Button";
-import GlobalStyles from "../../styles/GlobalStyles.styles";
-import Border from "../Common/Border_de";
 import { useNavigate } from "react-router-dom";
-
 import {
   CameraIcon,
   PictureIcon,
   MicIcon,
   HashtagIcon,
-  RecoderIcon,
-} from "../Common/Icon";
-import Modal from "../Common/Modal";
-import PostForm_Modal from "./PostForm_Modal";
-import Loading from "../LoadingLogo/Loading";
-import { useAuth } from "../../Contexts/AuthContext";
+} from "../Components/Common/Icon";
+import { useAuth } from "../Contexts/AuthContext";
+import Loading from "./Loading";
 
 // Styled Components
-
 const Wrapper = styled.div`
   width: 100%;
   height: calc(100vh - 120px);
 `;
+
 const BoederWrapper = styled.div`
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translate(-50%);
   margin: 0 auto;
-  border-radius: 40px 40px 0 0;
   width: 680px;
   height: 85%;
+  border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
   @media (max-width: 768px) {
@@ -62,11 +55,12 @@ const Form = styled.form`
   transform: translate(-50%);
   display: flex;
   flex-direction: column;
-  width: 680px;
-  height: 100%;
+  margin: 0 auto;
+  width: 660px;
+  height: calc(100% - 10px);
   gap: 10px;
   background: ${(props) => props.theme.borderColor};
-  border-radius: 40px 40px 0 0;
+  border-radius: 30px 30px 0 0;
   @media (max-width: 768px) {
     position: absolute;
     top: 0;
@@ -128,6 +122,7 @@ const CameraButton = styled.label`
   cursor: pointer;
   fill: none;
 `;
+
 const CameraInput = styled.input`
   display: none;
 `;
@@ -135,6 +130,7 @@ const CameraInput = styled.input`
 const PictureButton = styled.label`
   cursor: pointer;
 `;
+
 const PictureInput = styled.input`
   display: none;
 `;
@@ -162,6 +158,7 @@ const DeleteButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
 `;
+
 const OpenButton = styled.button`
   width: 300px;
   height: 80px;
@@ -180,6 +177,7 @@ const OpenButton = styled.button`
     display: none;
   }
 `;
+
 const SubmitBtn = styled.input`
   width: 300px;
   height: 80px;
@@ -198,37 +196,22 @@ const SubmitBtn = styled.input`
   }
 `;
 
-const IconBtn = styled.div`
-  background-color: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-`;
-
 const PostForm = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [post, setPost] = useState("");
-  const [files, setFiles] = useState([]);
-
+  const [post, setPost] = useState(""); // 게시글 상태
+  const [files, setFiles] = useState([]); // 파일 상태
   const [audioBlob, setAudioBlob] = useState(null); // 녹음 파일 상태
   const [isRecording, setIsRecording] = useState(false); // 녹음 중 상태
   const mediaRecorderRef = useRef(null); // MediaRecorder 참조
-  const [audioURL, setAudioURL] = useState(null); // 녹음 파일 미리보기 URL 상태
 
-  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
-
-  const generateCustomId = () => {
-    const timestamp = Date.now().toString();
-    const randomNum = Math.floor(Math.random() * 1000000).toString();
-    return timestamp + randomNum; // 두 값을 조합하여 고유 식별자 생성
-  };
 
   useEffect(() => {
     if (!currentUser) {
       const confirmLogin = window.confirm("로그인 하시겠습니까?");
       if (confirmLogin) {
-        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+        navigate("/login");
       } else {
         navigate("/");
       }
@@ -268,45 +251,21 @@ const PostForm = () => {
 
   // 녹음 시작
   const startRecording = () => {
-    // 기존 녹음 파일 초기화
-    setAudioBlob(null); // 이전 녹음 파일 제거
-    setFiles((prevFiles) =>
-      prevFiles.filter((file) => file.type !== "audio/mp3")
-    ); // 기존 오디오 파일 삭제
-
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       mediaRecorder.start();
       setIsRecording(true);
 
-      let chunks = [];
-
       mediaRecorder.ondataavailable = (e) => {
-        chunks.push(e.data);
-      };
-
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(chunks, { type: "audio/mp3" });
-        setAudioBlob(audioBlob); // 녹음이 끝나면 audioBlob 상태 설정
-
-        const audioFile = new File([audioBlob], "recording.mp3", {
-          type: "audio/mp3",
-        });
-
-        // 녹음 파일을 files 배열에 추가
-        setFiles((prevFiles) => [...prevFiles, audioFile]);
-
-        chunks = []; // 녹음 후 chunks 초기화
+        setAudioBlob(e.data); // 녹음 완료 시 audioBlob에 데이터 저장
       };
     });
   };
 
   // 녹음 중지
   const stopRecording = () => {
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
-    }
+    mediaRecorderRef.current.stop();
     setIsRecording(false);
   };
 
@@ -315,7 +274,6 @@ const PostForm = () => {
     const user = auth.currentUser;
     if (!user || isLoading || post === "" || post.length > 180) return;
 
-    // 랜덤으로 아이콘 값 생성
     const randomLikes = Math.floor(Math.random() * 100);
     const randomComments = Math.floor(Math.random() * 10);
     const randomDms = Math.floor(Math.random() * 50);
@@ -324,27 +282,22 @@ const PostForm = () => {
     try {
       setIsLoading(true);
 
-      // 커스텀 고유 ID 생성
-      const customPostId = generateCustomId(); // 고유 식별자 생성
-
-      // Firebase에 포스트 기본 정보 저장
       const docRef = await addDoc(collection(db, "contents"), {
         post,
         createdAt: serverTimestamp(),
         username: user?.displayName || "Anonymous",
         userId: user.uid,
         email: user.email,
-        customPostId,
         likes: randomLikes,
         comments: randomComments,
         dms: randomDms,
-        retweets: randomRetweets, // 랜덤 아이콘 값 저장
+        retweets: randomRetweets,
       });
 
       const photoUrls = [];
       const videoUrls = [];
 
-      // 파일이 있을 경우 업로드
+      // 파일 업로드
       await Promise.all(
         files.map(async (file) => {
           const locationRef = ref(
@@ -378,11 +331,10 @@ const PostForm = () => {
         videos: videoUrls,
       });
 
-      // 제출 후 상태 초기화
+      // 상태 초기화
       setPost("");
       setFiles([]);
       setAudioBlob(null);
-      navigate("/");
     } catch (error) {
       console.error(error);
     } finally {
@@ -417,7 +369,7 @@ const PostForm = () => {
                       objectFit: "contain",
                     }}
                   />
-                ) : file.type.startsWith("video/") ? (
+                ) : (
                   <video
                     controls
                     style={{
@@ -429,19 +381,6 @@ const PostForm = () => {
                   >
                     <source src={URL.createObjectURL(file)} />
                   </video>
-                ) : (
-                  <audio
-                    controls
-                    src={URL.createObjectURL(file)}
-                    style={{
-                      width: "140px", // 오디오 컨트롤러의 너비를 이미지/비디오와 맞춤
-                      height: "40px", // 오디오 컨트롤러의 높이 설정
-                      borderRadius: "10px", // 일관성을 위해 오디오에도 경계 반경 적용
-                      objectFit: "contain",
-                    }}
-                  >
-                    Your browser does not support the audio element.
-                  </audio>
                 )}
                 <DeleteButton onClick={() => removeFile(index)}>X</DeleteButton>
               </div>
@@ -459,17 +398,24 @@ const PostForm = () => {
             </CameraButton>
             <PictureButton htmlFor="picture">
               <PictureIcon width={24} />
+              <PictureInput
+                onChange={handleFileChange}
+                id="picture"
+                type="file"
+                accept="video/*, image/*"
+              />
             </PictureButton>
             {/* 녹음 기능 */}
+            <MicIcon width={24} />
 
             {!isRecording ? (
-              <IconBtn onClick={startRecording}>
-                <MicIcon width={24} />
-              </IconBtn>
+              <button type="button" onClick={startRecording}>
+                녹음 시작
+              </button>
             ) : (
-              <IconBtn onClick={stopRecording}>
-                <RecoderIcon width={24} />
-              </IconBtn>
+              <button type="button" onClick={stopRecording}>
+                녹음 중지
+              </button>
             )}
             <HashtagIcon width={24} />
           </Icons>

@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import GlobalStyles from "../styles/GlobalStyles.styles";
 import { useMediaQuery } from "react-responsive";
 import BorderItem from "../Components/Common/Border_de";
 import { ShareIconNew } from "../Components/Common/Icon";
+import Toggle from "./Common/Toggle";
+import MentionModal from "./Common/MentionModal";
+
 import {
   LockIcon,
   EyeCloseIcon,
@@ -15,7 +19,6 @@ import {
   EalthIcon,
   InfoDownIcon,
   PersonalInfoIcon,
-  SupervisionIcon,
   FamilyIcon,
   SecurityIcon,
   AccountStatusIcon,
@@ -26,8 +29,30 @@ import {
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  height: calc(100vh - 120px);
+  align-items: center;
 `;
+
+const SettingsInner = styled.div`
+  width: 558.67px; // 수정!
+  height: 100%;
+  padding: 20px 0;
+  background: ${(props) => props.theme.borderColor};
+  margin-top: 30px;
+  /* border: 1px solid rgb(213, 213, 213); */
+  border: none;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+  @media (max-width: 768px) {
+    width: 100%;
+    height: calc(100vh - 70px);
+    margin: 0;
+    border-radius: 0;
+  }
+`;
+
 const SettingMenu = styled.div`
   display: flex;
   justify-content: center;
@@ -35,7 +60,11 @@ const SettingMenu = styled.div`
   width: 169.77px;
   height: 48px;
   -webkit-tap-highlight-color: transparent;
+  @media (max-width: 768px) {
+    margin-bottom: 12px;
+  }
 `;
+
 const SettingTitle = styled.div.attrs({ className: "common-style" })`
   font-size: 14px;
   width: 120px;
@@ -45,6 +74,9 @@ const SettingTitle = styled.div.attrs({ className: "common-style" })`
   margin-bottom: 8px;
   cursor: pointer;
   position: relative; /* 자식 요소의 절대 위치 설정을 위한 relative */
+  @media (max-width: 768px) {
+    width: 80px;
+  }
 `;
 const SettingMove = styled.div`
   display: flex;
@@ -60,15 +92,16 @@ const OtherSettings = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
+  width: 100%;
   gap: 20px;
 `;
 const OutherPrivacy = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-  width: 509.33px;
+  width: 100%;
   height: 100%;
-  padding: 0 24px;
+  padding: 0 20px;
   gap: 30px;
 `;
 // 기타 개인정보 설정 텍스트
@@ -76,8 +109,9 @@ const OtherPivInfo = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 57.8px;
+  height: auto;
   padding: 8px 0px;
+  padding: 0 24px;
 `;
 const OtherTitle = styled.div`
   font-size: 16px;
@@ -86,19 +120,20 @@ const OtherTitle = styled.div`
 const OtherInfo = styled.span`
   font-size: 11px;
   font-weight: 400;
-  width: 462px;
+  width: 100%;
   color: #999;
   margin-top: 12px;
-  line-height: calc(1.4 * 1.3em);
-`;
 
+  line-height: calc(1.4em);
+`;
+// 개인정보보호
 const PrivacySettings = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-  margin: 10px auto;
-  width: 509.33px;
-  padding: 0 24px;
+  width: 100%;
+  margin: 8px auto;
+  padding: 0 20px;
   gap: 20px;
 `;
 const PrivacyProfile = styled.div`
@@ -108,10 +143,19 @@ const PrivacyProfile = styled.div`
   display: flex;
   justify-content: start;
   align-items: center;
+  padding: 0 24px;
 `;
 const PrivacyTitle = styled.span`
   font-size: 14px;
   margin-left: 14px;
+  align-items: center;
+  text-align: center;
+  line-height: calc(1.4 * 1.3em);
+`;
+
+const PersonalInfoTitle = styled.span`
+  font-size: 14px;
+  margin-left: 4px;
   align-items: center;
   text-align: center;
   line-height: calc(1.4 * 1.3em);
@@ -122,14 +166,23 @@ const AccountSettings = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-  margin-top: 8px;
+  width: 100%;
+  margin: 8px auto;
+  /* padding: 0 24px; */
+  gap: 20px;
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 `;
 const AccountContents = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
-  width: 460.33px;
+  width: 100%;
   gap: 20px;
+  @media (max-width: 768px) {
+    width: 360px;
+  }
 `;
 const AccountTitle = styled.span`
   font-size: 14px;
@@ -155,18 +208,58 @@ const ContentAutoLayout = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  @media (max-width: 768px) {
+    padding-right: 28px;
+  }
 `;
 const Icon = styled.div`
   height: 20px;
   text-align: end;
-  padding-right: 10px;
+  /* padding: 0 10px; */
+  svg {
+    path {
+      fill: ${(props) => props.theme.logoColor};
+      /* stroke: ${(props) => props.theme.logoColor}; */
+    }
+  }
+`;
+// 테두리만 보더 주어야 하는 svg
+const IconStroke = styled.div`
+  height: 20px;
+  text-align: end;
+  /* padding: 0 10px; */
+  svg {
+    path {
+      stroke: ${(props) => props.theme.logoColor};
+    }
+  }
+`;
+const Icon3 = styled.div`
+  height: 20px;
+  text-align: end;
+  /* padding: 0 10px; */
+  svg {
+    path {
+      stroke: ${(props) => props.theme.logoColor};
+    }
+  }
 `;
 const IconRadius = styled.div`
   width: 20px;
   height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  border: 2px solid #000;
+  border: 2px solid ${(props) => props.theme.logoColor};
   border-radius: 100%;
+  svg {
+    justify-content: center;
+    path {
+      /* fill: ${(props) => props.theme.logoColor}; */
+      stroke: ${(props) => props.theme.logoColor};
+    }
+  }
 `;
 
 // 줄
@@ -191,11 +284,29 @@ const ActiveBorder = styled.div`
   transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
 `;
 
+// 추가 레이아웃 설정
+const PrivacyAutoLayout = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const SelectedText = styled.span`
+  font-size: 14px;
+  color: ${(props) => props.theme.modalfont};
+`;
+
+const SelectLayout = styled.div`
+  display: flex;
+  gap: 14px;
+`;
+
 // 아이콘 눌렀을 때 링크로 이동
 const IconLink = styled.a`
   height: 20px;
   text-align: end;
-  padding-right: 10px;
+  /* padding-right: 10px; */
 `;
 
 const SettingsItem_de = () => {
@@ -212,7 +323,15 @@ const SettingsItem_de = () => {
       setBorderPosition({ left: offsetLeft, width: offsetWidth }); // border 위치 및 너비 업데이트
     }
   };
+  // 모달 창 구현
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOption, setSelectedOption] =
+    useState("내가 팔로우하는 프로필");
 
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+  const handleSelectOption = (option) => setSelectedOption(option);
+  // 모달 끝
   useEffect(() => {
     // 초기 상태에 대한 border 위치 설정
     const titleElement = document.getElementById("setting-title-0");
@@ -221,9 +340,11 @@ const SettingsItem_de = () => {
       setBorderPosition({ left: offsetLeft, width: offsetWidth });
     }
   }, []);
+  const [isDarkMode, setIsDarkMode] = useState(false); // 기본값은 라이트 모드
+
   return (
     <Wrapper>
-      <BorderItem type="settingsWrapper" isSmallScreen={isSmallScreen}>
+      <SettingsInner>
         <SettingMenu>
           <SettingMove>
             <SettingTitle
@@ -254,24 +375,41 @@ const SettingsItem_de = () => {
 
         {/* 현재 활성화된 탭에 따라 다른 내용을 렌더링 */}
         {activeTab === "privacy" && (
-          <PrivacySettings>
+          <PrivacySettings isSmallScreen={isSmallScreen}>
             <PrivacyProfile>
               <Icon>
                 <LockIcon width={"18px"} />
               </Icon>
-              <PrivacyTitle>비공개 프로필</PrivacyTitle>
+              <PrivacyAutoLayout>
+                <PrivacyTitle>비공개 프로필</PrivacyTitle>
+                {/* 토글 추가 */}
+                <Toggle />
+              </PrivacyAutoLayout>
             </PrivacyProfile>
             <PrivacyProfile>
               <Icon>
                 <Thread100Icon width={"20px"} fill={"black"} />
               </Icon>
-              <PrivacyTitle>언급</PrivacyTitle>
+              <PrivacyAutoLayout>
+                <PrivacyTitle>언급</PrivacyTitle>
+                <SelectLayout>
+                  <SelectedText>{selectedOption}</SelectedText>
+                  <IconStroke onClick={handleOpenModal}>
+                    <RightArrowIcon fill={"gray"} width={"12px"} />
+                  </IconStroke>
+                </SelectLayout>
+              </PrivacyAutoLayout>
             </PrivacyProfile>
             <PrivacyProfile>
               <Icon>
                 <EyeCloseIcon width={"24px"} />
               </Icon>
-              <PrivacyTitle>숨겨진 단어</PrivacyTitle>
+              <PrivacyAutoLayout>
+                <PrivacyTitle>숨겨진 단어</PrivacyTitle>
+                <IconStroke>
+                  <RightArrowIcon fill={"gray"} width={"12px"} />
+                </IconStroke>
+              </PrivacyAutoLayout>
             </PrivacyProfile>
             <Line />
             {/* 기타 개인정보 설정  */}
@@ -284,9 +422,11 @@ const SettingsItem_de = () => {
                 </OtherInfo>
               </OtherPivInfo>
               <PrivacyProfile>
-                <IconRadius>
-                  <CloseIcon width={"10px"} fill={"black"} />
-                </IconRadius>
+                <Icon>
+                  <IconRadius>
+                    <CloseIcon width={"10px"} fill={"black"} />
+                  </IconRadius>
+                </Icon>
                 <ContentAutoLayout>
                   <PrivacyTitle>차단된 프로필</PrivacyTitle>
                   <IconLink
@@ -295,7 +435,7 @@ const SettingsItem_de = () => {
                     rel="noopener noreferrer"
                   >
                     <ShareIconNew
-                      width={"14px"}
+                      width={"18px"}
                       stroke="#999"
                       strokeWidth="2"
                     />
@@ -303,9 +443,9 @@ const SettingsItem_de = () => {
                 </ContentAutoLayout>
               </PrivacyProfile>
               <PrivacyProfile>
-                <Icon>
+                <IconStroke>
                   <NotHeartIcon width={"20px"} fill={"black"} />
-                </Icon>
+                </IconStroke>
                 <ContentAutoLayout>
                   <PrivacyTitle>좋아요 수 및 공유 수 숨기기</PrivacyTitle>
                   <IconLink
@@ -314,7 +454,7 @@ const SettingsItem_de = () => {
                     rel="noopener noreferrer"
                   >
                     <ShareIconNew
-                      width={"14px"}
+                      width={"18px"}
                       stroke="#999"
                       strokeWidth="2"
                     />
@@ -326,19 +466,19 @@ const SettingsItem_de = () => {
         )}
 
         {activeTab === "account" && (
-          <OutherPrivacy>
+          <OutherPrivacy isSmallScreen={isSmallScreen}>
             {/* 계정 탭의 내용 */}
             <AccountSettings>
               <AccountContents>
                 <PrivacyProfile>
-                  <Icon>
+                  <IconStroke>
                     <CloseLockIcon width={"20px"} fill={"black"} />
-                  </Icon>
+                  </IconStroke>
                   <ContentAutoLayout>
                     <AccountTitle>웹 사이트 권한</AccountTitle>
-                    <Icon>
+                    <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
-                    </Icon>
+                    </IconStroke>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
@@ -347,20 +487,20 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <AccountTitle>프로필 비활성화 또는 삭제</AccountTitle>
-                    <Icon>
+                    <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
-                    </Icon>
+                    </IconStroke>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
-                  <Icon>
+                  <IconRadius>
                     <EalthIcon width={"22px"} />
-                  </Icon>
+                  </IconRadius>
                   <ContentAutoLayout>
                     <AccountTitle>페비더스 공유</AccountTitle>
-                    <Icon>
+                    <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
-                    </Icon>
+                    </IconStroke>
                   </ContentAutoLayout>
                 </PrivacyProfile>
               </AccountContents>
@@ -375,17 +515,27 @@ const SettingsItem_de = () => {
                 </OtherPivInfo>
                 <PrivacyProfile>
                   <Icon>
-                    <PersonalInfoIcon width={"30px"} fill={"black"} />
+                    <IconLink>
+                      <PersonalInfoIcon
+                        width={"30px"}
+                        height={"30px"}
+                        fill={"black"}
+                      />
+                    </IconLink>
                   </Icon>
                   <ContentAutoLayout>
-                    <PrivacyTitle>개인정보</PrivacyTitle>
-                    <Icon>
+                    <PersonalInfoTitle>개인정보</PersonalInfoTitle>
+                    <IconLink
+                      href="https://accountscenter.instagram.com/personal_info/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
@@ -394,13 +544,17 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <PrivacyTitle>관리 감독</PrivacyTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://familycenter.instagram.com/accounts/17841452333493991/?entrypoint=supervision_web&fc_session_id=b427b3a2-c47f-4a18-9bc0-27d6d0a83683&account_type=INSTAGRAM&is_home_e"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
@@ -409,28 +563,36 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <PrivacyTitle>보안</PrivacyTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://accountscenter.instagram.com/password_and_security/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <Icon>
-                    <AccountStatusIcon width="22px" fill="#000" />
+                    <AccountStatusIcon width={"22px"} fill={"black"} />
                   </Icon>
                   <ContentAutoLayout>
                     <PrivacyTitle>계정 상태</PrivacyTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://accountscenter.instagram.com/password_and_security/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
@@ -439,28 +601,36 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <PrivacyTitle>내 정보 다운로드</PrivacyTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://accountscenter.instagram.com/info_and_permissions/dyi/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
-                  <Icon>
+                  <IconStroke>
                     <NotHeartIcon width={"20px"} fill={"black"} />
-                  </Icon>
+                  </IconStroke>
                   <ContentAutoLayout>
                     <PrivacyTitle>내 정보 전송</PrivacyTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://accountscenter.instagram.com/info_and_permissions/tyi/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
               </OtherSettings>
@@ -476,17 +646,17 @@ const SettingsItem_de = () => {
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>개인정보 보호 및 보안 도움말</HelpTitle>
-                    <Icon>
+                    <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
-                    </Icon>
+                    </IconStroke>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>지원 요청</HelpTitle>
-                    <Icon>
+                    <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
-                    </Icon>
+                    </IconStroke>
                   </ContentAutoLayout>
                 </PrivacyProfile>
               </AccountContents>
@@ -495,92 +665,127 @@ const SettingsItem_de = () => {
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>고객센터</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://help.instagram.com/179980294969821/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>Meta 개인정보처리방침</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://www.facebook.com/privacy/policy/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>Meta 이용약관</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://help.instagram.com/581066165581870"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>Threads 추가 개인정보처리방침</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://help.instagram.com/515230437301944"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
                         width={"14px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>Threads 이용 약관</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://help.instagram.com/769983657850450"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>쿠키 정책</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://privacycenter.instagram.com/policies/cookies/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
                   <ContentAutoLayout>
                     <HelpTitle>페디버스 가이드</HelpTitle>
-                    <Icon>
+                    <IconLink
+                      href="https://www.facebook.com/privacy/guide/fediverse/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
-                    </Icon>
+                    </IconLink>
                   </ContentAutoLayout>
                 </PrivacyProfile>
               </OtherSettings>
             </AccountSettings>
           </OutherPrivacy>
         )}
-      </BorderItem>
+      </SettingsInner>
+      {/* 모달은 PrivacyProfile 바깥에 위치 */}
+      {isModalOpen && (
+        <MentionModal
+          onClose={handleCloseModal}
+          onSelectOption={handleSelectOption}
+        />
+      )}
     </Wrapper>
   );
 };

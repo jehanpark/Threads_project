@@ -2,19 +2,17 @@ import React from "react";
 import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
 import { color } from "framer-motion";
-import EditModal from "../EditModal";
 
 const ContentsAll = styled.div`
   @media (max-width: 768px) {
-    position: relative;
+    
   }
 `;
 
 const Wrapper = styled.div`
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
+  position: absolute;
+  top: 20px;
+  right: 20px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -28,17 +26,23 @@ const Wrapper = styled.div`
   z-index: 500;
   @media (max-width: 768px) {
     position: fixed;
-    bottom: 0;
-    left: 0;
+    width: 100%;
+    height: 40%;
+    bottom: calc( 0px + 70px);
+    right: 0;
+    top: auto;
+    border-radius: 30px 30px 0 0;
   }
 `;
 const Contentswrapper = styled.div`
   @media (max-width: 768px) {
+    bottom: 0;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin-top: 10px;
   }
 `;
@@ -102,7 +106,7 @@ const UpLoadButton = styled.button`
     width: 300px;
     height: 70px;
     background: ${(props) => props.theme.fontcolor};
-    color: #fff;
+    color: ${(props) => props.theme.logoColor};
     font-size: 15px;
     font-weight: bold;
     border-radius: 16px;
@@ -115,18 +119,17 @@ const UpLoadButton = styled.button`
   }
 `;
 
-const PostSetModal = ({ onEdit, onRepost, onDelete }) => {
+const PostSetModal = () => {
   return (
     <ContentsAll>
       <Wrapper>
         <Contentswrapper>
           <TopRec></TopRec>
           <Optionwrapper>
-            <Li onClick={onEdit}>수정</Li>
-            <Li onClick={onRepost}>리포스트</Li>
-            <Li onClick={onDelete}>삭제</Li>
+            <Li>수정</Li>
+            <Li>리포스트</Li>
+            <Li>삭제</Li>
           </Optionwrapper>
-          <UpLoadButton>게시글 업로드</UpLoadButton>
         </Contentswrapper>
       </Wrapper>
     </ContentsAll>

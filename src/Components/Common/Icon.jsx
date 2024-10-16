@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useState } from "react";
 
 // StyledSvg 스타일링
 const StyledSvg = styled.svg`
@@ -234,28 +235,39 @@ export const UserIcon1 = ({ width, fill }) => {
   );
 };
 
-//Heart
-export const HeartIcon = ({ width, fill }) => {
+// HeartIcon 컴포넌트
+export const HeartIcon = ({ width, initialFill }) => {
+  const [isFilled, setIsFilled] = useState(false); // 클릭 여부를 관리할 상태
   const height = width ? `${(width / 24) * 24}px` : "24px";
+
+  // 클릭 이벤트 핸들러
+  const handleClick = () => {
+    setIsFilled(!isFilled); // 클릭할 때마다 상태를 반전
+  };
 
   return (
     <StyledSvg
+      onClick={handleClick} // 클릭 시 색상이 변경되도록 설정
       width={width || "24px"}
       height={height}
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      style={{ cursor: "pointer", transition: "fill 0.2s ease, stroke 0.2s ease" }} // 부드러운 전환 추가
     >
       <path
         d="M20.8401 4.60999C20.3294 4.099 19.7229 3.69364 19.0555 3.41708C18.388 3.14052 17.6726 2.99817 16.9501 2.99817C16.2276 2.99817 15.5122 3.14052 14.8448 3.41708C14.1773 3.69364 13.5709 4.099 13.0601 4.60999L12.0001 5.66999L10.9401 4.60999C9.90843 3.5783 8.50915 2.9987 7.05012 2.9987C5.59109 2.9987 4.19181 3.5783 3.16012 4.60999C2.12843 5.64169 1.54883 7.04096 1.54883 8.49999C1.54883 9.95903 2.12843 11.3583 3.16012 12.39L4.22012 13.45L12.0001 21.23L19.7801 13.45L20.8401 12.39C21.3511 11.8792 21.7565 11.2728 22.033 10.6053C22.3096 9.93789 22.4519 9.22248 22.4519 8.49999C22.4519 7.77751 22.3096 7.0621 22.033 6.39464C21.7565 5.72718 21.3511 5.12075 20.8401 4.60999Z"
-        stroke={fill || "#BABABA"}
+        stroke={isFilled ? "red" : initialFill || "#BABABA"} // 상태에 따라 색상 변경
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        fill="none"
+        fill={isFilled ? "red" : "none"} // 채워진 상태일 때 빨간색으로 채움
+        style={{ transition: "fill 0.2s ease-in, stroke 0.2s ease-out" }} // 부드러운 전환 추가
       />
     </StyledSvg>
   );
 };
+
+
 //coment
 export const Coment = ({ width, fill }) => {
   const height = width ? `${(width / 24) * 24}px` : "24px";
@@ -517,18 +529,28 @@ export const StarIcon = ({ width, fill }) => {
   );
 };
 
-//RetweetIcon
-export const RetweetIcon = ({ width, fill }) => {
+// RetweetIcon 컴포넌트
+export const RetweetIcon = ({ width, initialFill }) => {
+  const [isClicked, setIsClicked] = useState(false); // 클릭 여부를 관리할 상태
+
+  // 클릭 이벤트 핸들러
+  const handleClick = () => {
+    setIsClicked(!isClicked); // 클릭할 때마다 상태를 반전
+  };
+
   return (
     <StyledSvg
+      onClick={handleClick} // 클릭 시 색상이 변경되도록 설정
       width={width || "26.64px"}
       height={width ? `${(width / 26.64) * 15.98}px` : "15.98px"}
       viewBox="0 0 28 17"
       xmlns="http://www.w3.org/2000/svg"
+      style={{ cursor: "pointer", transition: "fill 0.3s ease" }} // 부드러운 전환과 커서 스타일 추가
     >
       <path
         d="M7.10773 0.189636C6.40124 0.189636 5.7237 0.470285 5.22414 0.969843C4.72458 1.4694 4.44393 2.14695 4.44393 2.85343V10.8448H0.448242L5.77583 16.1724L11.1034 10.8448H7.10773V2.85343H16.431L19.0948 0.189636H7.10773ZM20.4267 5.51722H16.431L21.7586 0.189636L27.0862 5.51722H23.0905V13.5086C23.0905 14.2151 22.8098 14.8926 22.3103 15.3922C21.8107 15.8917 21.1332 16.1724 20.4267 16.1724H8.43962L11.1034 13.5086H20.4267V5.51722Z"
-        fill={fill || "currentColor"}
+        fill={isClicked ? "#0396f6" : initialFill || "#BABABA"} // 상태에 따라 색상 변경
+        style={{ transition: "fill 0.3s ease" }} // 부드러운 전환 효과 추가
       />
     </StyledSvg>
   );
@@ -842,10 +864,10 @@ export const CloseIcon = ({ width, fill, border, borderRadius }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={width || "12px"}
-      height={height}
+      width={width || "24px"}
+      height={width || "24px"}
+      fill={fill || "#000000"} // fill Prop을 사용하여 색상을 설정
       viewBox="0 0 14 14"
-      fill="none"
     >
       <path
         d="M13 1L1 13"
@@ -1005,7 +1027,7 @@ export const LockIcon = ({ width, fill }) => {
       height={height}
       viewBox="0 0 14 16"
       xmlns="http://www.w3.org/2000/svg"
-      fill="black" // 다은 수정
+      fill="${(props) => props.theme.borderColor}" // 다은 수정
     >
       <path
         d="M11.375 5.6V4C11.375 2.93913 10.9141 1.92172 10.0936 1.17157C9.27312 0.421427 8.16032 0 7 0C5.83968 0 4.72688 0.421427 3.90641 1.17157C3.08594 1.92172 2.625 2.93913 2.625 4V5.6C1.92881 5.6 1.26113 5.85286 0.768845 6.30294C0.276562 6.75303 0 7.36348 0 8V13.6C0 14.2365 0.276562 14.847 0.768845 15.2971C1.26113 15.7471 1.92881 16 2.625 16H11.375C12.0712 16 12.7389 15.7471 13.2312 15.2971C13.7234 14.847 14 14.2365 14 13.6V8C14 7.36348 13.7234 6.75303 13.2312 6.30294C12.7389 5.85286 12.0712 5.6 11.375 5.6ZM4.375 4C4.375 3.36348 4.65156 2.75303 5.14384 2.30294C5.63613 1.85286 6.30381 1.6 7 1.6C7.69619 1.6 8.36387 1.85286 8.85616 2.30294C9.34844 2.75303 9.625 3.36348 9.625 4V5.6H4.375V4ZM12.25 13.6C12.25 13.8122 12.1578 14.0157 11.9937 14.1657C11.8296 14.3157 11.6071 14.4 11.375 14.4H2.625C2.39294 14.4 2.17038 14.3157 2.00628 14.1657C1.84219 14.0157 1.75 13.8122 1.75 13.6V8C1.75 7.78783 1.84219 7.58434 2.00628 7.43431C2.17038 7.28429 2.39294 7.2 2.625 7.2H11.375C11.6071 7.2 11.8296 7.28429 11.9937 7.43431C12.1578 7.58434 12.25 7.78783 12.25 8V13.6Z"
@@ -1613,7 +1635,7 @@ export const DeleteProfileIcon = (props) => {
 export const EalthIcon = (props) => {
   return (
     <svg
-      viewBox="0 0 24 24"
+      viewBox="2 0 17 24"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       {...props}
@@ -1621,7 +1643,7 @@ export const EalthIcon = (props) => {
       <circle
         cx="12"
         cy="12"
-        r="9"
+        // r="9"
         stroke="#000000"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1698,18 +1720,26 @@ export const SecurityIcon = (props) => {
     </svg>
   );
 };
+
 // 계정상태
-export const AccountStatusIcon = (props) => {
+export const AccountStatusIcon = ({
+  width = "24px",
+  height = "24px",
+  fill = "currentColor",
+  ...props
+}) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      fill={props.fill || "#000000"} // 기본 색상 설정
-      width={props.width || "24px"} // 기본 너비 설정
-      height={props.height || "24px"} // 기본 높이 설정
+      width={width}
+      height={height}
       viewBox="0 0 24 24"
       {...props}
     >
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
+        fill={fill} // props로 전달받은 fill 사용
+      />
     </svg>
   );
 };
@@ -1756,6 +1786,25 @@ export const MobileMenu = ({ width }) => {
       <path
         d="M4 6H20V8H4V6ZM8 11H20V13H8V11ZM13 16H20V18H13V16Z"
         fill="black"
+      />
+    </svg>
+  );
+};
+
+export const RecoderIcon = ({ width }) => {
+  const height = width * 1;
+
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 10 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M4 3C3.73478 3 3.48043 3.10536 3.29289 3.29289C3.10536 3.48043 3 3.73478 3 4V6C3 6.26522 3.10536 6.51957 3.29289 6.70711C3.48043 6.89464 3.73478 7 4 7H6C6.26522 7 6.51957 6.89464 6.70711 6.70711C6.89464 6.51957 7 6.26522 7 6V4C7 3.73478 6.89464 3.48043 6.70711 3.29289C6.51957 3.10536 6.26522 3 6 3H4ZM10 5C10 6.32608 9.47322 7.59785 8.53553 8.53553C7.59785 9.47322 6.32608 10 5 10C3.67392 10 2.40215 9.47322 1.46447 8.53553C0.526784 7.59785 0 6.32608 0 5C0 3.67392 0.526784 2.40215 1.46447 1.46447C2.40215 0.526784 3.67392 0 5 0C6.32608 0 7.59785 0.526784 8.53553 1.46447C9.47322 2.40215 10 3.67392 10 5ZM9 5C9 3.93913 8.57857 2.92172 7.82843 2.17157C7.07828 1.42143 6.06087 1 5 1C3.93913 1 2.92172 1.42143 2.17157 2.17157C1.42143 2.92172 1 3.93913 1 5C1 6.06087 1.42143 7.07828 2.17157 7.82843C2.92172 8.57857 3.93913 9 5 9C6.06087 9 7.07828 8.57857 7.82843 7.82843C8.57857 7.07828 9 6.06087 9 5Z"
+        fill="#BABABA"
       />
     </svg>
   );

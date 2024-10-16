@@ -22,15 +22,15 @@ const AllWrap = styled.div`
   align-items: center;
 `;
 const Backarea = styled.div`
-  width: 700px;
+  width: 760px;
 `;
 const BoederWrapper = styled.div`
   position: fixed;
   bottom: 0;
-  width: 660px;
+  width: 680px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
+  background: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   display: flex;
   flex-direction: column;
@@ -62,7 +62,6 @@ const PostWrapper = styled.div`
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
   padding: 20px;
-  width: 660px;
   border-radius: 40px 40px 0 0;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
@@ -97,8 +96,7 @@ const Timer = styled.span`
 const Posted = styled.div`
   font-size: 15px;
   font-weight: 600;
-  margin-left: 30px;
-  margin-top: 5px;
+  margin-top: 8px;
   margin-bottom: 5px;
 `;
 const ColumnWrapper = styled.div`
@@ -106,14 +104,15 @@ const ColumnWrapper = styled.div`
 `;
 const Column = styled.div`
   display: flex;
-  margin-left: 30px;
+  margin-left: 50px;
   margin-bottom: 12px;
   gap: 10px;
+  cursor: pointer;
 `;
 
 const Photo = styled.img`
-  width: 160px;
-  height: 160px;
+  width: 120px;
+  height: 120px;
   object-fit: cover/contain;
   margin-left: 0px;
   border-radius: 8px;
@@ -125,8 +124,8 @@ const Photo = styled.img`
 `;
 const Video = styled.video`
   display: flex;
-  width: 220px;
-  height: 160px;
+  width: 180px;
+  height: 120px;
   border-radius: 15px;
   object-fit: cover;
   @media (max-width: 768px) {
@@ -180,8 +179,8 @@ const CommentHeader = styled.div`
   margin-left: 20px;
 `;
 const CommentUserImage = styled.img`
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
 `;
 const CommentUsername = styled.span`
   font-size: 14px;
@@ -367,7 +366,7 @@ const PostComment = ({ id }) => {
                   <commentsList>
                     <CommentWrapper key={comment.id}>
                       <CommentHeader>
-                        <UserImage src="http://localhost:5173/profile.png"></UserImage>
+                        <CommentUserImage src="http://localhost:5173/profile.png"></CommentUserImage>
                         <CommentUsername>{comment.username}</CommentUsername>
                         <CommentTimer>
                           {formatDistanceToNow(

@@ -60,7 +60,7 @@ const BorderItem = styled.div`
     `
     width: ${(props) => (props.isSmallScreen ? "100%" : "485.41px")}; // 수정!
     height: ${(props) => (props.isSmallScreen ? "100%" : "137px")};
-    background: #F5F5F5;
+    background: ${(props) => props.theme.borderColor};
     margin-top: 30px;
     padding: 24px;
     border: none;
@@ -76,7 +76,7 @@ const BorderItem = styled.div`
     `
     width: ${(props) => (props.isSmallScreen ? "100%" : "485.41px")}; // 수정!
     height: ${(props) => (props.isSmallScreen ? "100%" : "536px")};
-    background: #F5F5F5;
+     background: ${(props) => props.theme.borderColor};
     margin-top: 30px;
     padding: 24px;
     border: none;
@@ -98,7 +98,6 @@ const BorderItem = styled.div`
     background: #fff;
     margin-top: 30px;
     border: 1px solid rgb(213, 213, 213);
-
     border-radius: 20px;
     display: flex;
     flex-direction: column;
