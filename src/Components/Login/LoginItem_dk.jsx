@@ -8,7 +8,7 @@ import { useMediaQuery } from "react-responsive";
 import Border from "../Common/Border_dk";
 import ReportModal from "./ReportModal";
 import Loading from "../LoadingLogo/Loading";
-import { EyeOpenIcon } from "../Common/Icon";
+import { EyeOpenIcon, EyeCloseIcon } from "../Common/Icon";
 import styled from "styled-components";
 
 import {
@@ -89,9 +89,6 @@ const EyeIconWrapper = styled.div`
   svg {
     width: 28px;
     height: 28px;
-    fill: ${(props) => (props.isVisible ? "#000" : "#bababa")};
-    stroke: ${(props) => (props.isVisible ? "#fff" : "none")};
-    stroke-width: ${(props) => (props.isVisible ? "1.5px" : "0")};
     transition: fill 0.2s, stroke 0.2s; /* 부드러운 전환 효과 */
   }
   &:hover svg {
@@ -241,11 +238,13 @@ const LoginItemDk = () => {
             />
             <StyledLabel htmlFor="password">비밀번호</StyledLabel>
             {/* 다은 눈 아이콘 추가 */}
-            <EyeIconWrapper
-              onClick={togglePasswordVisibility}
-              fill={isPasswordVisible ? "#000" : "#bababa"}
-            >
-              <EyeOpenIcon width="50px" fill="black" />
+            {/* Eye 아이콘: 비밀번호가 보이는 경우 EyeCloseIcon, 보이지 않는 경우 EyeOpenIcon */}
+            <EyeIconWrapper onClick={togglePasswordVisibility}>
+              {isPasswordVisible ? (
+                <EyeCloseIcon width="28px" />
+              ) : (
+                <EyeOpenIcon width="28px" />
+              )}
             </EyeIconWrapper>
             {/* 다은 캡스락 추가 */}
             {isCapsLockOn && (
