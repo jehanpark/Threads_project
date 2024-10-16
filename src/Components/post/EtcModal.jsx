@@ -11,9 +11,7 @@ const AllWrapp = styled.div`
   justify-content: center;
   align-content: center;
   height: 100%;
-  width: 100%;
   z-index: 900;
-  border: 1px solid red;
 `;
 
 const ModalOverlay = styled.div`
