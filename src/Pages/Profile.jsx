@@ -24,7 +24,6 @@ import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
-import { useLocation } from "react-router-dom";
 
 const BoederWrapper = styled.div`
   position: fixed;

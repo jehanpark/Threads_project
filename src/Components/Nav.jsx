@@ -16,6 +16,7 @@ const AllWrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 20px 0px;
+  position: fixed;
 `;
 const Wrapper = styled.nav`
   width: 100%;
@@ -138,6 +139,11 @@ const ImgBox = styled.label`
   border-radius: 50px;
   overflow: hidden;
   background-color: ${(props) => props.theme.mouseHoverBg};
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 const Nav = () => {
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴

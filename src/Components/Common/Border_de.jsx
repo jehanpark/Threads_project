@@ -58,23 +58,33 @@ const BorderItem = styled.div`
   ${({ type }) =>
     type === "insitesWrapper" &&
     `
-    width: ${(props) => (props.isSmallScreen ? "100%" : "485.41px")}; // 수정!
+    width: ${(props) =>
+      props.isSmallScreen
+        ? "100%"
+        : props.isTablet
+        ? "100%"
+        : "485.41px"}; // 수정!
     height: ${(props) => (props.isSmallScreen ? "100%" : "137px")};
     background: ${(props) => props.theme.borderColor};
-    margin-top: 30px;
-    padding: 24px;
+    margin-top: 20px;
+    padding: 20px;
     border: none;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+    // box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
     `}
   ${({ type, isSmallScreen }) =>
     type === "followWrapper" &&
     `
-    width: ${(props) => (props.isSmallScreen ? "100%" : "485.41px")}; // 수정!
+    width:${(props) =>
+      props.isSmallScreen
+        ? "100%"
+        : props.isTablet
+        ? "100%"
+        : "485.41px"}; // 수정!
     height: ${(props) => (props.isSmallScreen ? "100%" : "536px")};
      background: ${(props) => props.theme.borderColor};
     margin-top: 30px;
