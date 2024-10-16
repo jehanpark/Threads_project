@@ -51,24 +51,18 @@ const NoResults = styled.p`
   margin-top: 40px;
 `;
 
+const Contain = styled.div`
+  width: 100%;
+  height: 90px;
+  border: 1px solid #f00;
+`;
+
 // const FollowersList =
 
 const FollowModal = ({ open, close, profile }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  //검색어 상태
-  const [followersEmpty, setFollowersEmpty] = useState(false); // 팔로워가 비어 있는지 여부
-  const [contentType, setContentType] = useState("profile");
   const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
 
   if (!open) return null;
-
-  const handleSearch = (term) => {
-    setSearchTerm(term); // 검색어를 상태로 저장
-    if (!term) {
-      setFollowersEmpty(false);
-    }
-  };
-  // 검색어를 업데이트하는 함수
 
   return (
     <>
@@ -79,10 +73,12 @@ const FollowModal = ({ open, close, profile }) => {
         >
           <CloseButton onClick={close}>X</CloseButton>
           {/* <Searchbar addSearch={handleSearch} /> */}
-          <Top>
-            <FollowersList />
-          </Top>
 
+          <FollowersList />
+
+          {/*{contentType === "profile" && followersEmpty && (
+            <NoResults>프로필이 존재하지 않습니다.</NoResults>
+          )} */}
           {/* <FollowerItem /> */}
         </FollowModalBox>
       </ModalOverlay>

@@ -22,13 +22,16 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
         orderBy("createdAt", "desc"),
         limit(25)
       );
+
       // 실시간 데이터 구독 설정
       unsubscribe = onSnapshot(postsQuery, (snapshot) => {
         const livePosts = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
+
         let filteredPosts = livePosts;
+
         // 검색어 필터링
         if (searchTerm && searchTerm.trim() !== "") {
           const searchLower = searchTerm.toLowerCase();
@@ -74,6 +77,7 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
       if (unsubscribe) unsubscribe();
     };
   }, [searchTerm, contentType]);
+
   const handleScroll = () => {
     const element = wrapperRef.current;
     if (element.scrollTop === 0) {

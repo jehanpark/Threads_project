@@ -11,6 +11,7 @@ const FollowerContain = styled.div`
   padding: 20px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   cursor: pointer;
+
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -121,7 +122,8 @@ const FollowerButton = styled.button`
   }
 `;
 const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
-  const { ProfileImg, email, bio, followNum, isFollowing } = follower;
+  const { ProfileImg, userEmail, bio, followNum, isFollowing } = follower;
+
   return (
     <FollowerContain onClick={onProfileClick}>
       <Wrapper>
@@ -133,9 +135,9 @@ const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
           )}
         </UserWrapper>
         <UserContex>
-          <UserName>{email || "daljag@gmail.com"}</UserName>
+          <UserName>{userEmail || "zang@ezen.com"}</UserName>
           <UserInfo>{bio || "노래하는 고양이"}</UserInfo>
-          <UserFollowerNum>{`팔로워 ${followNum || 7}명`}</UserFollowerNum>
+          <UserFollowerNum>{`팔로워 ${followNum}명`}</UserFollowerNum>
         </UserContex>
       </Wrapper>
       <FollowerButton

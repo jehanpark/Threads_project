@@ -185,26 +185,14 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   // isOn 값
   const [isOn, setIsOn] = useState(true);
   const [isOn2, setIsOn2] = useState(true);
-  console.log(profileData.isLinkPublic);
-  console.log("토글", isOn);
 
   useEffect(() => {
-    // // 파이어베이스 값
-    // const toggelbase = profileData.isLinkPublic;
-    // const toggelbase2 = profileData.isProfilePublic;
-
     if (profileData.isLinkPublic === false) {
-      toggleSwitch();
       setIsOn(false);
     }
-  }, []);
-
-  // const toggle = () => {
-  //   if (isOn === false) {
-  //   }
-  // };
-
-  useEffect(() => {
+    if (profileData.isProfilePublic === false) {
+      setIsOn2(false);
+    }
     if (open) {
       window.addEventListener("keydown", handleKeyDown);
     }
@@ -216,15 +204,6 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   useEffect(() => {
     setProfileData({ ...profile });
   }, [profile]);
-
-  // const toggle = () => {
-  //   if (isOn === false) {
-  //     toggleSwitch();
-  //   }
-  //   if (isOn2 === false) {
-  //     toggleSwitch2();
-  //   }
-  // };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -266,6 +245,9 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
       await updateProfile(user, { photoURL: avatar });
     } else return;
   };
+
+  const toggleSwitch = () => setIsOn(!isOn);
+  const toggleSwitch2 = () => setIsOn2(!isOn2);
 
   const complete = async () => {
     if (!user) return;
@@ -333,9 +315,6 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
     }
   };
 
-  const toggleSwitch = () => setIsOn(!isOn);
-  const toggleSwitch2 = () => setIsOn2(!isOn2);
-
   const spring = {
     type: "spring",
     stiffness: 700,
@@ -393,7 +372,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
                 <Handle layout transition={spring} />
               </Switch>
               <input
-                // style={{ display: "none" }}
+                style={{ display: "none" }}
                 type="checkbox"
                 name="isLinkPublic"
                 id="isLinkPublic"

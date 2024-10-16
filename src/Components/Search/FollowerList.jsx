@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useNavigate,
+  useSearchParams,
+  createSearchParams,
+} from "react-router-dom";
 import {
   collection,
   query,
@@ -12,27 +16,31 @@ import { db } from "../../firebase";
 import FollowerItem from "./FollowerItem";
 const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
   const [followers, setFollowers] = useState([]);
-  const wrapperRef = useRef(null);
+  // const wrapperRef = useRef(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const emailAdress = searchParams.get("email");
+
   useEffect(() => {
     let unsubscribe = null;
     const fetchFollowers = async () => {
       let followersQuery = query(collection(db, "profile"));
-      // 이메일 주소가 있는 경우 해당 이메일로 필터링
-      if (emailAdress) {
-        followersQuery = query(
-          followersQuery,
-          where("userEmail", "==", emailAdress)
-        );
-      }
+
+      //  이메일 필터링
+      // if (emailAdress) {
+      //   followersQuery = query(
+      //     followersQuery,
+      //     where("userEmail", "==", emailAdress)
+      //   );
+      // }
+
       // 실시간 데이터 구독 설정
       unsubscribe = onSnapshot(followersQuery, (snapshot) => {
         let liveFollowers = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
+
         // 검색어 필터링
         if (searchTerm && searchTerm.trim() !== "") {
           const searchLower = searchTerm.toLowerCase();
@@ -48,31 +56,29 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
             return usernameMatch || emailMatch || bioMatch;
           });
         }
+
         // 콘텐츠 타입 필터링 (프로필에 맞는 필터링 추가)
         if (contentType === "profile") {
           liveFollowers = liveFollowers.filter(
             (item) => item.isProfilePublic === true
           );
         }
+
         setFollowers(liveFollowers);
         if (onDataEmpty) onDataEmpty(liveFollowers.length === 0); // 데이터가 없는 경우 처리
       });
     };
+
     fetchFollowers();
     return () => {
       if (unsubscribe) unsubscribe();
     };
   }, [searchTerm, contentType, emailAdress, onDataEmpty]);
-  const handleScroll = () => {
-    const element = wrapperRef.current;
-    if (element.scrollTop === 0) {
-      setIsBouncing(true);
-      setTimeout(() => {
-        setIsBouncing(false);
-      }, 500);
-    }
-  };
+
+  //프로필페이지 이동
+
   const handleProfileClick = (email) => {
+    console.log(emailAdress);
     if (email) {
       navigate({
         pathname: "/profile",
@@ -82,10 +88,14 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
       });
     }
   };
+
+  //팔로우
   const handleToggleFollow = async (id, currentStatus) => {
     try {
       const followerRef = doc(db, "profile", id);
       const updatedStatus = !currentStatus;
+
+      //클릭전환
       await updateDoc(followerRef, { isFollowing: updatedStatus });
       setFollowers((prevFollowers) =>
         prevFollowers.map((follower) =>
@@ -98,6 +108,9 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
       console.error("오류 발생:", error);
     }
   };
+
+  //본인 아이디 제외
+
   return (
     <div>
       {followers.map((follower) => (
