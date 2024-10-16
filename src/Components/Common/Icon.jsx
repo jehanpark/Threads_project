@@ -1580,7 +1580,6 @@ export const EalthIcon = (props) => {
       <circle
         cx="12"
         cy="12"
-        // r="9"
         stroke="#000000"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1647,10 +1646,10 @@ export const SecurityIcon = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20px" // 원하는 아이콘의 크기로 조정
+      width="20px"
       height="20px"
       viewBox="0 0 1024 1024"
-      fill="#000000" // 아이콘 색상 설정
+      fill="#000000"
       {...props}
     >
       <path d="M908.008473 139.713707L529.299213 3.059374a51.005609 51.005609 0 0 0-17.397182-3.059374c-5.950311 0-11.855934 1.03125-17.534682 3.090312L117.015902 139.744645c-20.394681 7.397498-34.704989 26.774679-34.70499 48.472173v323.781463c0 72.287165 23.299368 144.584643 67.763417 214.87806 34.082802 53.875921 81.520288 106.71028 140.256832 157.045577 98.209345 84.156849 195.655565 132.70121 199.749627 134.725896a51.957797 51.957797 0 0 0 22.96593 5.352186c7.717185 0 15.485933-1.732499 22.608431-5.197498 4.094061-1.993749 101.495594-49.78186 199.797752-133.605272 58.794982-50.132485 105.520905-102.966844 139.627769-157.031827 44.446861-70.444666 66.601542-143.171831 66.601543-216.167122V188.216818c0.003437-21.731868-13.230933-41.133112-33.67374-48.503111zM164.810887 511.757656V226.768368c0-10.848747 6.648123-20.539056 16.847183-24.237805l320.759902-116.692777c2.859999-1.034687 6.142811-1.797812 9.580309-1.797812v427.961745h349.631456c0.020625 0 0.044687 0.464062 0.044688 0.759687-0.06875 93.255909-47.038736 185.679943-139.58652 275.670228-72.273415 70.279666-154.384953 120.436213-196.621503 144.096519-3.915311 2.196562-10.027184 3.231249-13.464683 3.231249V511.867656l-347.190832-0.11z" />
@@ -1675,7 +1674,7 @@ export const AccountStatusIcon = ({
     >
       <path
         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
-        fill={fill} // props로 전달받은 fill 사용
+        fill={fill}
       />
     </svg>
   );
@@ -1701,12 +1700,12 @@ export const FamilyIcon = ({
         fillRule="evenodd"
         clipRule="evenodd"
         d="M16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM9.25 3.75C9.25 4.44036 8.69036 5 8 5C7.30964 5 6.75 4.44036 6.75 3.75C6.75 3.05964 7.30964 2.5 8 2.5C8.69036 2.5 9.25 3.05964 9.25 3.75ZM12 8H9.41901L11.2047 13H9.081L8 9.97321L6.91901 13H4.79528L6.581 8H4V6H12V8Z"
-        fill={fill} // props로 받은 fill 값 사용
+        fill={fill}
       />
     </svg>
   );
 };
-// AttentionNote 스타일 컴포넌트
+// 경고 아이콘 스타일
 const AttentionNoteContainer = styled.div`
   display: flex;
   align-items: center;
@@ -1715,7 +1714,7 @@ const AttentionNoteContainer = styled.div`
   margin-top: -88px;
   margin-left: 12px;
   background-color: black;
-  border-radius: 15px;
+  border-radius: 10px;
   padding: 2px 6px;
   ::after {
     display: block;
@@ -1723,14 +1722,14 @@ const AttentionNoteContainer = styled.div`
     height: 5px;
     background-color: black;
     position: absolute;
-    top: 18px;
+    top: 17px;
     left: 10px;
     transform: rotate(45deg);
     content: "";
   }
 `;
 
-// AttentionNote 컴포넌트
+// 경고 메시지 Wrapper
 export const AttentionNote = ({ children }) => {
   return (
     <AttentionNoteContainer>
@@ -1758,9 +1757,7 @@ export const AttentionNote = ({ children }) => {
           strokeLinejoin="round"
         />
       </svg>
-      <span style={{ color: "#FFF", fontSize: "10px" }}>
-        {children} {/* 경고 메시지를 자식으로 전달 */}
-      </span>
+      <span style={{ color: "#FFF", fontSize: "10px" }}>{children}</span>
     </AttentionNoteContainer>
   );
 };
