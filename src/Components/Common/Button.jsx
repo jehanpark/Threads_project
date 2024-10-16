@@ -48,16 +48,21 @@ const ButtonItem = styled.button`
     `
       width: 585px;
       height: 39px;
-      background: #d9d9d9;
       color: #000;
       font-size: 15px;
       font-weight: Medium;
       border-radius: 6px;
       transition: all 0.3s;
       &:hover {
-        background: #1c1c1c; 
+        background: {#1c1c1c}; 
         color: #fff; 
+        outline: none;
       }
+      @media (max-width: 768px) {
+      height: 38px;
+      width: 100%;
+      outline: none;
+  }
     `}
   ${({ type }) =>
     type === "smalupload" &&
@@ -77,9 +82,13 @@ const ButtonItem = styled.button`
     `}
 `;
 
-const Button = ({ text, type, onClick }) => {
+const Button = ({ text, type, onClick, width, heith, bg }) => {
   return (
-    <ButtonItem type={type} onClick={onClick}>
+    <ButtonItem
+      type={type}
+      onClick={onClick}
+      style={{ width: `${width}`, height: `${heith}` }}
+    >
       {text || "button"}
     </ButtonItem>
   );

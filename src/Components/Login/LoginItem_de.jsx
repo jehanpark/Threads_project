@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Logo from "../Logo";
-import LogoTextMark from "../LogoTextMark";
+import Logo from "../LoadingLogo/Logo";
+import LogoTextMark from "../LoadingLogo/LogoTextMark";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import Border from "../Common/Border_de";

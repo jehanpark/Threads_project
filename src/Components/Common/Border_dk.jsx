@@ -132,7 +132,7 @@ const BorderItem = styled.div`
     align-items: center;
     padding: 17px 11px;
     margin-top: 0px;
-    margin-bottom: 12px;
+    margin-bottom: 50px;
     font-weight: 700;
     `}
   

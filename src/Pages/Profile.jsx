@@ -1,34 +1,127 @@
-import React, { useState, useContext } from "react";
-import { ThreadDispatchContext } from "../Contexts/ThreadContext";
-import { ThreadDataContext } from "../Contexts/ThreadContext";
-import styled from "styled-components";
-import { useMediaQuery } from "react-responsive";
-import Profileimg from "../../public/profile.png";
-import Border from "../Components/Common/Border_de";
-import Button from "../Components/Common/Button";
-import Modal from "../Components/Common/Modal";
-import { PlusIcon, InstaIcon, FacebookIcon } from "../Components/Common/Icon";
+import { useState, useContext, useEffect, useRef } from "react";
 import {
-  ProfileInnner,
-  IdWrap,
-  IdText,
-  Tap,
-  TextInput,
-  Desk,
-} from "../styles/MobileProfile";
+  ThreadDispatchContext,
+  ThreadDataContext,
+} from "../Contexts/ThreadContext";
+import { auth, db } from "../firebase";
+import {
+  collection,
+  onSnapshot,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import styled from "styled-components";
+import Button from "../Components/Common/Button";
+import Post from "../Components/Post";
+import {
+  PlusIcon,
+  InstaIcon,
+  FacebookIcon,
+  UserIcon2,
+} from "../Components/Common/Icon";
+import FollowModal from "../Components/profile/FollowModal";
+import LinkPluse from "../Components/profile/LinkPluse";
+import ProfileEdit from "../Components/profile/ProfileEdit";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import OtherBtnModal from "../Components/profile/OtherBtnModal";
 
-// const ProfileInnner = styled.div`
-//   padding: 40px 40px 0 40px;
-//   width: 100%;
-//   height: 320px;
-//   border-radius: 40px 40px 18px 18px;
-//   background: ${(props) => props.theme.borderColor};
-//   margin-bottom: 8px;
-// `;
+const BoederWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
+  margin: 0 auto;
+  width: 680px;
+  height: 85%;
+  border-radius: 40px 40px 0px 0px;
+  background: ${(props) => props.theme.headerBg};
+  box-shadow: ${(props) => props.theme.bordershadow};
+  /* overflow: hidden; */
+  @media (max-width: 768px) {
+    position: static;
+    margin: 0;
+    width: 100vw;
+    height: calc(100% - 140px);
+    box-shadow: none;
+    border-radius: 0px;
+    background: ${(props) => props.theme.borderColor};
+    transform: translate(0%);
+  }
+`;
+
+const ProfileInnner = styled.div`
+  padding: 40px 40px 20px 40px;
+  width: calc(100% - 20px);
+  height: 306px;
+  border: 306px;
+  border-radius: 40px 40px 18px 18px;
+  background: ${(props) => props.theme.headerBg};
+  margin: 0 10px 8px;
+  @media (max-width: 768px) {
+    padding: 14px 18px;
+    width: calc(100% - 10px);
+    height: 260px;
+    border: none;
+    border-radius: 30px 30px 10px 10px;
+    background: ${(props) => props.theme.borderColor};
+    margin: 70px auto 0px;
+  }
+`;
+
+const PostlistWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  width: 100%;
+  padding: 10px 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+    margin-top: 6px;
+    padding: 0 5px;
+    gap: 5px;
+  }
+`;
 const ProfileWrap = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
+`;
+
+const Desk = styled.div`
+  height: 84px;
+  font-size: 18px;
+  color: ${(props) => props.theme.fontcolor};
+  word-break: break-all;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+`;
+
+const IdWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  @media (max-width: 768px) {
+    gap: 4px;
+  }
+`;
+
+const IdText = styled.h3`
+  font-size: 15px;
+  font-weight: 400;
+  color: ${(props) => props.theme.nomalIconColor};
 `;
 
 const ImgWrap = styled.div`
@@ -38,6 +131,8 @@ const ImgWrap = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
+  border-radius: 50px;
+  overflow: hidden;
 `;
 const Img = styled.img`
   width: 100%;
@@ -51,15 +146,21 @@ const Nick = styled.h1`
 
 const BottomWrap = styled.div`
   width: 100%;
-  height: calc(100% - 80px);
+  height: 85%;
   display: flex;
   flex-direction: column;
   gap: 25px;
+  button {
+    padding: 10px;
+    border-radius: 10px;
+    color: ${(props) => props.theme.fontcolor};
+    background-color: ${(props) => props.theme.headerBg};
+    border: 2px solid ${(props) => props.theme.borderstroke};
+  }
+  @media screen and (max-width: 768px) {
+    gap: 8px;
+  }
 `;
-// const Desk = styled.div`
-//   height: 83px;
-//   color: ${(props) => props.theme.fontcolor};
-// `;
 
 const FollowLink = styled.div`
   display: flex;
@@ -68,7 +169,11 @@ const FollowLink = styled.div`
 
 const Follow = styled.div`
   font-size: 14px;
-  color: ${(props) => props.theme.nomalIconColor};
+  color: ${(props) => props.theme.searchBar};
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const Links = styled.div`
@@ -90,7 +195,7 @@ const LinkPlus = styled.div`
 `;
 
 const PulsLinkIcon = styled.div`
-  width: 150px;
+  width: 50px;
   height: 22px;
   display: flex;
   align-items: center;
@@ -103,73 +208,192 @@ const PulsLinkIcon = styled.div`
   }
 `;
 
-const Circle = styled.div`
-  border-radius: 50px;
-  width: 24px;
-  height: 24px;
-  background: ${(props) => props.theme.nomalIconColor};
-`;
-
 const ThreadInner = styled.div`
   width: 100%;
+  height: 100%;
 `;
 
-// const Tap = styled.div`
-//   width: 100%;
-//   height: 48px;
-//   border-radius: 18px;
-//   background: ${(props) => props.theme.borderColor};
-//   display: flex;
-//   justify-content: space-between;
-//   text-align: center;
-//   line-height: 3;
-//   margin-bottom: 8px;
-//   div {
-//     height: 100%;
-//     width: 168px;
-//     color: ${(props) => props.theme.nomalIconColor};
-//   }
-// `;
-
-// const TextInput = styled.div`
-//   padding: 40px 40px 0 40px;
-//   width: 100%;
-//   height: 68px;
-//   border-radius: 18px;
-//   background: ${(props) => props.theme.borderColor};
-// `;
-
-const ModalItemLine = styled.div`
-  padding: 20px;
-  width: 100%;
-  border: 1px solid ${(props) => props.theme.borderstroke};
-  border-radius: 15px;
-  height: 87px;
-`;
-
-const ModalMainText = styled.h3`
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 20px;
   margin-bottom: 6px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+
+  @media (max-width: 768px) {
+    gap: 10px;
+    margin-bottom: 0px;
+  }
+  button {
+    flex: 0 0 auto;
+    width: 130px;
+    padding: 10px 20px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all;
+
+    @media (max-width: 768px) {
+      width: 90px;
+      padding: 8px 15px;
+      background-color: ${(props) => props.theme.borderColor};
+    }
+    @media (max-width: 480px) {
+      width: 80px;
+      padding: 6px 10px;
+    }
+  }
 `;
 
-const Tdiv = styled.div`
-  padding: 40px 40px 0 40px;
-  width: 654px;
-  margin: 0 auto 8px;
-  height: 200px;
-  border-radius: 18px;
-  background: ${(props) => props.theme.borderColor};
-  color: #000;
+const PostWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: calc(100% - 80px);
+  padding: 10px 0px 260px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  transition: transform 0.3s ease-out;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  &.bounce {
+    animation: bounce-back 1s ease-in-out;
+  }
+
+  @keyframes bounce-back {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(40px); /* 살짝 위로 올렸다가 */
+    }
+    100% {
+      transform: translateY(0px); /* 원래 자리로 돌아오기 */
+    }
+  }
+`;
+
+const ButtonStyle = styled.button`
+  background-color: ${(props) => props.theme.headerBg};
 `;
 
 const Profile = () => {
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
-  const data = useContext(ThreadDataContext);
+  const navigate = useNavigate();
+  const user = auth.currentUser; //유저정보
 
-  const { createThread, updateThread, deleteThread, updateProfile } =
-    useContext(ThreadDispatchContext);
+  const [avatar, setAvarta] = useState(null || undefined); //이미지관리목적
+  const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
+  const [editbtn, setEditbtn] = useState(true);
+  const [searchParams] = useSearchParams();
+  const emailAdress = searchParams.get("email");
+
+  // const data = useContext(ThreadDataContext);
+  // const { createThread, updateThread, deleteThread, updateProfile } =
+  //   useContext(ThreadDispatchContext);
+  //모달관련 state
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
+  const [otherBtn, setOtherBtn] = useState(false);
+  const [followNum, setFollowNum] = useState(Math.floor(Math.random() * 10));
+  const [profile, setProfile] = useState({
+    postId: "",
+    username: "",
+    userId: "",
+    userEmail: "",
+    bio: "",
+    isLinkPublic: true,
+    isProfilePublic: true,
+    img: `${avatar ?? ""}`,
+    isFollowing: true,
+    followNum: followNum,
+  });
+
+  const [savedData, setSavedData] = useState([]); // 모든 데이터를 저장
+  const [filteredData, setFilteredData] = useState([]); // 필터링된 데이터를 저장
+  const [contentType, setContentType] = useState("thresds"); // 선택된 필터 상태
+  // NotificationList에서 데이터를 받아옴
+  const [isBouncing, setIsBouncing] = useState(false);
+  const handleDataUpdate = (listData) => {
+    if (listData.length > 0) {
+      setSavedData(listData); // 전체 데이터를 저장
+      setFilteredData(listData); // 필터링 없이 모든 데이터를 먼저 보여줌
+    }
+  };
+
+  const buttonCheck = () => {
+    if (user?.email === emailAdress) {
+      setEditbtn(true);
+    } else {
+      setEditbtn(false);
+    }
+  };
+
+  const CheckProfile = async () => {
+    console.log("프로필 체크 가동");
+    try {
+      const profileQuery = query(
+        collection(db, "profile"),
+        where("userEmail", "==", emailAdress)
+      );
+      const unsubscribe = onSnapshot(profileQuery, (querySnapshot) => {
+        //db에 firebase에 사람이 있다면 ?
+        if (!querySnapshot.empty) {
+          const profileDoc = querySnapshot.docs[0].data(); //이메일이 프로필db에 있는 사람의 데이터.
+          const imgUrl = profileDoc.img;
+          // const imgUrl = ref(storage, `avatars/${profileDoc.userId}`);
+
+          // 에러
+          setAvarta(imgUrl);
+          //유저 정보가 있다면
+          if (!profileDoc.empty) {
+            setProfile((prev) => ({
+              ...prev,
+              postId: profileDoc.postId,
+              username: profileDoc.username,
+              userEmail: profileDoc.userEmail,
+              bio: profileDoc.bio,
+              isLinkPublic: profileDoc.isLinkPublic,
+              isProfilePublic: profileDoc.isProfilePublic,
+              img: imgUrl,
+              isFollowing: profileDoc.isFollowing,
+              followNum: profileDoc.followNum,
+            }));
+          }
+        } else {
+          // 사람이 없다면?
+          setProfile((prev) => ({
+            ...prev,
+            postId: "",
+            username: emailAdress,
+            userEmail: emailAdress,
+            bio: "",
+            isLinkPublic: true,
+            isProfilePublic: true,
+            img: null,
+            isFollowing: true,
+            followNum: profile.followNum,
+          }));
+          console.log("유저가 없을 때 읽기 가동 완료");
+          console.log(profile);
+          console.log("유저 없을 때 프로필 체크");
+        }
+      });
+      return () => unsubscribe();
+    } catch (error) {
+      console.error("Error fetching profile: ", error);
+    }
+  };
+
+  useEffect(() => {
+    CheckProfile();
+    buttonCheck();
+  }, [emailAdress]);
 
   const onfollow = () => {
     setFollowModal((prev) => !prev);
@@ -183,83 +407,247 @@ const Profile = () => {
 
   const onProfileEdite = () => {
     setEditModal((prev) => !prev);
-    //프로필수정
+    //프로필수정모달
   };
 
+  const onOtherbtn = () => {
+    setOtherBtn((prev) => !prev);
+    //프로필수정모달
+  };
+
+  useEffect(() => {
+    let unsubscribe = null;
+    const fetchPosts = async () => {
+      const postsQuery = query(
+        collection(db, "contents"),
+        where("email", "==", emailAdress),
+        orderBy("createdAt", "desc"),
+        limit(15)
+      );
+      unsubscribe = onSnapshot(postsQuery, (snapshot) => {
+        const posts = snapshot.docs.map((doc) => {
+          const { createdAt, photos, videos, post, userId, username, email } =
+            doc.data();
+          return {
+            id: doc.id,
+            createdAt,
+            photos: photos || [],
+            videos: videos || [],
+            post,
+            userId,
+            username,
+            email,
+          };
+        });
+        setPosts(posts);
+      });
+    };
+    fetchPosts();
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    let unsubscribe = null;
+    const fetchPosts = async () => {
+      const postsQuery = query(
+        collection(db, "contents"),
+        where("email", "==", emailAdress),
+        orderBy("createdAt", "desc"),
+        limit(15)
+      );
+      unsubscribe = onSnapshot(postsQuery, (snapshot) => {
+        const posts = snapshot.docs.map((doc) => {
+          const { createdAt, photos, videos, post, userId, username, email } =
+            doc.data();
+          return {
+            id: doc.id,
+            createdAt,
+            photos: photos || [],
+            videos: videos || [],
+            post,
+            userId,
+            username,
+            email,
+          };
+        });
+        setPosts(posts);
+      });
+    };
+    fetchPosts();
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, []);
+
+  const handleProfileChange = (updatedProfile) => {
+    setProfile(updatedProfile);
+  };
+
+  // 필터링
+  const filterList = (type) => {
+    if (type === "thresds") {
+      setFilteredData(posts);
+    } else if (type === "photos") {
+      const filteredPhotos = posts.filter((data) => data.photos.length > 0);
+      setFilteredData(filteredPhotos);
+    } else if (type === "videos") {
+      const filteredVideos = posts.filter((data) => data.videos.length > 0);
+      setFilteredData(filteredVideos);
+    }
+  };
+
+  // 버튼 클릭 시 필터링 적용
+  const handleButtonClick = (type) => {
+    setContentType(type); // 필터 상태 업데이트
+    filterList(type); // 필터링 적용
+  };
+
+  const handleScroll = () => {
+    const element = wrapperRef.current;
+    // 스크롤이 가장 위에 도달했는지 확인
+    if (element.scrollTop === 0) {
+      // 텐션감을 위한 애니메이션 트리거
+      setIsBouncing(true);
+
+      // 0.5초 후에 애니메이션 클래스 제거
+      setTimeout(() => {
+        setIsBouncing(false);
+      }, 500);
+    }
+  };
+
+  const wrapperRef = useRef(null);
+
+  const getButtonStyle = (type) => ({
+    color: contentType === type ? "#000" : "rgba(204, 204, 204, 0.8)",
+    borderBottom: contentType === type ? "1.5px solid #000" : "none",
+  });
+
+  const buttons = [
+    { label: "스레드", type: "thresds" },
+    { label: "답글", type: "comment" },
+    { label: "사진", type: "photos" },
+    { label: "동영상", type: "videos" },
+  ];
+
   return (
-    // <Border type="borderWrapper">
     <>
-      <ProfileInnner isSmallScreen={isSmallScreen}>
-        <ProfileWrap>
-          <IdWrap isSmallScreen={isSmallScreen}>
-            <Nick>이과사</Nick>
-            <IdText isSmallScreen={isSmallScreen}>Prince</IdText>
-          </IdWrap>
-          <ImgWrap isSmallScreen={isSmallScreen}>
-            <Img src={Profileimg} />
-          </ImgWrap>
-        </ProfileWrap>
-        <BottomWrap>
-          <Desk isSmallScreen={isSmallScreen}>확인용 문구</Desk>
-          <FollowLink>
-            {followModal ? (
-              <Modal isOpen={true} onClose={onfollow}></Modal>
-            ) : (
-              <Modal isOpen={false} onClose={onfollow}></Modal>
-            )}
-            <Follow onClick={onfollow}>팔로워 00</Follow>
-            <Links>
-              {linkmodal ? (
-                <Modal isOpen={true} onClose={onLinkPlus} height={"200px"}>
-                  <ModalItemLine>
-                    <ModalMainText>링크 추가</ModalMainText>
-                    <input
-                      style={{
-                        width: "100%",
-                        borderBottom: ` 1px solid ${(props) =>
-                          props.theme.borderstroke}`,
-                        outline: "none",
-                      }}
-                    />
-                  </ModalItemLine>
-                </Modal>
+      {followModal ? (
+        <FollowModal open={true} close={onfollow} />
+      ) : (
+        <FollowModal open={false} close={onfollow} />
+      )}
+      {linkmodal ? (
+        <LinkPluse open={true} close={onLinkPlus} />
+      ) : (
+        <LinkPluse open={false} close={onLinkPlus} />
+      )}
+      {editmodal ? (
+        <ProfileEdit
+          open={true}
+          close={onProfileEdite}
+          profile={profile}
+          onProfileChange={() => handleProfileChange}
+        />
+      ) : (
+        <ProfileEdit
+          open={false}
+          close={onProfileEdite}
+          profile={profile}
+          onProfileChange={() => handleProfileChange}
+        />
+      )}
+      {otherBtn ? (
+        <OtherBtnModal
+          open={true}
+          close={onOtherbtn}
+          profile={profile}
+          onProfileChange={() => handleProfileChange}
+        />
+      ) : (
+        <OtherBtnModal
+          open={false}
+          close={onOtherbtn}
+          profile={profile}
+          onProfileChange={() => handleProfileChange}
+        />
+      )}
+      <BoederWrapper>
+        <PostlistWrapper>
+          <ProfileInnner>
+            <ProfileWrap>
+              <IdWrap>
+                <Nick> {profile.username}</Nick>
+                <IdText>{emailAdress}</IdText>
+              </IdWrap>
+              <ImgWrap>
+                {Boolean(avatar) ? (
+                  <Img src={avatar} />
+                ) : (
+                  <UserIcon2 width="54" fill="#BABABA" />
+                )}
+              </ImgWrap>
+            </ProfileWrap>
+            <BottomWrap>
+              <Desk>{profile.bio ?? "프로필을 꾸며보세요!"}</Desk>
+              <FollowLink>
+                <Follow onClick={onfollow}>팔로워 {profile.followNum}</Follow>
+                {profile.isLinkPublic ? (
+                  <Links>
+                    {user?.email === emailAdress ? (
+                      <LinkPlus onClick={onLinkPlus}>
+                        <PlusIcon width="16px" />
+                      </LinkPlus>
+                    ) : null}
+
+                    <PulsLinkIcon>
+                      <InstaIcon />
+                      <FacebookIcon />
+                    </PulsLinkIcon>
+                  </Links>
+                ) : null}
+              </FollowLink>
+              {user?.email === emailAdress ? (
+                <Button
+                  type="edit"
+                  text="프로필 수정"
+                  onClick={onProfileEdite}
+                  heith={"40px"}
+                />
               ) : (
-                <Modal isOpen={false} onClose={onLinkPlus}></Modal>
+                <Button type="edit" text="팔로잉" onClick={onOtherbtn} />
               )}
-              <LinkPlus onClick={onLinkPlus}>
-                <PlusIcon width="16px" />
-              </LinkPlus>
-              <PulsLinkIcon>
-                <Circle />
-                <Circle />
-                <Circle />
-                <InstaIcon />
-                <FacebookIcon />
-              </PulsLinkIcon>
-            </Links>
-          </FollowLink>
-          {editmodal ? (
-            <Modal isOpen={true} onClose={onProfileEdite}></Modal>
-          ) : (
-            <Modal isOpen={false} onClose={onProfileEdite}></Modal>
-          )}
-          <Button type="edit" text="프로필 수정" onClick={onProfileEdite} />
-        </BottomWrap>
-      </ProfileInnner>
-      <ThreadInner>
-        <Tap isSmallScreen={isSmallScreen}>
-          <li>스레드</li>
-          <li>답글</li>
-          <li>리포트</li>
-          <li>인스타</li>
-        </Tap>
-        <TextInput isSmallScreen={isSmallScreen} />
-        <Tdiv>
-          {data[0].userId} {data[0].nickname} {data[0].desc}
-        </Tdiv>
-      </ThreadInner>
+            </BottomWrap>
+          </ProfileInnner>
+          <ThreadInner>
+            <ButtonGroup>
+              {buttons.map((button) => (
+                <ButtonStyle
+                  key={button.type}
+                  style={getButtonStyle(button.type)}
+                  onClick={() => handleButtonClick(button.type)}
+                >
+                  {button.label}
+                </ButtonStyle>
+              ))}
+            </ButtonGroup>
+            <PostWrap
+              ref={wrapperRef}
+              className={isBouncing ? "bounce" : ""}
+              onScroll={handleScroll}
+            >
+              {contentType === "thresds"
+                ? posts.map((post) => <Post key={post.id} {...post} />)
+                : filteredData.map((filter) => (
+                    <Post key={filter.id} {...filter} />
+                  ))}
+            </PostWrap>
+          </ThreadInner>
+        </PostlistWrapper>
+      </BoederWrapper>
     </>
-    //</Border>
   );
 };
 

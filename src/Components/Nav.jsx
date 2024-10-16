@@ -1,40 +1,66 @@
-// src/components/Nav.jsx
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
-import Logo from "./Logo";
+import Logo from "./LoadingLogo/Logo";
+import { auth, db, storage } from "../firebase";
 import { useAuth } from "../Contexts/AuthContext";
-import { UserIcon1 } from "./Common/Icon";
-import { GoBack } from "./Common/Icon";
 import MobileNav from "./MobileNav";
+import { UserIcon2 } from "./Common/Icon";
+
+import { ref } from "firebase/storage";
+
 const AllWrapper = styled.div`
   width: 100%;
   height: 100%;
+  padding: 20px 0px;
 `;
 
 const Wrapper = styled.nav`
   width: 100%;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
   /* padding: 0px 20px; */
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const LogoWrapper = styled.div`
-  width: 40px; /* 고정 크기 설정 */
+  width: 40px;
+  padding-left: 20px;
   cursor: pointer;
-  @media screen and (width: 390px) {
+  @media screen and (width: 768px) {
     display: none;
   }
 `;
 
 const MyProfileImgs = styled.div`
+  position: absolute;
+  right: 20px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
   @media screen and (width: 390px) {
     display: none;
+  }
+`;
+
+const NavLoginBtn = styled.button`
+  position: absolute;
+  right: 20px;
+  background-color: ${(props) => props.theme.logoColor};
+  color: ${(props) => props.theme.btnBgColor};
+  width: 70px;
+  height: 37px;
+  border-radius: 12px;
+  cursor: pointer;
+  outline: none;
+  a {
+    width: 100%;
+    height: 100%;
   }
 `;
 
@@ -51,6 +77,7 @@ const DefaultImgWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid red;
 `;
 
 const Ul = styled.ul`
@@ -67,7 +94,7 @@ const Ul = styled.ul`
     width: 100%;
     height: 70px;
     position: fixed;
-    bottom: 5200px;
+    bottom: 0;
     left: 0;
     border-radius: 0;
     z-index: 100;
@@ -86,7 +113,6 @@ const Li = styled.li`
   justify-content: center;
   transition: all 0.4s;
   color: #bababa;
-  /* color: ${(props) => (props.$isSelected ? "#fff" : "#BABABA")}; */
   background-color: ${(props) =>
     props.$isSelected
       ? props.theme.logoColor
@@ -97,75 +123,63 @@ const Li = styled.li`
   &:hover {
     background-color: ${(props) => props.theme.fontcolor};
     color: ${(props) => props.theme.bodyBg};
-
-    /* background-color: ${(props) =>
-      props.$isSelected ? props.theme.fontcolor : "#f0f0f0"}; */
   }
 
   svg {
     width: 24px;
     height: 24px;
-    stroke: currentColor; /* stroke 색상을 부모의 color에 따라 변경 */
-    fill: none; /* fill을 없애거나 필요에 따라 조정 */
+    stroke: currentColor;
+    fill: none;
     transition: stroke 0.4s;
   }
-  ${(props) =>
-    props.$isSelected /* $isSelected로 변경 */ &&
-    css`
-      color: ${(props) => props.theme.headerselect};
-      background-color: ${(props) => props.theme.logoColor};
-    `}
-  @media screen and (width: 390px) {
-    &:hover {
-      background-color: ${(props) => props.theme.btnBgColor};
-      color: ${(props) => props.theme.selecticoncolor};
-    }
-  }
 `;
-const menuItems = styled.img`
-  ${(props) =>
-    props.$isSelected /* $isSelected로 변경 */ &&
-    css`
-      color: ${(props) => props.theme.selectIconColor};
-    `}
+
+const RightDiv = styled.div`
+  width: 40px;
 `;
-const BackNavwrapper = styled.div`
-  @media (max-width: 768px) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 70px;
-    background: ${(props) => props.theme.borderColor};
-    z-index: 1000;
-    @media (min-width: 768px) {
-      display: none; // 768px 이상의 화면에서는 숨기기
-    }
-  }
-`;
-const Backdesc = styled.div`
+
+const ImgBox = styled.label`
+  width: 50px;
+  height: 50px;
   display: flex;
+  justify-content: center;
   align-items: center;
-  width: 70px;
-  height: 100%;
-  cursor: pointer;
-  @media (min-width: 768px) {
-    display: none; // 768px 이상의 화면에서는 숨기기
-  }
+  margin-bottom: 10px;
+  border-radius: 50px;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.mouseHoverBg};
 `;
-const BackIcon = styled.div`
-  display: flex;
-  width: 24px;
-  height: 24px;
-  transform: translateX(5px);
-  transform: translateY(2px);
-  align-items: center;
-  margin-left: 10px;
-`;
-const Backtxt = styled.div`
-  font-size: 15px;
-`;
+
 const Nav = () => {
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const user = auth.currentUser;
+  const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
+  const navigate = useNavigate();
+  const location = useLocation(); // 현재 경로 가져오기
+  const [selectedMenu, setSelectedMenu] = useState(0);
+
+  // 비동기 함수로 분리하여 useEffect에서 호출
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      if (!user) return; // 사용자가 없는 경우 중단
+      try {
+        const locationRef = ref(storage, `avatars/${user?.uid}}`);
+        const result = await uploadBytes(locationRef, file);
+        const avatarUrl = await getDownloadURL(result.ref);
+        setAvarta(avatarUrl);
+      } catch (error) {
+        console.error("Error fetching avatar:", error);
+      }
+    };
+
+    fetchAvatar(); // 비동기 함수 호출
+
+    return () => {
+      // 컴포넌트 언마운트 시 클린업
+      setAvarta(""); // 클린업 작업으로 아바타 초기화
+    };
+  }, [user]);
+
   const menuItems = [
     {
       name: "Home",
@@ -242,7 +256,7 @@ const Nav = () => {
           />
         </svg>
       ),
-      path: "postform",
+      path: "/postform",
     },
     {
       name: "Search",
@@ -302,12 +316,17 @@ const Nav = () => {
     },
   ];
 
-  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  // URL이 변경될 때마다 현재 경로에 맞는 메뉴 선택
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const selectedIndex = menuItems.findIndex(
+      (item) => item.path === currentPath
+    );
+    if (selectedIndex !== -1) {
+      setSelectedMenu(selectedIndex);
+    }
+  }, [location.pathname, menuItems]);
 
-  console.log(currentUser);
-  const navigate = useNavigate();
-
-  const [selectedMenu, setSelectedMenu] = useState(0);
   const onSelected = (index, path) => {
     setSelectedMenu(index);
     navigate(path); // path에 따라 페이지 이동
@@ -315,20 +334,19 @@ const Nav = () => {
 
   return (
     <AllWrapper>
-      <MobileNav></MobileNav>
+      <MobileNav />
       <Wrapper>
         <Link to="/">
           <LogoWrapper>
             <Logo width={40} />
           </LogoWrapper>
         </Link>
-
         <Ul>
           {menuItems.map((menu, index) => (
             <Li
               key={index}
-              $itemCount={menuItems.length} /* $itemCount로 변경 */
-              $isSelected={selectedMenu === index} /* $isSelected로 변경 */
+              $itemCount={menuItems.length}
+              $isSelected={selectedMenu === index}
               onClick={() => onSelected(index, menu.path)}
               aria-current={selectedMenu === index ? "page" : undefined} // 접근성 향상
             >
@@ -336,19 +354,24 @@ const Nav = () => {
             </Li>
           ))}
         </Ul>
-        <MyProfileImgs>
-          {currentUser ? (
+        {currentUser ? (
+          <MyProfileImgs>
             <Link to="/profile">
-              <Img src="/profile.png" alt="Profile" />
+              <ImgBox htmlFor="profileImg">
+                {avatar == null || avatar == "" ? (
+                  <UserIcon2 width="54" fill="#BABABA" />
+                ) : (
+                  <Img src={avatar} />
+                )}
+              </ImgBox>
             </Link>
-          ) : (
-            <Link to="/login">
-              <DefaultImgWrapper src="/profile.png" alt="Profile">
-                <UserIcon1 />
-              </DefaultImgWrapper>
-            </Link>
-          )}
-        </MyProfileImgs>
+          </MyProfileImgs>
+        ) : (
+          <NavLoginBtn>
+            <Link to="/login">로그인</Link>
+          </NavLoginBtn>
+        )}
+        <RightDiv />
       </Wrapper>
     </AllWrapper>
   );

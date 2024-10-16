@@ -60,7 +60,7 @@ const BorderItem = styled.div`
     `
     width: ${(props) => (props.isSmallScreen ? "100%" : "485.41px")}; // 수정!
     height: ${(props) => (props.isSmallScreen ? "100%" : "137px")};
-    background: #F5F5F5;
+    background: ${(props) => props.theme.borderColor};
     margin-top: 30px;
     padding: 24px;
     border: none;
@@ -76,7 +76,7 @@ const BorderItem = styled.div`
     `
     width: ${(props) => (props.isSmallScreen ? "100%" : "485.41px")}; // 수정!
     height: ${(props) => (props.isSmallScreen ? "100%" : "536px")};
-    background: #F5F5F5;
+     background: ${(props) => props.theme.borderColor};
     margin-top: 30px;
     padding: 24px;
     border: none;
@@ -84,6 +84,24 @@ const BorderItem = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+    `}
+  ${(
+    { type, isSmallScreen } // 다은 추가! (설정 아이템 웨퍼)
+  ) =>
+    type === "settingsWrapper" &&
+    `
+    width: 558.67px; // 수정!
+    height: 100%;
+    padding: 20px 0;
+    background: #fff;
+    margin-top: 30px;
+    border: 1px solid rgb(213, 213, 213);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
     align-items: center;
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
     `}

@@ -9,8 +9,11 @@ import BottomNav from "../Components/MobileNav";
 const LayoutWrapper = styled.div`
   width: 100%;
   overflow: hidden;
-  padding: 20px 20px;
+  /* padding: 20px 20px; */
   position: relative;
+  @media screen and (max-width: 768px) {
+    padding: 0px;
+  }
 `;
 
 const Layout = () => {

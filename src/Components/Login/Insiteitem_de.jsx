@@ -29,6 +29,8 @@ const InsitesWrapper = styled.div`
     props.isSmallScreen ? "100%" : "auto"}; // 모바일에서는 100% 너비
   gap: ${(props) => (props.isSmallScreen ? "0" : "10px")};
   margin: 0; /* 박스 간 간격 제거 */
+  background: ${(props) => props.theme.borderColor};
+  border-radius: 20px;
 `;
 
 const InsitesTitle = styled.div`
@@ -44,7 +46,7 @@ const BorderItemTitle = styled.div`
   padding: 0 20px;
   font-weight: bold;
   margin: 0 0 20px;
-  color: #181818;
+  color: ${(props) => props.theme.fontColor};
 `;
 
 const Info = styled.div`
@@ -94,7 +96,7 @@ const TotalFollow = styled.div`
   margin: 12px 0;
 `;
 
-const Line = styled.hr`
+export const Line = styled.hr`
   width: 96%;
   margin: 20px 0;
   border: none;
