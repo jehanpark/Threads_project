@@ -38,6 +38,8 @@ export const lightTheme = {
   btnbottom: "1px solid rgba(204, 204, 204, 0.4)",
   // 다은 새로 추가(설정부분)
   activeBorder: "#181818",
+  modalfont: "#999999",
+  modalhoverbg: "#f6f6f6",
 };
 
 export const darkTheme = {
@@ -75,9 +77,10 @@ export const darkTheme = {
   readBG: "linear-gradient(145deg, #555, #666)",
   readTextColor: "#bbb",
   btnbottom: "1px solid #fff",
-    // 다은 새로 추가(설정부분)
-    activeBorder: "#fff",
-    modalfont: "#999999",
+  // 다은 새로 추가(설정부분)
+  activeBorder: "#fff",
+  modalfont: "#999999",
+  modalhoverbg: "#f6f6f6",
 };
 
 const GlobalStyles = createGlobalStyle`

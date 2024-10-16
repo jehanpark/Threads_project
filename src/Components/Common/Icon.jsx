@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useState } from "react";
+import { useMediaQuery } from "@mui/material";
 
 // StyledSvg 스타일링
 const StyledSvg = styled.svg`
@@ -252,7 +253,10 @@ export const HeartIcon = ({ width, initialFill }) => {
       height={height}
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ cursor: "pointer", transition: "fill 0.2s ease, stroke 0.2s ease" }} // 부드러운 전환 추가
+      style={{
+        cursor: "pointer",
+        transition: "fill 0.2s ease, stroke 0.2s ease",
+      }} // 부드러운 전환 추가
     >
       <path
         d="M20.8401 4.60999C20.3294 4.099 19.7229 3.69364 19.0555 3.41708C18.388 3.14052 17.6726 2.99817 16.9501 2.99817C16.2276 2.99817 15.5122 3.14052 14.8448 3.41708C14.1773 3.69364 13.5709 4.099 13.0601 4.60999L12.0001 5.66999L10.9401 4.60999C9.90843 3.5783 8.50915 2.9987 7.05012 2.9987C5.59109 2.9987 4.19181 3.5783 3.16012 4.60999C2.12843 5.64169 1.54883 7.04096 1.54883 8.49999C1.54883 9.95903 2.12843 11.3583 3.16012 12.39L4.22012 13.45L12.0001 21.23L19.7801 13.45L20.8401 12.39C21.3511 11.8792 21.7565 11.2728 22.033 10.6053C22.3096 9.93789 22.4519 9.22248 22.4519 8.49999C22.4519 7.77751 22.3096 7.0621 22.033 6.39464C21.7565 5.72718 21.3511 5.12075 20.8401 4.60999Z"
@@ -266,7 +270,6 @@ export const HeartIcon = ({ width, initialFill }) => {
     </StyledSvg>
   );
 };
-
 
 //coment
 export const Coment = ({ width, fill }) => {
@@ -1413,133 +1416,91 @@ export const IconWrapper = styled.div`
   padding: ${(props) => props.wrapperPadding || "5px"};
   background: ${(props) => props.background || "#f5f5f5"};
   border-radius: ${(props) => props.borderRadius || "50%"};
-  z-index: ${(props) => props.zIndex || "1"};
+  z-index: ${(props) => props.zIndex || ""};
 `;
 // 팔로워 아이콘
-export const FollowerIcon = ({ width }) => {
-  const height = (width / 86) * 17.411;
+
+export const FollowerIcon = ({ width = 436 }) => {
+  const isTablet = useMediaQuery("(max-width: 1024px)");
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  // 모바일, 태블릿 화면에 맞춰 크기 조정 (최소 크기 제한)
+  const adjustedWidth = isMobile
+    ? Math.max(width * 0.8, 300)
+    : isTablet
+    ? Math.max(width * 0.9, 350)
+    : width;
+  const height = (adjustedWidth / 430) * 280;
+  const strokeWidth = adjustedWidth / 100;
 
   return (
-    <svg width="436" height="280">
+    <svg
+      width="100%" // 부모 컨테이너에 맞게 꽉 채우기
+      height="100%"
+      viewBox="0 0 436 280"
+      preserveAspectRatio="xMidYMid meet" // 비율 유지하면서 중앙 정렬
+    >
       <g transform="translate(60, 20)">
+        {/* 아래 축 */}
         <g
           transform="translate(0, 225)"
           fill="none"
-          fontSize="10"
-          fontFamily="sans-serif"
           textAnchor="middle"
-        >
-          <g className="tick" opacity="1" transform="translate(0.5,0)">
-            <line stroke="gray" y2="6"></line>
-            <text
-              fill="black"
-              y="20"
-              dy="0.71em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            ></text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(346.5,0)">
-            <line stroke="gray" y2="6"></line>
-            <text
-              fill="black"
-              y="20"
-              dy="0.71em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            ></text>
-          </g>
-        </g>
-        <g
-          fill="none"
           fontSize="10"
-          fontFamily="Arial, sans-serif"
-          textAnchor="end"
         >
-          <g className="tick" opacity="1" transform="translate(0,225.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
+          {["0.5", "346.5"].map((x, idx) => (
+            <g
+              key={idx}
+              className="tick"
+              opacity="1"
+              transform={`translate(${x},0)`}
             >
-              0
-            </text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(0,180.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            >
-              20
-            </text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(0,135.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            >
-              40
-            </text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(0,90.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            >
-              60
-            </text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(0,45.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            >
-              80
-            </text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(0,0.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            >
-              100
-            </text>
-          </g>
+              <line stroke="gray" y2="6" />
+              <text
+                y="20"
+                dy="0.71em"
+                fontFamily="Arial, sans-serif"
+                fontSize="13px"
+              />
+            </g>
+          ))}
         </g>
+
+        {/* 왼쪽 축 */}
+        <g fill="none" textAnchor="end">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <g
+              key={i}
+              className="tick"
+              opacity="1"
+              transform={`translate(0, ${225 - i * 45}.5)`}
+            >
+              <line stroke="gray" x2="346" />
+              <text
+                x="-15"
+                dy="0.32em"
+                fontFamily="Arial, sans-serif"
+                fontSize="13px"
+              >
+                {i * 20}
+              </text>
+            </g>
+          ))}
+        </g>
+
+        {/* 축의 경계선 */}
         <path
           fill="none"
           stroke="gray"
           strokeLinecap="round"
-          strokeWidth="3"
+          strokeWidth={strokeWidth}
           d="M0,222.75L346,222.75"
-        ></path>
+        />
       </g>
     </svg>
   );
 };
+
 // 공유 아이템 수정
 export const ShareIconNew = ({
   width,
@@ -1599,6 +1560,28 @@ export const RightArrowIcon = ({ width, fill }) => {
     </svg>
   );
 };
+
+export const RightNewArrowIcon = ({ width = "21px", fill = "#000000" }) => {
+  const height = (parseInt(width) / 21) * 12; // width에 따라 height 계산
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 23 30"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+    >
+      <path
+        d="M1 1L10.5 10.5L1 20"
+        stroke={fill}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 // 권한
 export const CloseLockIcon = ({ width }) => {
   const height = width ? (width * 23) / 19 : "22px";
@@ -1643,7 +1626,6 @@ export const EalthIcon = (props) => {
       <circle
         cx="12"
         cy="12"
-        // r="9"
         stroke="#000000"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1710,10 +1692,10 @@ export const SecurityIcon = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20px" // 원하는 아이콘의 크기로 조정
+      width="20px"
       height="20px"
       viewBox="0 0 1024 1024"
-      fill="#000000" // 아이콘 색상 설정
+      fill="#000000"
       {...props}
     >
       <path d="M908.008473 139.713707L529.299213 3.059374a51.005609 51.005609 0 0 0-17.397182-3.059374c-5.950311 0-11.855934 1.03125-17.534682 3.090312L117.015902 139.744645c-20.394681 7.397498-34.704989 26.774679-34.70499 48.472173v323.781463c0 72.287165 23.299368 144.584643 67.763417 214.87806 34.082802 53.875921 81.520288 106.71028 140.256832 157.045577 98.209345 84.156849 195.655565 132.70121 199.749627 134.725896a51.957797 51.957797 0 0 0 22.96593 5.352186c7.717185 0 15.485933-1.732499 22.608431-5.197498 4.094061-1.993749 101.495594-49.78186 199.797752-133.605272 58.794982-50.132485 105.520905-102.966844 139.627769-157.031827 44.446861-70.444666 66.601542-143.171831 66.601543-216.167122V188.216818c0.003437-21.731868-13.230933-41.133112-33.67374-48.503111zM164.810887 511.757656V226.768368c0-10.848747 6.648123-20.539056 16.847183-24.237805l320.759902-116.692777c2.859999-1.034687 6.142811-1.797812 9.580309-1.797812v427.961745h349.631456c0.020625 0 0.044687 0.464062 0.044688 0.759687-0.06875 93.255909-47.038736 185.679943-139.58652 275.670228-72.273415 70.279666-154.384953 120.436213-196.621503 144.096519-3.915311 2.196562-10.027184 3.231249-13.464683 3.231249V511.867656l-347.190832-0.11z" />
@@ -1738,7 +1720,7 @@ export const AccountStatusIcon = ({
     >
       <path
         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
-        fill={fill} // props로 전달받은 fill 사용
+        fill={fill}
       />
     </svg>
   );
@@ -1764,9 +1746,65 @@ export const FamilyIcon = ({
         fillRule="evenodd"
         clipRule="evenodd"
         d="M16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM9.25 3.75C9.25 4.44036 8.69036 5 8 5C7.30964 5 6.75 4.44036 6.75 3.75C6.75 3.05964 7.30964 2.5 8 2.5C8.69036 2.5 9.25 3.05964 9.25 3.75ZM12 8H9.41901L11.2047 13H9.081L8 9.97321L6.91901 13H4.79528L6.581 8H4V6H12V8Z"
-        fill={fill} // props로 받은 fill 값 사용
+        fill={fill}
       />
     </svg>
+  );
+};
+// 경고 아이콘 스타일
+const AttentionNoteContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  position: absolute;
+  margin-top: -88px;
+  margin-left: 12px;
+  background-color: black;
+  border-radius: 10px;
+  padding: 2px 6px;
+  ::after {
+    display: block;
+    width: 5px;
+    height: 5px;
+    background-color: black;
+    position: absolute;
+    top: 17px;
+    left: 10px;
+    transform: rotate(45deg);
+    content: "";
+  }
+`;
+
+// 경고 메시지 창 스타일
+export const AttentionNote = ({ children }) => {
+  return (
+    <AttentionNoteContainer>
+      {/* 경고 아이콘 추가 */}
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect x="2" y="2" width="20" height="20" rx="10" fill="none" />
+        <path
+          d="M12 8v4"
+          stroke="#FFF"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M12 16h.01"
+          stroke="#FFF"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <span style={{ color: "#FFF", fontSize: "10px" }}>{children}</span>
+    </AttentionNoteContainer>
   );
 };
 
