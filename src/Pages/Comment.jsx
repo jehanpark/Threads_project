@@ -12,6 +12,7 @@ import {
   PictureIcon,
   MicIcon,
   HashtagIcon,
+  UserIcon2,
 } from "../Components/Common/Icon";
 import { useAuth } from "../Contexts/AuthContext";
 import { addDoc, serverTimestamp, updateDoc, doc } from "firebase/firestore";
@@ -21,6 +22,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
 import BackBtn from "../Components/post/BackBtn";
 import Loading from "../Components/LoadingLogo/Loading";
+import fetchUserProfileImage from "../Utils/fetchProfile";
 
 const AllDesc = styled.div``;
 
@@ -294,6 +296,7 @@ const Comment = ({ id }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const [profileImg, setProfileImg] = useState("");
 
   const {
     postContent,
@@ -305,8 +308,9 @@ const Comment = ({ id }) => {
     dms: passedDms,
     retweets: passedRetweets,
     postId,
+    userId,
   } = location.state || {};
-  console.log(location.state);
+
   // Firebase에서 전달된 값을 상태로 설정
   useEffect(() => {
     setLikes(passedLikes);
@@ -320,6 +324,22 @@ const Comment = ({ id }) => {
       return;
     }
   }, [postId]);
+
+  useEffect(() => {
+    const getUserProfileImage = async () => {
+      try {
+        const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
+        setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+      }
+    };
+
+    // userId가 있을 때만 프로필 이미지 가져오기
+    if (userId) {
+      getUserProfileImage();
+    }
+  }, [userId]);
 
   // Firestore에서 댓글 데이터를 가져오는 useEffect
   useEffect(() => {
@@ -457,7 +477,11 @@ const Comment = ({ id }) => {
             <Wrapper>
               <PostWrapper>
                 <Header>
-                  <UserImage src="http://localhost:5173/profile.png"></UserImage>
+                  {profileImg ? (
+                    <UserImage src={profileImg} alt="User Profile"></UserImage>
+                  ) : (
+                    <UserIcon2 />
+                  )}
                   <Username>{username}</Username>
                   <Timer>{renderTimeAgo()}</Timer>
                 </Header>

@@ -9,6 +9,7 @@ import {
   DmIcon,
   RetweetIcon,
   Coment,
+  UserIcon2,
 } from "../Components/Common/Icon";
 import BackBtn from "../Components/post/BackBtn";
 import {
@@ -22,6 +23,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../Contexts/AuthContext";
+import fetchUserProfileImage from "../Utils/fetchProfile";
 
 const AllWrap = styled.div`
   width: 100%;
@@ -206,6 +208,7 @@ const CommentHeader = styled.div`
 const CommentUserImage = styled.img`
   width: 34px;
   height: 34px;
+  border-radius: 50%;
 `;
 const CommentUsername = styled.span`
   font-size: 14px;
@@ -268,6 +271,8 @@ const PostComment = () => {
   const [files, setFiles] = useState([]);
   const [postOwnerId, setPostOwnerId] = useState("");
   const { currentUser } = useAuth();
+  const [profileImg, setProfileImg] = useState("");
+  const [profileImages, setProfileImages] = useState({}); // 댓글
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -284,6 +289,22 @@ const PostComment = () => {
     dms: passedDms,
     retweets: passedRetweets,
   } = location.state || {};
+
+  useEffect(() => {
+    const getUserProfileImage = async () => {
+      try {
+        const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
+        setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+      }
+    };
+
+    // userId가 있을 때만 프로필 이미지 가져오기
+    if (userId) {
+      getUserProfileImage();
+    }
+  }, [userId]);
 
   useEffect(() => {
     if (userId) {
@@ -317,7 +338,13 @@ const PostComment = () => {
         }));
 
         setComments(commentsList); // 댓글 리스트 저장
-        setCommentsCount(commentsList.length); // 댓글 수 저장 (이 부분을 수정)
+        setCommentsCount(commentsList.length);
+        const profileImagesMap = {};
+        for (let comment of commentsList) {
+          const profileImg = await fetchUserProfileImage(comment.userId);
+          profileImagesMap[comment.userId] = profileImg || ""; // 프로필 이미지가 없으면 빈 문자열
+        }
+        setProfileImages(profileImagesMap);
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
@@ -405,7 +432,11 @@ const PostComment = () => {
         <BoederWrapper>
           <PostWrapper>
             <Header>
-              <UserImage src="http://localhost:5173/profile.png"></UserImage>
+              {profileImg ? (
+                <UserImage src={profileImg} alt="User Profile"></UserImage>
+              ) : (
+                <UserIcon2 />
+              )}
               <Username>{username}</Username>
               <Timer>{renderTimeAgo()}</Timer>
             </Header>
@@ -455,7 +486,10 @@ const PostComment = () => {
                   <CommentsList>
                     <CommentWrapper key={comment.id}>
                       <CommentHeader>
-                        <CommentUserImage src="http://localhost:5173/profile.png"></CommentUserImage>
+                        <CommentUserImage
+                          src={profileImages[comment.userId]}
+                          alt="User Profile"
+                        ></CommentUserImage>
                         <CommentUsername>{comment.username}</CommentUsername>
                         <CommentTimer>
                           {formatDistanceToNow(

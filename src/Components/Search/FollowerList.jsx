@@ -11,6 +11,8 @@ import {
   orderBy,
   limit,
   onSnapshot,
+  doc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import FollowerItem from "./FollowerItem";
@@ -92,14 +94,25 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
   };
 
   // 팔로우 상태를 변경하는 함수
-  const handleToggleFollow = (isFollowing) => {
-    setFilteredFollowers((prevFollowers) =>
-      prevFollowers.map((follower) =>
-        follower.isFollowing === isFollowing
-          ? { ...follower, isFollowing: !follower.isFollowing }
-          : follower
-      )
-    );
+  const handleToggleFollow = async (id, currentStatus) => {
+    try {
+      const followerRef = doc(db, "profile", id);
+      const updatedStatus = !currentStatus;
+
+      await updateDoc(followerRef, { isFollowing: updatedStatus });
+
+      setFollowers((prevFollowers) =>
+        prevFollowers.map((follower) =>
+          follower.id === id
+            ? { ...follower, isFollowing: updatedStatus }
+            : follower
+        )
+      );
+
+      console.log("팔로우변경");
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
   };
 
   return (
@@ -108,7 +121,9 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
         <FollowerItem
           key={follower.id}
           follower={follower}
-          toggleFollow={() => handleToggleFollow(follower.id)}
+          toggleFollow={() =>
+            handleToggleFollow(follower.id, follower.isFollowing)
+          }
           onProfileClick={() => handleProfileClick(follower.email)}
         />
       ))}

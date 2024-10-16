@@ -28,8 +28,6 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  position: fixed;
-  left: 50px;
   width: 580px;
   height: 360px;
   border-radius: 12px;
@@ -39,7 +37,6 @@ const ModalWrapper = styled.div`
   flex-direction: column;
   z-index: 1000;
   @media (max-width: 768px) {
-    height: 340px;
     margin: 10px;
   }
 `;
@@ -86,8 +83,20 @@ const PlusImage = styled.div`
   display: flex;
   margin: 10px 20px;
   gap: 10px;
-  width: 90%;
-  height: 300px;
+  width: 140px;
+  height: 140px;
+  border-radius: 10px;
+  object-fit: cover;
+`;
+const Img = styled.img`
+  width: 140px;
+  height: 140px;
+  border-radius: 10px;
+  object-fit: cover;
+  @media (max-width: 768px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const Buttons = styled.div`
@@ -232,15 +241,10 @@ const EtcModal = ({
             {files.map((file, index) => (
               <div key={index} style={{ position: "relative", margin: "5px" }}>
                 {file.type.startsWith("image/") ? (
-                  <img
+                  <Img
                     src={URL.createObjectURL(file)}
                     alt={`Uploaded Preview ${index + 1}`}
-                    style={{
-                      width: "160px",
-                      height: "160px",
-                      borderRadius: "10px",
-                      objectFit: "cover",
-                    }}
+                    style={{}}
                   />
                 ) : file.type.startsWith("video/") ? (
                   <video

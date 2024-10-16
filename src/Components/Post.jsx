@@ -10,27 +10,30 @@ import {
   collection,
   getDocs,
 } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 import {
-  deleteObject,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { HeartIcon, DmIcon, RetweetIcon, EtcIcon, Coment } from "./Common/Icon";
+  HeartIcon,
+  DmIcon,
+  RetweetIcon,
+  EtcIcon,
+  Coment,
+  UserIcon2,
+} from "./Common/Icon";
 
 import { createSearchParams, useNavigate } from "react-router-dom";
 // Styled Components
 import { formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
 import PostSetModal from "./Common/PostSetModal";
-import EditModal from "./EditModal";
 import AudioMessage from "./AudioMessage";
 import EtcModal from "./post/EtcModal";
+import fetchUserProfileImage from "../Utils/fetchProfile";
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
@@ -277,6 +280,23 @@ const Post = ({
   const [isEtcModalOpen, setIsEtcModalOpen] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
   const navigate = useNavigate();
+  const [profileImg, setProfileImg] = useState("");
+
+  useEffect(() => {
+    const getUserProfileImage = async () => {
+      try {
+        const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
+        setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+      }
+    };
+
+    // userId가 있을 때만 프로필 이미지 가져오기
+    if (userId) {
+      getUserProfileImage();
+    }
+  }, [userId]);
 
   // const user = auth.currentUser;
 
@@ -433,6 +453,7 @@ const Post = ({
         likes,
         dms,
         retweets,
+        userId,
       },
     });
   };
@@ -499,17 +520,23 @@ const Post = ({
     <>
       <Wrapper>
         <Header>
-          <UserImage
-            onClick={() => {
-              navigate({
-                pathname: "/profile",
-                search: `${createSearchParams({
-                  email: email,
-                })}`,
-              });
-            }}
-            src="http://localhost:5173/profile.png"
-          ></UserImage>
+          {profileImg ? (
+            <UserImage
+              onClick={() => {
+                navigate({
+                  pathname: "/profile",
+                  search: `${createSearchParams({
+                    email: email,
+                  })}`,
+                });
+              }}
+              src={profileImg}
+              alt="User Profile"
+            ></UserImage>
+          ) : (
+            <UserIcon2 />
+          )}
+
           <Username
             onClick={() => {
               navigate({
