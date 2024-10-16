@@ -213,13 +213,22 @@ const LoginItemDk = () => {
       setIsLoading(false);
     }
   };
-
+  // 다은 변경 각 텍스트 클릭시 특정 링크로 수정
   const footerMenuList = [
-    "© 2024",
-    "Threads 약관",
-    "개인정보처리방침",
-    "쿠키정책",
-    "문제 신고",
+    { label: "© 2024", url: "#" },
+    {
+      label: "Threads 약관",
+      url: "https://help.instagram.com/769983657850450",
+    },
+    {
+      label: "개인정보처리방침",
+      url: "https://help.instagram.com/515230437301944",
+    },
+    {
+      label: "쿠키정책",
+      url: "https://privacycenter.instagram.com/policies/cookies/",
+    },
+    { label: "문제 신고", url: "https://www.threads.net/login" }, // 이부분은 우리가 만든 것으로 수정해야 될 것 같아요.
   ];
 
   return (
@@ -302,16 +311,14 @@ const LoginItemDk = () => {
         </Form>
         <FooterMenuUl>
           {footerMenuList.map((menu, index) => (
+            // 다은 이부분 수정
             <FooterMenuLi
               key={index}
-              onClick={() => {
-                if (index === footerMenuList.length - 1) {
-                  toggleShowing();
-                }
-              }}
+              onClick={() => (window.location.href = menu.url)} // URL로 이동
             >
-              {menu}
+              {menu.label}
             </FooterMenuLi>
+            // 다은 이부분 수정
           ))}
         </FooterMenuUl>
       </LoginInner>
