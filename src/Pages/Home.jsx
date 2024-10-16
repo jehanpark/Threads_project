@@ -10,6 +10,8 @@ const Wrapper = styled.div`
   width: 100%;
   height: calc(100vh - 120px);
   overflow: hidden;
+  padding: 100px;
+
   @media (max-width: 768px) {
     height: 100vh;
   }

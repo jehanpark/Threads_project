@@ -2,28 +2,25 @@ import styled from "styled-components";
 import { UserIcon2 } from "../Common/Icon";
 
 const FollowerContain = styled.div`
-  width: 640px;
+  position: relative;
+  width: 590px;
+  max-width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   padding: 20px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
 
   cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-3px);
-  }
 
   @media (max-width: 768px) {
     width: 100%;
-    padding: 15px 10px;
   }
 
   @media (max-width: 480px) {
-    padding: 10px 15px;
+    width: 100%;
+    padding: 10px 10px;
   }
 `;
 
@@ -151,7 +148,7 @@ const FollowerButton = styled.button`
 `;
 
 const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
-  const { ProfileImg, email, bio, followNum, isFollowing } = follower;
+  const { ProfileImg, userEmail, bio, followNum, isFollowing } = follower;
 
   return (
     <FollowerContain onClick={onProfileClick}>
@@ -164,9 +161,9 @@ const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
           )}
         </UserWrapper>
         <UserContex>
-          <UserName>{email || "daljag@gmail.com"}</UserName>
+          <UserName>{userEmail || "zang@ezen.com"}</UserName>
           <UserInfo>{bio || "노래하는 고양이"}</UserInfo>
-          <UserFollowerNum>{`팔로워 ${followNum || 7}명`}</UserFollowerNum>
+          <UserFollowerNum>{`팔로워 ${followNum}명`}</UserFollowerNum>
         </UserContex>
       </Wrapper>
       <FollowerButton

@@ -147,6 +147,7 @@ const Nav = () => {
   const location = useLocation(); // 현재 경로 가져오기
   const [selectedMenu, setSelectedMenu] = useState(0);
   const [userAdress, setUserAdress] = useState("");
+
   // 비동기 함수로 분리하여 useEffect에서 호출
   useEffect(() => {
     const fetchAvatar = async () => {
@@ -175,6 +176,17 @@ const Nav = () => {
     };
     userEmail();
   }, []);
+
+  useEffect(() => {
+    const userEmail = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        setUserAdress(user.email);
+      }
+    };
+    userEmail();
+  }, []);
+
   const menuItems = [
     {
       name: "Home",
@@ -318,6 +330,15 @@ const Nav = () => {
     };
     userEmail();
   }, []);
+  useEffect(() => {
+    const userEmail = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        setUserAdress(user.email);
+      }
+    };
+    userEmail();
+  }, []);
   // URL이 변경될 때마다 현재 경로에 맞는 메뉴 선택
   useEffect(() => {
     const currentPath = location.pathname;
@@ -330,6 +351,17 @@ const Nav = () => {
   }, [location.pathname, menuItems]);
   const onSelected = (index, path) => {
     setSelectedMenu(index);
+    if (index === 4) {
+      navigate({
+        pathname: "/profile",
+        search: `${createSearchParams({
+          email: userAdress,
+        })}`,
+      });
+    } else {
+      navigate(path); // path에 따라 페이지 이동
+    }
+
     if (index === 4) {
       navigate({
         pathname: "/profile",
@@ -375,13 +407,24 @@ const Nav = () => {
                 });
               }}
             >
-              <ImgBox htmlFor="profileImg">
-                {avatar == null || avatar == "" ? (
-                  <UserIcon2 width="54" fill="#BABABA" />
-                ) : (
-                  <Img src={avatar} />
-                )}
-              </ImgBox>
+              <div
+                onClick={() => {
+                  navigate({
+                    pathname: "/profile",
+                    search: `${createSearchParams({
+                      email: userAdress,
+                    })}`,
+                  });
+                }}
+              >
+                <ImgBox htmlFor="profileImg">
+                  {avatar == null || avatar == "" ? (
+                    <UserIcon2 width="54" fill="#BABABA" />
+                  ) : (
+                    <Img src={avatar} />
+                  )}
+                </ImgBox>
+              </div>
             </div>
           </MyProfileImgs>
         ) : (

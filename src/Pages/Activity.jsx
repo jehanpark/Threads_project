@@ -36,7 +36,7 @@ const ButtonGroup = styled.div`
   width: 100%;
   justify-content: center;
   align-content: center;
-  gap: 10px;
+  gap: 20px;
   margin-top: 20px;
   margin-bottom: 20px;
   transition: all 0.3s ease;

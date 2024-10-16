@@ -256,6 +256,7 @@ const Post = ({
   createdAt,
   email,
   audioURL,
+  comment,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPost, setEditedPost] = useState(post);
@@ -476,6 +477,7 @@ const Post = ({
         likes,
         dms,
         retweets,
+        comment,
       },
     });
   };
@@ -560,7 +562,7 @@ const Post = ({
             placeholder={post}
           />
         ) : (
-          <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
+          <Payload>{post ?? comment}</Payload> // 하나의 Payload만 남겨두기
         )}
       </Column>
       {/* AudioMessage 컴포넌트를 audioURL이 있을 때만 렌더링 */}

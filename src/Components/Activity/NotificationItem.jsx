@@ -212,51 +212,49 @@ const NotificationItem = ({
   };
 
   return (
-    <Contain>
-      <NotificationContain
-        drag="x"
-        dragElastic={0.5}
-        dragMomentum={false}
-        dragConstraints={{ left: DELETE_THRESHOLD, right: 0 }} // 드래그 제한 범위 설정
-        style={{ x: itemX }}
-        onDragEnd={handleDelete} // 드래그 종료 시 삭제 처리
-        ref={animateRef}
+    <NotificationContain
+      drag="x"
+      dragElastic={0.5}
+      dragMomentum={false}
+      dragConstraints={{ left: DELETE_THRESHOLD, right: 0 }} // 드래그 제한 범위 설정
+      style={{ x: itemX }}
+      onDragEnd={handleDelete} // 드래그 종료 시 삭제 처리
+      ref={animateRef}
+    >
+      <Wrapper onClick={handleClick} isRead={isRead}>
+        <UserWrapper>
+          {profileImg ? (
+            <img src={profileImg} alt="User profile" />
+          ) : (
+            <UserIcon2 width={50} />
+          )}
+        </UserWrapper>
+        <UserContex>
+          <User>
+            {type === "friend" && <UserInfo>친한친구</UserInfo>}
+            <UserName>{username}</UserName>
+            <UserInfo>{message}</UserInfo>
+          </User>
+          <UserDate>{renderTimeAgo()}</UserDate>
+          {isRead && <UserDate>읽음</UserDate>}
+        </UserContex>
+      </Wrapper>
+      <DeleteButton
+        initial="disappear"
+        animate={deleteAnimateState}
+        variants={{ appear: { opacity: 1 }, disappear: { opacity: 0 } }}
+        onClick={handleDelete} // 삭제 버튼 클릭 시 삭제
       >
-        <Wrapper onClick={handleClick} isRead={isRead}>
-          <UserWrapper>
-            {profileImg ? (
-              <img src={profileImg} alt="User profile" />
-            ) : (
-              <UserIcon2 width={50} />
-            )}
-          </UserWrapper>
-          <UserContex>
-            <User>
-              {type === "friend" && <UserInfo>친한친구</UserInfo>}
-              <UserName>{username}</UserName>
-              <UserInfo>{message}</UserInfo>
-            </User>
-            <UserDate>{renderTimeAgo()}</UserDate>
-            {isRead && <UserDate>읽음</UserDate>}
-          </UserContex>
-        </Wrapper>
-        <DeleteButton
-          initial="disappear"
-          animate={deleteAnimateState}
-          variants={{ appear: { opacity: 1 }, disappear: { opacity: 0 } }}
-          onClick={handleDelete} // 삭제 버튼 클릭 시 삭제
+        <DeleteLabel
+          variants={{
+            appear: { scale: 1 },
+            disappear: { scale: 0 },
+          }}
         >
-          <DeleteLabel
-            variants={{
-              appear: { scale: 1 },
-              disappear: { scale: 0 },
-            }}
-          >
-            삭제
-          </DeleteLabel>
-        </DeleteButton>
-      </NotificationContain>
-    </Contain>
+          삭제
+        </DeleteLabel>
+      </DeleteButton>
+    </NotificationContain>
   );
 };
 
