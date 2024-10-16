@@ -642,15 +642,16 @@ const Profile = () => {
                   <Follow onClick={onfollow}>팔로워 {profile.followNum}</Follow>
                   {profile.isLinkPublic ? (
                     <Links>
-                      {user?.email === emailAdress ? (
-                        <LinkPlus onClick={onLinkPlus}>
-                          <PlusIcon width="16px" />
-                        </LinkPlus>
-                      ) : null}
-
                       <PulsLinkIcon>
-                        <InstaIcon />
-                        <FacebookIcon />
+                        <a href={"https://www.instagram.com/"} target="_blank">
+                          <InstaIcon />
+                        </a>
+                        <a
+                          href="https://www.facebook.com/?locale=ko_KR"
+                          target="_blank"
+                        >
+                          <FacebookIcon />
+                        </a>
                       </PulsLinkIcon>
                     </Links>
                   ) : null}
