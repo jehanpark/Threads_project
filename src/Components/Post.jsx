@@ -261,9 +261,6 @@ const SetContentInputButton = styled.input`
   display: none;
 `;
 
-
-
-
 const Post = ({
   post,
   userId,
