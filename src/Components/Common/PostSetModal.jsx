@@ -106,7 +106,7 @@ const UpLoadButton = styled.button`
     width: 300px;
     height: 70px;
     background: ${(props) => props.theme.fontcolor};
-    color: ${(props) => props.theme.logoColor};
+    color: ${(props) => props.theme.borderColor};
     font-size: 15px;
     font-weight: bold;
     border-radius: 16px;

@@ -163,13 +163,15 @@ const DeleteButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
 `;
-const OpenButton = styled.button`
+const OpenButton = styled.div`
   width: 300px;
   height: 80px;
   background: #d6d6d6;
   border: none;
   color: #000;
   font-size: 15px;
+  text-align: center;
+  line-height: 5.5;
   font-weight: bold;
   border-radius: 30px;
   transition: all 0.3s;
@@ -250,14 +252,14 @@ const PostForm = () => {
     if (selectedFiles) {
       const newFiles = Array.from(selectedFiles).filter((file) => {
         if (file.size > maxFileSize) {
-          alert("The maximum file size is 5MB.");
+          alert("업로드 가능한 파일의 최대 크기는 5MB입니다.");
           return false;
         }
         return true;
       });
 
       if (files.length + newFiles.length > maxFilesCount) {
-        alert(`You can upload a maximum of ${maxFilesCount} files.`);
+        alert(`파일은 최대 ${maxFilesCount}장까지만 업로드할 수 있습니다.`);
         return;
       }
 
@@ -426,7 +428,7 @@ const PostForm = () => {
                       width: "160px",
                       height: "160px",
                       borderRadius: "10px",
-                      objectFit: "contain",
+                      objectFit: "cover",
                     }}
                   />
                 ) : file.type.startsWith("video/") ? (
@@ -471,7 +473,7 @@ const PostForm = () => {
             </CameraButton>
             <PictureButton htmlFor="picture">
               <PictureIcon width={24} />
-              <CameraInput
+              <PictureInput
                 onChange={handleFileChange}
                 id="picture"
                 type="file"

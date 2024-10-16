@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { formatDistanceToNow } from "date-fns";
+import { ko } from "date-fns/locale";
 import {
   HeartIcon,
   DmIcon,
@@ -150,7 +151,7 @@ const Icons = styled.div`
   display: flex;
   gap: 15px;
   justify-content: start;
-  
+
   align-items: center;
   margin-left: 50px;
   margin-top: 10px;
@@ -203,7 +204,7 @@ const Form = styled.form`
   }
 `;
 const Buttons = styled.div`
-height: auto;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -352,7 +353,7 @@ const Comment = ({ id }) => {
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
-    return formatDistanceToNow(date, { addSuffix: true });
+    return formatDistanceToNow(date, { addSuffix: true, locale: ko });
   };
 
   const handlePostChange = (e) => {
@@ -430,14 +431,14 @@ const Comment = ({ id }) => {
     if (selectedFiles) {
       const newFiles = Array.from(selectedFiles).filter((file) => {
         if (file.size > maxFileSize) {
-          alert("The maximum file size is 5MB.");
+          alert("업로드 가능한 파일의 최대 크기는 5MB입니다.");
           return false;
         }
         return true;
       });
 
       if (files.length + newFiles.length > maxFilesCount) {
-        alert(`You can upload a maximum of ${maxFilesCount} files.`);
+        alert(`파일은 최대 ${maxFilesCount}장까지만 업로드할 수 있습니다.`);
         return;
       }
 
@@ -486,6 +487,7 @@ const Comment = ({ id }) => {
                           controls
                           autoPlay
                           loop
+                          muted
                           src={videoUrl}
                         />
                       ))}
@@ -500,10 +502,10 @@ const Comment = ({ id }) => {
                     <Coment width={14} /> {commentsCount}
                   </IconWrapper>
                   <IconWrapper>
-                    <DmIcon width={12} /> {dms}
+                    <RetweetIcon width={14} /> {retweets}
                   </IconWrapper>
                   <IconWrapper>
-                    <RetweetIcon width={14} /> {retweets}
+                    <DmIcon width={12} /> {dms}
                   </IconWrapper>
                 </Icons>
               </PostWrapper>
@@ -538,6 +540,7 @@ const Comment = ({ id }) => {
                       ) : (
                         <video
                           controls
+                          muted
                           style={{
                             width: "160px",
                             height: "160px",
