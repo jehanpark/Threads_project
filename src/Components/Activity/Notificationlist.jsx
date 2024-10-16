@@ -67,7 +67,7 @@ const NotificationList = ({ onUpdate }) => {
 
           return {
             id: docSnapshot.id,
-            username: docData.email || "알수없음",
+            username: docData.email || "joda@ezen.com",
             createdAt,
             isRead: false,
             message,

@@ -84,8 +84,7 @@ const UserWrapper = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  background: ${(props) => props.theme.ImgBG};
-  box-shadow: ${(props) => props.theme.ImgSH};
+
   overflow: hidden;
 
   img {

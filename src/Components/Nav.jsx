@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useLocation,
+  createSearchParams,
+} from "react-router-dom";
 import styled, { css } from "styled-components";
 import Logo from "./LoadingLogo/Logo";
 import { auth, db, storage } from "../firebase";
 import { useAuth } from "../Contexts/AuthContext";
 import MobileNav from "./MobileNav";
 import { UserIcon2 } from "./Common/Icon";
-
 import { ref } from "firebase/storage";
-
 const AllWrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 20px 0px;
 `;
-
 const Wrapper = styled.nav`
   width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -27,7 +28,6 @@ const Wrapper = styled.nav`
     display: none;
   }
 `;
-
 const LogoWrapper = styled.div`
   width: 40px;
   padding-left: 20px;
@@ -36,7 +36,6 @@ const LogoWrapper = styled.div`
     display: none;
   }
 `;
-
 const MyProfileImgs = styled.div`
   position: absolute;
   right: 20px;
@@ -47,7 +46,6 @@ const MyProfileImgs = styled.div`
     display: none;
   }
 `;
-
 const NavLoginBtn = styled.button`
   position: absolute;
   right: 20px;
@@ -63,12 +61,10 @@ const NavLoginBtn = styled.button`
     height: 100%;
   }
 `;
-
 const Img = styled.img`
   width: 100%;
   height: 100%;
 `;
-
 const DefaultImgWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -79,7 +75,6 @@ const DefaultImgWrapper = styled.div`
   justify-content: center;
   border: 1px solid red;
 `;
-
 const Ul = styled.ul`
   width: 620px;
   background-color: ${(props) => props.theme.borderColor};
@@ -101,7 +96,6 @@ const Ul = styled.ul`
     border: none;
   }
 `;
-
 const Li = styled.li`
   color: #c95c5c;
   cursor: pointer;
@@ -119,12 +113,10 @@ const Li = styled.li`
       : props.theme.bordeborderColorrshadow};
   color: ${(props) =>
     props.$isSelected ? props.theme.bodyBg : props.theme.navIconColor};
-
   &:hover {
     background-color: ${(props) => props.theme.fontcolor};
     color: ${(props) => props.theme.bodyBg};
   }
-
   svg {
     width: 24px;
     height: 24px;
@@ -133,11 +125,9 @@ const Li = styled.li`
     transition: stroke 0.4s;
   }
 `;
-
 const RightDiv = styled.div`
   width: 40px;
 `;
-
 const ImgBox = styled.label`
   width: 50px;
   height: 50px;
@@ -149,7 +139,6 @@ const ImgBox = styled.label`
   overflow: hidden;
   background-color: ${(props) => props.theme.mouseHoverBg};
 `;
-
 const Nav = () => {
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
   const user = auth.currentUser;
@@ -157,7 +146,7 @@ const Nav = () => {
   const navigate = useNavigate();
   const location = useLocation(); // 현재 경로 가져오기
   const [selectedMenu, setSelectedMenu] = useState(0);
-
+  const [userAdress, setUserAdress] = useState("");
   // 비동기 함수로 분리하여 useEffect에서 호출
   useEffect(() => {
     const fetchAvatar = async () => {
@@ -171,15 +160,21 @@ const Nav = () => {
         console.error("Error fetching avatar:", error);
       }
     };
-
     fetchAvatar(); // 비동기 함수 호출
-
     return () => {
       // 컴포넌트 언마운트 시 클린업
       setAvarta(""); // 클린업 작업으로 아바타 초기화
     };
   }, [user]);
-
+  useEffect(() => {
+    const userEmail = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        setUserAdress(user.email);
+      }
+    };
+    userEmail();
+  }, []);
   const menuItems = [
     {
       name: "Home",
@@ -312,10 +307,17 @@ const Nav = () => {
           />
         </svg>
       ),
-      path: "/profile",
     },
   ];
-
+  useEffect(() => {
+    const userEmail = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        setUserAdress(user.email);
+      }
+    };
+    userEmail();
+  }, []);
   // URL이 변경될 때마다 현재 경로에 맞는 메뉴 선택
   useEffect(() => {
     const currentPath = location.pathname;
@@ -326,12 +328,19 @@ const Nav = () => {
       setSelectedMenu(selectedIndex);
     }
   }, [location.pathname, menuItems]);
-
   const onSelected = (index, path) => {
     setSelectedMenu(index);
-    navigate(path); // path에 따라 페이지 이동
+    if (index === 4) {
+      navigate({
+        pathname: "/profile",
+        search: `${createSearchParams({
+          email: userAdress,
+        })}`,
+      });
+    } else {
+      navigate(path); // path에 따라 페이지 이동
+    }
   };
-
   return (
     <AllWrapper>
       <MobileNav />
@@ -356,7 +365,16 @@ const Nav = () => {
         </Ul>
         {currentUser ? (
           <MyProfileImgs>
-            <Link to="/profile">
+            <div
+              onClick={() => {
+                navigate({
+                  pathname: "/profile",
+                  search: `${createSearchParams({
+                    email: userAdress,
+                  })}`,
+                });
+              }}
+            >
               <ImgBox htmlFor="profileImg">
                 {avatar == null || avatar == "" ? (
                   <UserIcon2 width="54" fill="#BABABA" />
@@ -364,7 +382,7 @@ const Nav = () => {
                   <Img src={avatar} />
                 )}
               </ImgBox>
-            </Link>
+            </div>
           </MyProfileImgs>
         ) : (
           <NavLoginBtn>
@@ -376,5 +394,4 @@ const Nav = () => {
     </AllWrapper>
   );
 };
-
 export default Nav;
