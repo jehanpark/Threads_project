@@ -8,6 +8,8 @@ import { useMediaQuery } from "react-responsive";
 import Border from "../Common/Border_dk";
 import ReportModal from "./ReportModal";
 import Loading from "../LoadingLogo/Loading";
+import { EyeOpenIcon } from "../Common/Icon";
+import styled from "styled-components";
 
 import {
   Wrapper,
@@ -32,6 +34,81 @@ import {
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+// 다은 추가 스타일 여기부터
+
+const PasswordInput = styled.input`
+  padding: 20px;
+  width: 100%;
+  height: 54px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #7e7e7e;
+  box-shadow: 0 0 0 0 ${(props) => props.theme.loginInputSelectColor};
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 24px;
+  &:focus + label,
+  &:not(:placeholder-shown) + label {
+    opacity: 0;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 1px 2px ${(props) => props.theme.loginInputSelectColor};
+  }
+  &[type="submit"] {
+    cursor: pointer;
+    background-color: #000;
+    color: #fff;
+    border: 1px solid ${(props) => props.theme.mouseHoverFontcolor};
+    margin-bottom: 27px;
+  }
+  &.insta-btn {
+    width: 100%;
+    height: 37px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #67b5fa;
+    outline: none;
+    border: none;
+    padding: 0px;
+    color: #fff;
+    border-radius: 12px;
+  }
+`;
+const EyeIconWrapper = styled.div`
+  position: absolute;
+  right: 10px;
+  top: 28px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  svg {
+    width: 28px;
+    height: 28px;
+    fill: ${(props) => (props.isVisible ? "#000" : "#bababa")};
+    stroke: ${(props) => (props.isVisible ? "#fff" : "none")};
+    stroke-width: ${(props) => (props.isVisible ? "1.5px" : "0")};
+    transition: fill 0.2s, stroke 0.2s; /* 부드러운 전환 효과 */
+  }
+  &:hover svg {
+    fill: #000; /* 호버 시 색상 */
+  }
+`;
+const CapsLockWarning = styled.div`
+  color: red;
+  font-size: 12px;
+  font-weight: 400;
+  display: flex;
+  justify-content: end;
+  margin-top: -12px;
+  /* margin-bottom: 6px; */
+`;
+// 다은 추가 스타일 여기까지!
+
 const LoginItemDk = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -45,6 +122,18 @@ const LoginItemDk = () => {
   const navigate = useNavigate();
 
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+
+  // 다은 추가 부분 여기부터
+  // 눈 아이콘 상태 변화
+  const togglePasswordVisibility = () => setIsPasswordVisible((prev) => !prev);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  // Caps 켜져있을 때 상태 변화
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
+  const handleCapsLock = (e) => {
+    const isCaps = e.getModifierState && e.getModifierState("CapsLock");
+    setIsCapsLockOn(isCaps); // CapsLock이 켜지면 true로 설정
+  };
+  // 다은 추가
 
   const onChange = (e) => {
     const {
@@ -139,16 +228,31 @@ const LoginItemDk = () => {
             </StyledLabel>
           </InputWrapper>
           <InputWrapper>
-            <StyledInput
+            <PasswordInput
               onChange={onChange}
-              type="password"
+              type={isPasswordVisible ? "text" : "password"} // 다은
               id="password"
               name="password"
               placeholder=""
               required
               value={password}
+              onKeyDown={handleCapsLock} // 다은 캡스락
+              onBlur={() => setIsCapsLockOn(false)} // 다은 캡스락
             />
             <StyledLabel htmlFor="password">비밀번호</StyledLabel>
+            {/* 다은 눈 아이콘 추가 */}
+            <EyeIconWrapper
+              onClick={togglePasswordVisibility}
+              fill={isPasswordVisible ? "#000" : "#bababa"}
+            >
+              <EyeOpenIcon width="50px" fill="black" />
+            </EyeIconWrapper>
+            {/* 다은 캡스락 추가 */}
+            {isCapsLockOn && (
+              <CapsLockWarning>Caps Lock이 켜져 있습니다.</CapsLockWarning>
+            )}
+            {/* 다은 캡스락 추가 */}
+            {/* 다은 눈 아이콘 추가 */}
           </InputWrapper>
           <InputWrapper>
             <StyledInput
