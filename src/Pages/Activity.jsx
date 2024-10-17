@@ -6,22 +6,55 @@ import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Contain = styled.div`
-  width: 100%;
+  /* width: 100%; */
+  /* height: calc(100vh - 120px); */
+  height: 100vh;
+  /* margin-top: 120px; */
+  /* overflow: hidden; */
+  /* z-index: -1; */
+  @media (max-width: 768px) {
+    height: 100vh;
+    width: 100%;
+  }
+`;
+
+const BoederWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  @media (max-width: 480px) {
+  background: ${(props) => props.theme.borderColor};
+
+  /* position: fixed; */
+  bottom: 0;
+  /* left: 50%; */
+  /* transform: translate(-50%); */
+  /* margin: 0; */
+  width: 35vw;
+  height: 100%;
+  /* height: 85%; */
+  border-radius: 40px 40px 0px 0px;
+  /* overflow: hidden; */
+  @media (max-width: 768px) {
+    position: absolute;
     width: 100%;
+    /* bottom: 0; */
+    border-radius: 0;
+    /* height: 100vh; */
+    /* height: calc(100% - 70px); */
+    box-shadow: none;
+    border-radius: 0px 0px 0px 0px;
   }
 `;
 
 const MenuTitle = styled.p`
   font-weight: 800;
   font-size: 20px;
-  margin-top: 40px;
-  margin-bottom: 40px;
+
   color: ${(props) => props.theme.fontcolor};
+  padding-top: 40px;
+  padding-bottom: 20px;
+  text-align: center;
   transition: all 0.3s;
   @media (max-width: 768px) {
     display: none;
@@ -72,30 +105,40 @@ const SelectButton = styled.button`
 `;
 
 const ButtonGroupPC = styled.div`
-  width: 84%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  gap: 10px;
+  gap: 40px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
-  background: transparent;
   @media (max-width: 768px) {
     display: none;
+  }
+  @media (max-width: 480px) {
   }
 `;
 
 const SelectButtonPC = styled.button`
   background: transparent;
   flex: 0 0 auto;
-  width: 140px;
+  width: 106px;
   padding: 10px 20px;
   border: none;
   font-weight: bold;
-  cursor: pointer;
   color: ${(props) =>
     props.selected ? props.theme.selectedbtn : props.theme.notSelectbtn};
   border-bottom: ${(props) =>
     props.selected ? `1px solid ${props.theme.selectedbtn}` : "none"};
+  cursor: pointer;
+  transition: all 0.3s;
+`;
+
+const Btnborder = styled.div`
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 `;
 
 const ContentsBorder = styled.div`
@@ -103,9 +146,11 @@ const ContentsBorder = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  max-height: 700px;
+  height: 100%;
+  /* max-height: 700px; */
   overflow-y: auto;
   padding: 0 20px;
+  padding-bottom: 20px;
   margin-top: 20px;
   ::-webkit-scrollbar {
     display: none;
@@ -121,28 +166,6 @@ const ContentsBorder = styled.div`
   @media (max-width: 480px) {
     width: 100%;
     max-height: 100%;
-  }
-`;
-
-const BoederWrapper = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%);
-  margin: 0 auto;
-  width: 680px;
-  height: 85%;
-  border-radius: 40px 40px 0px 0px;
-  background-color: ${(props) => props.theme.borderColor};
-  box-shadow: ${(props) => props.theme.bordershadow};
-  @media (max-width: 768px) {
-    position: fixed;
-    border-radius: 0;
-    width: 100%;
-    height: calc(100% - 140px);
-    bottom: 70px;
-    box-shadow: none;
-    border-radius: 0px 0px 0px 0px;
   }
 `;
 
@@ -273,17 +296,19 @@ const Activity = () => {
             ))}
           </ButtonGroup>
         ) : (
-          <ButtonGroupPC className="desktop-buttons">
-            {buttons.map((button) => (
-              <SelectButtonPC
-                key={button.type}
-                selected={contentType === button.type}
-                onClick={() => handleButtonClick(button.type)}
-              >
-                {button.label}
-              </SelectButtonPC>
-            ))}
-          </ButtonGroupPC>
+          <Btnborder>
+            <ButtonGroupPC className="desktop-buttons">
+              {buttons.map((button) => (
+                <SelectButtonPC
+                  key={button.type}
+                  selected={contentType === button.type}
+                  onClick={() => handleButtonClick(button.type)}
+                >
+                  {button.label}
+                </SelectButtonPC>
+              ))}
+            </ButtonGroupPC>
+          </Btnborder>
         )}
         <ContentsBorder>
           {filteredData.length > 0 ? (

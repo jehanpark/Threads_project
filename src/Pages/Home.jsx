@@ -43,7 +43,7 @@ const Wrapper = styled.div`
   }
 `;
 const BoederWrapper = styled.div`
-  width: 680px;
+  width: 35vw;
   bottom: 0;
   height: 100%;
   border-radius: 40px 40px 0px 0px;

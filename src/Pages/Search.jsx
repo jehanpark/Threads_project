@@ -18,17 +18,20 @@ const Wrapper = styled.div`
   }
 `;
 const BoederWrapper = styled.div`
+  background: ${(props) => props.theme.borderColor};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   /* position: fixed; */
   bottom: 0;
   /* left: 50%; */
   /* transform: translate(-50%); */
   /* margin: 0; */
-  width: 680px;
+  width: 35vw;
   height: 100%;
   /* height: 85%; */
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
-  box-shadow: ${(props) => props.theme.bordershadow};
   /* overflow: hidden; */
   @media (max-width: 768px) {
     position: absolute;
@@ -42,50 +45,20 @@ const BoederWrapper = styled.div`
   }
 `;
 
-const Contain = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  @media (max-width: 480px) {
-    width: 100%;
-    height: 100%;
-  }
-`;
-
 const MenuTitle = styled.p`
   font-weight: 800;
   font-size: 20px;
-  margin-top: 40px;
-  margin-bottom: 40px;
+
   color: ${(props) => props.theme.fontcolor};
+  padding-top: 40px;
+  padding-bottom: 20px;
+  text-align: center;
   transition: all 0.3s;
   @media (max-width: 768px) {
     display: none;
   }
   @media (max-width: 480px) {
     display: none;
-  }
-`;
-
-const Border = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* margin: 0 auto; */
-  /* padding: 20px; */
-  height: 600px;
-  border-radius: 40px 40px 0px 0px;
-  background-color: ${(props) => props.theme.borderColor};
-  @media (max-width: 768px) {
-    width: 100%;
-    height: 100vh;
-    border-radius: 20px 20px 0px 0px;
-  }
-  @media (max-width: 480px) {
-    width: 100%;
-    /* margin: 0 auto; */
   }
 `;
 
@@ -174,9 +147,7 @@ const ContentsBorder = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-content: center;
   height: 100%;
-  /* max-height: 700px; */
   overflow-y: auto;
   padding: 0 20px;
   padding-bottom: 20px;
@@ -255,53 +226,52 @@ const Search = () => {
   ];
 
   return (
-    <BoederWrapper>
-      <Contain>
+    <Wrapper>
+      <BoederWrapper>
         <MenuTitle>{searchTerm || "검색"}</MenuTitle>
-        <Border>
-          <SearchBox>
-            {showSearchBar ? (
-              <Searchbar addSearch={handleSearch} />
-            ) : isMobile ? (
-              <ButtonGroup
-                className="mobile-buttons"
-                whileTap="click"
-                drag="x"
-                dragMomentum={false}
-                dragConstraints={{ left: -100, right: 0 }}
-              >
-                {buttons.map((button) => (
-                  <SelectButton
-                    key={button.type}
-                    style={getButtonStyle(button.type)}
-                    onClick={() => handleButtonClick(button.type)}
-                  >
-                    {button.label}
-                  </SelectButton>
-                ))}
-              </ButtonGroup>
-            ) : (
-              <ButtonGroupPC className="desktop-buttons">
-                {buttons.map((button) => (
-                  <SelectButtonPC
-                    key={button.type}
-                    style={getPCButtonStyle(button.type)}
-                    onClick={() => handleButtonClick(button.type)}
-                  >
-                    {button.label}
-                  </SelectButtonPC>
-                ))}
-              </ButtonGroupPC>
-            )}
-          </SearchBox>
-          <ContentsBorder>
-            {contentType !== "picture" && contentType !== "video" && (
-              <FollowersList
-                searchTerm={searchTerm}
-                contentType={contentType}
-                onDataEmpty={(isEmpty) => setFollowersEmpty(isEmpty)}
-              />
-            )}
+        <SearchBox>
+          {showSearchBar ? (
+            <Searchbar addSearch={handleSearch} />
+          ) : isMobile ? (
+            <ButtonGroup
+              className="mobile-buttons"
+              whileTap="click"
+              drag="x"
+              dragMomentum={false}
+              dragConstraints={{ left: -70, right: 0 }}
+            >
+              {buttons.map((button) => (
+                <SelectButton
+                  key={button.type}
+                  selected={contentType === button.type}
+                  onClick={() => handleButtonClick(button.type)}
+                >
+                  {button.label}
+                </SelectButton>
+              ))}
+            </ButtonGroup>
+          ) : (
+            <ButtonGroupPC className="desktop-buttons">
+              {buttons.map((button) => (
+                <SelectButtonPC
+                  key={button.type}
+                  selected={contentType === button.type}
+                  onClick={() => handleButtonClick(button.type)}
+                >
+                  {button.label}
+                </SelectButtonPC>
+              ))}
+            </ButtonGroupPC>
+          )}
+        </SearchBox>
+        <ContentsBorder>
+          {contentType !== "picture" && contentType !== "video" && (
+            <FollowersList
+              searchTerm={searchTerm}
+              contentType={contentType}
+              onDataEmpty={(isEmpty) => setFollowersEmpty(isEmpty)}
+            />
+          )}
 
           {contentType !== "profile" && (
             <TimeLine
@@ -326,8 +296,8 @@ const Search = () => {
               <NoResults>게시글 및 프로필이 존재하지 않습니다.</NoResults>
             )}
         </ContentsBorder>
-      </Border>
-    </Contain>
+      </BoederWrapper>
+    </Wrapper>
   );
 };
 export default Search;
