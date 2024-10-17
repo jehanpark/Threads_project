@@ -19,6 +19,7 @@ const BorderWrapper = styled.div`
     props.isSmallScreen ? "0" : props.isTablet ? "20px" : "40px"};
   box-sizing: border-box;
   overflow-x: hidden;
+  height: 100vh;
 `;
 
 const InsitesWrapper = styled.div`
@@ -45,6 +46,7 @@ const InsitesWrapper = styled.div`
   box-sizing: border-box;
   transition: all 0.3s ease; /* 애니메이션 효과 추가 */
   padding: 20px;
+  padding-bottom: 600px;
 `;
 
 const InsitesTitle = styled.div`
