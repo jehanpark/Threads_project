@@ -227,6 +227,13 @@ const OvarlayHC = styled.div`
   background: ${(props) =>
     `linear-gradient(${props.theme.borderColor}, #ffffff00)`};
   z-index: 5;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
+  @media screen and (max-width: 480px) {
+    width: 100%;
+  }
 `;
 
 const ButtonGroup = styled.div`
@@ -419,10 +426,17 @@ const Profile = () => {
       return () => unsubscribe();
     } catch (error) {}
   };
+
   useEffect(() => {
     CheckProfile();
     buttonCheck();
   }, [emailAdress]);
+
+  useEffect(() => {
+    if (posts.length > 0) {
+      filterList("thresds");
+    }
+  }, [posts]);
 
   const fetchComments = async () => {
     try {
@@ -684,7 +698,7 @@ const Profile = () => {
                     type="edit"
                     text="프로필 수정"
                     onClick={onProfileEdite}
-                    heith={"40px"}
+                    height={"40px"}
                   />
                 ) : (
                   <Button type="edit" text="팔로잉" onClick={onOtherbtn} />

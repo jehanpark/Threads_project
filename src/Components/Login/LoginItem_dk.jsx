@@ -741,9 +741,9 @@ const LoginItemDk = () => {
             {/* Eye 아이콘: 비밀번호가 보이는 경우 EyeCloseIcon, 보이지 않는 경우 EyeOpenIcon */}
             <EyeIconWrapper onClick={togglePasswordVisibility}>
               {isPasswordVisible ? (
-                <EyeCloseIcon width="28px" />
+                <EyeCloseIcon width={28} />
               ) : (
-                <EyeOpenIcon width="28px" />
+                <EyeOpenIcon width={28} />
               )}
             </EyeIconWrapper>
             {/* CapsLock 경고 메시지 */}

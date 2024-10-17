@@ -135,7 +135,7 @@ const NotificationItem = ({
   type,
   onDelete,
 }) => {
-  //날짜 포맷 함수
+  // 날짜 포맷 함수
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
