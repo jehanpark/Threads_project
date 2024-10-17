@@ -50,7 +50,7 @@ const InsitesWrapper = styled.div`
 
 const InsitesTitle = styled.div`
   margin-top: ${(props) =>
-    props.isSmallScreen ? "20px" : props.isTablet ? "20px" : "10px"};
+    props.isSmallScreen ? "0" : props.isTablet ? "20px" : "10px"};
   font-size: ${(props) =>
     props.isSmallScreen ? "16px" : props.isTablet ? "16px" : "18px"};
   font-weight: 500;
@@ -142,6 +142,12 @@ const FollowerInner = styled.div`
     props.isSmallScreen ? "40px" : props.isTablet ? "0" : "0"};
 `;
 
+const InsiteInner2 = styled.div`
+  background: #f5f5f5;
+  padding: 12px 12px;
+  border-radius: 8px;
+`;
+
 const FollowerInfo = styled.div`
   width: ${(props) =>
     props.isSmallScreen ? "200px" : props.isTablet ? "100%" : "436px"};
@@ -213,22 +219,30 @@ const Insiteitem_de = () => {
             isSmallScreen={isSmallScreen}
             isTablet={isTablet}
           >
-            <BorderItemTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
-              {item.title}
-            </BorderItemTitle>
-            <Info isSmallScreen={isSmallScreen} isTablet={isTablet}>
-              <IconWrapper
-                background={"#e9e9e9"}
-                borderRadius={"100%"}
-                wrapperSize={"32px"}
-                wrapperPadding={"8px"}
+            <InsiteInner2>
+              <BorderItemTitle
+                isSmallScreen={isSmallScreen}
+                isTablet={isTablet}
               >
-                <InformationIcon width={"30px"} fill={"black"} zindex={"1"} />
-              </IconWrapper>
-              <BorderItemInfo isSmallScreen={isSmallScreen} isTablet={isTablet}>
-                {item.info}
-              </BorderItemInfo>
-            </Info>
+                {item.title}
+              </BorderItemTitle>
+              <Info isSmallScreen={isSmallScreen} isTablet={isTablet}>
+                <IconWrapper
+                  background={"#e9e9e9"}
+                  borderRadius={"100%"}
+                  wrapperSize={"32px"}
+                  wrapperPadding={"8px"}
+                >
+                  <InformationIcon width={"30px"} fill={"black"} zindex={"1"} />
+                </IconWrapper>
+                <BorderItemInfo
+                  isSmallScreen={isSmallScreen}
+                  isTablet={isTablet}
+                >
+                  {item.info}
+                </BorderItemInfo>
+              </Info>
+            </InsiteInner2>
           </BorderItem>
         ))}
       </InsitesWrapper>

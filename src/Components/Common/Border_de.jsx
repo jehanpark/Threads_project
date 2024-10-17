@@ -67,7 +67,7 @@ const BorderItem = styled.div`
     height: ${(props) => (props.isSmallScreen ? "100%" : "137px")};
     background: ${(props) => props.theme.borderColor};
     margin-top: 20px;
-    padding: 20px;
+    padding: ${(props) => (props.isSmallScreen ? "0" : "20px")};
     border: none;
     border-radius: 20px;
     display: flex;
