@@ -69,11 +69,11 @@ const PinBtn = styled.button`
   font-size: 0.6rem;
 `;
 
-// 왼쪽에서 오른쪽으로 슬라이드 인
+// 오른쪽에서 왼쪽으로 슬라이드 인
 const slideInFromLeft = keyframes`
   from {
-    transform: translateX(-15%);
-    opacity: 0.7;
+    transform: translateX(15%);
+    opacity: 0.9;
   }
   to {
     transform: translateX(0);
@@ -81,11 +81,11 @@ const slideInFromLeft = keyframes`
   }
 `;
 
-// 오른쪽에서 왼쪽으로 슬라이드 인
+// 왼쪽에서 오른쪽으로 슬라이드 인
 const slideInFromRight = keyframes`
   from {
-    transform: translateX(-5%);
-    opacity: 0.7;
+    transform: translateX(15%);
+    opacity: 0.9;
   }
   to {
     transform: translateX(0);
@@ -100,7 +100,7 @@ const ModalContainer = styled.div.withConfig({
     prop !== "isThemeModal" && prop !== "isBackClick",
 })`
   position: absolute;
-  top: 0px;
+  top: 10px;
   right: 10px;
   padding: 10px;
   width: 258px;

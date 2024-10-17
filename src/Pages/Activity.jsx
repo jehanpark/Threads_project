@@ -274,15 +274,11 @@ const Activity = () => {
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
   const navigate = useNavigate();
 
-  // 로그인 확인 및 리다이렉트
   useEffect(() => {
     if (!currentUser) {
-      const confirmLogin = window.confirm("로그인 하시겠습니까?");
-      if (confirmLogin) {
-        navigate("/login"); // 로그인 페이지로 이동
-      } else {
-        navigate("/"); // 메인 페이지로 이동
-      }
+      navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+    } else {
+      // navigate("/"); // "예"를 누르면 로그인 페이지로 이동
     }
   }, [currentUser, navigate]);
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { auth, db, storage } from "../firebase";
+import { useAuth } from "../Contexts/AuthContext";
 import {
   deleteDoc,
   doc,
@@ -381,6 +382,18 @@ const Post = ({
     setIsLiked((prevLiked) => !prevLiked);
   };
 
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+
+  useEffect(() => {
+    if (commentModalOpen) {
+      if (!currentUser) {
+        navigate("/login"); // 로그인 상태가 아니면 로그인 페이지로 이동
+      } else {
+        // navigate("/"); // 로그인 상태면 메인 페이지로 이동
+      }
+    }
+  }, [currentUser, navigate, commentModalOpen]);
+
   const openCommentModal = () => {
     setCommentModalOpen(true); // 특정 포스트의 ID로 모달 열기
   };
@@ -405,6 +418,7 @@ const Post = ({
     } catch (error) {}
   };
   const PostCommentClick = () => {
+    alert("hd");
     navigate("/PostComment/${id}", {
       state: {
         postId: id,

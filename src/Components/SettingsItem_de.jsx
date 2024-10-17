@@ -10,6 +10,9 @@ import HiddenWordModal from "./Common/HiddenWordModal";
 import OnlineStatusModal from "./Common/OnlineStatusModal";
 import AccountSettingModal from "./Common/AccountSettingModal";
 import DeactivateModal from "./Common/DeactivateModal";
+import { auth } from "../firebase";
+import { useAuth } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 import {
   LockIcon,
@@ -425,6 +428,17 @@ const SettingsItem_de = () => {
   const closeDeactivateModal = () => {
     setDeactivateModalOpen(false);
   };
+
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+    } else {
+      // navigate("/"); // "예"를 누르면 로그인 페이지로 이동
+    }
+  }, [currentUser, navigate]);
 
   // 모달 끝
   useEffect(() => {

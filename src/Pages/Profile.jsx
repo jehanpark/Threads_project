@@ -1,5 +1,7 @@
 import { useState, useContext, useEffect, useRef } from "react";
 import { auth, db } from "../firebase";
+import { useAuth } from "../Contexts/AuthContext";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   collection,
   onSnapshot,
@@ -21,9 +23,8 @@ import {
 } from "../Components/Common/Icon";
 import FollowModal from "../Components/profile/FollowModal";
 import ProfileEdit from "../Components/profile/ProfileEdit";
-import { useNavigate, useSearchParams } from "react-router-dom";
+
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
-import { useAuth } from "../Contexts/AuthContext";
 
 const Wrapper = styled.div`
   /* width: 100%; */
@@ -305,9 +306,6 @@ const NoResults = styled.p`
 `;
 
 const Profile = () => {
-  const navigate = useNavigate();
-  const user = auth.currentUser; //유저정보
-
   const [avatar, setAvarta] = useState(null || undefined); //이미지관리목적
   const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
   const [editbtn, setEditbtn] = useState(true);
@@ -337,18 +335,30 @@ const Profile = () => {
   // NotificationList에서 데이터를 받아옴
   const [isBouncing, setIsBouncing] = useState(false);
   const [comments, setComments] = useState([]);
+
+  const user = auth.currentUser; //유저정보
+
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!currentUser) {
-      const confirmLogin = window.confirm("로그인 하시겠습니까?");
-      if (confirmLogin) {
-        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
-      } else {
-        navigate("/");
-      }
+      navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+    } else {
+      // navigate(""); // "예"를 누르면 로그인 페이지로 이동
     }
   }, [currentUser, navigate]);
+
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+  //     const confirmLogin = window.confirm("로그인 하시겠습니까?");
+  //     if (confirmLogin) {
+  //     } else {
+  //       navigate("/");
+  //     }
+  //   }
+  // }, [currentUser, navigate]);
 
   // const location = useLocation();
 
