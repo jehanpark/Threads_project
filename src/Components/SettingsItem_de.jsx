@@ -9,6 +9,7 @@ import MentionModal from "./Common/MentionModal";
 import HiddenWordModal from "./Common/HiddenWordModal";
 import OnlineStatusModal from "./Common/OnlineStatusModal";
 import AccountSettingModal from "./Common/AccountSettingModal";
+import DeactivateModal from "./Common/deactivateModal";
 
 import {
   LockIcon,
@@ -414,6 +415,17 @@ const SettingsItem_de = () => {
     setAccountSettingModalOpen(false);
   };
 
+  // 프로필 비활성화 모달
+  const [isDeactivateModalOpen, setDeactivateModalOpen] = useState(false);
+
+  const openDeactivateModal = () => {
+    setDeactivateModalOpen(true);
+  };
+
+  const closeDeactivateModal = () => {
+    setDeactivateModalOpen(false);
+  };
+
   // 모달 끝
   useEffect(() => {
     // 초기 상태에 대한 border 위치 설정
@@ -594,7 +606,7 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <AccountTitle>프로필 비활성화 또는 삭제</AccountTitle>
-                    <IconStroke>
+                    <IconStroke onClick={() => setDeactivateModalOpen(true)}>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
                     </IconStroke>
                   </ContentAutoLayout>
@@ -898,10 +910,10 @@ const SettingsItem_de = () => {
       )}
       {isHiddenWordModalOpen && (
         <HiddenWordModal
-          onClose={closeHiddenWordModal}
-          onSelectOption={handleSelectOption} // 옵션 선택 시 상태 업데이트
-          selectedOption1={selectedOption1} // 선택된 옵션을 전달
-          selectedOption2={selectedOption2} // 선택된 옵션을 전달
+          onClose={closeHiddenWordModal} // 올바른 함수 전달
+          onSelectOption={handleSelectOption}
+          selectedOption1={selectedOption1}
+          selectedOption2={selectedOption2}
         />
       )}
       {isOnlineStatusModalOpen && (
@@ -915,6 +927,9 @@ const SettingsItem_de = () => {
         <AccountSettingModal
           onClose={() => setAccountSettingModalOpen(false)}
         />
+      )}
+      {isDeactivateModalOpen && (
+        <DeactivateModal onClose={() => setDeactivateModalOpen(false)} />
       )}
     </Wrapper>
   );

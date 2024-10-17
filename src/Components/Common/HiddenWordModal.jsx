@@ -5,6 +5,7 @@ import { RightArrowIcon } from "../../Components/Common/Icon";
 import { Line } from "../../Components/SettingsItem_de";
 import { useMediaQuery } from "react-responsive";
 import AddWordsModal from "./AddWordModal";
+import { LeftArrowIcon } from "./Icon";
 
 // 스타일 정의
 const Overlay = styled.div`
@@ -25,7 +26,7 @@ const Overlay = styled.div`
 
 const ModalContainer = styled.div`
   width: ${({ isMobile }) => (isMobile ? "100%" : "420px")};
-  height: ${({ isMobile }) => (isMobile ? "100%" : "620px")};
+  height: ${({ isMobile }) => (isMobile ? "100%" : "640px")};
   background-color: ${(props) => props.theme.borderColor};
   border: 1px solid ${(props) => props.theme.borderstroke};
   border-radius: ${({ isMobile }) => (isMobile ? "none" : "8px")};
@@ -33,6 +34,9 @@ const ModalContainer = styled.div`
 `;
 
 const HeadTitle = styled.h1`
+  margin-top: 10px;
+  margin-left: 120px;
+  font-weight: 600;
   margin-bottom: 14px;
   display: flex;
   justify-content: start;
@@ -146,6 +150,30 @@ const Checkbox = styled.input`
   }
 `;
 
+const TitleLayout = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+const BackButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+
+  color: gray; // 초기 색상 설정
+  transition: color 0.3s ease; // 색상 전환 효과
+
+  &:hover,
+  &:active {
+    color: #181818; // 호버 또는 클릭 시 색상 변경
+  }
+`;
+
 const HiddenWordModal = ({
   onClose,
   onSelectOption,
@@ -173,7 +201,18 @@ const HiddenWordModal = ({
   return (
     <Overlay onClick={handleOverlayClick} isMobile={isMobile}>
       <ModalContainer onClick={(e) => e.stopPropagation()} isMobile={isMobile}>
-        <HeadTitle isMobile={isMobile}>숨겨진 단어</HeadTitle>
+        <TitleLayout>
+          <BackButton
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log("BackButton clicked"); // 클릭 확인
+              onClose && onClose(); // 함수가 존재할 때만 호출
+            }}
+          >
+            <LeftArrowIcon size={32} />
+          </BackButton>
+          <HeadTitle isMobile={isMobile}>숨겨진 단어</HeadTitle>
+        </TitleLayout>
         <Info>Instagram에서 받은 댓글에도 이 설정이 적용됩니다.</Info>
         <Line />
         <Title isMobile={isMobile}>불쾌한 단어 및 문구</Title>

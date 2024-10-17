@@ -130,7 +130,6 @@ const ActiveBorder = styled.div`
   background-color: ${(props) => props.theme.activeBorder};
   transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
 `;
-
 const BackButton = styled.button`
   display: flex;
   justify-content: center;
@@ -138,6 +137,15 @@ const BackButton = styled.button`
   background: transparent;
   box-sizing: border-box;
   border: none;
+  cursor: pointer;
+
+  color: gray; // 초기 색상 설정
+  transition: color 0.3s ease; // 색상 전환 효과
+
+  &:hover,
+  &:active {
+    color: #181818; // 호버 또는 클릭 시 색상 변경
+  }
 `;
 
 const Layout = styled.div`
