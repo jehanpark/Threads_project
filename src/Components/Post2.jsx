@@ -34,12 +34,14 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
-  padding: 40px;
-  margin-bottom: 10px;
+  padding: 4px 40px 20px;
+  margin-bottom: 4px;
   display: flex;
-  border-radius: 30px;
+  /* border-radius: 30px; */
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
+  border-bottom: 1px solid ${(props) => props.theme.borderstroke};
+
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
@@ -260,7 +262,12 @@ const SetContentInputButton = styled.input`
   display: none;
 `;
 
-const Post = ({
+const BorderBottom = styled.div`
+  margin: 10px 0;
+  border: 1px solid #ccc;
+`;
+
+const Post2 = ({
   post,
   userId,
   photos,
@@ -671,4 +678,4 @@ const Post = ({
   );
 };
 
-export default Post;
+export default Post2;

@@ -175,7 +175,7 @@ const ButtonWrap = styled.div`
   }
 `;
 
-const InputBtn = styled.input`
+const InputBtn = styled.button`
   width: 100%;
   height: 40px;
   border: 1px solid;
@@ -183,7 +183,8 @@ const InputBtn = styled.input`
   background-color: ${(props) => props.theme.headerBg};
   border: 2px solid ${(props) => props.theme.borderstroke};
   border-radius: 8px;
-  padding: 15px;
+  font-size: 14px;
+  padding: 4px 15px;
   &:hover {
     background: ${(props) => props.theme.searchBar};
     color: ${(props) => props.theme.btnBgColor};
@@ -339,83 +340,83 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
 
   return (
     <>
-      <form onSubmit={complete}>
-        <ModalOverlay onClick={close}>
-          <PofileModalBox onClick={(e) => e.stopPropagation()}>
-            <CloseButton onClick={close}>X</CloseButton>
-            <Box style={{ height: "97px" }}>
-              <Left style={{ width: "90%" }}>
-                <SubTitle>이름</SubTitle>
-                <NameInput
-                  name="username"
-                  placeholder={user.displayName || user.email}
-                  onChange={handleInputChange}
-                />
-              </Left>
-              <ImgBox htmlFor="profileImg">
-                {avatar == null || avatar == "" ? (
-                  <UserIcon2 width="54" fill="#BABABA" />
-                ) : (
-                  <Img src={avatar} />
-                )}
-              </ImgBox>
-              <ImgInput
-                id="profileImg"
-                type="file"
-                accept="image/*"
-                onChange={onImgchange}
+      {/* <form onSubmit={complete}> */}
+      <ModalOverlay onClick={close}>
+        <PofileModalBox onClick={(e) => e.stopPropagation()}>
+          <CloseButton onClick={close}>X</CloseButton>
+          <Box style={{ height: "97px" }}>
+            <Left style={{ width: "90%" }}>
+              <SubTitle>이름</SubTitle>
+              <NameInput
+                name="username"
+                placeholder={user.displayName || user.email}
+                onChange={handleInputChange}
               />
-            </Box>
-            <Box style={{ height: "100px" }}>
-              <Full>
-                <SubTitle>자기소개</SubTitle>
-                <NameInput
-                  name="bio"
-                  placeholder={profileData.bio || "자기소개를 입력하세요"}
-                  onChange={handleInputChange}
-                  maxlength="120"
-                />
-              </Full>
-            </Box>
-            <Box style={{ height: "60px" }}>
-              <Checkinner>
-                <SubTitle>연동 링크 공개</SubTitle>
-                <Switch
-                  data-ison={isOn}
-                  onClick={toggleSwitch}
-                  htmlFor="isLinkPublic"
-                >
-                  <Handle layout transition={spring} />
-                </Switch>
-                <input
-                  style={{ display: "none" }}
-                  type="checkbox"
-                  name="isLinkPublic"
-                  id="isLinkPublic"
-                  checked={profileData.isLinkPublic}
-                  onChange={handleInputChange}
-                />
-              </Checkinner>
-            </Box>
-            <Box style={{ height: "60px" }}>
-              <Checkinner>
-                <SubTitle>비공개 프로필</SubTitle>
-                <Switch
-                  data-isOn={isOn2}
-                  onClick={toggleSwitch2}
-                  htmlFor="isProfilePublic"
-                >
-                  <Handle layout transition={spring} />
-                </Switch>
-                <input
-                  style={{ display: "none" }}
-                  type="checkbox"
-                  name="isProfilePublic"
-                  id="isProfilePublic"
-                  checked={profileData.isProfilePublic}
-                  onChange={handleInputChange}
-                />
-                {/* <Switch data-isOn={isOn} onClick={toggleSwitch}>
+            </Left>
+            <ImgBox htmlFor="profileImg">
+              {avatar == null || avatar == "" ? (
+                <UserIcon2 width="54" fill="#BABABA" />
+              ) : (
+                <Img src={avatar} />
+              )}
+            </ImgBox>
+            <ImgInput
+              id="profileImg"
+              type="file"
+              accept="image/*"
+              onChange={onImgchange}
+            />
+          </Box>
+          <Box style={{ height: "100px" }}>
+            <Full>
+              <SubTitle>자기소개</SubTitle>
+              <NameInput
+                name="bio"
+                placeholder={profileData.bio || "자기소개를 입력하세요"}
+                onChange={handleInputChange}
+                maxlength="120"
+              />
+            </Full>
+          </Box>
+          <Box style={{ height: "60px" }}>
+            <Checkinner>
+              <SubTitle>연동 링크 공개</SubTitle>
+              <Switch
+                data-ison={isOn}
+                onClick={toggleSwitch}
+                htmlFor="isLinkPublic"
+              >
+                <Handle layout transition={spring} />
+              </Switch>
+              <input
+                style={{ display: "none" }}
+                type="checkbox"
+                name="isLinkPublic"
+                id="isLinkPublic"
+                checked={profileData.isLinkPublic}
+                onChange={handleInputChange}
+              />
+            </Checkinner>
+          </Box>
+          <Box style={{ height: "60px" }}>
+            <Checkinner>
+              <SubTitle>비공개 프로필</SubTitle>
+              <Switch
+                data-isOn={isOn2}
+                onClick={toggleSwitch2}
+                htmlFor="isProfilePublic"
+              >
+                <Handle layout transition={spring} />
+              </Switch>
+              <input
+                style={{ display: "none" }}
+                type="checkbox"
+                name="isProfilePublic"
+                id="isProfilePublic"
+                checked={profileData.isProfilePublic}
+                onChange={handleInputChange}
+              />
+              {/* <Switch data-isOn={isOn} onClick={toggleSwitch}>
                   <Handle layout transition={spring} />
                 </Switch>
                 <input
@@ -424,17 +425,17 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
                   checked={profileData.isProfilePublic}
                   onChange={handleInputChange}
                 /> */}
-              </Checkinner>
-            </Box>
-            <ButtonWrap>
-              <InputBtn type="submit"></InputBtn>
-            </ButtonWrap>
-            <Box className="mobile" onClick={close}>
-              모달 닫기
-            </Box>
-          </PofileModalBox>
-        </ModalOverlay>
-      </form>
+            </Checkinner>
+          </Box>
+          <ButtonWrap>
+            <InputBtn onClick={complete}>완료</InputBtn>
+          </ButtonWrap>
+          <Box className="mobile" onClick={close}>
+            모달 닫기
+          </Box>
+        </PofileModalBox>
+      </ModalOverlay>
+      {/* </form> */}
     </>
   );
 });

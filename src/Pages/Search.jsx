@@ -291,6 +291,7 @@ const Search = () => {
                 searchTerm={searchTerm}
                 contentType={contentType}
                 onDataEmpty={(isEmpty) => setDisplaysEmpty(isEmpty)}
+                postNum="2"
               />
             )}
 

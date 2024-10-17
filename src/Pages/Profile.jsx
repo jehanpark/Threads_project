@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import styled from "styled-components";
 import Button from "../Components/Common/Button";
-import Post from "../Components/Post";
+import Post2 from "../Components/Post2";
 import {
   PlusIcon,
   InstaIcon,
@@ -44,7 +44,8 @@ const BoederWrapper = styled.div`
   /* transform: translate(-50%); */
   /* margin: 0; */
   width: 680px;
-  height: 100%;
+  /* height: 100%; */
+  height: calc(100% - 120px);
   /* height: 85%; */
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderColor};
@@ -223,9 +224,10 @@ const ThreadInner = styled.div`
 
 const OvarlayHC = styled.div`
   width: 680px;
-  height: 50px;
+  height: 20px;
   position: absolute;
-  background: linear-gradient(#fff, #ffffff00);
+  background: ${(props) =>
+    `linear-gradient(${props.theme.borderColor}, #ffffff00)`};
   z-index: 5;
 `;
 
@@ -255,6 +257,8 @@ const PostWrap = styled.div`
   overflow-y: scroll;
   scrollbar-width: none;
   transition: transform 0.3s ease-out;
+  & > div {
+  }
   ::-webkit-scrollbar {
     display: none;
   }
@@ -699,9 +703,9 @@ const Profile = () => {
                 onScroll={handleScroll}
               >
                 {contentType === "thresds"
-                  ? posts.map((post) => <Post key={post.id} {...post} />)
+                  ? posts.map((post) => <Post2 key={post.id} {...post} />)
                   : filteredData.map((filter) => (
-                      <Post key={filter.id} {...filter} />
+                      <Post2 key={filter.id} {...filter} />
                     ))}
               </PostWrap>
             </ThreadInner>
