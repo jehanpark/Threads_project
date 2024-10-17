@@ -205,6 +205,9 @@ const CommentHeader = styled.div`
   align-items: center;
   gap: 10px;
   margin-left: 40px;
+  @media (max-width: 768px) {
+    margin-left: 14px;
+  }
 `;
 const CommentUserImage = styled.img`
   width: 34px;
@@ -251,6 +254,9 @@ const CometdescAll = styled.div`
   margin: 10px 0 0 8%;
   border-left: 2px solid ${(props) => props.theme.borderstroke};
   padding: 10px 0;
+  @media (max-width: 768px) {
+    margin: 10px 0 0 8%;
+  }
 `;
 const CommentContent = styled.div`
   font-size: 14px;

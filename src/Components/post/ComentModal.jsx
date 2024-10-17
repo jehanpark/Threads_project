@@ -166,8 +166,8 @@ const Img = styled.img`
 const BottomWrapp = styled.div`
   width: 100%;
   height: auto;
-  padding: 10px 0 0 0;
-  margin-bottom: 10px;
+  padding: 10px 0 10px 0px;
+
   background: ${(props) => props.theme.borderWrapper};
   border-radius: 0 0 30px 30px;
   border-top: 1px solid rgba(204, 204, 204, 0.4);
@@ -382,7 +382,7 @@ const ComentModal = ({
                   </PictureButton>
                 </Icons>
                 <EditButton>
-                  <UploadButton onClick={handleSave}>저장</UploadButton>
+                  <UploadButton onClick={handleSave}>게시</UploadButton>
                   <DelButton cancel onClick={onCancel}>
                     취소
                   </DelButton>
