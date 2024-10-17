@@ -3,9 +3,9 @@ import styled, { keyframes } from "styled-components";
 import { ThemeContext } from "../Contexts/ThemeContext";
 import { auth } from "../firebase";
 import { useAuth } from "../Contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 import ReportModal from "./Login/ReportModal";
 import { AddPageContext } from "../Contexts/AddPageContext";
+import { useNavigate, useLocation } from "react-router-dom"; // useLocation 추가
 import {
   ArrowIcon,
   EtcIcon,
@@ -240,7 +240,8 @@ const Sidebar = () => {
   const toggleShowing = () => setShowing((prev) => !prev);
 
   const navigate = useNavigate();
-
+  const location = useLocation(); // 현재 경로 가져오기
+  const isHomePage = location.pathname === "/";
   const openModal = () => {
     setIsOpen(true);
     setIsThemeModalOpen(false);
@@ -323,9 +324,11 @@ const Sidebar = () => {
     <>
       <Aside>
         <BtnWrapper>
-          <PinBtn onClick={openPinModal}>
-            <FixIcon fill={"#bababa"} />
-          </PinBtn>
+          {isHomePage && ( // 홈 페이지에서만 PinBtn 렌더링
+            <PinBtn onClick={openPinModal}>
+              <FixIcon fill={"#bababa"} />
+            </PinBtn>
+          )}
           <SetBtn onClick={openModal}>
             <EtcIcon fill={"#bababa"} />
           </SetBtn>
