@@ -23,16 +23,17 @@ import FollowModal from "../Components/profile/FollowModal";
 import ProfileEdit from "../Components/profile/ProfileEdit";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
-
+import { useAuth } from "../Contexts/AuthContext";
 const Wrapper = styled.div`
   /* width: 100%; */
   /* height: calc(100vh - 120px); */
   height: 100vh;
-  margin-top: 120px;
+  /* margin-top: 120px; */
   /* overflow: hidden; */
   z-index: 10;
   @media (max-width: 768px) {
     height: 100vh;
+    width: 100%;
   }
 `;
 
@@ -54,7 +55,7 @@ const BoederWrapper = styled.div`
     position: static;
     margin: 0;
     width: 100vw;
-    height: calc(100% - 140px);
+    height: calc(100% - 70px);
     box-shadow: none;
     border-radius: 0px;
     background: ${(props) => props.theme.borderColor};
@@ -321,6 +322,18 @@ const Profile = () => {
   // NotificationList에서 데이터를 받아옴
   const [isBouncing, setIsBouncing] = useState(false);
   const [comments, setComments] = useState([]);
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+
+  useEffect(() => {
+    if (!currentUser) {
+      const confirmLogin = window.confirm("로그인 하시겠습니까?");
+      if (confirmLogin) {
+        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+      } else {
+        navigate("/");
+      }
+    }
+  }, [currentUser, navigate]);
 
   // const location = useLocation();
 

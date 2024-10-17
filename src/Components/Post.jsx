@@ -28,26 +28,31 @@ import PostSetModal from "./Common/PostSetModal";
 import AudioMessage from "./AudioMessage";
 import EtcModal from "./post/EtcModal";
 import fetchUserProfileImage from "../Utils/fetchProfile";
+import PostCommentModal from "../Pages/PostComment";
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
   padding: 40px;
-  padding: 40px;
+  margin-bottom: 10px;
   display: flex;
+  border-radius: 30px;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
-  border-bottom: 1px solid rgba(172, 172, 172, 0.4);
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
+    border-radius: 0px;
+    padding: 30px;
+    margin-bottom: 0px;
   }
 `;
 const ColumnWrapper = styled.div`
   display: flex;
 `;
 const Column = styled.div`
+  margin-left: 20px;
   display: flex;
   margin-left: 50px;
   margin-bottom: 12px;
@@ -281,6 +286,7 @@ const Post = ({
   const [editedPost, setEditedPost] = useState(post);
   const navigate = useNavigate();
   const [profileImg, setProfileImg] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
     const getUserProfileImage = async () => {
@@ -413,41 +419,46 @@ const Post = ({
     }
   };
 
-  const onUpdate = async () => {
-    try {
-      if (user?.uid !== userId) return;
+  // const onUpdate = async () => {
+  //   try {
+  //     if (user?.uid !== userId) return;
 
-      const postDoc = await getDoc(doc(db, "contents", id));
-      if (!postDoc.exists()) throw new Error("Documents does not exist");
+  //     const postDoc = await getDoc(doc(db, "contents", id));
+  //     if (!postDoc.exists()) throw new Error("Documents does not exist");
 
-      if (editedPhoto) {
-        const newFileType = editedPhoto.type.startsWith("image/")
-          ? "image"
-          : "video";
+  //     if (editedPhoto) {
+  //       const newFileType = editedPhoto.type.startsWith("image/")
+  //         ? "image"
+  //         : "video";
 
-        const locationRef = ref(storage, `contents/${user.uid}/${id}`);
-        const uploadTask = uploadBytesResumable(locationRef, editedPhoto);
-        if (editedPhoto.size >= 5 * 1024 * 1024) {
-          uploadTask.cancel();
-          throw new Error("File Size is over 5MB");
-        }
-        const result = await uploadBytes(locationRef, editedPhoto);
-        const url = await getDownloadURL(result.ref);
+  //       const locationRef = ref(storage, `contents/${user.uid}/${id}`);
+  //       const uploadTask = uploadBytesResumable(locationRef, editedPhoto);
+  //       if (editedPhoto.size >= 5 * 1024 * 1024) {
+  //         uploadTask.cancel();
+  //         throw new Error("File Size is over 5MB");
+  //       }
+  //       const result = await uploadBytes(locationRef, editedPhoto);
+  //       const url = await getDownloadURL(result.ref);
 
-        await updateDoc(doc(db, "contents", id), {
-          post: editedPost,
-          photo: newFileType === "image" ? url : "",
-          video: newFileType === "video" ? url : "",
-          fileType: newFileType,
-        });
-      } else {
-        await updateDoc(doc(db, "contents", id), { post: editedPost });
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsEditing(false); // 수정 완료 후 입력창 닫기
-    }
+  //       await updateDoc(doc(db, "contents", id), {
+  //         post: editedPost,
+  //         photo: newFileType === "image" ? url : "",
+  //         video: newFileType === "video" ? url : "",
+  //         fileType: newFileType,
+  //       });
+  //     } else {
+  //       await updateDoc(doc(db, "contents", id), { post: editedPost });
+  //     }
+  //   } catch (e) {
+  //     console.error(e);
+  //   } finally {
+  //     setIsEditing(false); // 수정 완료 후 입력창 닫기
+  //   }
+  // };
+
+  const handleSave = (updatedContent) => {
+    setEditedPost(updatedContent);
+    // 추가적으로 필요한 업데이트 로직
   };
 
   const handleLike = async () => {
@@ -503,15 +514,28 @@ const Post = ({
   const handleDmClick = async () => {
     const postRef = doc(db, "contents", id);
 
-    if (isDms) {
-      setDms((prevDms) => prevDms - 1);
-      await updateDoc(postRef, { dms: dms - 1 });
-    } else {
+    // 최초 클릭 시 DM 카운트 증가 및 Firebase 업데이트
+    if (!isCopied) {
       setDms((prevDms) => prevDms + 1);
       await updateDoc(postRef, { dms: dms + 1 });
-    }
 
-    setIsDms((prevDms) => !prevDms);
+      // URL 복사 처리
+      const pageUrl = window.location.href;
+
+      try {
+        // 클립보드에 URL 복사
+        await navigator.clipboard.writeText(pageUrl);
+
+        // 복사 완료 상태와 알림 표시
+        setIsCopied(true);
+        alert("링크가 복사되었습니다.");
+      } catch (err) {
+        console.error("링크 복사 실패:", err);
+      }
+    } else {
+      // 이미 복사된 경우 알림 표시
+      alert("이미 링크가 복사되었습니다.");
+    }
   };
 
   // Retweets 상태가 변경될 때 Firebase에 업데이트
@@ -550,7 +574,7 @@ const Post = ({
               alt="User Profile"
             ></UserImage>
           ) : (
-            <UserIcon2 />
+            <UserIcon2 width={40} />
           )}
 
           <Username
@@ -585,7 +609,9 @@ const Post = ({
           {isEtcModalOpen && (
             <EtcModal
               post={post}
-              // onSave={handleSave}
+              photos={photos}
+              id={id}
+              onSave={handleSave}
               onCancel={closeEtcModal}
               setIsEtcModalOpen={setIsEtcModalOpen}
             />
@@ -635,11 +661,11 @@ const Post = ({
           <IconWrapper onClick={handleCommentClick}>
             <Coment width={20} /> {commentsCount}
           </IconWrapper>
-          <IconWrapper onClick={handleDmClick}>
-            <DmIcon width={18} /> {dms}
-          </IconWrapper>
           <IconWrapper onClick={handleRetweetClick}>
             <RetweetIcon width={20} /> {retweets}
+          </IconWrapper>
+          <IconWrapper onClick={handleDmClick}>
+            <DmIcon width={18} /> {dms}
           </IconWrapper>
         </Icons>
       </Wrapper>

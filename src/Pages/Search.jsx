@@ -174,8 +174,8 @@ const BoederWrapper = styled.div`
     position: fixed;
     border-radius: 0;
     width: 100%;
-    height: calc(100% - 140px);
-    bottom: 70px;
+    /* height: calc(100% - 140px); */
+    bottom: 0px;
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
   }
