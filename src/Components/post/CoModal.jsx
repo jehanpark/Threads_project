@@ -78,6 +78,7 @@ const PostAll = styled.div`
   }
 `;
 const PostArea = styled.div`
+  padding: 10px;
   margin: 10px;
   display: grid;
   flex: 2;
@@ -406,8 +407,13 @@ const CenBtn = styled.div`
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   border-radius: 40px 40px 0 0;
   cursor: pointer;
+  @media (max-width: 768px) {
+    padding: 18px;
+    gap: 0px;
+  }
 `;
 const CoModal = ({
+  userId,
   postId,
   postContent,
   photos,
@@ -434,7 +440,6 @@ const CoModal = ({
   const maxFileSize = 5 * 1024 * 1024; // 5MB
   const maxFilesCount = 3;
 
-  const { userId } = location.state || {};
   // Firebase에서 전달된 값을 상태로 설정
   useEffect(() => {
     if (passedLikes) setLikes(passedLikes);
@@ -675,8 +680,8 @@ const CoModal = ({
                         src={URL.createObjectURL(file)}
                         alt={`Uploaded Preview ${index + 1}`}
                         style={{
-                          width: "160px",
-                          height: "160px",
+                          width: "120px",
+                          height: "120px",
                           borderRadius: "10px",
                           objectFit: "cover",
                         }}
@@ -686,8 +691,8 @@ const CoModal = ({
                         controls
                         muted
                         style={{
-                          width: "160px",
-                          height: "160px",
+                          width: "120px",
+                          height: "120px",
                           borderRadius: "10px",
                           objectFit: "cover",
                         }}

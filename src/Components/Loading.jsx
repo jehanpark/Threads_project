@@ -10,18 +10,18 @@ const draw = keyframes`
 
 // 스타일 컴포넌트 정의
 const LoadingContainer = styled.div`
-  width: 680px;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   position: absolute;
   left: 50%;
   bottom: 0;
   transform: translate(-50%);
-  border-radius: 40px 40px 0 0;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: ${(props)=>props.theme.bodyBg};
+  background-color: ${(props) => props.theme.bodyBg};
   opacity: 0.9;
   z-index: 100000;
 
@@ -37,9 +37,9 @@ const SvgIcon = styled.svg`
   width: 50px;
   height: 56px;
   path {
-    stroke-dasharray: 300;  // 전체 경로 길이
+    stroke-dasharray: 300; // 전체 경로 길이
     stroke-dashoffset: 300; // 경로가 가려진 상태에서 시작
-    stroke: ${(props)=>props.theme.logoColor};
+    stroke: ${(props) => props.theme.logoColor};
     animation: ${draw} 1.6s infinite forwards; // 3초 동안 경로를 그리는 애니메이션
   }
 `;
@@ -66,7 +66,7 @@ const Loading = () => {
           strokeWidth="4"
         />
       </SvgIcon>
-      <GrayLogo src='/logoSvg.png'/>
+      <GrayLogo src="/logoSvg.png" />
     </LoadingContainer>
   );
 };

@@ -106,8 +106,8 @@ const PlusImage = styled.div`
   object-fit: cover;
 `;
 const Img = styled.img`
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
   border-radius: 10px;
   object-fit: cover;
   @media (max-width: 768px) {
@@ -290,8 +290,8 @@ const EtcModal = ({
                   <video
                     controls
                     style={{
-                      width: "160px",
-                      height: "160px",
+                      width: "120px",
+                      height: "120px",
                       borderRadius: "10px",
                       objectFit: "cover",
                     }}
