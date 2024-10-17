@@ -7,7 +7,6 @@ import ThreadProvider from "./Contexts/ThreadContext";
 import ThemeProvider from "./Contexts/ThemeContext";
 import AuthProvider from "./Contexts/AuthContext";
 import GlobalStyles from "./styles/GlobalStyles.styles";
-import Nav from "./Components/Nav";
 
 createRoot(document.getElementById("root")).render(
   <ThemeProvider>

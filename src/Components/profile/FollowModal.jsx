@@ -4,6 +4,7 @@ import { useMediaQuery } from "react-responsive";
 import Searchbar from "../Search/Searchbar";
 import FollowersList from "../Search/FollowerList";
 import FollowerItem from "../Search/FollowerItem";
+
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
