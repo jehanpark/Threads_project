@@ -1,6 +1,7 @@
 // src/components/MentionModal.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
+import { LeftArrowIcon } from "./Icon";
 
 // 스타일 정의
 export const Overlay = styled.div`
@@ -26,12 +27,38 @@ export const ModalContainer = styled.div`
   padding: 24px;
 `;
 
+const TitleLayout = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+const BackButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+
+  color: gray; // 초기 색상 설정
+  transition: color 0.3s ease; // 색상 전환 효과
+
+  &:hover,
+  &:active {
+    color: #181818; // 호버 또는 클릭 시 색상 변경
+  }
+`;
+
 export const Title = styled.h2`
+  margin-left: 90px;
+  font-weight: 600;
+  margin-top: 10px;
   margin-bottom: 14px;
   display: flex;
   justify-content: start;
   align-items: center;
-  font-weight: 600;
   font-size: ${({ isMobile }) => (isMobile ? "14px" : "")};
 `;
 
@@ -124,7 +151,13 @@ const MentionModal = ({ onClose, onSelectOption }) => {
   return (
     <Overlay onClick={handleOverlayClick}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <Title>@언급 허용 대상</Title>
+        <TitleLayout>
+          <BackButton onClick={onClose}>
+            <LeftArrowIcon size={32} />
+          </BackButton>
+          <Title>@언급 허용 대상</Title>
+        </TitleLayout>
+
         <Info>
           회원님을 @언급하여 스레드, 답글 또는 소개글에 회원님의 프로필을 연결할
           수 있도록 허용할 사람을 선택하세요. 회원님이 선택한 옵션에 해당하지

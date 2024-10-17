@@ -910,10 +910,10 @@ const SettingsItem_de = () => {
       )}
       {isHiddenWordModalOpen && (
         <HiddenWordModal
-          onClose={closeHiddenWordModal}
-          onSelectOption={handleSelectOption} // 옵션 선택 시 상태 업데이트
-          selectedOption1={selectedOption1} // 선택된 옵션을 전달
-          selectedOption2={selectedOption2} // 선택된 옵션을 전달
+          onClose={closeHiddenWordModal} // 올바른 함수 전달
+          onSelectOption={handleSelectOption}
+          selectedOption1={selectedOption1}
+          selectedOption2={selectedOption2}
         />
       )}
       {isOnlineStatusModalOpen && (

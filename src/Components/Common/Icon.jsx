@@ -1844,25 +1844,25 @@ export const OnlineStatusIcon = ({ width, fill }) => {
   );
 };
 // 왼쪽 화살표 아이콘 컴포넌트
-export const LeftArrowIcon = ({
-  width = "24px",
-  height = "24px",
-  fill = "#1C1C1F",
-}) => (
+export const LeftArrowIcon = ({ width = "24px", height = "24px" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    xmlnsXlink="http://www.w3.org/1999/xlink"
     width={width}
     height={height}
     viewBox="0 -6.5 38 38"
   >
     <title>left-arrow</title>
     <desc>Created with Sketch.</desc>
-    <g id="icons" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+    <g
+      id="icons"
+      stroke="none"
+      strokeWidth="1"
+      fill="currentColor"
+      fillRule="evenodd"
+    >
       <g
         id="ui-gambling-website-lined-icnos-casinoshunter"
         transform="translate(-1641.000000, -158.000000)"
-        fill={fill}
         fillRule="nonzero"
       >
         <g id="1" transform="translate(1350.000000, 120.000000)">

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { RightArrowIcon } from "../../Components/Common/Icon";
 import { useMediaQuery } from "react-responsive";
+import { LeftArrowIcon } from "./Icon";
 
 // 스타일 정의
 export const Overlay = styled.div`
@@ -50,6 +51,8 @@ const IconLink = styled.a`
 `;
 
 const HeadTitle = styled.h1`
+  margin-top: 10px;
+  margin-left: 120px;
   margin-bottom: 14px;
   display: flex;
   justify-content: start;
@@ -75,6 +78,29 @@ const Info = styled.div`
   border-radius: 8px;
   line-height: 12px;
   padding: ${({ isMobile }) => (isMobile ? "4px" : "10px")};
+`;
+const TitleLayout = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+const BackButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+
+  color: gray; // 초기 색상 설정
+  transition: color 0.3s ease; // 색상 전환 효과
+
+  &:hover,
+  &:active {
+    color: #181818; // 호버 또는 클릭 시 색상 변경
+  }
 `;
 
 const OptionList = styled.ul`
@@ -144,7 +170,12 @@ const OnlineStatusModal = ({ onClose, selectedOption3, onSelectOption3 }) => {
   return (
     <Overlay onClick={onClose} isMobile={isMobile}>
       <ModalContainer onClick={(e) => e.stopPropagation()} isMobile={isMobile}>
-        <HeadTitle>온라인 상태</HeadTitle>
+        <TitleLayout>
+          <BackButton onClick={onClose}>
+            <LeftArrowIcon size={32} />
+          </BackButton>
+          <HeadTitle>온라인 상태</HeadTitle>
+        </TitleLayout>
         <Title isMobile={isMobile}>내 활동 상태를 볼 수 있는 사람</Title>
         <Info isMobile={isMobile}>
           이 옵션을 해제하면 다른 사람의 온라인 상태를 볼 수 없게 됩니다.{" "}

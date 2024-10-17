@@ -20,7 +20,7 @@ export const Overlay = styled.div`
 
 export const ModalContainer = styled.div`
   width: 420px;
-  height: 540px;
+  height: 520px;
   background-color: ${(props) => props.theme.borderColor};
   border: 1px solid ${(props) => props.theme.borderstroke};
   border-radius: 8px;
@@ -107,6 +107,15 @@ const BackButton = styled.button`
   background: transparent;
   box-sizing: border-box;
   border: none;
+  cursor: pointer;
+
+  color: gray; // 초기 색상 설정
+  transition: color 0.3s ease; // 색상 전환 효과
+
+  &:hover,
+  &:active {
+    color: #181818; // 호버 또는 클릭 시 색상 변경
+  }
 `;
 
 const ButtonLayout = styled.div`
