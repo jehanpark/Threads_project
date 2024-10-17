@@ -25,6 +25,7 @@ export const lightTheme = {
   searchButton: "#e9e9e9",
   buttonbackground: "#fff",
   buttonText: "#000",
+  comentBouttomLine: "#cccccc66",
   navIconColor: undefined,
   activityBG: "linear-gradient(145deg, #ffffff, #e6e6e6)",
   activitySH:
@@ -66,6 +67,7 @@ export const darkTheme = {
   navIconColor: undefined,
   buttonbackground: "#000",
   buttonText: "#fff",
+  comentBouttomLine: "#2d2d2d",
   activityBG: "linear-gradient(145deg, #333, #444)",
   activitySH:
     "5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(0, 0, 0, 0.2)",

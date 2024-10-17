@@ -89,7 +89,7 @@ const Li = styled.div`
     color: #0396f6;
   }
   @media (max-width: 768px) {
-    width: 60%;
+    width: 80%;
     height: 40px;
     padding: 18px;
     text-align: center;
@@ -107,7 +107,7 @@ const UpLoadButton = styled.button`
     justify-content: center;
     align-items: center;
     margin-bottom: 40px;
-    width: 60%;
+    width: 80%;
     height: 70px;
     background: ${(props) => props.theme.fontcolor};
     color: ${(props) => props.theme.borderColor};
@@ -117,8 +117,8 @@ const UpLoadButton = styled.button`
     border: none;
     transition: all 0.3s;
     &:hover {
-      background: #fff;
-      color: #1c1c1c;
+      background: ${(props) => props.theme.mouseHoverBg};
+      color: ${(props) => props.theme.mouseHoverFontcolor};
     }
   }
 `;

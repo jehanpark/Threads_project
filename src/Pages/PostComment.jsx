@@ -75,7 +75,7 @@ const PostWrapper = styled.div`
   background: ${(props) => props.theme.borderColor};
   padding: 40px;
   border-radius: 40px 40px 0 0;
-  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  border-bottom: 1px solid ${(props) => props.theme.comentBouttomLine};
   z-index: 20;
   @media (max-width: 768px) {
     width: 100%;
@@ -191,7 +191,7 @@ const CommentWrapper = styled.div`
   height: auto;
   background: ${(props) => props.theme.borderColor};
   padding: 15px;
-  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  border-bottom: 1px solid ${(props) => props.theme.comentBouttomLine};
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease-out;
