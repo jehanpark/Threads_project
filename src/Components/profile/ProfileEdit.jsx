@@ -105,6 +105,16 @@ const NameInput = styled.input`
   }
 `;
 
+const BioWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  p {
+    color: ${(props) => props.theme.nomalIconColor};
+    font-weight: 300;
+    font-size: 14px;
+  }
+`;
+
 const Full = styled.div`
   width: 100%;
   height: 100%;
@@ -205,6 +215,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   const [inputData, setInputDate] = useState({}); //>> 인풋 값을 받을 state
   const user = auth.currentUser; //유저 계정 내용 ( displayName , email , photoURL  , uid)
   const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
+  const [textNum, setTextNum] = useState(); //텍스트 숫자
 
   // isOn 값
   const [isOn, setIsOn] = useState(true);
@@ -241,6 +252,15 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
         ...prev,
         [name]: newValue,
       }));
+    }
+    if (name === "bio") {
+      let num = e.target.value.length;
+      if (num < 10) {
+        let num1 = String(num.toString().padStart(2, "0"));
+        setTextNum(num1);
+      } else {
+        setTextNum(num);
+      }
     }
   };
 
@@ -340,7 +360,6 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
 
   return (
     <>
-      {/* <form onSubmit={complete}> */}
       <ModalOverlay onClick={close}>
         <PofileModalBox onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={close}>X</CloseButton>
@@ -369,7 +388,11 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           </Box>
           <Box style={{ height: "100px" }}>
             <Full>
-              <SubTitle>자기소개</SubTitle>
+              <SubTitle>
+                <BioWrap>
+                  자기소개<p>{textNum || "00"}</p>
+                </BioWrap>
+              </SubTitle>
               <NameInput
                 name="bio"
                 placeholder={profileData.bio || "자기소개를 입력하세요"}
@@ -416,15 +439,6 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
                 checked={profileData.isProfilePublic}
                 onChange={handleInputChange}
               />
-              {/* <Switch data-isOn={isOn} onClick={toggleSwitch}>
-                  <Handle layout transition={spring} />
-                </Switch>
-                <input
-                  type="checkbox"
-                  name="isProfilePublic"
-                  checked={profileData.isProfilePublic}
-                  onChange={handleInputChange}
-                /> */}
             </Checkinner>
           </Box>
           <ButtonWrap>
@@ -435,7 +449,6 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           </Box>
         </PofileModalBox>
       </ModalOverlay>
-      {/* </form> */}
     </>
   );
 });

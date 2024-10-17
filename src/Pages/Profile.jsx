@@ -24,12 +24,9 @@ import ProfileEdit from "../Components/profile/ProfileEdit";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
 import { useAuth } from "../Contexts/AuthContext";
+
 const Wrapper = styled.div`
-  /* width: 100%; */
-  /* height: calc(100vh - 120px); */
   height: 100vh;
-  /* margin-top: 120px; */
-  /* overflow: hidden; */
   z-index: 10;
   @media (max-width: 768px) {
     height: 100vh;
@@ -38,20 +35,12 @@ const Wrapper = styled.div`
 `;
 
 const BoederWrapper = styled.div`
-  /* position: fixed; */
   bottom: 0;
-  /* left: 50%; */
-  /* transform: translate(-50%); */
-  /* margin: 0; */
   width: 680px;
-  /* height: 100%; */
-  height: calc(100% - 120px);
-  /* height: 85%; */
+  height: calc(100vh - 120px);
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
-  /* overflow: hidden; */
-
   @media (max-width: 768px) {
     position: static;
     margin: 0;
@@ -190,17 +179,6 @@ const Links = styled.div`
   gap: 8px;
   align-items: center;
   justify-content: center;
-`;
-
-const LinkPlus = styled.div`
-  border: 1px solid ${(props) => props.theme.nomalIconColor};
-  border-radius: 50px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
-  path {
-    stroke: ${(props) => props.theme.nomalIconColor};
-  }
 `;
 
 const PulsLinkIcon = styled.div`
