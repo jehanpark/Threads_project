@@ -205,7 +205,7 @@ const EtcModal = ({
         photos: newFileUrls.length > 0 ? newFileUrls : photos, // 새로운 사진이 있으면 업데이트
       });
 
-      onSave(newContent); // 부모 컴포넌트로 수정된 내용을 전달
+      onSave(newContent);
       setIsEtcModalOpen(false); // 모달 닫기
     } catch (error) {
       console.error("Error updating post:", error);
@@ -227,7 +227,7 @@ const EtcModal = ({
   return (
     <AllWrapp>
       {/* 어두운 배경을 클릭하면 모달이 닫히도록 설정 */}
-      <ModalOverlay onClick={() => setIsEtcModalOpen(false)}>
+      <ModalOverlay>
         {/* ModalWrapper는 ModalOverlay 안에 위치하여 화면 중앙에 배치됩니다 */}
         <ModalWrapper onClick={(e) => e.stopPropagation()}>
           <TextAreaWrapper>

@@ -385,6 +385,7 @@ const Comment = ({ id }) => {
   };
 
   const handleSubmit = async (e) => {
+    const user = auth.currentUser;
     e.preventDefault();
     if (!currentUser || isLoading || !post.trim() || post.length > 180) return;
 
@@ -398,6 +399,7 @@ const Comment = ({ id }) => {
         userId: currentUser.uid,
         photoUrls: [],
         videoUrls: [],
+        email: user.email,
       };
 
       const commentsRef = collection(db, "contents", postId, "comments");
