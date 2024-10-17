@@ -3,7 +3,7 @@ import styled, { useTheme } from "styled-components";
 import { motion } from "framer-motion";
 import Searchbar from "../Components/Search/Searchbar";
 import FollowersList from "../Components/Search/FollowerList";
-import TimeLine from "../Components/post/TimeLine";
+import TimeLine2 from "../Components/Search/TimLine2";
 
 const Wrapper = styled.div`
   /* width: 100%; */
@@ -29,13 +29,11 @@ const BoederWrapper = styled.div`
   /* left: 50%; */
   /* transform: translate(-50%); */
   /* margin: 0; */
-  width: 680px;
-  height: 100%;
+  height: calc(100vh - 120px);
   /* height: 85%; */
   border-radius: 40px 40px 0px 0px;
   /* overflow: hidden; */
   @media (max-width: 768px) {
-    position: absolute;
     width: 100%;
     /* bottom: 0; */
     border-radius: 0;
@@ -73,9 +71,14 @@ const ButtonGroup = styled(motion.div)`
   margin-top: 20px;
   margin-bottom: 20px;
   transition: all 0.3s ease;
+  @media (max-width: 768px) {
+    top: 0;
+    padding-left: 100px;
+  }
 
   @media (max-width: 480px) {
-    padding-left: 80px;
+    top: 0;
+    padding-left: 140px;
   }
 `;
 
@@ -96,14 +99,14 @@ const SelectButton = styled(motion.button)`
 
   @media (max-width: 768px) {
     display: block;
-    width: 90px;
-    padding: 8px 15px;
+    width: 100px;
+    padding: 10px 0;
   }
 
   @media (max-width: 480px) {
     display: block;
-    width: 80px;
-    padding: 6px 10px;
+    width: 90px;
+    padding: 10px 0;
   }
 `;
 
@@ -141,26 +144,31 @@ const SearchBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 30px;
 
   @media (max-width: 768px) {
-    margin-top: 100px;
+    margin-top: 60px;
   }
 
   @media (max-width: 480px) {
+    margin-top: 60px;
   }
 `;
 
 const ContentsBorder = styled.div`
   width: 100%;
+  height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: 100%;
+  align-content: center;
+
+  margin-top: 20px;
   overflow-y: auto;
   padding: 0 40px;
   padding-bottom: 20px;
-  margin-top: 20px;
+  box-sizing: border-box;
+
   ::-webkit-scrollbar {
     display: none;
   }
@@ -168,15 +176,18 @@ const ContentsBorder = styled.div`
   scrollbar-width: none;
 
   @media (max-width: 768px) {
+    padding: 0 20px;
     width: 100%;
+    height: 1000px;
   }
 
   @media (max-width: 480px) {
+    margin-top: 30px;
+    padding: 0 10px;
     width: 100%;
-    max-height: 100%;
+    height: 1000px;
   }
 `;
-
 const NoResults = styled.p`
   font-size: 16px;
   text-align: center;
@@ -246,7 +257,7 @@ const Search = () => {
               whileTap="click"
               drag="x"
               dragMomentum={false}
-              dragConstraints={{ left: -18, right: 0 }}
+              dragConstraints={{ left: -140, right: 0 }}
             >
               {buttons.map((button) => (
                 <SelectButton
@@ -282,11 +293,10 @@ const Search = () => {
           )}
 
           {contentType !== "profile" && (
-            <TimeLine
+            <TimeLine2
               searchTerm={searchTerm}
               contentType={contentType}
               onDataEmpty={(isEmpty) => setDisplaysEmpty(isEmpty)}
-              postNum="2"
             />
           )}
 

@@ -15,6 +15,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
   const emailAdress = searchParams.get("email");
   const auth = getAuth();
   const currentUser = auth.currentUser; // 로그인 정보
+
   useEffect(() => {
     const fetchFollowers = async () => {
       if (!currentUser) return; // currentUser가 없으면 실행하지 않음
@@ -34,6 +35,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
             (follower) => follower.userEmail !== currentUser.email
           );
         }
+
         // 검색어 필터링
         if (searchTerm && searchTerm.trim() !== "") {
           const searchLower = searchTerm.toLowerCase();
@@ -49,18 +51,20 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
             return usernameMatch || emailMatch || bioMatch;
           });
         }
+
         // 콘텐츠 타입 필터링 (프로필에 맞는 필터링 추가)
         if (contentType === "profile") {
           liveFollowers = liveFollowers.filter(
             (item) => item.isProfilePublic === true
           );
         }
+
         setFollowers(liveFollowers);
-        handleDataEmpty(liveFollowers.length === 0); // 데이터가 없는 경우 처리
-      } catch (error) {
-        console.error("데이터 가져오기 오류:", error);
-      }
+        // 상태 변경 후 onDataEmpty 호출
+        onDataEmpty(liveFollowers.length === 0); // 데이터가 없는 경우 처리
+      } catch (error) {}
     };
+
     fetchFollowers();
   }, [searchTerm, contentType, emailAdress, currentUser]);
 
@@ -91,9 +95,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
             : follower
         )
       );
-    } catch (error) {
-      console.error("오류 발생:", error);
-    }
+    } catch (error) {}
   };
   return (
     <div>

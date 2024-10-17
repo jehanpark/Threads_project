@@ -4,8 +4,9 @@ import NotificationItem from "../Components/Activity/NotificationItem";
 import NotificationList from "../Components/Activity/Notificationlist";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const Contain = styled.div`
+const Wrapper = styled.div`
   /* width: 100%; */
   /* height: calc(100vh - 120px); */
   height: 100vh;
@@ -17,27 +18,23 @@ const Contain = styled.div`
     width: 100%;
   }
 `;
-
 const BoederWrapper = styled.div`
-  width: 680px;
+  background: ${(props) => props.theme.borderColor};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: ${(props) => props.theme.borderColor};
-
+  width: 680px;
   /* position: fixed; */
   bottom: 0;
   /* left: 50%; */
   /* transform: translate(-50%); */
   /* margin: 0; */
-  width: 680px;
-  height: 100%;
+  height: calc(100vh - 120px);
   /* height: 85%; */
   border-radius: 40px 40px 0px 0px;
   /* overflow: hidden; */
   @media (max-width: 768px) {
-    position: absolute;
     width: 100%;
     /* bottom: 0; */
     border-radius: 0;
@@ -67,46 +64,48 @@ const MenuTitle = styled.p`
   }
 `;
 
-const ButtonGroup = styled.div`
+const ButtonGroup = styled(motion.div)`
+  /* padding-left: 20px; */
+  padding: 0px 15px;
   display: flex;
+  justify-content: space-between;
   width: 100%;
-  justify-content: center;
-  align-content: center;
-  gap: 20px;
-  margin-top: 100px;
-  margin-bottom: 10px;
+  gap: 12px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   transition: all 0.3s ease;
+
   @media (max-width: 480px) {
-    gap: 10px;
   }
 `;
 
-const SelectButton = styled.button`
+const SelectButton = styled(motion.button)`
   display: flex;
   flex: 0 0 auto;
   width: 110px;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px 20px;
-  color: ${(props) =>
-    props.selected ? props.theme.borderColor : props.theme.buttonText};
-  font-weight: 700;
   background: ${(props) =>
     props.selected ? props.theme.buttonText : props.theme.buttonbackground};
+  color: ${(props) =>
+    props.selected ? props.theme.borderColor : props.theme.buttonText};
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
 
   @media (max-width: 768px) {
+    margin-top: 40px;
     display: block;
-    width: 90px;
-    padding: 8px 15px;
+    width: 100px;
+    padding: 10px 0;
   }
 
   @media (max-width: 480px) {
+    margin-top: 40px;
     display: block;
-    width: 80px;
-    padding: 6px 10px;
+    width: 90px;
+    padding: 10px 0;
   }
 `;
 
@@ -154,11 +153,13 @@ const ContentsBorder = styled.div`
   justify-content: flex-start;
   align-content: center;
   height: 100%;
-  /* max-height: 700px; */
+
   overflow-y: auto;
   padding: 0 40px;
   padding-bottom: 20px;
   margin-top: 20px;
+  box-sizing: border-box;
+
   ::-webkit-scrollbar {
     display: none;
   }
@@ -166,11 +167,13 @@ const ContentsBorder = styled.div`
   scrollbar-width: none;
 
   @media (max-width: 768px) {
+    padding: 0 20px;
     width: 100%;
     max-height: 100%;
   }
 
   @media (max-width: 480px) {
+    padding: 0 10px;
     width: 100%;
     max-height: 100%;
   }
@@ -192,7 +195,6 @@ const Activity = () => {
   // NotificationList에서 데이터를 받아옴
   const handleDataUpdate = (listData) => {
     if (listData.length > 0) {
-      console.log("받은 데이터:", listData);
       setSavedData(listData); // 전체 데이터를 저장
       setFilteredData(listData); // 필터링 없이 모든 데이터를 먼저 보여줌
     }
@@ -229,13 +231,11 @@ const Activity = () => {
 
   // 필터링
   const filterList = (type) => {
-    console.log("선택된 타입:", type);
-    console.log("저장된 데이터:", savedData);
     if (type === "all") {
       setFilteredData(savedData); // 전체 데이터 보여줌
     } else {
       const filtered = savedData.filter((item) => item.type === type); // 타입에 따른 필터링
-      console.log("필터된 데이터:", filtered);
+
       setFilteredData(filtered);
     }
   };
@@ -274,24 +274,26 @@ const Activity = () => {
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
   const navigate = useNavigate();
 
-  // 로그인 확인 및 리다이렉트
   useEffect(() => {
     if (!currentUser) {
-      const confirmLogin = window.confirm("로그인 하시겠습니까?");
-      if (confirmLogin) {
-        navigate("/login"); // 로그인 페이지로 이동
-      } else {
-        navigate("/"); // 메인 페이지로 이동
-      }
+      navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+    } else {
+      // navigate("/"); // "예"를 누르면 로그인 페이지로 이동
     }
   }, [currentUser, navigate]);
 
   return (
-    <Contain>
+    <Wrapper>
       <BoederWrapper>
         <MenuTitle>활동</MenuTitle>
         {isMobile ? (
-          <ButtonGroup>
+          <ButtonGroup
+            className="mobile-buttons"
+            whileTap="click"
+            drag="x"
+            dragMomentum={false}
+            dragConstraints={{ left: -26, right: 0 }}
+          >
             {buttons.map((button) => (
               <SelectButton
                 key={button.type}
@@ -336,7 +338,7 @@ const Activity = () => {
           )}
         </ContentsBorder>
       </BoederWrapper>
-    </Contain>
+    </Wrapper>
   );
 };
 

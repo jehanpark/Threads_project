@@ -8,6 +8,7 @@ export const Wrapper = styled.div`
   margin: 0 auto;
   z-index: -1;
   color: ${(props) => props.theme.fontcolor};
+  background-color: ${(props) => props.theme.bodyBg};
 `;
 
 export const BgImg = styled.img`
@@ -65,7 +66,7 @@ export const StyledInput = styled.input`
   height: 54px;
   border: none;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
   color: #7e7e7e;
   box-shadow: 0 0 0 0 ${(props) => props.theme.loginInputSelectColor};

@@ -41,7 +41,7 @@ const BoederWrapper = styled.div`
   height: 100%;
   padding: 10px;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
+  background: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   /* overflow: hidden; */
   @media (max-width: 768px) {
@@ -52,6 +52,7 @@ const BoederWrapper = styled.div`
     padding: 0;
     left: 0px;
     border-radius: 0;
+    background: ${(props) => props.theme.borderColor};
     height: calc(100% - 70px);
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;

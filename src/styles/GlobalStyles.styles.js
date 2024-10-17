@@ -121,6 +121,10 @@ body {
   line-height: 1;
   overflow-y: scroll;
   transition: background-color 0.4s ease, color 0.2s ease;
+  @media (max-width: 768px) {
+    background-color: ${(props) => props.theme.buttonbackground};
+
+  }
   /* background-color: #F2F2F2; */
 }
 ol, ul ,li {

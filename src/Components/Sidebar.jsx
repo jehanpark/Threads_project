@@ -95,7 +95,7 @@ const ModalContainer = styled.div.withConfig({
   left: 0px;
   padding: 10px;
   width: 258px;
-  /* height: ${(props) => (props.isThemeModal ? "220px" : "")}; */
+  height: ${(props) => (props.isThemeModal ? "134px" : "")};
   /* height: 100%; */
   /* height: 298px; */
   background-color: ${(props) => props.theme.borderColor};
@@ -318,7 +318,7 @@ const Sidebar = () => {
     ? ["디자인", "인사이트", "설정", "문제신고", "로그아웃"]
     : ["디자인", , "문제신고", "로그인"];
 
-  const PinModalLists = ["Profile", "Activity", "Settings"];
+  const PinModalLists = ["Profile", "Activity"];
 
   return (
     <>

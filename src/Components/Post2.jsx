@@ -34,7 +34,7 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
-  padding: 4px 40px 20px;
+  padding: 20px;
   margin-bottom: 4px;
   display: flex;
   /* border-radius: 30px; */
@@ -43,11 +43,9 @@ const Wrapper = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.borderstroke};
 
   @media (max-width: 768px) {
+    margin-top: 10px;
+    padding: 12px;
     width: 100%;
-    height: auto;
-    border-radius: 0px;
-    padding: 30px;
-    margin-bottom: 0px;
   }
 `;
 const ColumnWrapper = styled.div`
@@ -300,9 +298,7 @@ const Post2 = ({
       try {
         const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
         setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
-      } catch (error) {
-        console.error("Error fetching profile image:", error);
-      }
+      } catch (error) {}
     };
 
     // userId가 있을 때만 프로필 이미지 가져오기
@@ -344,7 +340,6 @@ const Post2 = ({
 
   useEffect(() => {
     if (!id) {
-      console.error("ID is not available for this post");
       return; // id가 유효하지 않으면 바로 return
     }
 
@@ -378,9 +373,7 @@ const Post2 = ({
         );
         const commentsSnapshot = await getDocs(commentsCollectionRef);
         setCommentsCount(commentsSnapshot.size); // 댓글 개수를 상태로 설정
-      } catch (error) {
-        console.error("Error fetching post and comments data:", error);
-      }
+      } catch (error) {}
     };
 
     fetchPostAndCommentsData();
@@ -418,9 +411,7 @@ const Post2 = ({
           const photoRef = ref(storage, `contents/${user.uid}/${id}`);
           await deleteObject(photoRef);
         }
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     } else {
       alert("삭제할 권한이 없습니다.");
     }
@@ -536,9 +527,7 @@ const Post2 = ({
         // 복사 완료 상태와 알림 표시
         setIsCopied(true);
         alert("링크가 복사되었습니다.");
-      } catch (err) {
-        console.error("링크 복사 실패:", err);
-      }
+      } catch (err) {}
     } else {
       // 이미 복사된 경우 알림 표시
       alert("이미 링크가 복사되었습니다.");
@@ -559,9 +548,7 @@ const Post2 = ({
 
     setIsRetweets((prevRet) => !prevRet);
   };
-  useEffect(() => {
-    console.log("isEtcModalOpen changed:", isEtcModalOpen);
-  }, [isEtcModalOpen]);
+  useEffect(() => {}, [isEtcModalOpen]);
 
   return (
     <>

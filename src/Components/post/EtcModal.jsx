@@ -238,7 +238,6 @@ const EtcModal = ({
       onSave(newContent);
       setIsEtcModalOpen(false); // 모달 닫기
     } catch (error) {
-      console.error("Error updating post:", error);
     } finally {
       setIsLoading(false);
     }

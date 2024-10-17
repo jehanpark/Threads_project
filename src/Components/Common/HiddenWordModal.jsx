@@ -207,7 +207,7 @@ const HiddenWordModal = ({
           <BackButton
             onClick={(e) => {
               e.stopPropagation();
-              console.log("BackButton clicked"); // 클릭 확인
+
               onClose && onClose(); // 함수가 존재할 때만 호출
             }}
           >
