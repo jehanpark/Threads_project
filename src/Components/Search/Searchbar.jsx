@@ -4,7 +4,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import styled from "styled-components";
-import { MicIcon } from "../Common/Icon";
+import { MicIcon, RecoderIcon } from "../Common/Icon";
 import Micspinner from "./Micspinner";
 
 const SearchWrapper = styled.div`

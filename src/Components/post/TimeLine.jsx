@@ -90,27 +90,15 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty, postNum }) => {
 
   return (
     <>
-      {postNum === "2" ? (
-        <div
-          ref={wrapperRef}
-          className={isBouncing ? "bounce" : ""}
-          onScroll={handleScroll}
-        >
-          {posts.map((post) => (
-            <Post2 key={post.id} {...post} />
-          ))}
-        </div>
-      ) : (
-        <div
-          ref={wrapperRef}
-          className={isBouncing ? "bounce" : ""}
-          onScroll={handleScroll}
-        >
-          {posts.map((post) => (
-            <Post key={post.id} {...post} />
-          ))}
-        </div>
-      )}
+      <div
+        ref={wrapperRef}
+        className={isBouncing ? "bounce" : ""}
+        onScroll={handleScroll}
+      >
+        {posts.map((post) => (
+          <Post key={post.id} {...post} />
+        ))}
+      </div>
     </>
   );
 };

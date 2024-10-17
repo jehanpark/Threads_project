@@ -23,6 +23,7 @@ const BoederWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 680px;
   /* position: fixed; */
   bottom: 0;
   /* left: 50%; */
@@ -63,13 +64,17 @@ const MenuTitle = styled.p`
 `;
 
 const ButtonGroup = styled(motion.div)`
-  padding-left: 80px;
+  padding-left: 40px;
   display: flex;
   width: 100%;
   gap: 12px;
   margin-top: 20px;
   margin-bottom: 20px;
   transition: all 0.3s ease;
+
+  @media (max-width: 480px) {
+    padding-left: 80px;
+  }
 `;
 
 const SelectButton = styled(motion.button)`
@@ -137,6 +142,7 @@ const SearchBox = styled.div`
   margin-top: 20px;
 
   @media (max-width: 768px) {
+    margin-top: 100px;
   }
 
   @media (max-width: 480px) {
@@ -144,12 +150,13 @@ const SearchBox = styled.div`
 `;
 
 const ContentsBorder = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   height: 100%;
   overflow-y: auto;
-  padding: 0 20px;
+  padding: 0 40px;
   padding-bottom: 20px;
   margin-top: 20px;
   ::-webkit-scrollbar {
@@ -160,7 +167,6 @@ const ContentsBorder = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
-    max-height: 100%;
   }
 
   @media (max-width: 480px) {
@@ -238,7 +244,7 @@ const Search = () => {
               whileTap="click"
               drag="x"
               dragMomentum={false}
-              dragConstraints={{ left: -70, right: 0 }}
+              dragConstraints={{ left: -18, right: 0 }}
             >
               {buttons.map((button) => (
                 <SelectButton

@@ -46,7 +46,8 @@ const InsitesWrapper = styled.div`
   box-sizing: border-box;
   transition: all 0.3s ease; /* 애니메이션 효과 추가 */
   padding: 20px;
-  padding-bottom: 600px;
+  padding-bottom: ${(props) =>
+    props.isSmallScreen ? "300px" : props.isTablet ? "500px" : "400px"};
 `;
 
 const InsitesTitle = styled.div`
@@ -69,10 +70,8 @@ const FollowerTitle = styled.div`
 `;
 
 const BorderItemTitle = styled.div`
-  display: flex;
-  justify-content: start;
   flex-grow: 1; /* 자식 요소가 유연하게 공간 채움 */
-  width: 110%;
+  width: 100%;
   /* max-width: ${(props) =>
     props.isSmallScreen ? "calc(100% - 40px)" : "480px"}; */
   height: auto; /* 고정된 높이 제거 */
@@ -147,6 +146,7 @@ const InsiteInner2 = styled.div`
   background: #f5f5f5;
   padding: 12px 12px;
   border-radius: 8px;
+  margin-top: 20px;
 `;
 
 const FollowerInfo = styled.div`
@@ -214,22 +214,30 @@ const Insiteitem_de = ({ isSmallScreen, isTablet }) => {
             isSmallScreen={isSmallScreen}
             isTablet={isTablet}
           >
-            <BorderItemTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
-              {item.title}
-            </BorderItemTitle>
-            <Info isSmallScreen={isSmallScreen} isTablet={isTablet}>
-              <IconWrapper
-                background={"#e9e9e9"}
-                borderRadius={"100%"}
-                wrapperSize={"32px"}
-                wrapperPadding={"8px"}
+            <InsiteInner2>
+              <BorderItemTitle
+                isSmallScreen={isSmallScreen}
+                isTablet={isTablet}
               >
-                <InformationIcon width={"30px"} fill={"black"} zindex={"1"} />
-              </IconWrapper>
-              <BorderItemInfo isSmallScreen={isSmallScreen} isTablet={isTablet}>
-                {item.info}
-              </BorderItemInfo>
-            </Info>
+                {item.title}
+              </BorderItemTitle>
+              <Info isSmallScreen={isSmallScreen} isTablet={isTablet}>
+                <IconWrapper
+                  background={"#e9e9e9"}
+                  borderRadius={"100%"}
+                  wrapperSize={"32px"}
+                  wrapperPadding={"8px"}
+                >
+                  <InformationIcon width={"30px"} fill={"black"} zindex={"1"} />
+                </IconWrapper>
+                <BorderItemInfo
+                  isSmallScreen={isSmallScreen}
+                  isTablet={isTablet}
+                >
+                  {item.info}
+                </BorderItemInfo>
+              </Info>
+            </InsiteInner2>
           </BorderItem>
         ))}
       </InsitesWrapper>
