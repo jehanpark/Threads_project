@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useState } from "react";
 import { useMediaQuery } from "@mui/material";
 
 // StyledSvg 스타일링
@@ -235,28 +236,41 @@ export const UserIcon1 = ({ width, fill }) => {
   );
 };
 
-//Heart
-export const HeartIcon = ({ width, fill }) => {
+// HeartIcon 컴포넌트
+export const HeartIcon = ({ width, initialFill }) => {
+  const [isFilled, setIsFilled] = useState(false); // 클릭 여부를 관리할 상태
   const height = width ? `${(width / 24) * 24}px` : "24px";
+
+  // 클릭 이벤트 핸들러
+  const handleClick = () => {
+    setIsFilled(!isFilled); // 클릭할 때마다 상태를 반전
+  };
 
   return (
     <StyledSvg
+      onClick={handleClick} // 클릭 시 색상이 변경되도록 설정
       width={width || "24px"}
       height={height}
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      style={{
+        cursor: "pointer",
+        transition: "fill 0.2s ease, stroke 0.2s ease",
+      }} // 부드러운 전환 추가
     >
       <path
         d="M20.8401 4.60999C20.3294 4.099 19.7229 3.69364 19.0555 3.41708C18.388 3.14052 17.6726 2.99817 16.9501 2.99817C16.2276 2.99817 15.5122 3.14052 14.8448 3.41708C14.1773 3.69364 13.5709 4.099 13.0601 4.60999L12.0001 5.66999L10.9401 4.60999C9.90843 3.5783 8.50915 2.9987 7.05012 2.9987C5.59109 2.9987 4.19181 3.5783 3.16012 4.60999C2.12843 5.64169 1.54883 7.04096 1.54883 8.49999C1.54883 9.95903 2.12843 11.3583 3.16012 12.39L4.22012 13.45L12.0001 21.23L19.7801 13.45L20.8401 12.39C21.3511 11.8792 21.7565 11.2728 22.033 10.6053C22.3096 9.93789 22.4519 9.22248 22.4519 8.49999C22.4519 7.77751 22.3096 7.0621 22.033 6.39464C21.7565 5.72718 21.3511 5.12075 20.8401 4.60999Z"
-        stroke={fill || "#BABABA"}
+        stroke={isFilled ? "red" : initialFill || "#BABABA"} // 상태에 따라 색상 변경
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        fill="none"
+        fill={isFilled ? "red" : "none"} // 채워진 상태일 때 빨간색으로 채움
+        style={{ transition: "fill 0.2s ease-in, stroke 0.2s ease-out" }} // 부드러운 전환 추가
       />
     </StyledSvg>
   );
 };
+
 //coment
 export const Coment = ({ width, fill }) => {
   const height = width ? `${(width / 24) * 24}px` : "24px";
@@ -518,18 +532,28 @@ export const StarIcon = ({ width, fill }) => {
   );
 };
 
-//RetweetIcon
-export const RetweetIcon = ({ width, fill }) => {
+// RetweetIcon 컴포넌트
+export const RetweetIcon = ({ width, initialFill }) => {
+  const [isClicked, setIsClicked] = useState(false); // 클릭 여부를 관리할 상태
+
+  // 클릭 이벤트 핸들러
+  const handleClick = () => {
+    setIsClicked(!isClicked); // 클릭할 때마다 상태를 반전
+  };
+
   return (
     <StyledSvg
+      onClick={handleClick} // 클릭 시 색상이 변경되도록 설정
       width={width || "26.64px"}
       height={width ? `${(width / 26.64) * 15.98}px` : "15.98px"}
       viewBox="0 0 28 17"
       xmlns="http://www.w3.org/2000/svg"
+      style={{ cursor: "pointer", transition: "fill 0.3s ease" }} // 부드러운 전환과 커서 스타일 추가
     >
       <path
         d="M7.10773 0.189636C6.40124 0.189636 5.7237 0.470285 5.22414 0.969843C4.72458 1.4694 4.44393 2.14695 4.44393 2.85343V10.8448H0.448242L5.77583 16.1724L11.1034 10.8448H7.10773V2.85343H16.431L19.0948 0.189636H7.10773ZM20.4267 5.51722H16.431L21.7586 0.189636L27.0862 5.51722H23.0905V13.5086C23.0905 14.2151 22.8098 14.8926 22.3103 15.3922C21.8107 15.8917 21.1332 16.1724 20.4267 16.1724H8.43962L11.1034 13.5086H20.4267V5.51722Z"
-        fill={fill || "currentColor"}
+        fill={isClicked ? "#0396f6" : initialFill || "#BABABA"} // 상태에 따라 색상 변경
+        style={{ transition: "fill 0.3s ease" }} // 부드러운 전환 효과 추가
       />
     </StyledSvg>
   );

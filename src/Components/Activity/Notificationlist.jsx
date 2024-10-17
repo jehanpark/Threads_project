@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  orderBy,
-  query,
-} from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, query } from "firebase/firestore";
 import { db } from "../../firebase";
 import NotificationItem from "./NotificationItem";
 
@@ -45,18 +38,18 @@ const NotificationList = ({ onUpdate }) => {
     const fetchData = async () => {
       try {
         const DesQuery = query(
-          collection(db, "contents"),
-          orderBy("createdAt", "desc")
+          collection(db, "profile")
+          // orderBy("createdAt", "desc")
         );
         const querySnapshot = await getDocs(DesQuery);
 
         const initialData = querySnapshot.docs.map((docSnapshot) => {
           const docData = docSnapshot.data();
-
-          const createdAt =
-            docData.createdAt && docData.createdAt.toDate
-              ? docData.createdAt.toDate()
-              : new Date();
+          console.log(docData);
+          // const createdAt =
+          //   docData.createdAt && docData.createdAt.toDate
+          //     ? docData.createdAt.toDate()
+          //     : new Date();
 
           const message =
             docData.message ||
@@ -67,8 +60,8 @@ const NotificationList = ({ onUpdate }) => {
 
           return {
             id: docSnapshot.id,
-            username: docData.nikname || "알수없음",
-            createdAt,
+            username: docData.userEmail || "siro@ezen.com",
+            // createdAt,
             isRead: false,
             message,
             type,
@@ -93,7 +86,7 @@ const NotificationList = ({ onUpdate }) => {
   // 알림 읽음 처리 함수
   const markAsRead = async (id) => {
     try {
-      const notificationRef = doc(db, "notifications", id);
+      const notificationRef = doc(db, "profile", id);
       await updateDoc(notificationRef, { isRead: true });
 
       setNotifications((prevNotifications) =>

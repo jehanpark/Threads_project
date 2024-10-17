@@ -39,7 +39,7 @@ const BoederWrapper = styled.div`
   transform: translate(-50%);
   margin: 0 auto;
   border-radius: 40px 40px 0 0;
-  width: 660px;
+  width: 680px;
   height: 85%;
   background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
@@ -62,8 +62,7 @@ const Form = styled.form`
   transform: translate(-50%);
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
-  width: 660px;
+  width: 680px;
   height: 100%;
   gap: 10px;
   background: ${(props) => props.theme.borderColor};
@@ -116,6 +115,7 @@ const TextArea = styled.textarea`
 
 const Icons = styled.div`
   display: flex;
+  align-items: center;
   margin: 20px 0;
   margin-left: 20px;
   gap: 20px;
@@ -163,13 +163,15 @@ const DeleteButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
 `;
-const OpenButton = styled.button`
+const OpenButton = styled.div`
   width: 300px;
   height: 80px;
   background: #d6d6d6;
   border: none;
   color: #000;
   font-size: 15px;
+  text-align: center;
+  line-height: 5.5;
   font-weight: bold;
   border-radius: 30px;
   transition: all 0.3s;
@@ -199,7 +201,7 @@ const SubmitBtn = styled.input`
   }
 `;
 
-const IconBtn = styled.button`
+const IconBtn = styled.div`
   background-color: transparent;
   border: none;
   outline: none;
@@ -210,6 +212,8 @@ const PostForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState("");
   const [files, setFiles] = useState([]);
+  const [opendForm, setOpenForm] = useState(false);
+  const [selectedText, setSelectedText] = useState("팔로워에게만 허용");
 
   const [audioBlob, setAudioBlob] = useState(null); // 녹음 파일 상태
   const [isRecording, setIsRecording] = useState(false); // 녹음 중 상태
@@ -218,6 +222,13 @@ const PostForm = () => {
 
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
   const navigate = useNavigate();
+
+  const generateCustomId = () => {
+    const timestamp = Date.now().toString();
+    const randomNum = Math.floor(Math.random() * 1000000).toString();
+    return timestamp + randomNum; // 두 값을 조합하여 고유 식별자 생성
+  };
+
   useEffect(() => {
     if (!currentUser) {
       const confirmLogin = window.confirm("로그인 하시겠습니까?");
@@ -241,14 +252,14 @@ const PostForm = () => {
     if (selectedFiles) {
       const newFiles = Array.from(selectedFiles).filter((file) => {
         if (file.size > maxFileSize) {
-          alert("The maximum file size is 5MB.");
+          alert("업로드 가능한 파일의 최대 크기는 5MB입니다.");
           return false;
         }
         return true;
       });
 
       if (files.length + newFiles.length > maxFilesCount) {
-        alert(`You can upload a maximum of ${maxFilesCount} files.`);
+        alert(`파일은 최대 ${maxFilesCount}장까지만 업로드할 수 있습니다.`);
         return;
       }
 
@@ -262,6 +273,12 @@ const PostForm = () => {
 
   // 녹음 시작
   const startRecording = () => {
+    // 기존 녹음 파일 초기화
+    setAudioBlob(null); // 이전 녹음 파일 제거
+    setFiles((prevFiles) =>
+      prevFiles.filter((file) => file.type !== "audio/mp3")
+    ); // 기존 오디오 파일 삭제
+
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
@@ -292,17 +309,10 @@ const PostForm = () => {
 
   // 녹음 중지
   const stopRecording = () => {
-    mediaRecorderRef.current.stop();
-    setIsRecording(false);
-
-    if (audioBlob) {
-      const audioFile = new File([audioBlob], "recording.mp3", {
-        type: "audio/mp3",
-      });
-
-      // 녹음 파일을 files 배열에 추가
-      setFiles((prevFiles) => [...prevFiles, audioFile]);
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
     }
+    setIsRecording(false);
   };
 
   const handleSubmit = async (e) => {
@@ -319,6 +329,9 @@ const PostForm = () => {
     try {
       setIsLoading(true);
 
+      // 커스텀 고유 ID 생성
+      const customPostId = generateCustomId(); // 고유 식별자 생성
+
       // Firebase에 포스트 기본 정보 저장
       const docRef = await addDoc(collection(db, "contents"), {
         post,
@@ -326,6 +339,7 @@ const PostForm = () => {
         username: user?.displayName || "Anonymous",
         userId: user.uid,
         email: user.email,
+        customPostId,
         likes: randomLikes,
         comments: randomComments,
         dms: randomDms,
@@ -381,6 +395,15 @@ const PostForm = () => {
     }
   };
 
+  const openFormModal = () => {
+    setOpenForm(true);
+  };
+  const closeFormModal = () => {
+    setOpenForm(false);
+  };
+  const handleSelect = (text) => {
+    setSelectedText(text);
+  };
   return (
     <Wrapper>
       <BoederWrapper>
@@ -405,7 +428,7 @@ const PostForm = () => {
                       width: "160px",
                       height: "160px",
                       borderRadius: "10px",
-                      objectFit: "contain",
+                      objectFit: "cover",
                     }}
                   />
                 ) : file.type.startsWith("video/") ? (
@@ -440,7 +463,7 @@ const PostForm = () => {
           </PlusImage>
           <Icons>
             <CameraButton htmlFor="camera">
-              <CameraIcon width={38} />
+              <CameraIcon width={36} />
               <CameraInput
                 onChange={handleFileChange}
                 id="camera"
@@ -450,6 +473,12 @@ const PostForm = () => {
             </CameraButton>
             <PictureButton htmlFor="picture">
               <PictureIcon width={24} />
+              <PictureInput
+                onChange={handleFileChange}
+                id="picture"
+                type="file"
+                accept="video/*, image/*"
+              />
             </PictureButton>
             {/* 녹음 기능 */}
 
@@ -465,7 +494,7 @@ const PostForm = () => {
             <HashtagIcon width={24} />
           </Icons>
           <Buttons>
-            <OpenButton>팔로워에게만 허용</OpenButton>
+            <OpenButton onClick={openFormModal}>{selectedText}</OpenButton>
             <SubmitBtn
               text="스레드 업로드"
               type="submit"
@@ -474,6 +503,9 @@ const PostForm = () => {
           </Buttons>
         </Form>
       </BoederWrapper>
+      {opendForm && (
+        <PostForm_Modal onClose={closeFormModal} onSelect={handleSelect} />
+      )}
     </Wrapper>
   );
 };

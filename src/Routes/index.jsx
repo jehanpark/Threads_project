@@ -3,6 +3,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout/Layout";
 import Home from "../Pages/Home";
+import HomeDK from "../Pages/Home_dk";
 import Search from "../Pages/Search";
 import Login from "../Pages/Login";
 import LoginInsta from "../Pages/LoginInsta";
@@ -29,7 +30,7 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "Search",
+        path: "search",
         element: <Search />,
       },
       {
@@ -57,13 +58,17 @@ export const router = createBrowserRouter([
         element: <Settings />,
       },
       {
-        path: "Comment",
+        path: "Comment/:customPostId",
         element: <Comment />,
       },
       {
-        path: "PostComment",
+        path: "PostComment/:customPostId",
         element: <PostComment />,
       },
+      // {
+      //   path: "PostComment",
+      //   element: <PostComment />,
+      // },
     ],
   },
   {
@@ -83,6 +88,7 @@ export const router = createBrowserRouter([
     path: "Login-insta", // 이 라우트도 Layout 바깥에 있음
     element: <LoginInsta />,
   },
+
   // {
   //   path: "CreateAccount", // dan 추가한 라우트
   //   element: <CreateAccount />,

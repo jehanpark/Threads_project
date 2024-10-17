@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { formatDistanceToNow } from "date-fns";
+import { ko } from "date-fns/locale";
 import {
   HeartIcon,
   DmIcon,
@@ -11,6 +12,7 @@ import {
   PictureIcon,
   MicIcon,
   HashtagIcon,
+  UserIcon2,
 } from "../Components/Common/Icon";
 import { useAuth } from "../Contexts/AuthContext";
 import { addDoc, serverTimestamp, updateDoc, doc } from "firebase/firestore";
@@ -20,11 +22,20 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
 import BackBtn from "../Components/post/BackBtn";
 import Loading from "../Components/LoadingLogo/Loading";
+import fetchUserProfileImage from "../Utils/fetchProfile";
 
+const AllDesc = styled.div``;
+
+const AllWrap = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const Backarea = styled.div`
-  position: fixed;
-  top: 12%;
-  left: 25%;
+  width: 760px;
 `;
 
 const BoederWrapper = styled.div`
@@ -32,8 +43,7 @@ const BoederWrapper = styled.div`
   bottom: 0;
   left: 50%;
   transform: translate(-50%);
-  margin: 0 auto;
-  width: 660px;
+  width: 680px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderWrapper};
@@ -46,7 +56,6 @@ const BoederWrapper = styled.div`
     bottom: 70px;
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
-    padding: 10px;
   }
 `;
 
@@ -71,13 +80,10 @@ const PostWrapper = styled.div`
   background: ${(props) => props.theme.borderColor};
   padding: 20px;
   border-radius: 40px 40px 0 0;
-  border-bottom: 1px solid #bababa;
-  width: 660px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
     height: auto;
-    width: 98%;
-    margin-top: 6px;
-    gap: 5px;
+    border-radius: 0;
   }
 `;
 const Header = styled.div`
@@ -120,8 +126,8 @@ const Column = styled.div`
   gap: 10px;
 `;
 const Photo = styled.img`
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   object-fit: cover/contain;
   margin-left: 0px;
   border-radius: 8px;
@@ -133,8 +139,8 @@ const Photo = styled.img`
 `;
 const Video = styled.video`
   display: flex;
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 15px;
   object-fit: cover;
   @media (max-width: 768px) {
@@ -147,6 +153,7 @@ const Icons = styled.div`
   display: flex;
   gap: 15px;
   justify-content: start;
+
   align-items: center;
   margin-left: 50px;
   margin-top: 10px;
@@ -187,7 +194,7 @@ const Form = styled.form`
   flex-direction: column;
   justify-content: space-between;
   margin: 0;
-  width: 660px;
+  width: 100%;
   height: 100%;
   gap: 10px;
   background: ${(props) => props.theme.borderColor};
@@ -195,12 +202,14 @@ const Form = styled.form`
     top: 0;
     width: 100%;
     height: 100%;
-    border-radius: 20px 20px 0 0;
+    border-radius: 0;
   }
 `;
 const Buttons = styled.div`
+  height: auto;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin: 0 auto;
   gap: 20px;
   border-top: ${(props) => props.theme.borderstroke};
@@ -216,15 +225,14 @@ const PlusImage = styled.div`
   gap: 10px;
 `;
 const TextArea = styled.textarea`
+  display: flex;
   background: ${(props) => props.theme.borderColor};
   color: ${(props) => props.theme.fontcolor};
   border: none;
   padding: 20px;
-  padding-left: 20px;
   font-size: 16px;
-
   margin-top: 20px;
-  width: 600px;
+  width: 90%;
   height: auto;
   resize: none;
   font-family: var(--pretendard-font);
@@ -234,6 +242,7 @@ const TextArea = styled.textarea`
     opacity: 1;
     font-size: 16px;
     transition: opacity 0.3s;
+    padding-left: 20px;
   }
   &:focus {
     &::placeholder {
@@ -241,9 +250,10 @@ const TextArea = styled.textarea`
     }
     outline: none;
   }
-  @media screen and (width: 390px) {
+  @media (max-width: 768px) {
     border-radius: 20px 20px 0 0;
     padding-left: 0px;
+    width: 100%;
   }
 `;
 const IconsBtnwrapper = styled.div`
@@ -251,6 +261,9 @@ const IconsBtnwrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   height: auto;
+  width: 100%;
+  @media (max-width: 768px) {
+  }
 `;
 const SubmitBtn = styled.input`
   width: 300px;
@@ -267,6 +280,7 @@ const SubmitBtn = styled.input`
   }
   @media (max-width: 768px) {
     width: 100%;
+    margin-left: 20px;
   }
 `;
 
@@ -282,6 +296,7 @@ const Comment = ({ id }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const [profileImg, setProfileImg] = useState("");
 
   const {
     postContent,
@@ -293,8 +308,9 @@ const Comment = ({ id }) => {
     dms: passedDms,
     retweets: passedRetweets,
     postId,
+    userId,
   } = location.state || {};
-  console.log(location.state);
+
   // Firebase에서 전달된 값을 상태로 설정
   useEffect(() => {
     setLikes(passedLikes);
@@ -308,6 +324,22 @@ const Comment = ({ id }) => {
       return;
     }
   }, [postId]);
+
+  useEffect(() => {
+    const getUserProfileImage = async () => {
+      try {
+        const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
+        setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+      }
+    };
+
+    // userId가 있을 때만 프로필 이미지 가져오기
+    if (userId) {
+      getUserProfileImage();
+    }
+  }, [userId]);
 
   // Firestore에서 댓글 데이터를 가져오는 useEffect
   useEffect(() => {
@@ -341,7 +373,7 @@ const Comment = ({ id }) => {
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
-    return formatDistanceToNow(date, { addSuffix: true });
+    return formatDistanceToNow(date, { addSuffix: true, locale: ko });
   };
 
   const handlePostChange = (e) => {
@@ -353,12 +385,11 @@ const Comment = ({ id }) => {
   };
 
   const handleSubmit = async (e) => {
+    const user = auth.currentUser;
     e.preventDefault();
     if (!currentUser || isLoading || !post.trim() || post.length > 180) return;
-
     try {
       setIsLoading(true);
-
       const commentData = {
         comment: post.trim(),
         createdAt: serverTimestamp(),
@@ -366,13 +397,11 @@ const Comment = ({ id }) => {
         userId: currentUser.uid,
         photoUrls: [],
         videoUrls: [],
+        email: user.email,
       };
-
       const commentsRef = collection(db, "contents", postId, "comments");
-
       const photoUrls = [];
       const videoUrls = [];
-
       if (files.length > 0) {
         await Promise.all(
           files.map(async (file) => {
@@ -382,7 +411,6 @@ const Comment = ({ id }) => {
             );
             const snapshot = await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(snapshot.ref);
-
             if (file.type.startsWith("image/")) {
               photoUrls.push(downloadURL);
             } else if (file.type.startsWith("video/")) {
@@ -390,16 +418,12 @@ const Comment = ({ id }) => {
             }
           })
         );
-
         commentData.photoUrls = photoUrls;
         commentData.videoUrls = videoUrls;
       }
-
       await addDoc(commentsRef, commentData);
-
       setPost(""); // 상태 초기화
       setFiles([]); // 업로드 파일 초기화
-
       // 댓글을 추가한 후 즉시 업데이트
       setComments((prevComments) => [...prevComments, commentData]);
       setCommentsCount((prevCount) => prevCount + 1);
@@ -410,7 +434,6 @@ const Comment = ({ id }) => {
       setIsLoading(false);
     }
   };
-
   const maxFileSize = 5 * 1024 * 1024; // 5MB
   const maxFilesCount = 3;
 
@@ -419,14 +442,14 @@ const Comment = ({ id }) => {
     if (selectedFiles) {
       const newFiles = Array.from(selectedFiles).filter((file) => {
         if (file.size > maxFileSize) {
-          alert("The maximum file size is 5MB.");
+          alert("업로드 가능한 파일의 최대 크기는 5MB입니다.");
           return false;
         }
         return true;
       });
 
       if (files.length + newFiles.length > maxFilesCount) {
-        alert(`You can upload a maximum of ${maxFilesCount} files.`);
+        alert(`파일은 최대 ${maxFilesCount}장까지만 업로드할 수 있습니다.`);
         return;
       }
 
@@ -437,145 +460,153 @@ const Comment = ({ id }) => {
   return (
     <div>
       <AllDesc>
-        <Backarea>
-          <BackBtn />
-        </Backarea>
-        <BoederWrapper>
-          <Wrapper>
-            <PostWrapper>
-              <Header>
-                <UserImage src="http://localhost:5173/profile.png"></UserImage>
-                <Username>{username}</Username>
-                <Timer>{renderTimeAgo()}</Timer>
-              </Header>
-              <Column>
-                <Posted>{postContent}</Posted>
-              </Column>
-
-              <ColumnWrapper>
+        <AllWrap>
+          <Backarea>
+            <BackBtn />
+          </Backarea>
+          <BoederWrapper>
+            <Wrapper>
+              <PostWrapper>
+                <Header>
+                  {profileImg ? (
+                    <UserImage src={profileImg} alt="User Profile"></UserImage>
+                  ) : (
+                    <UserIcon2 />
+                  )}
+                  <Username>{username}</Username>
+                  <Timer>{renderTimeAgo()}</Timer>
+                </Header>
                 <Column>
-                  {photos &&
-                    photos.length > 0 &&
-                    photos.map((photoUrl, index) => (
-                      <Photo
-                        key={index}
-                        src={photoUrl}
-                        alt={`Post Image ${index + 1}`}
-                      />
-                    ))}
+                  <Posted>{postContent}</Posted>
                 </Column>
 
-                <Column>
-                  {videos &&
-                    videos.length > 0 &&
-                    videos.map((videoUrl, index) => (
-                      <Video
-                        key={index}
-                        controls
-                        autoPlay
-                        loop
-                        src={videoUrl}
-                      />
-                    ))}
-                </Column>
-              </ColumnWrapper>
+                <ColumnWrapper>
+                  <Column>
+                    {photos &&
+                      photos.length > 0 &&
+                      photos.map((photoUrl, index) => (
+                        <Photo
+                          key={index}
+                          src={photoUrl}
+                          alt={`Post Image ${index + 1}`}
+                        />
+                      ))}
+                  </Column>
 
-              <Icons>
-                <IconWrapper>
-                  <HeartIcon width={14} /> {likes}
-                </IconWrapper>
-                <IconWrapper>
-                  <Coment width={14} /> {commentsCount}
-                </IconWrapper>
-                <IconWrapper>
-                  <DmIcon width={12} /> {dms}
-                </IconWrapper>
-                <IconWrapper>
-                  <RetweetIcon width={14} /> {retweets}
-                </IconWrapper>
-              </Icons>
-            </PostWrapper>
+                  <Column>
+                    {videos &&
+                      videos.length > 0 &&
+                      videos.map((videoUrl, index) => (
+                        <Video
+                          key={index}
+                          controls
+                          autoPlay
+                          loop
+                          muted
+                          src={videoUrl}
+                        />
+                      ))}
+                  </Column>
+                </ColumnWrapper>
 
-            <Form onSubmit={handleSubmit}>
-              {isLoading ? <Loading /> : null}
-              <TextArea
-                onChange={handlePostChange}
-                value={post}
-                name="contents"
-                id="contents"
-                placeholder="댓글을 작성하세요.."
-                required
-              />
-              <PlusImage>
-                {files.map((file, index) => (
-                  <div
-                    key={index}
-                    style={{ position: "relative", margin: "5px" }}
-                  >
-                    {file.type.startsWith("image/") ? (
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt={`Uploaded Preview ${index + 1}`}
-                        style={{
-                          width: "160px",
-                          height: "160px",
-                          borderRadius: "10px",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      <video
-                        controls
-                        style={{
-                          width: "160px",
-                          height: "160px",
-                          borderRadius: "10px",
-                          objectFit: "cover",
-                        }}
-                      >
-                        <source src={URL.createObjectURL(file)} />
-                      </video>
-                    )}
-                    <DeleteButton onClick={() => removeFile(index)}>
-                      X
-                    </DeleteButton>
-                  </div>
-                ))}
-              </PlusImage>
-              <IconsBtnwrapper>
                 <Icons>
-                  <CameraButton htmlFor="camera">
-                    <CameraIcon width={38} />
-                    <CameraInput
+                  <IconWrapper>
+                    <HeartIcon width={14} /> {likes}
+                  </IconWrapper>
+                  <IconWrapper>
+                    <Coment width={14} /> {commentsCount}
+                  </IconWrapper>
+                  <IconWrapper>
+                    <RetweetIcon width={14} /> {retweets}
+                  </IconWrapper>
+                  <IconWrapper>
+                    <DmIcon width={12} /> {dms}
+                  </IconWrapper>
+                </Icons>
+              </PostWrapper>
+
+              <Form onSubmit={handleSubmit}>
+                {isLoading ? <Loading /> : null}
+                <TextArea
+                  onChange={handlePostChange}
+                  value={post}
+                  name="contents"
+                  id="contents"
+                  placeholder="댓글을 작성하세요.."
+                  required
+                />
+                <PlusImage>
+                  {files.map((file, index) => (
+                    <div
+                      key={index}
+                      style={{ position: "relative", margin: "5px" }}
+                    >
+                      {file.type.startsWith("image/") ? (
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={`Uploaded Preview ${index + 1}`}
+                          style={{
+                            width: "160px",
+                            height: "160px",
+                            borderRadius: "10px",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : (
+                        <video
+                          controls
+                          muted
+                          style={{
+                            width: "160px",
+                            height: "160px",
+                            borderRadius: "10px",
+                            objectFit: "cover",
+                          }}
+                        >
+                          <source src={URL.createObjectURL(file)} />
+                        </video>
+                      )}
+                      <DeleteButton onClick={() => removeFile(index)}>
+                        X
+                      </DeleteButton>
+                    </div>
+                  ))}
+                </PlusImage>
+                <IconsBtnwrapper>
+                  <Icons>
+                    <CameraButton htmlFor="camera">
+                      <CameraIcon width={36} />
+                      <CameraInput
+                        onChange={handleFileChange}
+                        id="camera"
+                        type="file"
+                        accept="video/*, image/*"
+                      />
+                    </CameraButton>
+                    <PictureButton htmlFor="picture">
+                      <PictureIcon width={24} />
+                    </PictureButton>
+                    <PictureInput
                       onChange={handleFileChange}
-                      id="camera"
+                      id="picture"
                       type="file"
                       accept="video/*, image/*"
                     />
-                  </CameraButton>
-                  <PictureButton htmlFor="picture">
-                    <PictureIcon width={24} />
-                  </PictureButton>
-                  <PictureInput
-                    onChange={handleFileChange}
-                    id="picture"
-                    type="file"
-                    accept="video/*, image/*"
-                  />
-                  <MicIcon width={24} />
-                  <HashtagIcon width={24} />
-                </Icons>
-                <Buttons>
-                  <SubmitBtn
-                    text="댓글달기"
-                    type="submit"
-                    value={isLoading ? "댓글다는중..." : "댓글달기"}
-                  />
-                </Buttons>
-              </IconsBtnwrapper>
-            </Form>
-          </Wrapper>
-        </BoederWrapper>
+                    <MicIcon width={24} />
+                    <HashtagIcon width={24} />
+                  </Icons>
+                  <Buttons>
+                    <SubmitBtn
+                      text="댓글달기"
+                      type="submit"
+                      value={isLoading ? "댓글다는중..." : "댓글달기"}
+                    />
+                  </Buttons>
+                </IconsBtnwrapper>
+              </Form>
+            </Wrapper>
+          </BoederWrapper>
+        </AllWrap>
       </AllDesc>
     </div>
   );

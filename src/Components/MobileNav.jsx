@@ -11,10 +11,15 @@ import {
   GoBack,
 } from "./Common/Icon";
 import Logo from "./LoadingLogo/Logo";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 // BottomNav 스타일 정의
 const Wrapper = styled.div`
+  /* position: fixed; */
+  /* z-index: 100; */
+  background-color: #000;
+
+  /* top: 100px; */
   @media (min-width: 768px) {
     display: none; // 768px 이상의 화면에서는 숨기기
   }
@@ -31,7 +36,7 @@ const BottomNavWrapper = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  z-index: 100;
+  z-index: 10000;
   box-shadow: ${(props) => props.theme.bor};
   @media (min-width: 768px) {
     display: none; // 768px 이상의 화면에서는 숨기기
@@ -100,6 +105,30 @@ const Backtxt = styled.div`
 
 const MobileNav = () => {
   const navigate = useNavigate();
+
+  const location = useLocation(); // 현재 URL 정보를 가져옴
+  const renderContent = () => {
+    if (location.pathname.includes("activity")) {
+      return "활동";
+    } else if (location.pathname.includes("postform")) {
+      return "포스트";
+    } else if (location.pathname.includes("Search")) {
+      return "검색";
+    } else if (location.pathname.includes("profile")) {
+      return "프로필";
+    } else if (location.pathname.includes("settings")) {
+      return "설정";
+    } else if (location.pathname.includes("insites")) {
+      return "인사이트";
+    } else if (location.pathname.includes("PostComment")) {
+      return "게시글";
+    } else if (location.pathname.includes("Comment")) {
+      return "댓글 달기";
+    } else {
+      return "홈";
+    }
+  };
+
   return (
     <Wrapper>
       <BackNavwrapper>
@@ -110,9 +139,11 @@ const MobileNav = () => {
           <Backtxt>뒤로</Backtxt>
         </Backdesc> */}
         <LogoWrapper>
-          <Logo width={28} />
+          <Link to={"/"}>
+            <Logo width={28} />
+          </Link>
         </LogoWrapper>
-        <div>Activity</div>
+        <div>{renderContent()}</div>
         <MobileSidebar />
       </BackNavwrapper>
       <BottomNavWrapper>
