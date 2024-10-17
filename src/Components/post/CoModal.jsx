@@ -675,8 +675,8 @@ const CoModal = ({
                         src={URL.createObjectURL(file)}
                         alt={`Uploaded Preview ${index + 1}`}
                         style={{
-                          width: "160px",
-                          height: "160px",
+                          width: "120px",
+                          height: "120px",
                           borderRadius: "10px",
                           objectFit: "cover",
                         }}
@@ -686,8 +686,8 @@ const CoModal = ({
                         controls
                         muted
                         style={{
-                          width: "160px",
-                          height: "160px",
+                          width: "120px",
+                          height: "120px",
                           borderRadius: "10px",
                           objectFit: "cover",
                         }}
