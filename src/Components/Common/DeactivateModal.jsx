@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // import useNavigate
 import styled from "styled-components";
 import ConfirmDeleteModal from "./ConfirmDeleteModal"; // import the new ConfirmDeleteModal
+import ConfirmDeactivateModal from "./ConfirmDeactivateModal";
 import { LeftArrowIcon } from "./Icon";
 
 // 스타일 정의
@@ -132,6 +133,7 @@ const DeactivateModal = ({ onClose, onSelectOption }) => {
   const [activeOption, setActiveOption] = useState(null);
   const [isOptionSelected, setIsOptionSelected] = useState(false);
   const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false); // 삭제 확인 모달 상태
+  const [isConfirmVisible, setIsConfirmVisible] = useState(false); // 삭제 확인 모달 상태
   const navigate = useNavigate(); // useNavigate 훅 사용
 
   const handleOptionClick = (option) => {
@@ -140,12 +142,22 @@ const DeactivateModal = ({ onClose, onSelectOption }) => {
     onSelectOption(option);
     onClose();
   };
-
+  // 프로필 삭제 모달
   const handleDeleteClick = () => {
     setIsDeleteConfirmVisible(true); // 삭제 확인 모달 보이기
   };
 
   const handleConfirmDelete = () => {
+    // 홈으로 리디렉션하는 로직 (예: useHistory를 사용하는 경우)
+    window.location.href = "/"; // 404 페이지 대신 홈으로 리디렉션
+  };
+
+  // 프로필 비활성화 모달
+  const handleConfirmClick = () => {
+    setIsConfirmVisible(true); // 삭제 확인 모달 보이기
+  };
+
+  const handleConfirm = () => {
     // 홈으로 리디렉션하는 로직 (예: useHistory를 사용하는 경우)
     window.location.href = "/"; // 404 페이지 대신 홈으로 리디렉션
   };
@@ -183,7 +195,7 @@ const DeactivateModal = ({ onClose, onSelectOption }) => {
             않습니다.
           </Info>
           <ButtonLayout>
-            <Button onClick={handleOptionClick}>프로필 비활성화</Button>
+            <Button onClick={handleConfirmClick}>프로필 비활성화</Button>
             <DelButton onClick={handleDeleteClick}>프로필 삭제</DelButton>{" "}
             {/* 삭제 버튼 클릭 시 확인 모달 표시 */}
           </ButtonLayout>
@@ -193,6 +205,12 @@ const DeactivateModal = ({ onClose, onSelectOption }) => {
         <ConfirmDeleteModal
           onClose={() => setIsDeleteConfirmVisible(false)} // 모달 닫기
           onConfirm={handleConfirmDelete} // 확인 클릭 시 홈으로 이동
+        />
+      )}
+      {isConfirmVisible && ( // 삭제 확인 모달 표시
+        <ConfirmDeactivateModal
+          onClose={() => setIsConfirmVisible(false)} // 모달 닫기
+          onConfirm={handleConfirm} // 확인 클릭 시 홈으로 이동
         />
       )}
     </>
