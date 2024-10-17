@@ -34,7 +34,7 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
-  padding: 4px 40px 20px;
+  padding: 20px;
   margin-bottom: 4px;
   display: flex;
   /* border-radius: 30px; */
@@ -43,11 +43,9 @@ const Wrapper = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.borderstroke};
 
   @media (max-width: 768px) {
+    margin-top: 10px;
+    padding: 12px;
     width: 100%;
-    height: auto;
-    border-radius: 0px;
-    padding: 30px;
-    margin-bottom: 0px;
   }
 `;
 const ColumnWrapper = styled.div`

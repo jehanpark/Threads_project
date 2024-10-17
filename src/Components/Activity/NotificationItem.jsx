@@ -122,6 +122,7 @@ const User = styled.div`
   align-items: center;
   font-size: 12px;
   font-weight: 500;
+  line-height: 1.4;
 `;
 
 const NotificationItem = ({

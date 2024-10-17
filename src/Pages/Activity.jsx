@@ -4,8 +4,9 @@ import NotificationItem from "../Components/Activity/NotificationItem";
 import NotificationList from "../Components/Activity/Notificationlist";
 import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const Contain = styled.div`
+const Wrapper = styled.div`
   /* width: 100%; */
   /* height: calc(100vh - 120px); */
   height: 100vh;
@@ -17,27 +18,23 @@ const Contain = styled.div`
     width: 100%;
   }
 `;
-
 const BoederWrapper = styled.div`
-  width: 680px;
+  background: ${(props) => props.theme.borderColor};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: ${(props) => props.theme.borderColor};
-
+  width: 680px;
   /* position: fixed; */
   bottom: 0;
   /* left: 50%; */
   /* transform: translate(-50%); */
   /* margin: 0; */
-  width: 680px;
-  height: 100%;
+  height: calc(100vh - 120px);
   /* height: 85%; */
   border-radius: 40px 40px 0px 0px;
   /* overflow: hidden; */
   @media (max-width: 768px) {
-    position: absolute;
     width: 100%;
     /* bottom: 0; */
     border-radius: 0;
@@ -67,46 +64,46 @@ const MenuTitle = styled.p`
   }
 `;
 
-const ButtonGroup = styled.div`
+const ButtonGroup = styled(motion.div)`
+  padding-left: 20px;
   display: flex;
   width: 100%;
-  justify-content: center;
-  align-content: center;
-  gap: 20px;
-  margin-top: 30px;
-  margin-bottom: 10px;
+  gap: 12px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   transition: all 0.3s ease;
+
   @media (max-width: 480px) {
-    gap: 10px;
   }
 `;
 
-const SelectButton = styled.button`
+const SelectButton = styled(motion.button)`
   display: flex;
   flex: 0 0 auto;
   width: 110px;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px 20px;
-  color: ${(props) =>
-    props.selected ? props.theme.borderColor : props.theme.buttonText};
-  font-weight: 700;
   background: ${(props) =>
     props.selected ? props.theme.buttonText : props.theme.buttonbackground};
+  color: ${(props) =>
+    props.selected ? props.theme.borderColor : props.theme.buttonText};
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
 
   @media (max-width: 768px) {
+    margin-top: 40px;
     display: block;
-    width: 90px;
-    padding: 8px 15px;
+    width: 100px;
+    padding: 10px 0;
   }
 
   @media (max-width: 480px) {
+    margin-top: 40px;
     display: block;
-    width: 80px;
-    padding: 6px 10px;
+    width: 90px;
+    padding: 10px 0;
   }
 `;
 
@@ -148,7 +145,6 @@ const Btnborder = styled.div`
 `;
 
 const ContentsBorder = styled.div`
-  border: 1px solid #f00;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -292,11 +288,17 @@ const Activity = () => {
   }, [currentUser, navigate]);
 
   return (
-    <Contain>
+    <Wrapper>
       <BoederWrapper>
         <MenuTitle>활동</MenuTitle>
         {isMobile ? (
-          <ButtonGroup>
+          <ButtonGroup
+            className="mobile-buttons"
+            whileTap="click"
+            drag="x"
+            dragMomentum={false}
+            dragConstraints={{ left: -26, right: 0 }}
+          >
             {buttons.map((button) => (
               <SelectButton
                 key={button.type}
@@ -341,7 +343,7 @@ const Activity = () => {
           )}
         </ContentsBorder>
       </BoederWrapper>
-    </Contain>
+    </Wrapper>
   );
 };
 
