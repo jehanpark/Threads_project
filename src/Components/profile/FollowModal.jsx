@@ -31,13 +31,42 @@ const FollowModalBox = styled.div`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
   background: none;
   border: none;
   color: ${(props) => props.theme.fontcolor};
   font-size: 18px;
   cursor: pointer;
+`;
+
+const ContentsBorder = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: center;
+  height: 100%;
+  padding: 0 10px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  @media (max-width: 768px) {
+    padding: 0 20px;
+    width: 100%;
+    max-height: 100%;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 10px;
+    width: 100%;
+    max-height: 100%;
+  }
 `;
 
 // const FollowersList =
@@ -55,8 +84,9 @@ const FollowModal = ({ open, close, profile }) => {
           onClick={(e) => e.stopPropagation()}
         >
           <CloseButton onClick={close}>X</CloseButton>
-
-          <FollowersList />
+          <ContentsBorder>
+            <FollowersList />
+          </ContentsBorder>
         </FollowModalBox>
       </ModalOverlay>
     </>
