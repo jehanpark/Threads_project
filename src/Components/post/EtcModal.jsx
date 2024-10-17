@@ -4,6 +4,7 @@ import { updateDoc, doc } from "firebase/firestore";
 import { db, storage } from "../../firebase";
 import { CameraIcon, PictureIcon } from "../Common/Icon";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import Loading from "../Loading";
 
 const AllWrapp = styled.div`
   /* position: relative;  */
@@ -62,7 +63,7 @@ const TextAreaWrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 30px;
-  z-index: 999999;
+  z-index: 900;
   @media (max-width: 768px) {
     border-radius: 0;
     width: 100%;
@@ -210,9 +211,11 @@ const EtcModal = ({
 }) => {
   const [newContent, setNewContent] = useState(post); // 수정할 내용을 상태로 관리
   const [files, setFiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSave = async () => {
     try {
+      setIsLoading(true);
       let newFileUrls = [];
 
       // 선택된 파일이 있으면 Firebase Storage에 업로드
@@ -236,6 +239,8 @@ const EtcModal = ({
       setIsEtcModalOpen(false); // 모달 닫기
     } catch (error) {
       console.error("Error updating post:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -338,7 +343,10 @@ const EtcModal = ({
               </PictureButton>
             </Icons>
             <EditButton>
-              <UploadButton onClick={handleSave}>저장</UploadButton>
+              <UploadButton onClick={handleSave}>
+                {isLoading ? <Loading /> : null}
+                저장
+              </UploadButton>
               <DelButton cancel onClick={onCancel}>
                 취소
               </DelButton>
