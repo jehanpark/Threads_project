@@ -20,7 +20,7 @@ export const Overlay = styled.div`
 
 export const ModalContainer = styled.div`
   width: 420px;
-  height: 620px;
+  height: 580px;
   background-color: ${(props) => props.theme.borderColor};
   border: 1px solid ${(props) => props.theme.borderstroke};
   border-radius: 8px;
