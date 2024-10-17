@@ -29,12 +29,13 @@ import AudioMessage from "./AudioMessage";
 import EtcModal from "./post/EtcModal";
 import fetchUserProfileImage from "../Utils/fetchProfile";
 import PostCommentModal from "../Pages/PostComment";
+import ImageModal from "./post/ImageModal";
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
-  padding: 40px;
+  padding: 30px 40px;
   margin-bottom: 10px;
   display: flex;
   border-radius: 30px;
@@ -287,6 +288,9 @@ const Post = ({
   const navigate = useNavigate();
   const [profileImg, setProfileImg] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+  const [isImgModalOpen, setIsImgModalOpen] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const [mediaType, setMediaType] = useState(null);
 
   useEffect(() => {
     const getUserProfileImage = async () => {
@@ -327,6 +331,19 @@ const Post = ({
   };
   const closeEtcModal = () => {
     setIsEtcModalOpen(false);
+  };
+
+  // Img Modal
+  const handleMediaClick = (mediaUrl, type) => {
+    setSelectedMedia(mediaUrl); // 클릭된 미디어 URL 설정
+    setMediaType(type); // 미디어 타입 설정 (image 또는 video)
+    setIsImgModalOpen(true); // 모달 열기
+  };
+
+  const handleCloseModal = () => {
+    setIsImgModalOpen(false); // 모달 닫기
+    setSelectedMedia(null); // 선택된 미디어 초기화
+    setMediaType(null); // 미디어 타입 초기화
   };
 
   const handleClickOutside = (e) => {
@@ -626,11 +643,11 @@ const Post = ({
               placeholder={post}
             />
           ) : (
-            <Payload>{post ?? comment}</Payload> // 하나의 Payload만 남겨두기
+            <Payload onClick={PostCommentClick}>{post ?? comment}</Payload> // 하나의 Payload만 남겨두기
           )}
         </Column>
         {/* AudioMessage 컴포넌트를 audioURL이 있을 때만 렌더링 */}
-        <ColumnWrapper onClick={PostCommentClick}>
+        <ColumnWrapper>
           {/* Render multiple photos */}
           {photos && photos.length > 0 && (
             <Column>
@@ -639,6 +656,7 @@ const Post = ({
                   key={index}
                   src={photoUrl}
                   alt={`Post Image ${index + 1}`}
+                  onClick={() => handleMediaClick(photoUrl, "image")}
                 />
               ))}
             </Column>
@@ -647,7 +665,14 @@ const Post = ({
           {videos && videos.length > 0 && (
             <Column>
               {videos.map((videoUrl, index) => (
-                <Video key={index} controls autoPlay loop src={videoUrl} />
+                <Video
+                  key={index}
+                  controls
+                  autoPlay
+                  loop
+                  src={videoUrl}
+                  onClick={() => handleMediaClick(videoUrl, "video")}
+                />
               ))}
             </Column>
           )}
@@ -668,6 +693,14 @@ const Post = ({
             <DmIcon width={18} /> {dms}
           </IconWrapper>
         </Icons>
+        {/* 모달을 렌더링 (이미지 또는 비디오가 선택되었을 때) */}
+        {isImgModalOpen && selectedMedia && (
+          <ImageModal
+            mediaUrl={selectedMedia}
+            mediaType={mediaType} // 미디어 타입 전달
+            onClose={handleCloseModal} // 모달 닫기 핸들러 전달
+          />
+        )}
       </Wrapper>
     </>
   );

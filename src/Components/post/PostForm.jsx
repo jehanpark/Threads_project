@@ -166,16 +166,17 @@ const DeleteButton = styled.button`
   cursor: pointer;
 `;
 const OpenButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 300px;
-  height: 80px;
+  height: 60px;
   background: #d6d6d6;
-  border: none;
+  border-radius: 16px;
   color: #000;
   font-size: 15px;
-  text-align: center;
-  line-height: 5.5;
   font-weight: bold;
-  border-radius: 30px;
+  border-radius: 16px;
   transition: all 0.3s;
   &:hover {
     background: #eaeaea;
@@ -187,12 +188,12 @@ const OpenButton = styled.div`
 `;
 const SubmitBtn = styled.input`
   width: 300px;
-  height: 80px;
+  height: 60px;
   background: #1c1c1c;
   color: #fff;
   font-size: 15px;
   font-weight: bold;
-  border-radius: 30px;
+  border-radius: 16px;
   transition: all 0.3s;
   &:hover {
     background: #fff;
@@ -200,6 +201,7 @@ const SubmitBtn = styled.input`
   }
   @media (max-width: 768px) {
     width: 100%;
+    height: 60px;
   }
 `;
 
