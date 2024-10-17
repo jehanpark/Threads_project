@@ -46,7 +46,7 @@ const BoederWrapper = styled.div`
   height: 100%;
   /* height: 85%; */
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.headerBg};
+  background: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   /* overflow: hidden; */
 
@@ -68,7 +68,7 @@ const ProfileInnner = styled.div`
   height: 306px;
   border: 306px;
   border-radius: 40px 40px 18px 18px;
-  background: ${(props) => props.theme.headerBg};
+  background: ${(props) => props.theme.borderColor};
   margin: 0 10px 8px;
   @media (max-width: 768px) {
     padding: 14px 18px;
@@ -161,7 +161,7 @@ const BottomWrap = styled.div`
     padding: 10px;
     border-radius: 10px;
     color: ${(props) => props.theme.fontcolor};
-    background-color: ${(props) => props.theme.headerBg};
+    background-color: ${(props) => props.theme.borderColor};
     border: 2px solid ${(props) => props.theme.borderstroke};
   }
   @media screen and (max-width: 768px) {
@@ -220,36 +220,25 @@ const ThreadInner = styled.div`
   height: 100%;
 `;
 
+const OvarlayHC = styled.div`
+  width: 680px;
+  height: 50px;
+  position: absolute;
+  background: linear-gradient(#fff, #ffffff00);
+  z-index: 5;
+`;
+
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   gap: 20px;
-  margin-bottom: 6px;
+  /* margin-bottom: 6px; */
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
 
   @media (max-width: 768px) {
     gap: 10px;
     margin-bottom: 0px;
-  }
-  button {
-    flex: 0 0 auto;
-    width: 130px;
-    padding: 10px 20px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all;
-
-    @media (max-width: 768px) {
-      width: 90px;
-      padding: 8px 15px;
-      background-color: ${(props) => props.theme.borderColor};
-    }
-    @media (max-width: 480px) {
-      width: 80px;
-      padding: 6px 10px;
-    }
   }
 `;
 
@@ -286,7 +275,17 @@ const PostWrap = styled.div`
 `;
 
 const ButtonStyle = styled.button`
-  background-color: ${(props) => props.theme.headerBg};
+  background: transparent;
+  flex: 0 0 auto;
+  width: 154px;
+  padding: 10px 20px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  color: ${(props) =>
+    props.selected ? props.theme.selectedbtn : props.theme.notSelectbtn};
+  border-bottom: ${(props) =>
+    props.selected ? `1px solid ${props.theme.selectedbtn}` : "none"};
 `;
 
 const Profile = () => {
@@ -673,13 +672,14 @@ const Profile = () => {
                 {buttons.map((button) => (
                   <ButtonStyle
                     key={button.type}
-                    style={getButtonStyle(button.type)}
                     onClick={() => handleButtonClick(button.type)}
+                    selected={contentType === button.type}
                   >
                     {button.label}
                   </ButtonStyle>
                 ))}
               </ButtonGroup>
+              <OvarlayHC />
               <PostWrap
                 ref={wrapperRef}
                 className={isBouncing ? "bounce" : ""}

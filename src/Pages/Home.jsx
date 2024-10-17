@@ -138,6 +138,7 @@ const Wrapper = styled.div`
     width: 100%;
   }
 `;
+
 const BoederWrapper = styled.div`
   /* position: fixed; */
   bottom: 0;
