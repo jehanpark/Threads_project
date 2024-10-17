@@ -62,9 +62,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
         setFollowers(liveFollowers);
         // 상태 변경 후 onDataEmpty 호출
         onDataEmpty(liveFollowers.length === 0); // 데이터가 없는 경우 처리
-      } catch (error) {
-        console.error("데이터 가져오기 오류:", error);
-      }
+      } catch (error) {}
     };
 
     fetchFollowers();
@@ -97,9 +95,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
             : follower
         )
       );
-    } catch (error) {
-      console.error("오류 발생:", error);
-    }
+    } catch (error) {}
   };
   return (
     <div>

@@ -320,7 +320,6 @@ const Comment = ({ id }) => {
 
   useEffect(() => {
     if (!postId) {
-      console.error("postId가 없습니다. 댓글을 불러올 수 없습니다.");
       return;
     }
   }, [postId]);
@@ -330,9 +329,7 @@ const Comment = ({ id }) => {
       try {
         const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
         setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
-      } catch (error) {
-        console.error("Error fetching profile image:", error);
-      }
+      } catch (error) {}
     };
 
     // userId가 있을 때만 프로필 이미지 가져오기
@@ -362,9 +359,7 @@ const Comment = ({ id }) => {
 
         setComments(commentsList); // 댓글 리스트 저장
         setCommentsCount(commentsSnapshot.size); // 댓글 수 저장
-      } catch (error) {
-        console.error("댓글을 불러오는 중 오류가 발생했습니다:", error);
-      }
+      } catch (error) {}
     };
 
     if (postId) fetchComments();
@@ -429,7 +424,6 @@ const Comment = ({ id }) => {
       setCommentsCount((prevCount) => prevCount + 1);
       navigate("/");
     } catch (error) {
-      console.error("댓글 추가 중 오류가 발생했습니다:", error);
     } finally {
       setIsLoading(false);
     }

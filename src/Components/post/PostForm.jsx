@@ -389,7 +389,6 @@ const PostForm = () => {
       setAudioBlob(null);
       navigate("/");
     } catch (error) {
-      console.error(error);
     } finally {
       setIsLoading(false);
     }

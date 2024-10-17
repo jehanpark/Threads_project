@@ -193,7 +193,6 @@ const Activity = () => {
   // NotificationList에서 데이터를 받아옴
   const handleDataUpdate = (listData) => {
     if (listData.length > 0) {
-      console.log("받은 데이터:", listData);
       setSavedData(listData); // 전체 데이터를 저장
       setFilteredData(listData); // 필터링 없이 모든 데이터를 먼저 보여줌
     }
@@ -230,13 +229,11 @@ const Activity = () => {
 
   // 필터링
   const filterList = (type) => {
-    console.log("선택된 타입:", type);
-    console.log("저장된 데이터:", savedData);
     if (type === "all") {
       setFilteredData(savedData); // 전체 데이터 보여줌
     } else {
       const filtered = savedData.filter((item) => item.type === type); // 타입에 따른 필터링
-      console.log("필터된 데이터:", filtered);
+
       setFilteredData(filtered);
     }
   };

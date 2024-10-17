@@ -316,9 +316,7 @@ const Nav = () => {
         const result = await uploadBytes(locationRef, file);
         const avatarUrl = await getDownloadURL(result.ref);
         setAvarta(avatarUrl);
-      } catch (error) {
-        console.error("Error fetching avatar:", error);
-      }
+      } catch (error) {}
     };
     fetchAvatar(); // 비동기 함수 호출
     return () => {
@@ -373,9 +371,7 @@ const Nav = () => {
       const locationRef = ref(storage, `avatars/${user?.uid}`);
       const avatarUrl = await getDownloadURL(locationRef);
       setAvarta(avatarUrl);
-    } catch (error) {
-      console.error("Error fetching avatar:", error);
-    }
+    } catch (error) {}
   };
 
   const onSelected = (index, path) => {

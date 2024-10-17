@@ -336,7 +336,6 @@ const PostForm = () => {
       setFiles([]);
       setAudioBlob(null);
     } catch (error) {
-      console.error(error);
     } finally {
       setIsLoading(false);
     }

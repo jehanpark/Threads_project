@@ -142,9 +142,7 @@ const NotificationItem = ({
     return formatDistanceToNow(date, { addSuffix: true });
   };
 
-  useEffect(() => {
-    console.log("읽음 상태 변경:", isRead);
-  }, [isRead]);
+  useEffect(() => {}, [isRead]);
 
   // 삭제 관련 상태 및 애니메이션 처리
   const [isDeleteShow, setIsDeleteShow] = useState(false);
