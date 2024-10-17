@@ -68,8 +68,10 @@ const FollowerTitle = styled.div`
 `;
 
 const BorderItemTitle = styled.div`
+  display: flex;
+  justify-content: start;
   flex-grow: 1; /* 자식 요소가 유연하게 공간 채움 */
-  width: 100%;
+  width: 110%;
   /* max-width: ${(props) =>
     props.isSmallScreen ? "calc(100% - 40px)" : "480px"}; */
   height: auto; /* 고정된 높이 제거 */
@@ -189,17 +191,6 @@ const items = [
   },
   {
     title: "팔로워",
-    info: "팔로워가 100명 이상이 되면 어떤 사람들이 회원님의 콘텐츠를 조회했는지에 관한 정보를 더 확인할 수 있습니다.",
-  },
-];
-
-const itemsSecondBox = [
-  {
-    title: "조회수",
-    info: "팔로워가 100명 이상이 되면 어떤 사람들이 회원님의 콘텐츠를 조회했는지에 관한 정보를 더 확인할 수 있습니다.",
-  },
-  {
-    title: "반응",
     info: "팔로워가 100명 이상이 되면 어떤 사람들이 회원님의 콘텐츠를 조회했는지에 관한 정보를 더 확인할 수 있습니다.",
   },
 ];
