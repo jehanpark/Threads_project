@@ -60,7 +60,6 @@ const PostAll = styled.div`
     height: 100%;
   }
 `;
-//여기에 포스트가 들어가면됩니다 ..^^
 const PostArea = styled.div`
   margin: 10px;
   display: grid;
@@ -167,7 +166,6 @@ const BottomWrapp = styled.div`
   width: 100%;
   height: auto;
   padding: 10px 0 10px 0px;
-
   background: ${(props) => props.theme.borderWrapper};
   border-radius: 0 0 30px 30px;
   border-top: 1px solid rgba(204, 204, 204, 0.4);
@@ -247,6 +245,16 @@ const Title = styled.div`
   font-size: 18px;
   color: #ffffff;
 `;
+const CharacterCount = styled.div`
+  text-align: right;
+  font-weight: 500;
+  font-size: 12px;
+  ${(props) => props.theme.fontcolor};
+  opacity: 0.6;
+  margin-right: 10px;
+  margin-bottom: 10px;
+`;
+
 const ComentModal = ({
   onSave,
   post,
@@ -255,8 +263,9 @@ const ComentModal = ({
   onCancel,
   setIsEtcModalOpen,
 }) => {
-  const [newContent, setNewContent] = useState(post); // 수정할 내용을 상태로 관리
+  const [newContent, setNewContent] = useState(post || ""); // post가 undefined일 때 빈 문자열로 초기화
   const [files, setFiles] = useState([]);
+  const [charCount, setCharCount] = useState(post ? post.length : 0); // post가 undefined일 때 0으로 초기화
 
   const handleSave = async () => {
     try {
@@ -286,9 +295,6 @@ const ComentModal = ({
     }
   };
 
-  const maxFileSize = 5 * 1024 * 1024; // 5MB
-  const maxFilesCount = 3;
-
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
@@ -296,6 +302,12 @@ const ComentModal = ({
 
   const removeFile = (index) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
+  const handleContentChange = (e) => {
+    const content = e.target.value;
+    setNewContent(content);
+    setCharCount(content.length); // 글자 수 업데이트
   };
 
   return (
@@ -310,9 +322,10 @@ const ComentModal = ({
 
             <CommentArea onClick={(e) => e.stopPropagation()}>
               <TextAreaWrapper>
+                <CharacterCount>{charCount}자 입력중..</CharacterCount>{" "}
                 <TextArea
-                  value={newContent}
-                  onChange={(e) => setNewContent(e.target.value)}
+                  value={newContent || ""} // newContent가 undefined일 때 빈 문자열로 처리
+                  onChange={handleContentChange} // 핸들러 연결
                   placeholder="내용을 입력하세요 ..."
                 />
               </TextAreaWrapper>
@@ -326,7 +339,6 @@ const ComentModal = ({
                       <Img
                         src={URL.createObjectURL(file)}
                         alt={`Uploaded Preview ${index + 1}`}
-                        style={{}}
                       />
                     ) : file.type.startsWith("video/") ? (
                       <video
@@ -345,9 +357,9 @@ const ComentModal = ({
                         controls
                         src={URL.createObjectURL(file)}
                         style={{
-                          width: "140px", // 오디오 컨트롤러의 너비를 이미지/비디오와 맞춤
-                          height: "40px", // 오디오 컨트롤러의 높이 설정
-                          borderRadius: "10px", // 일관성을 위해 오디오에도 경계 반경 적용
+                          width: "140px",
+                          height: "40px",
+                          borderRadius: "10px",
                           objectFit: "contain",
                         }}
                       >

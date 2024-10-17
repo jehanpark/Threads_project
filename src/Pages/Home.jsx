@@ -112,7 +112,7 @@ const Home = () => {
 
   return (
     <Wrapper>
-      {/* <ComentModal /> */}
+      <ComentModal />
       <BoederWrapper>
         <PostlistWrapper
           ref={wrapperRef}
