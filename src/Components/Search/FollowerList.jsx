@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   useNavigate,
   useSearchParams,
@@ -7,7 +7,6 @@ import {
 import {
   collection,
   query,
-  where,
   onSnapshot,
   doc,
   updateDoc,
@@ -25,7 +24,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
   const currentUser = auth.currentUser; // 로그인 정보
 
   useEffect(() => {
-    let unsubscribe = null;
+    let unsubscribe = null; //메모리누수방지
     const fetchFollowers = async () => {
       let followersQuery = query(collection(db, "profile"));
 
@@ -42,7 +41,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
         let liveFollowers = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        }));
+        })); // 현재 모든 데이터를 가져와서 필터링
 
         // 로그인 회원 정보와 이메일 정보 동일
 
