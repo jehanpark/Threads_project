@@ -1,12 +1,10 @@
 import styled from "styled-components";
-import { useMediaQuery } from "react-responsive";
 import { UserIcon2 } from "../Common/Icon";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Button from "../Common/Button";
 import {
   collection,
   query,
@@ -14,7 +12,6 @@ import {
   getDocs,
   addDoc,
   updateDoc,
-  doc,
 } from "firebase/firestore";
 
 const ModalOverlay = styled.div`
@@ -175,7 +172,7 @@ const ButtonWrap = styled.div`
   }
 `;
 
-const InputBtn = styled.input`
+const InputBtn = styled.button`
   width: 100%;
   height: 40px;
   border: 1px solid;
@@ -183,7 +180,7 @@ const InputBtn = styled.input`
   background-color: ${(props) => props.theme.headerBg};
   border: 2px solid ${(props) => props.theme.borderstroke};
   border-radius: 8px;
-  padding: 15px;
+  padding: 5px 15px;
   &:hover {
     background: ${(props) => props.theme.searchBar};
     color: ${(props) => props.theme.btnBgColor};
@@ -263,71 +260,78 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   const toggleSwitch = () => setIsOn(!isOn);
   const toggleSwitch2 = () => setIsOn2(!isOn2);
 
+  const enterkey = (e) => {
+    if (e.key === "enter") {
+      console.log("확인");
+    }
+  };
+
   const complete = async (e) => {
     e.preventDefault();
     if (!user) return;
-    try {
-      const nameToSave =
-        inputData.username || profile.username || user.displayName;
-      const bioToSave = inputData.bio || profile.bio || "";
-      const imgToSave = avatar || "";
-      const profileQuery = query(
-        collection(db, "profile"),
-        where("userEmail", "==", user.email)
-      );
+    if (keyup)
+      try {
+        const nameToSave =
+          inputData.username || profile.username || user.displayName;
+        const bioToSave = inputData.bio || profile.bio || "";
+        const imgToSave = avatar || "";
+        const profileQuery = query(
+          collection(db, "profile"),
+          where("userEmail", "==", user.email)
+        );
 
-      const querySnapshot = await getDocs(profileQuery);
-      if (querySnapshot.empty) {
-        // 유저 데이터가 없을 때
-        const newDocRef = await addDoc(collection(db, "profile"), {
-          username: nameToSave,
-          userId: user.uid,
-          userEmail: user.email,
-          bio: bioToSave,
-          isLinkPublic: profileData.isLinkPublic,
-          isProfilePublic: profileData.isProfilePublic,
-          img: imgToSave,
-          isFollowing: profile.isFollowing,
-          followNum: profile.followNum,
+        const querySnapshot = await getDocs(profileQuery);
+        if (querySnapshot.empty) {
+          // 유저 데이터가 없을 때
+          const newDocRef = await addDoc(collection(db, "profile"), {
+            username: nameToSave,
+            userId: user.uid,
+            userEmail: user.email,
+            bio: bioToSave,
+            isLinkPublic: profileData.isLinkPublic,
+            isProfilePublic: profileData.isProfilePublic,
+            img: imgToSave,
+            isFollowing: profile.isFollowing,
+            followNum: profile.followNum,
+          });
+          await updateDoc(newDocRef, { postId: newDocRef.id });
+        } else {
+          //데이터가 있을 떄 업로드
+          const docRef = querySnapshot.docs[0].ref;
+          await updateDoc(docRef, {
+            username: nameToSave,
+            userId: user.uid,
+            userEmail: user.email,
+            bio: bioToSave,
+            isLinkPublic: profileData.isLinkPublic,
+            isProfilePublic: profileData.isProfilePublic,
+            img: imgToSave,
+            isFollowing: profile.isFollowing,
+            followNum: profile.followNum,
+          });
+        }
+        // auth 정보 수정
+        await updateProfile(user, {
+          displayName: nameToSave,
+          photoURL: avatar,
         });
-        await updateDoc(newDocRef, { postId: newDocRef.id });
-      } else {
-        //데이터가 있을 떄 업로드
-        const docRef = querySnapshot.docs[0].ref;
-        await updateDoc(docRef, {
+        //여기에 있는 profile state값 변경
+        setProfileData({
+          ...profileData,
           username: nameToSave,
-          userId: user.uid,
-          userEmail: user.email,
           bio: bioToSave,
-          isLinkPublic: profileData.isLinkPublic,
-          isProfilePublic: profileData.isProfilePublic,
-          img: imgToSave,
-          isFollowing: profile.isFollowing,
-          followNum: profile.followNum,
+          img: avatar,
         });
+        onProfileChange({
+          ...profileData,
+          username: nameToSave,
+          bio: bioToSave,
+          img: avatar,
+        });
+        close();
+      } catch (e) {
+        console.log(e);
       }
-      // auth 정보 수정
-      await updateProfile(user, {
-        displayName: nameToSave,
-        photoURL: avatar,
-      });
-      //여기에 있는 profile state값 변경
-      setProfileData({
-        ...profileData,
-        username: nameToSave,
-        bio: bioToSave,
-        img: avatar,
-      });
-      onProfileChange({
-        ...profileData,
-        username: nameToSave,
-        bio: bioToSave,
-        img: avatar,
-      });
-      close();
-    } catch (e) {
-      console.log(e);
-    }
   };
 
   const spring = {
@@ -427,7 +431,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
               </Checkinner>
             </Box>
             <ButtonWrap>
-              <InputBtn type="submit"></InputBtn>
+              <InputBtn>완료</InputBtn>
             </ButtonWrap>
             <Box className="mobile" onClick={close}>
               모달 닫기
