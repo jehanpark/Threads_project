@@ -4,8 +4,8 @@ import styled from "styled-components";
 import { RightArrowIcon } from "../../Components/Common/Icon";
 import { Line } from "../../Components/SettingsItem_de";
 import { useMediaQuery } from "react-responsive";
+import AddWordsModal from "./AddWordModal";
 
-// 스타일 정의
 // 스타일 정의
 const Overlay = styled.div`
   position: fixed; // 모달을 화면에 고정
@@ -50,6 +50,33 @@ const Title = styled.h2`
   font-weight: 500;
 `;
 
+const SmallTitle = styled.div`
+  color: #ddd;
+  font-size: 12px;
+  font-weight: normal;
+  margin-right: 12px;
+  transition: all 0.3s;
+  &:hover {
+    color: #181818;
+    font-weight: 500;
+  }
+`;
+
+const OutherTitle = styled.div`
+  display: flex;
+  justify-content: space-between; // 양쪽 끝으로 정렬
+  align-items: center; // 수직 중앙 정렬
+  width: 100%; // 전체 너비 사용
+  font-size: ${({ isMobile }) => (isMobile ? "14px" : "")};
+  font-weight: 500;
+`;
+
+const ContentAutoLayout = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 const Info = styled.div`
   color: ${(props) => props.theme.modalfont};
   font-size: 12px;
@@ -65,17 +92,6 @@ const MoveLink = styled.a``;
 const OptionList = styled.ul`
   list-style-type: none;
   padding-top: ${({ isMobile }) => (isMobile ? "8px" : "12px")};
-`;
-
-const AutoLayout = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding-right: 18px;
-  @media (max-width: 768px) {
-    padding-right: 20px;
-  }
 `;
 
 const OptionItem = styled.li`
@@ -138,7 +154,7 @@ const HiddenWordModal = ({
 }) => {
   const [activeOption1, setActiveOption1] = useState(selectedOption1); // 첫 번째 옵션 상태
   const [activeOption2, setActiveOption2] = useState(selectedOption2); // 두 번째 옵션 상태
-
+  const [showAddWordsModal, setShowAddWordsModal] = useState(false); // 새로운 모달 상태 추가
   const handleOptionClick = (option, listIndex) => {
     if (listIndex === 1) {
       setActiveOption1(option);
@@ -204,10 +220,24 @@ const HiddenWordModal = ({
           ))}
         </OptionList>
         <Line />
-        <AutoLayout>
-          <Title isMobile={isMobile}>맞춤 단어 및 문구 관리</Title>
-          <RightArrowIcon fill={"gray"} width={"12px"} />
-        </AutoLayout>
+        <ContentAutoLayout>
+          <OutherTitle isMobile={isMobile}>
+            맞춤 단어 및 문구 관리
+            <a
+              onClick={() => setShowAddWordsModal(true)} // "설정하기" 클릭 시 새로운 모달 열기
+              style={{
+                cursor: "pointer",
+                textDecoration: "none",
+                color: "inherit",
+              }}
+            >
+              <SmallTitle>설정하기</SmallTitle>
+            </a>
+          </OutherTitle>
+        </ContentAutoLayout>
+        {showAddWordsModal && (
+          <AddWordsModal onClose={() => setShowAddWordsModal(false)} /> // 새로운 모달 닫기 함수
+        )}
       </ModalContainer>
     </Overlay>
   );
