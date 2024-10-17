@@ -27,6 +27,7 @@ import { useAuth } from "../Contexts/AuthContext";
 const Wrapper = styled.div`
   /* width: 100%; */
   /* height: calc(100vh - 120px); */
+  width: 680px;
   height: 100vh;
   /* margin-top: 120px; */
   /* overflow: hidden; */

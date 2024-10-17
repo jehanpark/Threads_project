@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import TimeLine from "../Components/post/TimeLine";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 // 모든 페이지들
 import Activity from "./Activity";
@@ -44,6 +46,7 @@ const Wrapper = styled.div`
 `;
 const BoederWrapper = styled.div`
   width: 680px;
+  /* border: 1px solid red; */
   bottom: 0;
   height: 100%;
   border-radius: 40px 40px 0px 0px;
@@ -116,6 +119,20 @@ const BUTTONS = styled.div`
   left: 0px;
 `;
 
+const CarouselWrapper = styled.div`
+  /* border: 1px solid red; */
+  width: 100vw;
+`;
+
+////////////
+const ActivityWrapper = styled.div`
+  width: 100%; /* 모든 슬라이드 아이템의 너비가 동일하게 설정 */
+`;
+
+const ProfileWrapper = styled.div`
+  width: 100%; /* 동일하게 100% 너비 설정 */
+`;
+
 const Home = () => {
   const wrapperRef = useRef(null); // DOM 요소 접근을 위한 useRef
   const [isBouncing, setIsBouncing] = useState(false); // 바운스 상태 관리
@@ -131,6 +148,26 @@ const Home = () => {
       ...prevState,
       [page]: true,
     }));
+  };
+
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 1,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 3,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
   };
 
   const handleScroll = () => {
@@ -165,13 +202,31 @@ const Home = () => {
   return (
     <DIV>
       <BUTTONS>
-        {" "}
         <h1>Home Component</h1>
         {/* 버튼을 클릭하여 컴포넌트를 추가 */}
         <button onClick={() => handlePin("showActivity")}>Pin Activity</button>
         <button onClick={() => handlePin("showProfile")}>Pin Profile</button>
       </BUTTONS>
-      <Wrapper>
+      <CarouselWrapper>
+        <Carousel responsive={responsive}>
+          <Wrapper>
+            <BoederWrapper>
+              <PostlistWrapper
+                ref={wrapperRef}
+                className={isBouncing ? "bounce" : ""}
+              >
+                <TimeLine />
+              </PostlistWrapper>
+            </BoederWrapper>
+          </Wrapper>
+          <Profile />
+          <Profile />
+          <Profile />
+          <Profile />
+        </Carousel>
+      </CarouselWrapper>
+
+      {/* <Wrapper>
         <BoederWrapper>
           <PostlistWrapper
             ref={wrapperRef}
@@ -180,7 +235,8 @@ const Home = () => {
             <TimeLine />
           </PostlistWrapper>
         </BoederWrapper>
-      </Wrapper>
+      </Wrapper> */}
+
       {/* //   핀으로 추가된 컴포넌트들 */}
       {pages.showActivity && (
         <AddPages className="pinned-activity pinned">
