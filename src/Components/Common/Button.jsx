@@ -7,7 +7,7 @@ const ButtonItem = styled.button`
   border: none;
   cursor: pointer;
   &:hover {
-    background: #474747;
+    background: rgba(0, 0, 0, 0.8);
     color: #fff;
   }
 

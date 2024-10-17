@@ -86,9 +86,7 @@ const NotificationList = ({ onUpdate }) => {
         if (typeof onUpdate === "function") {
           onUpdate(initialData);
         }
-      } catch (error) {
-        console.error("오류 발생:", error);
-      }
+      } catch (error) {}
     };
     fetchData();
   }, []); // 컴포넌트 마운트 시 한 번만 실행
@@ -106,11 +104,7 @@ const NotificationList = ({ onUpdate }) => {
             : notification
         )
       );
-
-      console.log("업데이트된 알림 상태");
-    } catch (error) {
-      console.error("Firestore 업데이트 중 오류 발생:", error);
-    }
+    } catch (error) {}
   };
 
   //알림 삭제

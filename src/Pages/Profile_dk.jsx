@@ -425,9 +425,7 @@ const Profile = () => {
         }
       });
       return () => unsubscribe();
-    } catch (error) {
-      console.error("Error fetching profile: ", error);
-    }
+    } catch (error) {}
   };
   useEffect(() => {
     CheckProfile();
@@ -468,11 +466,8 @@ const Profile = () => {
       setComments(flattenedComments);
 
       if (flattenedComments.length === 0) {
-        console.log("No comments found for the provided email.");
       }
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-    }
+    } catch (error) {}
   };
 
   const onfollow = () => {

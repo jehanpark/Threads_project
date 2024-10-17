@@ -26,33 +26,45 @@ import OtherBtnModal from "../Components/profile/OtherBtnModal";
 import { useAuth } from "../Contexts/AuthContext";
 
 const Wrapper = styled.div`
+  /* width: 100%; */
+  /* height: calc(100vh - 120px); */
   height: 100vh;
-  z-index: 10;
+  /* margin-top: 120px; */
+  /* overflow: hidden; */
+  /* z-index: -1; */
   @media (max-width: 768px) {
     height: 100vh;
     width: 100%;
   }
 `;
-
 const BoederWrapper = styled.div`
-  bottom: 0;
-  width: 680px;
-  height: calc(100vh - 120px);
-  border-radius: 40px 40px 0px 0px;
   background: ${(props) => props.theme.borderColor};
-  box-shadow: ${(props) => props.theme.bordershadow};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 680px;
+  /* position: fixed; */
+  bottom: 0;
+  /* left: 50%; */
+  /* transform: translate(-50%); */
+  /* margin: 0; */
+  height: calc(100vh - 120px);
+  /* height: 85%; */
+  border-radius: 40px 40px 0px 0px;
+  /* overflow: hidden; */
   @media (max-width: 768px) {
-    position: static;
-    margin: 0;
-    width: 100vw;
+    width: 100%;
+    /* bottom: 0; */
+    border-radius: 0;
+    /* height: 100vh; */
+    /* height: calc(100% - 70px); */
     height: calc(100% - 70px);
+
     box-shadow: none;
-    border-radius: 0px;
-    background: ${(props) => props.theme.borderColor};
-    transform: translate(0%);
+    border-radius: 0px 0px 0px 0px;
   }
 `;
-
 const ProfileInnner = styled.div`
   padding: 30px 40px 4px 40px;
   width: calc(100% - 20px);
@@ -68,7 +80,7 @@ const ProfileInnner = styled.div`
     border: none;
     border-radius: 30px 30px 10px 10px;
     background: ${(props) => props.theme.borderColor};
-    margin: 70px auto 0px;
+    margin: 40px auto 0px;
   }
 `;
 
@@ -86,7 +98,6 @@ const PostlistWrapper = styled.div`
     width: 100%;
     height: 100%;
     margin-top: 6px;
-    padding: 0 5px;
     gap: 5px;
   }
 `;
@@ -97,12 +108,13 @@ const ProfileWrap = styled.div`
 `;
 
 const Desk = styled.div`
+  padding-top: 20px;
   height: 84px;
-  font-size: 18px;
+  font-size: 14px;
   color: ${(props) => props.theme.fontcolor};
   word-break: break-all;
   @media (max-width: 768px) {
-    font-size: 16px;
+    font-size: 14px;
   }
 `;
 
@@ -144,17 +156,24 @@ const Nick = styled.h1`
 
 const BottomWrap = styled.div`
   width: 100%;
-  height: 85%;
   display: flex;
   flex-direction: column;
   gap: 25px;
   button {
-    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
     border-radius: 10px;
-    color: ${(props) => props.theme.fontcolor};
-    background-color: ${(props) => props.theme.borderColor};
+    color: ${(props) => props.theme.headerBg};
+    background-color: ${(props) => props.theme.selectedbtn};
     border: 2px solid ${(props) => props.theme.borderstroke};
+    @media screen and (max-width: 480px) {
+      width: 100%;
+      margin-top: 10px;
+    }
   }
+
   @media screen and (max-width: 768px) {
     gap: 8px;
   }
@@ -218,8 +237,11 @@ const ButtonGroup = styled.div`
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
 
   @media (max-width: 768px) {
-    gap: 10px;
-    margin-bottom: 0px;
+    width: 100%;
+  }
+  @media (max-width: 480px) {
+    width: 100%;
+    gap: 0;
   }
 `;
 
@@ -269,6 +291,17 @@ const ButtonStyle = styled.button`
     props.selected ? props.theme.selectedbtn : props.theme.notSelectbtn};
   border-bottom: ${(props) =>
     props.selected ? `1px solid ${props.theme.selectedbtn}` : "none"};
+  @media (max-width: 768px) {
+    width: 100px;
+    margin-bottom: 0px;
+  }
+`;
+
+const NoResults = styled.p`
+  font-size: 16px;
+  text-align: center;
+  color: #999;
+  margin-top: 60px;
 `;
 
 const Profile = () => {
@@ -318,13 +351,6 @@ const Profile = () => {
   }, [currentUser, navigate]);
 
   // const location = useLocation();
-
-  const handleDataUpdate = (listData) => {
-    if (listData.length > 0) {
-      setSavedData(listData); // 전체 데이터를 저장
-      setFilteredData(listData); // 필터링 없이 모든 데이터를 먼저 보여줌
-    }
-  };
 
   const buttonCheck = () => {
     if (user?.email === emailAdress) {
@@ -381,9 +407,7 @@ const Profile = () => {
         }
       });
       return () => unsubscribe();
-    } catch (error) {
-      console.error("Error fetching profile: ", error);
-    }
+    } catch (error) {}
   };
   useEffect(() => {
     CheckProfile();
@@ -424,11 +448,8 @@ const Profile = () => {
       setComments(flattenedComments);
 
       if (flattenedComments.length === 0) {
-        console.log("No comments found for the provided email.");
       }
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-    }
+    } catch (error) {}
   };
 
   const onfollow = () => {
@@ -477,10 +498,12 @@ const Profile = () => {
             email,
           };
         });
+
         setPosts(posts);
       });
     };
     fetchPosts();
+
     return () => {
       unsubscribe && unsubscribe();
     };
@@ -523,7 +546,7 @@ const Profile = () => {
     setProfile(updatedProfile);
   };
 
-  // 필터링
+  // 필터링 적용 함수
   const filterList = (type) => {
     if (type === "thresds") {
       setFilteredData(posts);
@@ -540,8 +563,8 @@ const Profile = () => {
 
   // 버튼 클릭 시 필터링 적용
   const handleButtonClick = (type) => {
-    setContentType(type); // 필터 상태 업데이트
-    filterList(type); // 필터링 적용
+    setContentType(type);
+    filterList(type);
   };
 
   const handleScroll = () => {
@@ -559,10 +582,6 @@ const Profile = () => {
   };
 
   const wrapperRef = useRef(null);
-  const getButtonStyle = (type) => ({
-    color: contentType === type ? "#000" : "rgba(204, 204, 204, 0.8)",
-    borderBottom: contentType === type ? "1.5px solid #000" : "none",
-  });
 
   const buttons = [
     { label: "스레드", type: "thresds" },
@@ -680,11 +699,11 @@ const Profile = () => {
                 className={isBouncing ? "bounce" : ""}
                 onScroll={handleScroll}
               >
-                {contentType === "thresds"
-                  ? posts.map((post) => <Post2 key={post.id} {...post} />)
-                  : filteredData.map((filter) => (
-                      <Post2 key={filter.id} {...filter} />
-                    ))}
+                {filteredData.length === 0 ? (
+                  <NoResults>게시글이 없습니다.</NoResults>
+                ) : (
+                  filteredData.map((post) => <Post2 key={post.id} {...post} />)
+                )}
               </PostWrap>
             </ThreadInner>
           </PostlistWrapper>

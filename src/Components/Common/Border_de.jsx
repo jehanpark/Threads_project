@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { lightTheme } from "../../styles/GlobalStyles.styles";
 // import LogoImg from "../../images/insta.png";
 // import RightArrow from "../../images/rightarrow.svg";
-console.log(lightTheme);
+
 const BorderItem = styled.div`
   ${({ type }) =>
     type === "borderWrapper" &&

@@ -15,10 +15,10 @@ const FollowerContain = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
+    padding: 20px 10px;
   }
   @media (max-width: 480px) {
     width: 100%;
-    padding: 10px 10px;
   }
 `;
 const Wrapper = styled.div`
@@ -142,7 +142,6 @@ const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
       <FollowerButton
         isFollowing={isFollowing}
         onClick={(e) => {
-          console.log("click");
           e.stopPropagation(); // 상위 이벤트 전달 x
           toggleFollow();
         }}

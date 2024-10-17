@@ -323,9 +323,7 @@ const PostComment = () => {
       try {
         const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
         setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
-      } catch (error) {
-        console.error("Error fetching profile image:", error);
-      }
+      } catch (error) {}
     };
 
     // userId가 있을 때만 프로필 이미지 가져오기
@@ -373,9 +371,7 @@ const PostComment = () => {
           profileImagesMap[comment.userId] = profileImg || ""; // 프로필 이미지가 없으면 빈 문자열
         }
         setProfileImages(profileImagesMap);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
+      } catch (error) {}
     };
 
     fetchComments();
@@ -408,7 +404,6 @@ const PostComment = () => {
     const fetchPostOwner = async () => {
       try {
         if (!id) {
-          console.error("포스트 ID가 없습니다.");
           return;
         }
 
@@ -417,22 +412,14 @@ const PostComment = () => {
         const postSnapshot = await getDoc(postRef);
         if (postSnapshot.exists()) {
           const postData = postSnapshot.data();
-          console.log("포스트 데이터:", postData);
 
           if (postData.userId) {
             setPostOwnerId(postData.userId); // userId를 상태로 저장
           } else {
-            console.error("userId 필드가 문서에 없습니다.");
           }
         } else {
-          console.error("해당 포스트가 Firestore에 존재하지 않습니다.");
         }
-      } catch (error) {
-        console.error(
-          "포스트 작성자 정보를 가져오는 중 오류가 발생했습니다:",
-          error
-        );
-      }
+      } catch (error) {}
     };
 
     fetchPostOwner(); // 포스트 작성자의 ID 가져오기
@@ -446,9 +433,7 @@ const PostComment = () => {
         prevComments.filter((comment) => comment.id !== commentId)
       ); // UI에서 삭제된 댓글 제거
       setCommentsCount((prevCount) => prevCount - 1); // 댓글 수 감소
-    } catch (error) {
-      console.error("댓글 삭제 중 오류 발생:", error);
-    }
+    } catch (error) {}
   };
 
   return (

@@ -451,17 +451,14 @@ const CoModal = ({
     const getUserProfileImage = async () => {
       try {
         const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
-        console.log(imgUrl, "야호");
+
         setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
-      } catch (error) {
-        console.error("Error fetching profile image:", error);
-      }
+      } catch (error) {}
     };
 
     // userId가 있을 때만 프로필 이미지 가져오기
     if (userId) {
       getUserProfileImage();
-      console.log(userId);
     }
   }, [userId]);
 
@@ -485,9 +482,7 @@ const CoModal = ({
         }));
 
         setCommentsCount(commentsSnapshot.size); // 댓글 수 저장
-      } catch (error) {
-        console.error("댓글을 불러오는 중 오류가 발생했습니다:", error);
-      }
+      } catch (error) {}
     };
 
     if (postId) fetchComments();
@@ -571,7 +566,6 @@ const CoModal = ({
       setCommentsCount((prevCount) => prevCount + 1);
       onClose();
     } catch (error) {
-      console.error("댓글 추가 중 오류가 발생했습니다:", error);
     } finally {
       setIsLoading(false);
     }

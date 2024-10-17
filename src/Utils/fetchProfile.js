@@ -14,11 +14,9 @@ export default async function fetchUserProfileImage(userId) {
 
       return profileImg || null; // 이미지가 없으면 null 반환
     } else {
-      console.log("해당 유저가 존재하지 않습니다.");
       return null;
     }
   } catch (error) {
-    console.error("Error fetching user profile image:", error);
     return null;
   }
 }

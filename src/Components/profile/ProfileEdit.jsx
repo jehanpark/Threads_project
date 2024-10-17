@@ -195,6 +195,7 @@ const InputBtn = styled.button`
   border-radius: 8px;
   font-size: 14px;
   padding: 4px 15px;
+
   &:hover {
     background: ${(props) => props.theme.searchBar};
     color: ${(props) => props.theme.btnBgColor};
