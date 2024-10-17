@@ -29,12 +29,12 @@ const AllWrap = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 const Backarea = styled.div`
-  width: 760px;
+  display: flex;
+  margin-right: 730px;
 `;
 const BoederWrapper = styled.div`
   position: fixed;
@@ -194,7 +194,6 @@ const CommentWrapper = styled.div`
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   display: flex;
   flex-direction: column;
-
   transition: transform 0.3s ease-out;
   @media (max-width: 768px) {
     width: 100%;
@@ -250,7 +249,7 @@ const DeletIcon = styled.img`
 `;
 const CometdescAll = styled.div`
   margin: 10px 0 0 8%;
-  border-left: 3px solid ${(props) => props.theme.borderstroke};
+  border-left: 2px solid ${(props) => props.theme.borderstroke};
   padding: 10px 0;
 `;
 const CommentContent = styled.div`
