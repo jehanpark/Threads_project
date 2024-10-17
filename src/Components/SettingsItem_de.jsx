@@ -8,6 +8,7 @@ import Toggle from "./Common/Toggle";
 import MentionModal from "./Common/MentionModal";
 import HiddenWordModal from "./Common/HiddenWordModal";
 import OnlineStatusModal from "./Common/OnlineStatusModal";
+import AccountSettingModal from "./Common/AccountSettingModal";
 
 import {
   LockIcon,
@@ -401,6 +402,18 @@ const SettingsItem_de = () => {
     setSelectedOption3(option);
   };
 
+  // 웹사이트 권한 모달
+  const [isAccountSettingModalOpen, setAccountSettingModalOpen] =
+    useState(false);
+
+  const openAccountSettingModal = () => {
+    setAccountSettingModalOpen(true);
+  };
+
+  const closeAccountSettingModal = () => {
+    setAccountSettingModalOpen(false);
+  };
+
   // 모달 끝
   useEffect(() => {
     // 초기 상태에 대한 border 위치 설정
@@ -568,7 +581,9 @@ const SettingsItem_de = () => {
                   </IconStroke>
                   <ContentAutoLayout>
                     <AccountTitle>웹 사이트 권한</AccountTitle>
-                    <IconStroke>
+                    <IconStroke
+                      onClick={() => setAccountSettingModalOpen(true)}
+                    >
                       <RightArrowIcon fill={"gray"} width={"12px"} />
                     </IconStroke>
                   </ContentAutoLayout>
@@ -894,6 +909,11 @@ const SettingsItem_de = () => {
           onClose={closeOnlineStatusModal}
           selectedOption3={selectedOption3}
           onSelectOption3={handleSelectOption3}
+        />
+      )}
+      {isAccountSettingModalOpen && (
+        <AccountSettingModal
+          onClose={() => setAccountSettingModalOpen(false)}
         />
       )}
     </Wrapper>
