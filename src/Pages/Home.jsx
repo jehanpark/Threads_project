@@ -30,9 +30,22 @@ const DIV = styled.div`
 //   }
 // }
 
-const AddPages = styled.div``;
+const AddPages = styled.div`
+  /* padding-left: 400px;s */
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  padding-left: 50vw;
+  @media (max-width: 1390px) {
+    padding-left: 0px;
+  }
+`;
 
 const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+
   height: 100vh;
   /* width: 100%; */
   /* height: calc(100vh - 120px); */
@@ -65,7 +78,7 @@ const BoederWrapper = styled.div`
   @media (max-width: 768px) {
     position: absolute;
     width: 100%;
-    bottom: 0;
+    top: 0;
     left: 0px;
     border-radius: 0;
     height: calc(100% - 70px);
@@ -117,10 +130,11 @@ const PostlistWrapper = styled.div`
 const BUTTONS = styled.div`
   position: fixed;
   left: 0px;
+  z-index: 1000;
 `;
 
 const CarouselWrapper = styled.div`
-  /* border: 1px solid red; */
+  /* border: 1px solid red;s */
   width: 100vw;
 `;
 
@@ -148,26 +162,6 @@ const Home = () => {
       ...prevState,
       [page]: true,
     }));
-  };
-
-  const responsive = {
-    superLargeDesktop: {
-      // the naming can be any, depends on you.
-      breakpoint: { max: 4000, min: 3000 },
-      items: 1,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 3,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
   };
 
   const handleScroll = () => {
@@ -198,31 +192,58 @@ const Home = () => {
       }
     };
   }, []);
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 1,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1384 },
+      items: 2,
+    },
+    tablet: {
+      breakpoint: { max: 1384, min: 464 },
+      items: 1,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
+
+  //   <BUTTONS>
+  //   <h1>Home Component</h1>
+  //   {/* 버튼을 클릭하여 컴포넌트를 추가 */}
+  //   <button onClick={() => handlePin("showActivity")}>Pin Activity</button>
+  //   <button onClick={() => handlePin("showProfile")}>Pin Profile</button>
+  // </BUTTONS>
 
   return (
     <DIV>
-      <BUTTONS>
-        <h1>Home Component</h1>
-        {/* 버튼을 클릭하여 컴포넌트를 추가 */}
-        <button onClick={() => handlePin("showActivity")}>Pin Activity</button>
-        <button onClick={() => handlePin("showProfile")}>Pin Profile</button>
-      </BUTTONS>
       <CarouselWrapper>
         <Carousel responsive={responsive}>
-          <Wrapper>
-            <BoederWrapper>
-              <PostlistWrapper
-                ref={wrapperRef}
-                className={isBouncing ? "bounce" : ""}
-              >
-                <TimeLine />
-              </PostlistWrapper>
-            </BoederWrapper>
-          </Wrapper>
-          <Profile />
-          <Profile />
-          <Profile />
-          <Profile />
+          <AddPages>
+            <Wrapper>
+              <BoederWrapper>
+                <PostlistWrapper
+                  ref={wrapperRef}
+                  className={isBouncing ? "bounce" : ""}
+                >
+                  <TimeLine />
+                </PostlistWrapper>
+              </BoederWrapper>
+            </Wrapper>
+          </AddPages>
+          <AddPages>
+            <Profile />
+          </AddPages>
+          <AddPages>
+            <Profile />
+          </AddPages>
+          <AddPages>
+            <Profile />
+          </AddPages>
         </Carousel>
       </CarouselWrapper>
 
