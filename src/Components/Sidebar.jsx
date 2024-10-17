@@ -315,7 +315,7 @@ const Sidebar = () => {
 
   // 로그인 상태에 따라 ModalLists를 다르게 설정
   const ModalLists = currentUser
-    ? ["디자인", "인사이트", "설정", "문제신고", "로그아웃"]
+    ? ["디자인", "설정", "문제신고", "로그아웃"]
     : ["디자인", , "문제신고", "로그인"];
 
   const PinModalLists = ["Profile", "Activity", "Settings"];
