@@ -7,17 +7,27 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const AllWrapp = styled.div`
   /* position: relative;  */
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-content: center;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   z-index: 900;
+  @media (max-width: 768px) {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+  }
 `;
 
 const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
@@ -25,6 +35,13 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 999;
+  @media (max-width: 768px) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+  }
 `;
 
 const ModalWrapper = styled.div`

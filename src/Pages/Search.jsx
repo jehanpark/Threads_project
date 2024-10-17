@@ -18,15 +18,14 @@ const Contain = styled.div`
 
 const MenuTitle = styled.p`
   font-weight: 800;
-  font-size: 22px;
+  font-size: 20px;
   margin-top: 40px;
+  margin-bottom: 40px;
   color: ${(props) => props.theme.fontcolor};
   transition: all 0.3s;
-
   @media (max-width: 768px) {
     display: none;
   }
-
   @media (max-width: 480px) {
     display: none;
   }
@@ -127,19 +126,16 @@ const SearchBox = styled.div`
 `;
 
 const ContentsBorder = styled.div`
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  width: 100%;
-  /* max-height: 600px; */
-  height: calc(100vh - 120px);
-
+  height: 100%;
+  max-height: 700px;
   overflow-y: auto;
   padding: 0 20px;
-
   padding-bottom: 20px;
+  margin-top: 20px;
   ::-webkit-scrollbar {
     display: none;
   }
@@ -147,11 +143,13 @@ const ContentsBorder = styled.div`
   scrollbar-width: none;
 
   @media (max-width: 768px) {
-    padding: 20px;
+    width: 100%;
+    max-height: 100%;
   }
 
   @media (max-width: 480px) {
-    padding: 0;
+    width: 100%;
+    max-height: 100%;
   }
 `;
 
@@ -161,7 +159,7 @@ const BoederWrapper = styled.div`
   left: 50%;
   transform: translate(-50%);
   margin: 0 auto;
-  /* width: 680px; */
+  width: 680px;
   height: 85%;
   border-radius: 40px 40px 0px 0px;
   background-color: ${(props) => props.theme.borderColor};
@@ -170,8 +168,8 @@ const BoederWrapper = styled.div`
     position: fixed;
     border-radius: 0;
     width: 100%;
-    height: calc(100% - 140px);
-    bottom: 70px;
+    /* height: calc(100% - 140px); */
+    bottom: 0px;
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
   }

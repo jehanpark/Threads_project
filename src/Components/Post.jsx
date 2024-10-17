@@ -28,26 +28,31 @@ import PostSetModal from "./Common/PostSetModal";
 import AudioMessage from "./AudioMessage";
 import EtcModal from "./post/EtcModal";
 import fetchUserProfileImage from "../Utils/fetchProfile";
+import CoModal from "./post/CoModal";
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
   padding: 40px;
-  padding: 40px;
+  margin-bottom: 10px;
   display: flex;
+  border-radius: 30px;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
-  border-bottom: 1px solid rgba(172, 172, 172, 0.4);
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
+    border-radius: 0px;
+    padding: 30px;
+    margin-bottom: 0px;
   }
 `;
 const ColumnWrapper = styled.div`
   display: flex;
 `;
 const Column = styled.div`
+  margin-left: 20px;
   display: flex;
   margin-left: 50px;
   margin-bottom: 12px;
@@ -135,34 +140,6 @@ const Icons = styled.div`
   color: #bababa;
 `;
 
-const DeleteButton = styled.button`
-  background: #ff6347;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  cursor: pointer;
-`;
-
-const EditorColumns = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-const EditButton = styled.button`
-  background: #7f8689;
-  color: #fff;
-  font-weight: 600;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  text-transform: uppercase;
-  cursor: pointer;
-`;
-
 const IconWrapper = styled.div`
   width: 50px;
   height: auto;
@@ -218,42 +195,6 @@ const EditPostFormTextArea = styled.textarea`
     border: 1px solid #1d9bf0;
   }
 `;
-const CancelButton = styled.button`
-  background: #7f8689;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-transform: uppercase;
-  cursor: pointer;
-`;
-const UpdateButton = styled.button`
-  background: #1d9bf0;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-transform: uppercase;
-  cursor: pointer;
-`;
-
-const SetContentButton = styled.label`
-  color: #fff;
-  transition: color 0.3s;
-
-  &:hover {
-    color: #1d9bf0;
-  }
-
-  svg {
-    width: 24px;
-    cursor: pointer;
-  }
-`;
-
-const SetContentInputButton = styled.input`
-  display: none;
-`;
 
 const Post = ({
   post,
@@ -265,6 +206,7 @@ const Post = ({
   createdAt,
   email,
   audioURL,
+  comment,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPhoto, setEditedPhoto] = useState(null);
@@ -272,7 +214,6 @@ const Post = ({
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [isLiked, setIsLiked] = useState(false);
   const [dms, setDms] = useState(Math.floor(Math.random() * 50));
-  const [isDms, setIsDms] = useState(false);
   const [retweets, setRetweets] = useState(2);
   const [isRetweets, setIsRetweets] = useState(false);
   const [openModalId, setOpenModalId] = useState(null);
@@ -281,6 +222,7 @@ const Post = ({
   const navigate = useNavigate();
   const [profileImg, setProfileImg] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+  const [commentModalOpen, setCommentModalOpen] = useState(false);
 
   useEffect(() => {
     const getUserProfileImage = async () => {
@@ -383,10 +325,6 @@ const Post = ({
 
   const user = auth.currentUser;
 
-  // const onChange = (e) => {
-  //   setEditedPost(e.target.value);
-  // };
-
   const handleClose = () => {
     setIsEditing(false);
   };
@@ -413,43 +351,6 @@ const Post = ({
     }
   };
 
-  // const onUpdate = async () => {
-  //   try {
-  //     if (user?.uid !== userId) return;
-
-  //     const postDoc = await getDoc(doc(db, "contents", id));
-  //     if (!postDoc.exists()) throw new Error("Documents does not exist");
-
-  //     if (editedPhoto) {
-  //       const newFileType = editedPhoto.type.startsWith("image/")
-  //         ? "image"
-  //         : "video";
-
-  //       const locationRef = ref(storage, `contents/${user.uid}/${id}`);
-  //       const uploadTask = uploadBytesResumable(locationRef, editedPhoto);
-  //       if (editedPhoto.size >= 5 * 1024 * 1024) {
-  //         uploadTask.cancel();
-  //         throw new Error("File Size is over 5MB");
-  //       }
-  //       const result = await uploadBytes(locationRef, editedPhoto);
-  //       const url = await getDownloadURL(result.ref);
-
-  //       await updateDoc(doc(db, "contents", id), {
-  //         post: editedPost,
-  //         photo: newFileType === "image" ? url : "",
-  //         video: newFileType === "video" ? url : "",
-  //         fileType: newFileType,
-  //       });
-  //     } else {
-  //       await updateDoc(doc(db, "contents", id), { post: editedPost });
-  //     }
-  //   } catch (e) {
-  //     console.error(e);
-  //   } finally {
-  //     setIsEditing(false); // 수정 완료 후 입력창 닫기
-  //   }
-  // };
-
   const handleSave = (updatedContent) => {
     setEditedPost(updatedContent);
     // 추가적으로 필요한 업데이트 로직
@@ -469,23 +370,33 @@ const Post = ({
     setIsLiked((prevLiked) => !prevLiked);
   };
 
-  const handleCommentClick = () => {
-    navigate("/Comment/${id}", {
-      state: {
-        postId: id,
-        postContent: post,
-        photos,
-        videos,
-        username,
-        createdAt: createdAt || { seconds: Date.now() / 1000 },
-        likes,
-        dms,
-        retweets,
-        userId,
-      },
-    });
+  const openCommentModal = () => {
+    setCommentModalOpen(true); // 특정 포스트의 ID로 모달 열기
   };
+  const closeCommentModal = async () => {
+    setCommentModalOpen(false);
 
+    try {
+      // Firestore에서 댓글 수를 다시 가져오기
+      const commentsRef = collection(db, "contents", postId, "comments");
+      const commentsSnapshot = await getDocs(commentsRef);
+      // 스냅샷에서 댓글 수 가져와 상태 업데이트
+      const newCommentsCount = commentsSnapshot.size;
+      setCommentsCount(newCommentsCount); // 댓글 수 상태 업데이트
+    } catch (error) {
+      console.error("댓글 수를 불러오는 중 오류가 발생했습니다:", error);
+    }
+  };
+  const handleCommentSubmitSuccess = async () => {
+    try {
+      const commentsRef = collection(db, "contents", id, "comments");
+      const commentsSnapshot = await getDocs(commentsRef);
+      setCommentsCount(commentsSnapshot.size); // 새로운 댓글 수를 상태로 업데이트
+      setCommentModalOpen(false); // 댓글 추가 후 모달 닫기
+    } catch (error) {
+      console.error("댓글 수를 불러오는 중 오류가 발생했습니다:", error);
+    }
+  };
   const PostCommentClick = () => {
     navigate("/PostComment/${id}", {
       state: {
@@ -499,6 +410,7 @@ const Post = ({
         dms,
         retweets,
         userId,
+        comment,
       },
     });
   };
@@ -546,8 +458,19 @@ const Post = ({
     setIsRetweets((prevRet) => !prevRet);
   };
   useEffect(() => {
-    console.log("isEtcModalOpen changed:", isEtcModalOpen);
-  }, [isEtcModalOpen]);
+    // Firestore에서 댓글 수를 가져오는 함수
+    const fetchCommentsCount = async () => {
+      try {
+        const commentsRef = collection(db, "contents", id, "comments");
+        const commentsSnapshot = await getDocs(commentsRef);
+        setCommentsCount(commentsSnapshot.size); // 댓글 개수를 설정
+      } catch (error) {
+        console.error("댓글 수를 불러오는 중 오류가 발생했습니다:", error);
+      }
+    };
+
+    fetchCommentsCount(); // 컴포넌트가 마운트될 때 댓글 수를 가져옴
+  }, [id]);
 
   return (
     <>
@@ -619,7 +542,7 @@ const Post = ({
               placeholder={post}
             />
           ) : (
-            <Payload>{post}</Payload> // 하나의 Payload만 남겨두기
+            <Payload>{post ?? comment}</Payload> // 하나의 Payload만 남겨두기
           )}
         </Column>
         {/* AudioMessage 컴포넌트를 audioURL이 있을 때만 렌더링 */}
@@ -651,7 +574,7 @@ const Post = ({
           <IconWrapper onClick={handleLike}>
             <HeartIcon width={20} /> {likes}
           </IconWrapper>
-          <IconWrapper onClick={handleCommentClick}>
+          <IconWrapper onClick={openCommentModal}>
             <Coment width={20} /> {commentsCount}
           </IconWrapper>
           <IconWrapper onClick={handleRetweetClick}>
@@ -661,6 +584,24 @@ const Post = ({
             <DmIcon width={18} /> {dms}
           </IconWrapper>
         </Icons>
+
+        {commentModalOpen && (
+          <CoModal
+            onClose={() => setCommentModalOpen(false)}
+            onSubmitSuccess={handleCommentSubmitSuccess}
+            postId={id}
+            postContent={post}
+            photos={photos}
+            videos={videos}
+            username={username}
+            createdAt={createdAt || { seconds: Date.now() / 1000 }}
+            likes={likes}
+            dms={dms}
+            retweets={retweets}
+            userId={userId}
+            comment={comment}
+          />
+        )}
       </Wrapper>
     </>
   );

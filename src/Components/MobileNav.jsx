@@ -15,6 +15,11 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 
 // BottomNav 스타일 정의
 const Wrapper = styled.div`
+  /* position: fixed; */
+  /* z-index: 100; */
+  background-color: #000;
+
+  /* top: 100px; */
   @media (min-width: 768px) {
     display: none; // 768px 이상의 화면에서는 숨기기
   }
@@ -31,7 +36,7 @@ const BottomNavWrapper = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  z-index: 100;
+  z-index: 10000;
   box-shadow: ${(props) => props.theme.bor};
   @media (min-width: 768px) {
     display: none; // 768px 이상의 화면에서는 숨기기

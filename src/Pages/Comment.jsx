@@ -388,10 +388,8 @@ const Comment = ({ id }) => {
     const user = auth.currentUser;
     e.preventDefault();
     if (!currentUser || isLoading || !post.trim() || post.length > 180) return;
-
     try {
       setIsLoading(true);
-
       const commentData = {
         comment: post.trim(),
         createdAt: serverTimestamp(),
@@ -401,12 +399,9 @@ const Comment = ({ id }) => {
         videoUrls: [],
         email: user.email,
       };
-
       const commentsRef = collection(db, "contents", postId, "comments");
-
       const photoUrls = [];
       const videoUrls = [];
-
       if (files.length > 0) {
         await Promise.all(
           files.map(async (file) => {
@@ -416,7 +411,6 @@ const Comment = ({ id }) => {
             );
             const snapshot = await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(snapshot.ref);
-
             if (file.type.startsWith("image/")) {
               photoUrls.push(downloadURL);
             } else if (file.type.startsWith("video/")) {
@@ -424,16 +418,12 @@ const Comment = ({ id }) => {
             }
           })
         );
-
         commentData.photoUrls = photoUrls;
         commentData.videoUrls = videoUrls;
       }
-
       await addDoc(commentsRef, commentData);
-
       setPost(""); // 상태 초기화
       setFiles([]); // 업로드 파일 초기화
-
       // 댓글을 추가한 후 즉시 업데이트
       setComments((prevComments) => [...prevComments, commentData]);
       setCommentsCount((prevCount) => prevCount + 1);
@@ -444,7 +434,6 @@ const Comment = ({ id }) => {
       setIsLoading(false);
     }
   };
-
   const maxFileSize = 5 * 1024 * 1024; // 5MB
   const maxFilesCount = 3;
 

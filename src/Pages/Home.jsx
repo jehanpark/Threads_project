@@ -1,32 +1,35 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import TimeLine from "../Components/post/TimeLine";
+import EtcModal from "../Components/post/EtcModal";
 
 const Wrapper = styled.div`
-  width: 100%;
-  height: calc(100vh - 120px);
-  overflow-y: hidden;
-
+  /* width: 100%; */
+  /* height: calc(100vh - 120px); */
+  height: 100vh;
+  /* margin-top: 120px; */
+  /* overflow: hidden; */
+  /* z-index: -1; */
   @media (max-width: 768px) {
-    height: calc(100vh - 100px);
-    ::-webkit-scrollbar {
-      display: none;
-    }
+    height: 100vh;
+    width: 100%;
   }
 `;
-
 const BoederWrapper = styled.div`
-  margin: 0 auto;
+  bottom: 0;
   width: 680px;
   height: 100%;
+  padding: 10px;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.border};
+  background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
+  /* overflow: hidden; */
   @media (max-width: 768px) {
     position: absolute;
-    bottom: 0;
-    border-radius: 0;
     width: 100%;
+    bottom: 0;
+    padding: 0;
+    border-radius: 0;
     height: calc(100% - 70px);
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
@@ -39,7 +42,7 @@ const PostlistWrapper = styled.div`
   justify-content: flex-start;
   height: 100%;
   width: 100%;
-  border-radius: 40px 40px 0 0;
+  border-radius: 30px 30px 0 0;
   overflow-y: scroll;
   ::-webkit-scrollbar {
     display: none;
