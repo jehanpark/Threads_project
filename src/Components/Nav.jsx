@@ -93,6 +93,7 @@ const DefaultImgWrapper = styled.div`
 `;
 const Ul = styled.ul`
   width: 620px;
+  border: 1px solid red;
   background-color: ${(props) => props.theme.borderColor};
   height: 60px;
   display: flex;
