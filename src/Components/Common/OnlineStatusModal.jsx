@@ -1,6 +1,7 @@
-// src/components/MentionModal.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
+import { RightArrowIcon } from "../../Components/Common/Icon";
+import { useMediaQuery } from "react-responsive";
 
 // 스타일 정의
 export const Overlay = styled.div`
@@ -26,7 +27,29 @@ export const ModalContainer = styled.div`
   padding: 24px;
 `;
 
-export const Title = styled.h2`
+const PrivacyTitle = styled.span`
+  font-size: 14px;
+  margin-left: 14px;
+  align-items: center;
+  text-align: center;
+  line-height: calc(1.4 * 1.3em);
+`;
+
+const ContentAutoLayout = styled.div`
+  display: flex;
+  width: 100%;
+  @media (max-width: 768px) {
+    padding-right: 28px;
+  }
+`;
+
+const IconLink = styled.a`
+  height: 20px;
+  text-align: end;
+  /* padding-right: 10px; */
+`;
+
+const HeadTitle = styled.h1`
   margin-bottom: 14px;
   display: flex;
   justify-content: start;
@@ -35,22 +58,31 @@ export const Title = styled.h2`
   font-size: ${({ isMobile }) => (isMobile ? "14px" : "")};
 `;
 
-export const Info = styled.div`
+const Title = styled.h2`
+  margin: 14px 0;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  font-size: ${({ isMobile }) => (isMobile ? "14px" : "")};
+  font-weight: 500;
+`;
+
+const Info = styled.div`
   color: ${(props) => props.theme.modalfont};
-  font-size: 12px;
+  font-size: 10px;
   font-weight: normal;
   background: ${(props) => props.theme.borderstroke};
   border-radius: 8px;
-  line-height: 20px;
-  padding: 12px;
+  line-height: 12px;
+  padding: ${({ isMobile }) => (isMobile ? "4px" : "10px")};
 `;
 
-export const OptionList = styled.ul`
+const OptionList = styled.ul`
   list-style-type: none;
   padding-top: 12px;
 `;
 
-export const OptionItem = styled.li`
+const OptionItem = styled.li`
   cursor: pointer;
   padding: 8px 10px;
   display: flex;
@@ -60,19 +92,18 @@ export const OptionItem = styled.li`
   position: relative; /* Positioning for the ::after element */
   color: ${(props) => props.theme.fontcolor};
   background-color: transparent; /* 초기 배경색 설정 */
-  border-radius: 8px;
+  border-radius: 6px;
 
   // 호버 시 배경색 변경
   &:hover {
-    color: #181818;
+    color: #000;
     background-color: ${(props) =>
       props.theme.modalhoverbg}; /* 호버 시 백그라운드 색상 */
     transition: background-color 0.3s ease; /* 배경색 변화 애니메이션 */
   }
 `;
-
 // 체크박스 스타일 컴포넌트 추가
-export const Checkbox = styled.input`
+const Checkbox = styled.input`
   width: 20px;
   height: 20px;
   appearance: none;
@@ -103,48 +134,41 @@ export const Checkbox = styled.input`
   }
 `;
 
-const MentionModal = ({ onClose, onSelectOption }) => {
-  const [activeOption, setActiveOption] = useState(null);
-  const [isOptionSelected, setIsOptionSelected] = useState(false);
+const OnlineStatusModal = ({ onClose, selectedOption3, onSelectOption3 }) => {
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   const handleOptionClick = (option) => {
-    setActiveOption(option);
-    setIsOptionSelected(true);
-    onSelectOption(option); // 부모 컴포넌트에 선택된 옵션 전달
-    onClose(); // 모달 닫기
+    onSelectOption3(option);
+    onClose();
   };
-
-  // 모달 외부 클릭 시 닫히는 함수
-  const handleOverlayClick = () => {
-    if (isOptionSelected) {
-      onClose();
-    }
-  };
-
   return (
-    <Overlay onClick={handleOverlayClick}>
-      <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <Title>@언급 허용 대상</Title>
-        <Info>
-          회원님을 @언급하여 스레드, 답글 또는 소개글에 회원님의 프로필을 연결할
-          수 있도록 허용할 사람을 선택하세요. 회원님이 선택한 옵션에 해당하지
-          않는 사람이 회원님을 @언급하려고 시도하면 회원님이 @언급을 허용하지
-          않는다는 메시지가 표시됩니다.
+    <Overlay onClick={onClose} isMobile={isMobile}>
+      <ModalContainer onClick={(e) => e.stopPropagation()} isMobile={isMobile}>
+        <HeadTitle>온라인 상태</HeadTitle>
+        <Title isMobile={isMobile}>내 활동 상태를 볼 수 있는 사람</Title>
+        <Info isMobile={isMobile}>
+          이 옵션을 해제하면 다른 사람의 온라인 상태를 볼 수 없게 됩니다.{" "}
+          <a
+            href="https://www.instagram.com/accounts/blocked_accounts/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none", color: "inherit" }} // 링크 스타일 조정
+          >
+            더 알아보기
+          </a>
         </Info>
         <OptionList>
-          {/* 옵션 배열을 순회하며 리스트 항목 생성 */}
-          {["모든 사람", "내가 팔로우하는 프로필", "아무도 언급할 수 없음"].map(
+          {["모든 사람", "팔로워", "맞팔로우 중인 사람", "비공개"].map(
             (option) => (
               <OptionItem
                 key={option}
                 onClick={() => handleOptionClick(option)}
               >
-                {/* 체크박스 추가 */}
                 {option}
                 <Checkbox
-                  type="radio" // 라디오 버튼으로 설정
-                  checked={activeOption === option} // 현재 선택된 옵션과 비교하여 체크 상태 설정
-                  readOnly // 사용자가 직접 체크할 수 없도록 설정
+                  type="checkbox"
+                  checked={selectedOption3 === option}
+                  readOnly
                 />
               </OptionItem>
             )
@@ -155,4 +179,4 @@ const MentionModal = ({ onClose, onSelectOption }) => {
   );
 };
 
-export default MentionModal;
+export default OnlineStatusModal;

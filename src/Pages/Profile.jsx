@@ -24,9 +24,13 @@ import ProfileEdit from "../Components/profile/ProfileEdit";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
 import { useAuth } from "../Contexts/AuthContext";
+
 const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
   /* width: 100%; */
   /* height: calc(100vh - 120px); */
+  width: 680px;
   height: 100vh;
   /* margin-top: 120px; */
   /* overflow: hidden; */

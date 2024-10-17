@@ -48,7 +48,7 @@ const NotificationList = ({ onUpdate }) => {
 
         let initialData = querySnapshot.docs.map((docSnapshot) => {
           const docData = docSnapshot.data();
-          console.log(docData);
+
           // const createdAt =
           //   docData.createdAt && docData.createdAt.toDate
           //     ? docData.createdAt.toDate()
@@ -72,7 +72,6 @@ const NotificationList = ({ onUpdate }) => {
         });
 
         // 로그인 회원 정보와 이메일 정보 동일
-
         if (currentUser && currentUser.email) {
           initialData = initialData.filter(
             (notification) => notification.username !== currentUser.email
@@ -92,9 +91,9 @@ const NotificationList = ({ onUpdate }) => {
     };
 
     fetchData();
-  }, []); // 빈 배열로 의존성을 설정하여 컴포넌트 마운트 시 한 번만 실행
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
 
-  // 알림 읽음 처리 함수
+  // 알림 읽음
   const markAsRead = async (id) => {
     try {
       const notificationRef = doc(db, "profile", id);

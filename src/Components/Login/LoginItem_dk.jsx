@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../LoadingLogo/Logo";
 import LogoTextMark from "../LoadingLogo/LogoTextMark";
 import { Link, useNavigate } from "react-router-dom";
@@ -33,6 +33,8 @@ import {
   Error,
   Linebreak,
   StyledSpan,
+  FooterWrapper,
+  FooterContainer,
   FooterMenuUl,
   FooterMenuLi,
   FooterMenubasic,
@@ -148,7 +150,26 @@ const LoginItemDk = () => {
 
   const navigate = useNavigate();
 
+  // 다은 추가 미디어 쿼리
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+  const isTablet = useMediaQuery({
+    query: "(min-width: 769px) and (max-width: 1024px)",
+  });
+
+  // 다은 키보드 열었을 때 푸터 안보이게 하는 것
+  const [dynamicBottom, setDynamicBottom] = useState(30); // 초기 값
+
+  useEffect(() => {
+    const updateFooterPosition = () => {
+      const keyboardOpen = window.innerHeight < window.visualViewport.height;
+      setDynamicBottom(keyboardOpen ? 0 : 30); // 키보드 열릴 때는 0으로 설정
+    };
+
+    window.visualViewport.addEventListener("resize", updateFooterPosition);
+    return () => {
+      window.visualViewport.removeEventListener("resize", updateFooterPosition);
+    };
+  }, []);
 
   // 다은 추가 부분 여기부터
   // 눈 아이콘 상태 변화
@@ -308,17 +329,21 @@ const LoginItemDk = () => {
             {/* 비밀번호 오류 메시지 */}
             {passwordError && <PasswordError>{passwordError}</PasswordError>}
           </InputWrapper>
-          <InputWrapper>
+          <InputWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
             <StyledInput
               type="submit"
               value={isLoading ? "Loading.." : "로그인"}
             />
           </InputWrapper>
           <Link to="/create-account">
-            <SingnUpText>회원가입</SingnUpText>
+            <SingnUpText isSmallScreen={isSmallScreen} isTablet={isTablet}>
+              회원가입
+            </SingnUpText>
           </Link>
-          <ForgotPasswordText>비밀번호를 잊으셨나요?</ForgotPasswordText>
-          <Linebreak $isSmallScreen={isSmallScreen}>
+          <ForgotPasswordText isSmallScreen={isSmallScreen} isTablet={isTablet}>
+            비밀번호를 잊으셨나요?
+          </ForgotPasswordText>
+          <Linebreak isSmallScreen={isSmallScreen} isTablet={isTablet}>
             <Hr $isSmallScreen={isSmallScreen} />
             <Or $isSmallScreen={isSmallScreen}>또는</Or>
             <Hr $isSmallScreen={isSmallScreen} />
@@ -334,19 +359,21 @@ const LoginItemDk = () => {
           {error !== "" ? <Error>{error}</Error> : null}
         </Form>
       </LoginInner>
-      <FooterMenuUl>
-        <FooterMenubasic>© 2024</FooterMenubasic>
-        {footerMenuList.map((menu, index) => (
-          // 다은 이부분 수정oo
-          <FooterMenuLi
-            key={index}
-            onClick={() => (window.location.href = menu.url)} // URL로 이동
-          >
-            {menu.label}
-          </FooterMenuLi>
-          // 다은 이부분 수정
-        ))}
-      </FooterMenuUl>
+      <FooterContainer isSmallScreen={isSmallScreen} isTablet={isTablet}>
+        <FooterWrapper>
+          <FooterMenuUl>
+            <FooterMenubasic>© 2024</FooterMenubasic>
+            {footerMenuList.map((menu, index) => (
+              <FooterMenuLi
+                key={index}
+                onClick={() => (window.location.href = menu.url)}
+              >
+                {menu.label}
+              </FooterMenuLi>
+            ))}
+          </FooterMenuUl>
+        </FooterWrapper>
+      </FooterContainer>
       <ReportModal
         width="100%"
         height="100vh"
