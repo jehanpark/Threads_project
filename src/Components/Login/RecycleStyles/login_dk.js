@@ -21,7 +21,7 @@ export const BgImg = styled.img`
 export const LoginInner = styled.div`
   position: relative;
   margin: 0 auto;
-  margin-top: 14%;
+  margin-top: 13%;
   width: 370px;
   height: 407px;
   display: flex;
@@ -171,6 +171,7 @@ export const Linebreak = styled.div`
 
 export const StyledSpan = styled.span`
   font-size: ${(props) => (props.$isSmallScreen ? "14px" : "16px")};
+  font-weight: bold;
   color: ${(props) => props.theme.fontcolor};
   display: ${(props) => (props.$isSmallScreen ? "block" : "inline")};
   text-align: center;
