@@ -6,6 +6,7 @@ export const Wrapper = styled.div`
   height: 100vh; // 뷰포트 전체를 차지
   overflow: hidden; // 키보드 때문에 스크롤 안 생기도록 설정
   margin: 0 auto;
+  z-index: -1;
   color: ${(props) => props.theme.fontcolor};
 `;
 

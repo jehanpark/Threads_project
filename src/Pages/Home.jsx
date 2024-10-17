@@ -49,6 +49,7 @@ const BoederWrapper = styled.div`
     width: 100%;
     bottom: 0;
     padding: 0;
+    left: 0px;
     border-radius: 0;
     height: calc(100% - 70px);
     box-shadow: none;
