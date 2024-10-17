@@ -18,13 +18,16 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
   useEffect(() => {
     const fetchFollowers = async () => {
       if (!currentUser) return; // currentUser가 없으면 실행하지 않음
+
       let followersQuery = query(collection(db, "profile"));
+
       try {
         const snapshot = await getDocs(followersQuery);
         let liveFollowers = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
+
         // 로그인 회원 정보와 동일한 이메일 필터링
         if (currentUser.email) {
           liveFollowers = liveFollowers.filter(
@@ -60,6 +63,7 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
     };
     fetchFollowers();
   }, [searchTerm, contentType, emailAdress, currentUser]);
+
   //프로필 페이지 이동
   const handleProfileClick = (email) => {
     if (email) {
@@ -71,11 +75,13 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
       });
     }
   };
+
   //팔로우 상태 전환
   const handleToggleFollow = async (id, currentStatus) => {
     try {
       const followerRef = doc(db, "profile", id);
       const updatedStatus = !currentStatus;
+
       // 클릭 전환
       await updateDoc(followerRef, { isFollowing: updatedStatus });
       setFollowers((prevFollowers) =>
@@ -104,4 +110,5 @@ const FollowersList = ({ searchTerm, contentType, onDataEmpty }) => {
     </div>
   );
 };
+
 export default FollowersList;

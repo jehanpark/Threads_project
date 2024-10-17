@@ -11,7 +11,12 @@ import {
   GoBack,
 } from "./Common/Icon";
 import Logo from "./LoadingLogo/Logo";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import {
+  useNavigate,
+  Link,
+  useLocation,
+  createSearchParams,
+} from "react-router-dom";
 
 // BottomNav 스타일 정의
 const Wrapper = styled.div`
@@ -159,7 +164,16 @@ const MobileNav = () => {
         <NavItem onClick={() => navigate("/activity")}>
           <Like />
         </NavItem>
-        <NavItem onClick={() => navigate("/profile")}>
+        <NavItem
+          onClick={() => {
+            navigate({
+              pathname: "/profile",
+              // search: `${createSearchParams({
+              //   email: userAdress,
+              // })}`,
+            });
+          }}
+        >
           <UserIcon1 />
         </NavItem>
       </BottomNavWrapper>
