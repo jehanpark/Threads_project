@@ -8,7 +8,7 @@ const Contain = styled.div``;
 
 const NotificationContain = styled(motion.div)`
   position: relative;
-  width: 590px;
+  width: 680px;
   max-width: 100%;
   display: flex;
   justify-content: space-between;

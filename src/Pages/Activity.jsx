@@ -154,7 +154,7 @@ const ContentsBorder = styled.div`
   height: 100%;
   /* max-height: 700px; */
   overflow-y: auto;
-  padding: 0 20px;
+  padding: 0 40px;
   padding-bottom: 20px;
   margin-top: 20px;
   ::-webkit-scrollbar {
@@ -285,8 +285,8 @@ const Activity = () => {
   }, [currentUser, navigate]);
 
   return (
-    <BoederWrapper>
-      <Contain>
+    <Contain>
+      <BoederWrapper>
         <MenuTitle>활동</MenuTitle>
         {isMobile ? (
           <ButtonGroup>
@@ -333,8 +333,8 @@ const Activity = () => {
             <NotificationList onUpdate={handleDataUpdate} />
           )}
         </ContentsBorder>
-      </Contain>
-    </BoederWrapper>
+      </BoederWrapper>
+    </Contain>
   );
 };
 

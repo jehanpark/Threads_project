@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { UserIcon2 } from "../Common/Icon";
+
 const FollowerContain = styled.div`
   position: relative;
-  width: 590px;
+  width: 680px;
   max-width: 100%;
   display: flex;
   justify-content: space-between;
