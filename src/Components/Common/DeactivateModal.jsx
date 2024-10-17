@@ -1,6 +1,7 @@
-// src/components/MentionModal.jsx
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // import useNavigate
 import styled from "styled-components";
+import ConfirmDeleteModal from "./ConfirmDeleteModal"; // import the new ConfirmDeleteModal
 import { LeftArrowIcon } from "./Icon";
 
 // 스타일 정의
@@ -130,12 +131,23 @@ const ButtonLayout = styled.div`
 const DeactivateModal = ({ onClose, onSelectOption }) => {
   const [activeOption, setActiveOption] = useState(null);
   const [isOptionSelected, setIsOptionSelected] = useState(false);
+  const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false); // 삭제 확인 모달 상태
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
   const handleOptionClick = (option) => {
     setActiveOption(option);
     setIsOptionSelected(true);
-    onSelectOption(option); // 부모 컴포넌트에 선택된 옵션 전달
-    onClose(); // 모달 닫기
+    onSelectOption(option);
+    onClose();
+  };
+
+  const handleDeleteClick = () => {
+    setIsDeleteConfirmVisible(true); // 삭제 확인 모달 보이기
+  };
+
+  const handleConfirmDelete = () => {
+    // 홈으로 리디렉션하는 로직 (예: useHistory를 사용하는 경우)
+    window.location.href = "/"; // 404 페이지 대신 홈으로 리디렉션
   };
 
   // 모달 외부 클릭 시 닫히는 함수
@@ -146,35 +158,44 @@ const DeactivateModal = ({ onClose, onSelectOption }) => {
   };
 
   return (
-    <Overlay onClick={handleOverlayClick}>
-      <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <TitleLayout>
-          <BackButton onClick={onClose}>
-            <LeftArrowIcon size={32} />
-          </BackButton>
-          <Title>비활성화 또는 삭제</Title>
-        </TitleLayout>
-        <SubTitle>프로필 비활성화는 일시적입니다. </SubTitle>
-        <Info>
-          다시 로그인하여 프로필을 재활성화할 때까지 Threads 프로필, 콘텐츠,
-          좋아요, 팔로워가 숨겨집니다.
-        </Info>
-        <SubTitle>프로필 삭제는 영구적입니다. </SubTitle>
-        <Info>
-          Threads 프로필, 콘텐츠, 좋아요, 팔로워가 숨겨지며 30일 후에 영구적으로
-          삭제됩니다.
-        </Info>
-        <SubTitle>Threads 프로필에만 적용됩니다. </SubTitle>
-        <Info>
-          회원님의 Instagram 계정(@frontendd_d)은 삭제되거나 비활성화되지
-          않습니다.
-        </Info>
-        <ButtonLayout>
-          <Button>프로필 비활성화</Button>
-          <DelButton>프로필 삭제</DelButton>
-        </ButtonLayout>
-      </ModalContainer>
-    </Overlay>
+    <>
+      <Overlay onClick={handleOverlayClick}>
+        <ModalContainer onClick={(e) => e.stopPropagation()}>
+          <TitleLayout>
+            <BackButton onClick={onClose}>
+              <LeftArrowIcon size={32} />
+            </BackButton>
+            <Title>비활성화 또는 삭제</Title>
+          </TitleLayout>
+          <SubTitle>프로필 비활성화는 일시적입니다.</SubTitle>
+          <Info>
+            다시 로그인하여 프로필을 재활성화할 때까지 Threads 프로필, 콘텐츠,
+            좋아요, 팔로워가 숨겨집니다.
+          </Info>
+          <SubTitle>프로필 삭제는 영구적입니다.</SubTitle>
+          <Info>
+            Threads 프로필, 콘텐츠, 좋아요, 팔로워가 숨겨지며 30일 후에
+            영구적으로 삭제됩니다.
+          </Info>
+          <SubTitle>Threads 프로필에만 적용됩니다.</SubTitle>
+          <Info>
+            회원님의 Instagram 계정(@frontendd_d)은 삭제되거나 비활성화되지
+            않습니다.
+          </Info>
+          <ButtonLayout>
+            <Button onClick={handleOptionClick}>프로필 비활성화</Button>
+            <DelButton onClick={handleDeleteClick}>프로필 삭제</DelButton>{" "}
+            {/* 삭제 버튼 클릭 시 확인 모달 표시 */}
+          </ButtonLayout>
+        </ModalContainer>
+      </Overlay>
+      {isDeleteConfirmVisible && ( // 삭제 확인 모달 표시
+        <ConfirmDeleteModal
+          onClose={() => setIsDeleteConfirmVisible(false)} // 모달 닫기
+          onConfirm={handleConfirmDelete} // 확인 클릭 시 홈으로 이동
+        />
+      )}
+    </>
   );
 };
 
