@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import styled from "styled-components";
 import Button from "../Components/Common/Button";
-import Post from "../Components/Post";
+import Post2 from "../Components/Post2";
 import {
   PlusIcon,
   InstaIcon,
@@ -24,12 +24,9 @@ import ProfileEdit from "../Components/profile/ProfileEdit";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
 import { useAuth } from "../Contexts/AuthContext";
+
 const Wrapper = styled.div`
-  /* width: 100%; */
-  /* height: calc(100vh - 120px); */
   height: 100vh;
-  /* margin-top: 120px; */
-  /* overflow: hidden; */
   z-index: 10;
   @media (max-width: 768px) {
     height: 100vh;
@@ -38,19 +35,12 @@ const Wrapper = styled.div`
 `;
 
 const BoederWrapper = styled.div`
-  /* position: fixed; */
   bottom: 0;
-  /* left: 50%; */
-  /* transform: translate(-50%); */
-  /* margin: 0; */
   width: 680px;
-  height: 100%;
-  /* height: 85%; */
+  height: calc(100vh - 120px);
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.headerBg};
+  background: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
-  /* overflow: hidden; */
-
   @media (max-width: 768px) {
     position: static;
     margin: 0;
@@ -69,7 +59,7 @@ const ProfileInnner = styled.div`
   height: 306px;
   border: 306px;
   border-radius: 40px 40px 18px 18px;
-  background: ${(props) => props.theme.headerBg};
+  background: ${(props) => props.theme.borderColor};
   margin: 0 10px 8px;
   @media (max-width: 768px) {
     padding: 14px 18px;
@@ -162,7 +152,7 @@ const BottomWrap = styled.div`
     padding: 10px;
     border-radius: 10px;
     color: ${(props) => props.theme.fontcolor};
-    background-color: ${(props) => props.theme.headerBg};
+    background-color: ${(props) => props.theme.borderColor};
     border: 2px solid ${(props) => props.theme.borderstroke};
   }
   @media screen and (max-width: 768px) {
@@ -191,17 +181,6 @@ const Links = styled.div`
   justify-content: center;
 `;
 
-const LinkPlus = styled.div`
-  border: 1px solid ${(props) => props.theme.nomalIconColor};
-  border-radius: 50px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
-  path {
-    stroke: ${(props) => props.theme.nomalIconColor};
-  }
-`;
-
 const PulsLinkIcon = styled.div`
   width: 50px;
   height: 22px;
@@ -221,36 +200,26 @@ const ThreadInner = styled.div`
   height: 100%;
 `;
 
+const OvarlayHC = styled.div`
+  width: 680px;
+  height: 20px;
+  position: absolute;
+  background: ${(props) =>
+    `linear-gradient(${props.theme.borderColor}, #ffffff00)`};
+  z-index: 5;
+`;
+
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   gap: 20px;
-  margin-bottom: 6px;
+  /* margin-bottom: 6px; */
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
 
   @media (max-width: 768px) {
     gap: 10px;
     margin-bottom: 0px;
-  }
-  button {
-    flex: 0 0 auto;
-    width: 130px;
-    padding: 10px 20px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all;
-
-    @media (max-width: 768px) {
-      width: 90px;
-      padding: 8px 15px;
-      background-color: ${(props) => props.theme.borderColor};
-    }
-    @media (max-width: 480px) {
-      width: 80px;
-      padding: 6px 10px;
-    }
   }
 `;
 
@@ -266,6 +235,8 @@ const PostWrap = styled.div`
   overflow-y: scroll;
   scrollbar-width: none;
   transition: transform 0.3s ease-out;
+  & > div {
+  }
   ::-webkit-scrollbar {
     display: none;
   }
@@ -287,7 +258,17 @@ const PostWrap = styled.div`
 `;
 
 const ButtonStyle = styled.button`
-  background-color: ${(props) => props.theme.headerBg};
+  background: transparent;
+  flex: 0 0 auto;
+  width: 154px;
+  padding: 10px 20px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  color: ${(props) =>
+    props.selected ? props.theme.selectedbtn : props.theme.notSelectbtn};
+  border-bottom: ${(props) =>
+    props.selected ? `1px solid ${props.theme.selectedbtn}` : "none"};
 `;
 
 const Profile = () => {
@@ -655,15 +636,16 @@ const Profile = () => {
                   <Follow onClick={onfollow}>팔로워 {profile.followNum}</Follow>
                   {profile.isLinkPublic ? (
                     <Links>
-                      {user?.email === emailAdress ? (
-                        <LinkPlus onClick={onLinkPlus}>
-                          <PlusIcon width="16px" />
-                        </LinkPlus>
-                      ) : null}
-
                       <PulsLinkIcon>
-                        <InstaIcon />
-                        <FacebookIcon />
+                        <a href={"https://www.instagram.com/"} target="_blank">
+                          <InstaIcon />
+                        </a>
+                        <a
+                          href="https://www.facebook.com/?locale=ko_KR"
+                          target="_blank"
+                        >
+                          <FacebookIcon />
+                        </a>
                       </PulsLinkIcon>
                     </Links>
                   ) : null}
@@ -685,22 +667,23 @@ const Profile = () => {
                 {buttons.map((button) => (
                   <ButtonStyle
                     key={button.type}
-                    style={getButtonStyle(button.type)}
                     onClick={() => handleButtonClick(button.type)}
+                    selected={contentType === button.type}
                   >
                     {button.label}
                   </ButtonStyle>
                 ))}
               </ButtonGroup>
+              <OvarlayHC />
               <PostWrap
                 ref={wrapperRef}
                 className={isBouncing ? "bounce" : ""}
                 onScroll={handleScroll}
               >
                 {contentType === "thresds"
-                  ? posts.map((post) => <Post key={post.id} {...post} />)
+                  ? posts.map((post) => <Post2 key={post.id} {...post} />)
                   : filteredData.map((filter) => (
-                      <Post key={filter.id} {...filter} />
+                      <Post2 key={filter.id} {...filter} />
                     ))}
               </PostWrap>
             </ThreadInner>

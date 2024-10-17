@@ -43,6 +43,8 @@ const BoederWrapper = styled.div`
     border-radius: 0;
     /* height: 100vh; */
     /* height: calc(100% - 70px); */
+    height: calc(100% - 70px);
+
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
   }
@@ -71,7 +73,7 @@ const ButtonGroup = styled.div`
   justify-content: center;
   align-content: center;
   gap: 20px;
-  margin-top: 100px;
+  margin-top: 30px;
   margin-bottom: 10px;
   transition: all 0.3s ease;
   @media (max-width: 480px) {
@@ -146,17 +148,20 @@ const Btnborder = styled.div`
 `;
 
 const ContentsBorder = styled.div`
+  border: 1px solid #f00;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
   height: 100%;
-  /* max-height: 700px; */
+
   overflow-y: auto;
   padding: 0 40px;
   padding-bottom: 20px;
   margin-top: 20px;
+  box-sizing: border-box;
+
   ::-webkit-scrollbar {
     display: none;
   }
@@ -164,11 +169,13 @@ const ContentsBorder = styled.div`
   scrollbar-width: none;
 
   @media (max-width: 768px) {
+    padding: 0 20px;
     width: 100%;
     max-height: 100%;
   }
 
   @media (max-width: 480px) {
+    padding: 0 10px;
     width: 100%;
     max-height: 100%;
   }

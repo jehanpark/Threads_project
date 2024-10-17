@@ -7,6 +7,9 @@ import { ShareIconNew } from "../Components/Common/Icon";
 import Toggle from "./Common/Toggle";
 import MentionModal from "./Common/MentionModal";
 import HiddenWordModal from "./Common/HiddenWordModal";
+import OnlineStatusModal from "./Common/OnlineStatusModal";
+import AccountSettingModal from "./Common/AccountSettingModal";
+import DeactivateModal from "./Common/DeactivateModal";
 
 import {
   LockIcon,
@@ -23,6 +26,7 @@ import {
   FamilyIcon,
   SecurityIcon,
   AccountStatusIcon,
+  OnlineStatusIcon,
 } from "../Components/Common/Icon";
 
 // import { Line } from "../Components/Login/Insiteitem_de";
@@ -207,7 +211,7 @@ const HelpTitle = styled.span`
 
 // 아이콘 정렬
 
-const ContentAutoLayout = styled.div`
+export const ContentAutoLayout = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -314,7 +318,7 @@ const SelectDirection = styled.div`
 `;
 
 // 아이콘 눌렀을 때 링크로 이동
-const IconLink = styled.a`
+export const IconLink = styled.a`
   height: 20px;
   text-align: end;
   /* padding-right: 10px; */
@@ -383,6 +387,45 @@ const SettingsItem_de = () => {
     setHiddenWordModalOpen(false); // 숨겨진 단어 모달도 닫기
   };
 
+  // 온라인 상태 모달
+  const [isOnlineStatusModalOpen, setOnlineStatusModalOpen] = useState(false);
+  const [selectedOption3, setSelectedOption3] = useState("모든 사람");
+
+  const openOnlineStatusModal = () => {
+    setOnlineStatusModalOpen(true);
+  };
+
+  const closeOnlineStatusModal = () => {
+    setOnlineStatusModalOpen(false);
+  };
+
+  const handleSelectOption3 = (option) => {
+    setSelectedOption3(option);
+  };
+
+  // 웹사이트 권한 모달
+  const [isAccountSettingModalOpen, setAccountSettingModalOpen] =
+    useState(false);
+
+  const openAccountSettingModal = () => {
+    setAccountSettingModalOpen(true);
+  };
+
+  const closeAccountSettingModal = () => {
+    setAccountSettingModalOpen(false);
+  };
+
+  // 프로필 비활성화 모달
+  const [isDeactivateModalOpen, setDeactivateModalOpen] = useState(false);
+
+  const openDeactivateModal = () => {
+    setDeactivateModalOpen(true);
+  };
+
+  const closeDeactivateModal = () => {
+    setDeactivateModalOpen(false);
+  };
+
   // 모달 끝
   useEffect(() => {
     // 초기 상태에 대한 border 위치 설정
@@ -449,6 +492,20 @@ const SettingsItem_de = () => {
                 <SelectLayout>
                   <SelectedText>{selectedOption}</SelectedText>
                   <IconStroke onClick={openMentionModal}>
+                    <RightArrowIcon fill={"gray"} width={"12px"} />
+                  </IconStroke>
+                </SelectLayout>
+              </PrivacyAutoLayout>
+            </PrivacyProfile>
+            <PrivacyProfile>
+              <Icon>
+                <OnlineStatusIcon width={"20px"} fill={"black"} />
+              </Icon>
+              <PrivacyAutoLayout>
+                <PrivacyTitle>온라인 상태</PrivacyTitle>
+                <SelectLayout>
+                  <SelectedText>{selectedOption3}</SelectedText>
+                  <IconStroke onClick={openOnlineStatusModal}>
                     <RightArrowIcon fill={"gray"} width={"12px"} />
                   </IconStroke>
                 </SelectLayout>
@@ -536,7 +593,9 @@ const SettingsItem_de = () => {
                   </IconStroke>
                   <ContentAutoLayout>
                     <AccountTitle>웹 사이트 권한</AccountTitle>
-                    <IconStroke>
+                    <IconStroke
+                      onClick={() => setAccountSettingModalOpen(true)}
+                    >
                       <RightArrowIcon fill={"gray"} width={"12px"} />
                     </IconStroke>
                   </ContentAutoLayout>
@@ -547,7 +606,7 @@ const SettingsItem_de = () => {
                   </Icon>
                   <ContentAutoLayout>
                     <AccountTitle>프로필 비활성화 또는 삭제</AccountTitle>
-                    <IconStroke>
+                    <IconStroke onClick={() => setDeactivateModalOpen(true)}>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
                     </IconStroke>
                   </ContentAutoLayout>
@@ -851,11 +910,26 @@ const SettingsItem_de = () => {
       )}
       {isHiddenWordModalOpen && (
         <HiddenWordModal
-          onClose={closeHiddenWordModal}
-          onSelectOption={handleSelectOption} // 옵션 선택 시 상태 업데이트
-          selectedOption1={selectedOption1} // 선택된 옵션을 전달
-          selectedOption2={selectedOption2} // 선택된 옵션을 전달
+          onClose={closeHiddenWordModal} // 올바른 함수 전달
+          onSelectOption={handleSelectOption}
+          selectedOption1={selectedOption1}
+          selectedOption2={selectedOption2}
         />
+      )}
+      {isOnlineStatusModalOpen && (
+        <OnlineStatusModal
+          onClose={closeOnlineStatusModal}
+          selectedOption3={selectedOption3}
+          onSelectOption3={handleSelectOption3}
+        />
+      )}
+      {isAccountSettingModalOpen && (
+        <AccountSettingModal
+          onClose={() => setAccountSettingModalOpen(false)}
+        />
+      )}
+      {isDeactivateModalOpen && (
+        <DeactivateModal onClose={() => setDeactivateModalOpen(false)} />
       )}
     </Wrapper>
   );

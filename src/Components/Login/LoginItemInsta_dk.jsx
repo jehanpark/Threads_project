@@ -168,7 +168,7 @@ const LoginItemInstaDk = () => {
               <StyledInput
                 className="insta-btn"
                 type="submit"
-                value={isLoading ? "ㅋ.." : "로그인"}
+                value={isLoading ? "0.." : "로그인"}
               />
             </InputWrapper>
             {/* 

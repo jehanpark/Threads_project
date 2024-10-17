@@ -2,8 +2,11 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   width: 100%;
-  height: calc(100vh - 15%);
+  /* height: calc(100vh - 15%); */
+  height: 100vh; // 뷰포트 전체를 차지
+  overflow: hidden; // 키보드 때문에 스크롤 안 생기도록 설정
   margin: 0 auto;
+  z-index: -1;
   color: ${(props) => props.theme.fontcolor};
 `;
 
@@ -52,7 +55,8 @@ export const Form = styled.form`
 export const InputWrapper = styled.div`
   position: relative;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: ${(props) =>
+    props.isSmallScreen ? "12px" : props.isTablet ? "20px" : "20px"};
 `;
 
 export const StyledInput = styled.input`
@@ -112,7 +116,8 @@ export const SingnUpText = styled.p`
   display: flex;
   justify-content: center;
   font-size: 14px;
-  margin-bottom: 13px;
+  margin-bottom: ${(props) =>
+    props.isSmallScreen ? "6px" : props.isTablet ? "13px" : "13px"};
 `;
 
 export const ForgotPasswordText = styled.p`
@@ -165,12 +170,15 @@ export const Linebreak = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 41.5px;
-  margin-bottom: 46px;
+  margin-top: ${(props) =>
+    props.isSmallScreen ? "20px" : props.isTablet ? "41.5x" : "41.5px"};
+  margin-bottom: ${(props) =>
+    props.isSmallScreen ? "20px" : props.isTablet ? "46px" : "46px"};
 `;
 
 export const StyledSpan = styled.span`
   font-size: ${(props) => (props.$isSmallScreen ? "14px" : "16px")};
+  font-weight: bold;
   color: ${(props) => props.theme.fontcolor};
   display: ${(props) => (props.$isSmallScreen ? "block" : "inline")};
   text-align: center;
@@ -196,15 +204,29 @@ export const LoginInstaLi = styled.li`
   }
 `;
 
-export const FooterMenuUl = styled.ul`
-  width: 370px;
+export const FooterContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 30px;
+  justify-content: center; /* 수평 가운데 정렬 */
+  position: relative; /* 자식 요소가 이 기준으로 위치하도록 설정 */
+  padding-bottom: 20px; /* 하단 여백 추가 */
+  padding-top: ${(props) =>
+    props.isSmallScreen ? "150px" : props.isTablet ? "230px" : "230px"};
 `;
+
+export const FooterWrapper = styled.div`
+  width: 370px; /* 푸터 너비 설정 */
+  margin: 0 auto; /* 수평 가운데 정렬 */
+  padding-bottom: 20px; /* 하단 여백 추가 */
+  padding-top: ${(props) =>
+    props.isSmallScreen ? "12px" : props.isTablet ? "12px" : "0"};
+`;
+
+export const FooterMenuUl = styled.ul`
+  display: flex;
+  justify-content: space-between; /* 메뉴 아이템 간격 */
+  width: 100%; /* 부모 너비에 맞춤 */
+`;
+
 // 다은 © 2024만 안눌리도록 따로 스타일 줌
 export const FooterMenubasic = styled.li`
   cursor: pointer;

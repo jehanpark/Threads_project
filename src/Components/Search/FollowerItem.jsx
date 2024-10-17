@@ -135,7 +135,7 @@ const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
         </UserWrapper>
         <UserContex>
           <UserName>{userEmail || "zang@ezen.com"}</UserName>
-          <UserInfo>{bio || "노래하는 고양이"}</UserInfo>
+          <UserInfo>{bio}</UserInfo>
           <UserFollowerNum>{`팔로워 ${followNum}명`}</UserFollowerNum>
         </UserContex>
       </Wrapper>

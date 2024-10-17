@@ -9,8 +9,9 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { db } from "../../firebase";
 import Post from "../Post";
+import Post2 from "../Post2";
 
-const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
+const TimeLine = ({ searchTerm, contentType, onDataEmpty, postNum }) => {
   const [posts, setPosts] = useState([]);
   const [isBouncing, setIsBouncing] = useState(false);
   const wrapperRef = useRef(null);
@@ -22,7 +23,6 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
         orderBy("createdAt", "desc"),
         limit(25)
       );
-
       // 실시간 데이터 구독 설정
       unsubscribe = onSnapshot(postsQuery, (snapshot) => {
         const livePosts = snapshot.docs.map((doc) => ({
@@ -87,6 +87,7 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
       }, 500);
     }
   };
+
   return (
     <>
       <div

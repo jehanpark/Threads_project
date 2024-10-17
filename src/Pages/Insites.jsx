@@ -1,10 +1,12 @@
 import { useMediaQuery } from "react-responsive";
-// import Sidebar from "../Components/Sidebar";
 import Sidebar from "../Components/Sidebar";
-import Insiteitem_de from "../Components/Login/Insiteitem_de"; // 추가된 부분
+import Insiteitem_de from "../Components/Login/Insiteitem_de";
 
 const Insites = () => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+  const isTablet = useMediaQuery({
+    query: "(min-width: 769px) and (max-width: 1024px)",
+  });
 
   return (
     <div
@@ -15,7 +17,7 @@ const Insites = () => {
       }}
     >
       <Sidebar />
-      <Insiteitem_de isSmallScreen={isSmallScreen} />
+      <Insiteitem_de isSmallScreen={isSmallScreen} isTablet={isTablet} />
     </div>
   );
 };

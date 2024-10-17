@@ -41,6 +41,8 @@ const BoederWrapper = styled.div`
     border-radius: 0;
     /* height: 100vh; */
     /* height: calc(100% - 70px); */
+    height: calc(100% - 70px);
+
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
   }
@@ -284,6 +286,7 @@ const Search = () => {
               searchTerm={searchTerm}
               contentType={contentType}
               onDataEmpty={(isEmpty) => setDisplaysEmpty(isEmpty)}
+              postNum="2"
             />
           )}
 

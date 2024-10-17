@@ -29,12 +29,12 @@ const AllWrap = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 const Backarea = styled.div`
-  width: 760px;
+  display: flex;
+  margin-right: 730px;
 `;
 const BoederWrapper = styled.div`
   position: fixed;
@@ -73,9 +73,10 @@ const PostWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
-  padding: 20px;
+  padding: 40px;
   border-radius: 40px 40px 0 0;
-  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  border-bottom: 1px solid ${(props) => props.theme.comentBouttomLine};
+  z-index: 20;
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
@@ -152,7 +153,8 @@ const Icons = styled.div`
   justify-content: start;
   align-items: center;
   margin-left: 50px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
+  margin-top: 10px;
   cursor: pointer;
   color: #bababa;
 `;
@@ -189,10 +191,9 @@ const CommentWrapper = styled.div`
   height: auto;
   background: ${(props) => props.theme.borderColor};
   padding: 15px;
-  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  border-bottom: 1px solid ${(props) => props.theme.comentBouttomLine};
   display: flex;
   flex-direction: column;
-
   transition: transform 0.3s ease-out;
   @media (max-width: 768px) {
     width: 100%;
@@ -203,7 +204,10 @@ const CommentHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: 20px;
+  margin-left: 40px;
+  @media (max-width: 768px) {
+    margin-left: 14px;
+  }
 `;
 const CommentUserImage = styled.img`
   width: 34px;
@@ -215,28 +219,24 @@ const CommentUsername = styled.span`
   font-weight: 600;
   color: ${(props) => props.theme.fontcolor};
 `;
-
 const CommentTimer = styled.span`
   font-size: 10px;
   color: #9a9a9a;
   flex: 1;
 `;
+
 const DeletAll = styled.div`
-  height: 100%;
+  height: auto;
   width: auto;
-  padding-top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
-
 const DeletComment = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  line-height: 25px;
   font-size: 18px;
-  margin-right: 4px;
   width: 34px;
   height: 100%;
   border-radius: 50%;
@@ -247,31 +247,37 @@ const DeletComment = styled.div`
   }
 `;
 const DeletIcon = styled.img`
-  opacity: 1;
+  opacity: 0.6;
+  width: 16px;
 `;
-
+const CometdescAll = styled.div`
+  margin: 10px 0 0 8%;
+  border-left: 2px solid ${(props) => props.theme.borderstroke};
+  padding: 10px 0;
+  @media (max-width: 768px) {
+    margin: 10px 0 0 8%;
+  }
+`;
 const CommentContent = styled.div`
   font-size: 14px;
   color: ${(props) => props.theme.fontcolor};
-  margin-left: 70px;
+  margin-left: 30px;
 `;
-
 const CommentImage = styled.img`
   width: 120px;
   height: 120px;
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
-  margin-left: 70px;
+  margin-left: 30px;
 `;
-
 const CommentVideo = styled.video`
   width: 120px;
   height: 120px;
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
-  margin-left: 70px;
+  margin-left: 30px;
 `;
 const NotComment = styled.div`
   display: flex;
@@ -531,40 +537,42 @@ const PostComment = () => {
                           </DeletAll>
                         )}
                       </CommentHeader>
-                      <CommentContent>
-                        {typeof comment.comment === "string"
-                          ? comment.comment
-                          : JSON.stringify(comment.comment)}
-                      </CommentContent>
+                      <CometdescAll>
+                        <CommentContent>
+                          {typeof comment.comment === "string"
+                            ? comment.comment
+                            : JSON.stringify(comment.comment)}
+                        </CommentContent>
 
-                      {/* 댓글에 이미지가 있을 경우 */}
-                      {comment.photoUrls && comment.photoUrls.length > 0 && (
-                        <div>
-                          {comment.photoUrls.map((photoUrl, index) => (
-                            <CommentImage
-                              key={index}
-                              src={photoUrl}
-                              alt={`Comment Image ${index + 1}`}
-                            />
-                          ))}
-                        </div>
-                      )}
+                        {/* 댓글에 이미지가 있을 경우 */}
+                        {comment.photoUrls && comment.photoUrls.length > 0 && (
+                          <div>
+                            {comment.photoUrls.map((photoUrl, index) => (
+                              <CommentImage
+                                key={index}
+                                src={photoUrl}
+                                alt={`Comment Image ${index + 1}`}
+                              />
+                            ))}
+                          </div>
+                        )}
 
-                      {/* 댓글에 비디오가 있을 경우 */}
-                      {comment.videoUrls && comment.videoUrls.length > 0 && (
-                        <div>
-                          {comment.videoUrls.map((videoUrl, index) => (
-                            <CommentVideo
-                              key={index}
-                              controls
-                              autoPlay
-                              loop
-                              muted
-                              src={videoUrl}
-                            />
-                          ))}
-                        </div>
-                      )}
+                        {/* 댓글에 비디오가 있을 경우 */}
+                        {comment.videoUrls && comment.videoUrls.length > 0 && (
+                          <div>
+                            {comment.videoUrls.map((videoUrl, index) => (
+                              <CommentVideo
+                                key={index}
+                                controls
+                                autoPlay
+                                loop
+                                muted
+                                src={videoUrl}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </CometdescAll>
                     </CommentWrapper>
                   </CommentsList>
                 </ScrollWrapper>

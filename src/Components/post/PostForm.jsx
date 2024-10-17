@@ -498,7 +498,7 @@ const PostForm = () => {
             <SubmitBtn
               text="스레드 업로드"
               type="submit"
-              value={isLoading ? "Posting..." : "Post"}
+              value={isLoading ? "Posㅋting..." : "Post"}
             />
           </Buttons>
         </Form>

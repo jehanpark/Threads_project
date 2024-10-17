@@ -16,7 +16,6 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
-import { useSearchParams } from "react-router-dom";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -35,7 +34,7 @@ const PofileModalBox = styled.div`
   width: 450px;
   height: 530px;
   border-radius: 12px;
-  background: ${(props) => props.theme.headerBg};
+  background: ${(props) => props.theme.borderColor};
   padding: 64px 11px 0 11px;
   color: ${(props) => props.theme.fontcolor};
   position: relative;
@@ -66,7 +65,7 @@ const Box = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 15px;
-  background: ${(props) => props.theme.borderColor};
+  background: ${(props) => props.theme.headerBg};
   margin-bottom: 10px;
   &.mobile {
     display: none;
@@ -103,6 +102,16 @@ const NameInput = styled.input`
     &::placeholder {
       opacity: 0;
     }
+  }
+`;
+
+const BioWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  p {
+    color: ${(props) => props.theme.nomalIconColor};
+    font-weight: 300;
+    font-size: 14px;
   }
 `;
 
@@ -171,8 +180,33 @@ const ImgInput = styled.input`
 const ButtonWrap = styled.div`
   button {
     color: ${(props) => props.theme.fontcolor};
-    background-color: ${(props) => props.theme.borderColor};
+    background-color: ${(props) => props.theme.headerBg};
     border: 2px solid ${(props) => props.theme.borderstroke};
+  }
+`;
+
+const InputBtn = styled.button`
+  width: 100%;
+  height: 40px;
+  border: 1px solid;
+  color: ${(props) => props.theme.fontcolor};
+  background-color: ${(props) => props.theme.headerBg};
+  border: 2px solid ${(props) => props.theme.borderstroke};
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 4px 15px;
+  &:hover {
+    background: ${(props) => props.theme.searchBar};
+    color: ${(props) => props.theme.btnBgColor};
+  }
+  @media screen and (max-width: 768px) {
+    display: block;
+    text-align: center;
+    background: ${(props) => props.theme.borderstroke};
+    &:hover {
+      background: ${(props) => props.theme.followerfont};
+      color: ${(props) => props.theme.btnBgColor};
+    }
   }
 `;
 
@@ -181,6 +215,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   const [inputData, setInputDate] = useState({}); //>> 인풋 값을 받을 state
   const user = auth.currentUser; //유저 계정 내용 ( displayName , email , photoURL  , uid)
   const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
+  const [textNum, setTextNum] = useState(); //텍스트 숫자
 
   // isOn 값
   const [isOn, setIsOn] = useState(true);
@@ -193,25 +228,11 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
     if (profileData.isProfilePublic === false) {
       setIsOn2(false);
     }
-    if (open) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
   }, [open]);
 
   useEffect(() => {
     setProfileData({ ...profile });
   }, [profile]);
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      complete();
-    } else if (e.key === "Escape") {
-      close();
-    }
-  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -226,6 +247,20 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
         ...prev,
         [name]: checked,
       }));
+    } else {
+      setProfileData((prev) => ({
+        ...prev,
+        [name]: newValue,
+      }));
+    }
+    if (name === "bio") {
+      let num = e.target.value.length;
+      if (num < 10) {
+        let num1 = String(num.toString().padStart(2, "0"));
+        setTextNum(num1);
+      } else {
+        setTextNum(num);
+      }
     }
   };
 
@@ -249,7 +284,8 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   const toggleSwitch = () => setIsOn(!isOn);
   const toggleSwitch2 = () => setIsOn2(!isOn2);
 
-  const complete = async () => {
+  const complete = async (e) => {
+    e.preventDefault();
     if (!user) return;
     try {
       const nameToSave =
@@ -333,7 +369,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
               <NameInput
                 name="username"
                 placeholder={user.displayName || user.email}
-                onKeyUp={handleInputChange}
+                onChange={handleInputChange}
               />
             </Left>
             <ImgBox htmlFor="profileImg">
@@ -352,11 +388,15 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           </Box>
           <Box style={{ height: "100px" }}>
             <Full>
-              <SubTitle>자기소개</SubTitle>
+              <SubTitle>
+                <BioWrap>
+                  자기소개<p>{textNum || "00"}</p>
+                </BioWrap>
+              </SubTitle>
               <NameInput
                 name="bio"
                 placeholder={profileData.bio || "자기소개를 입력하세요"}
-                onKeyUp={handleInputChange}
+                onChange={handleInputChange}
                 maxlength="120"
               />
             </Full>
@@ -399,25 +439,10 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
                 checked={profileData.isProfilePublic}
                 onChange={handleInputChange}
               />
-              {/* <Switch data-isOn={isOn} onClick={toggleSwitch}>
-                <Handle layout transition={spring} />
-              </Switch>
-              <input
-                type="checkbox"
-                name="isProfilePublic"
-                checked={profileData.isProfilePublic}
-                onChange={handleInputChange}
-              /> */}
             </Checkinner>
           </Box>
           <ButtonWrap>
-            <Button
-              text={"완료"}
-              width={"100%"}
-              heith={"40px"}
-              type="edit"
-              onClick={complete}
-            />
+            <InputBtn onClick={complete}>완료</InputBtn>
           </ButtonWrap>
           <Box className="mobile" onClick={close}>
             모달 닫기
