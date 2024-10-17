@@ -36,9 +36,9 @@ const ButtonGroup = styled.div`
   width: 100%;
   justify-content: center;
   align-content: center;
-  gap: 20px;
+  gap: 10px;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   transition: all 0.3s ease;
 `;
 
@@ -46,11 +46,14 @@ const SelectButton = styled.button`
   display: flex;
   flex: 0 0 auto;
   width: 110px;
+  border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px 20px;
-  background: ${(props) => props.theme.buttonbackground};
-  border: 1px solid ${(props) => props.theme.searchButton};
-  color: ${(props) => props.theme.buttonText};
+  color: ${(props) =>
+    props.selected ? props.theme.borderColor : props.theme.buttonText};
+  font-weight: 700;
+  background: ${(props) =>
+    props.selected ? props.theme.buttonText : props.theme.buttonbackground};
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
@@ -75,19 +78,24 @@ const ButtonGroupPC = styled.div`
   align-items: center;
   gap: 10px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  background: transparent;
   @media (max-width: 768px) {
     display: none;
   }
 `;
 
 const SelectButtonPC = styled.button`
+  background: transparent;
   flex: 0 0 auto;
   width: 140px;
   padding: 10px 20px;
   border: none;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s;
+  color: ${(props) =>
+    props.selected ? props.theme.selectedbtn : props.theme.notSelectbtn};
+  border-bottom: ${(props) =>
+    props.selected ? `1px solid ${props.theme.selectedbtn}` : "none"};
 `;
 
 const ContentsBorder = styled.div`
@@ -95,11 +103,9 @@ const ContentsBorder = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  height: 100%;
   max-height: 700px;
   overflow-y: auto;
   padding: 0 20px;
-  padding-bottom: 20px;
   margin-top: 20px;
   ::-webkit-scrollbar {
     display: none;
@@ -171,9 +177,11 @@ const Activity = () => {
           : notification
       );
 
-      setFilteredData(updatedData);
+      const updatedFilteredData = updatedData.filter(
+        (item) => contentType === "all" || item.type === contentType
+      );
 
-      console.log("업데이트된 데이터:", updatedData);
+      setFilteredData(updatedFilteredData); // 업데이트 필터데이터
 
       return updatedData;
     });
@@ -207,9 +215,10 @@ const Activity = () => {
     setContentType(type);
   };
 
+  //필터링된 데이터 바로 업데이트
   useEffect(() => {
-    filterList(contentType);
-  }, [contentType]);
+    filterList(contentType); // savadata에서 filter된 데이터(내가 선택한 데이터)
+  }, [contentType, savedData]);
 
   // 미디어 사이즈 변화시 버튼 종류 변경
   useEffect(() => {
@@ -224,29 +233,6 @@ const Activity = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  // 버튼 스타일 동적 처리
-  const getButtonStyle = (type) => ({
-    backgroundColor: contentType === type ? "#000" : "#fff",
-    color: contentType === type ? "#fff" : "#000",
-  });
-
-  // 버튼 스타일 동적 적용
-  const getPCButtonStyle = (type, isNightMode) => ({
-    background: "transparent",
-    color:
-      contentType === type
-        ? isNightMode
-          ? "#FFF"
-          : "#000"
-        : isNightMode
-        ? "rgba(255, 255, 255, 0.8)"
-        : "rgba(204, 204, 204, 0.8)",
-    borderBottom:
-      contentType === type
-        ? `1.5px solid ${isNightMode ? "#fff" : "#000"}`
-        : "none",
-  });
 
   const buttons = [
     { label: "모두", type: "all" },
@@ -279,7 +265,7 @@ const Activity = () => {
             {buttons.map((button) => (
               <SelectButton
                 key={button.type}
-                style={getButtonStyle(button.type)}
+                selected={contentType === button.type}
                 onClick={() => handleButtonClick(button.type)}
               >
                 {button.label}
@@ -291,7 +277,7 @@ const Activity = () => {
             {buttons.map((button) => (
               <SelectButtonPC
                 key={button.type}
-                style={getPCButtonStyle(button.type)}
+                selected={contentType === button.type}
                 onClick={() => handleButtonClick(button.type)}
               >
                 {button.label}

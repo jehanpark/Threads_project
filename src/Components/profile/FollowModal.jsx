@@ -21,7 +21,7 @@ const FollowModalBox = styled.div`
   width: 450px;
   height: 530px;
   border-radius: 12px;
-  background: ${(props) => props.theme.borderWrapper};
+  background: ${(props) => props.theme.borderColor};
   padding: 64px 11px 0 11px;
   color: ${(props) => props.theme.fontcolor};
   position: relative;
@@ -39,24 +39,6 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
-const Top = styled.div`
-  height: 100px;
-  width: 430px;
-`;
-
-const NoResults = styled.p`
-  font-size: 16px;
-  text-align: center;
-  color: #999;
-  margin-top: 40px;
-`;
-
-const Contain = styled.div`
-  width: 100%;
-  height: 90px;
-  border: 1px solid #f00;
-`;
-
 // const FollowersList =
 
 const FollowModal = ({ open, close, profile }) => {
@@ -72,14 +54,8 @@ const FollowModal = ({ open, close, profile }) => {
           onClick={(e) => e.stopPropagation()}
         >
           <CloseButton onClick={close}>X</CloseButton>
-          {/* <Searchbar addSearch={handleSearch} /> */}
 
           <FollowersList />
-
-          {/*{contentType === "profile" && followersEmpty && (
-            <NoResults>프로필이 존재하지 않습니다.</NoResults>
-          )} */}
-          {/* <FollowerItem /> */}
         </FollowModalBox>
       </ModalOverlay>
     </>

@@ -71,8 +71,6 @@ const UserName = styled.p`
 `;
 const UserInfo = styled.p`
   font-size: 12px;
-  color: ${(props) =>
-    props.isRead ? props.theme.readTextColor : props.theme.followerfont};
   margin: 0;
   @media (max-width: 768px) {
     font-size: 10px;
