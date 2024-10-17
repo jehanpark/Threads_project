@@ -19,6 +19,7 @@ const Contain = styled.div`
 `;
 
 const BoederWrapper = styled.div`
+  width: 680px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -30,7 +31,7 @@ const BoederWrapper = styled.div`
   /* left: 50%; */
   /* transform: translate(-50%); */
   /* margin: 0; */
-  width: 680px;
+  width: 35vw;
   height: 100%;
   /* height: 85%; */
   border-radius: 40px 40px 0px 0px;

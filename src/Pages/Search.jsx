@@ -23,12 +23,13 @@ const BoederWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 680px;
   /* position: fixed; */
   bottom: 0;
   /* left: 50%; */
   /* transform: translate(-50%); */
   /* margin: 0; */
-  width: 680px;
+  width: 35vw;
   height: 100%;
   /* height: 85%; */
   border-radius: 40px 40px 0px 0px;
