@@ -44,6 +44,7 @@ const Info = styled.p`
   margin-bottom: 8px;
   color: ${(props) => props.theme.modalfont};
   padding: 0 6px;
+  line-height: 1.5;
 `;
 
 const InputContainer = styled.div`

@@ -74,7 +74,6 @@ const NoButton = styled.button`
     border: 1px solid #fff;
   }
 `;
-
 const ConfirmDeleteModal = ({ onClose, onConfirm }) => {
   return (
     <Overlay onClick={onClose}>
@@ -88,5 +87,4 @@ const ConfirmDeleteModal = ({ onClose, onConfirm }) => {
     </Overlay>
   );
 };
-
 export default ConfirmDeleteModal;

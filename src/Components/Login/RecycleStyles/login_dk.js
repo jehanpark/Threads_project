@@ -72,8 +72,31 @@ export const StyledInput = styled.input`
   transition: all 0.2s ease-in-out;
 
   &:focus + label,
+  // 다은 추가 스타일링 
   &:not(:placeholder-shown) + label {
-    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    position: absolute;
+    margin-top: -32px;
+    margin-left: 12px;
+    background-color: black;
+    border-radius: 10px;
+    padding: 2px 6px;
+
+    /* 삼각형 */
+    &::after {
+      content: "";
+      position: absolute;
+      top: 90%;
+      left: 10px;
+      width: 0;
+      height: 0;
+      border-radius: 3px;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 7px solid black;
+    }
   }
   &:focus {
     outline: none;
@@ -125,6 +148,7 @@ export const ForgotPasswordText = styled.p`
   align-items: center;
   justify-content: center;
   font-size: 14px;
+  margin-bottom: 20px;
 `;
 
 export const Error = styled.span`
@@ -210,7 +234,7 @@ export const FooterContainer = styled.div`
   position: relative; /* 자식 요소가 이 기준으로 위치하도록 설정 */
   margin-bottom: 20px; /* 하단 여백 추가 */
   margin-top: ${(props) =>
-    props.isSmallScreen ? "150px" : props.isTablet ? "230px" : "230px"};
+    props.isSmallScreen ? "170px" : props.isTablet ? "230px" : "230px"};
 `;
 
 export const FooterWrapper = styled.div`

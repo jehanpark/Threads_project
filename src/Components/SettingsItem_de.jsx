@@ -32,6 +32,10 @@ import {
 // import { Line } from "../Components/Login/Insiteitem_de";
 
 const Wrapper = styled.div`
+  width: ${(props) =>
+    props.isSmallScreen ? "100%" : props.isTablet ? "100%" : "620px"};
+  padding: ${(props) =>
+    props.isSmallScreen ? "0" : props.isTablet ? "0 40px" : "0"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,7 +45,8 @@ const Wrapper = styled.div`
 `;
 
 const SettingsInner = styled.div`
-  width: 558.67px; // 수정!
+  width: ${(props) =>
+    props.isSmallScreen ? "100%" : props.isTablet ? "100%" : "620px"}; // 수정!
   height: 100%;
   padding: 20px 0;
   background: ${(props) => props.theme.borderColor};
@@ -188,9 +193,8 @@ const AccountContents = styled.div`
   text-align: center;
   width: 100%;
   gap: 20px;
-  @media (max-width: 768px) {
-    width: 360px;
-  }
+  width: ${(props) =>
+    props.isSmallScreen ? "400px" : props.isTablet ? "100%" : "100%"};
 `;
 const AccountTitle = styled.span`
   font-size: 14px;
@@ -216,9 +220,10 @@ export const ContentAutoLayout = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  @media (max-width: 768px) {
-    padding-right: 28px;
-  }
+  padding-right: ${(props) =>
+    props.isSmallScreen ? "0" : props.isTablet ? "0" : "28px"};
+  gap: ${(props) =>
+    props.isSmallScreen ? "20px" : props.isTablet ? "0" : "0"};
 `;
 const Icon = styled.div`
   height: 20px;
@@ -326,6 +331,9 @@ export const IconLink = styled.a`
 
 const SettingsItem_de = () => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+  const isTablet = useMediaQuery({
+    query: "(min-width: 769px) and (max-width: 1024px)",
+  });
   const [activeTab, setActiveTab] = useState("privacy");
   const [borderPosition, setBorderPosition] = useState({ left: 0, width: 0 });
 
@@ -440,8 +448,8 @@ const SettingsItem_de = () => {
     query: "(max-width: 768px)", // 닫는 괄호 추가
   });
   return (
-    <Wrapper>
-      <SettingsInner>
+    <Wrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
+      <SettingsInner isSmallScreen={isSmallScreen} isTablet={isTablet}>
         <SettingMenu>
           <SettingMove>
             <SettingTitle
@@ -586,12 +594,18 @@ const SettingsItem_de = () => {
           <OutherPrivacy isSmallScreen={isSmallScreen}>
             {/* 계정 탭의 내용 */}
             <AccountSettings>
-              <AccountContents>
+              <AccountContents
+                isSmallScreen={isSmallScreen}
+                isTablet={isTablet}
+              >
                 <PrivacyProfile>
                   <IconStroke>
                     <CloseLockIcon width={"20px"} fill={"black"} />
                   </IconStroke>
-                  <ContentAutoLayout>
+                  <ContentAutoLayout
+                    isSmallScreen={isSmallScreen}
+                    isTablet={isTablet}
+                  >
                     <AccountTitle>웹 사이트 권한</AccountTitle>
                     <IconStroke
                       onClick={() => setAccountSettingModalOpen(true)}
@@ -604,7 +618,10 @@ const SettingsItem_de = () => {
                   <Icon>
                     <DeleteProfileIcon width={"22px"} fill={"black"} />
                   </Icon>
-                  <ContentAutoLayout>
+                  <ContentAutoLayout
+                    isSmallScreen={isSmallScreen}
+                    isTablet={isTablet}
+                  >
                     <AccountTitle>프로필 비활성화 또는 삭제</AccountTitle>
                     <IconStroke onClick={() => setDeactivateModalOpen(true)}>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
@@ -615,7 +632,10 @@ const SettingsItem_de = () => {
                   <IconRadius>
                     <EalthIcon width={"22px"} />
                   </IconRadius>
-                  <ContentAutoLayout>
+                  <ContentAutoLayout
+                    isSmallScreen={isSmallScreen}
+                    isTablet={isTablet}
+                  >
                     <AccountTitle>페비더스 공유</AccountTitle>
                     <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
@@ -763,7 +783,10 @@ const SettingsItem_de = () => {
             <AccountSettings>
               <AccountContents>
                 <PrivacyProfile>
-                  <ContentAutoLayout>
+                  <ContentAutoLayout
+                    isSmallScreen={isSmallScreen}
+                    isTablet={isTablet}
+                  >
                     <HelpTitle>개인정보 보호 및 보안 도움말</HelpTitle>
                     <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
@@ -771,7 +794,10 @@ const SettingsItem_de = () => {
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
-                  <ContentAutoLayout>
+                  <ContentAutoLayout
+                    isSmallScreen={isSmallScreen}
+                    isTablet={isTablet}
+                  >
                     <HelpTitle>지원 요청</HelpTitle>
                     <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />

@@ -1,8 +1,8 @@
 // src/components/ConfirmDeactivateModal.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom"; // import useNavigate
-import DeactivateSuccessModal from "./DeactivateSuccessModal"; // 새로운 모달 import
+import { LeftArrowIcon } from "./Icon";
+import DeactivateSuccessModal from "./DeactivateSuccessModal";
 
 const Overlay = styled.div`
   position: fixed;
@@ -56,7 +56,6 @@ const YesButton = styled.button`
     border: 1px solid #fff;
   }
 `;
-
 const NoButton = styled.button`
   width: 120px;
   padding: 16px; /* 인풋 창과 같은 높이로 설정 */
@@ -76,7 +75,6 @@ const NoButton = styled.button`
     border: 1px solid #fff;
   }
 `;
-
 const ConfirmDeactivateModal = ({ onClose }) => {
   const [showDeactivateSuccessModal, setShowDeactivateSuccessModal] =
     useState(false); // 성공 모달 상태
