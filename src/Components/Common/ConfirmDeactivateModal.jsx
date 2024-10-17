@@ -83,8 +83,7 @@ const ConfirmDeactivateModal = ({ onClose }) => {
     setShowDeactivateSuccessModal(true); // 성공 모달 표시
   };
   const handleConfirmDelete = () => {
-    // 홈으로 리디렉션하는 로직 (예: useHistory를 사용하는 경우)
-    window.location.href = "/"; // 404 페이지 대신 홈으로 리디렉션
+    window.location.href = "/";
   };
 
   return (

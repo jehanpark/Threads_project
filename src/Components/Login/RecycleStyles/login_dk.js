@@ -287,7 +287,7 @@ export const FooterMenuLi = styled.li`
   color: ${(props) => props.theme.nomalIconColor};
   transition: all 0.3s;
   &:hover {
-    color: #181818;
+    color: ${(props) => props.theme.fontcolor};
     font-weight: 500;
   }
 `;
