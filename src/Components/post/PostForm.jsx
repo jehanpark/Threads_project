@@ -122,7 +122,7 @@ const Icons = styled.div`
   gap: 20px;
   @media (max-width: 768px) {
     margin: 0;
-    margin-left: 20px;
+    margin-left: 0px;
   }
 `;
 
@@ -151,6 +151,7 @@ const Buttons = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     gap: 10px;
+    margin: 0;
   }
 `;
 
