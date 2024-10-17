@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import GlobalStyles from "../styles/GlobalStyles.styles";
 import MobileSidebar from "./MobileSidebar";
@@ -8,7 +8,6 @@ import {
   UserIcon1,
   Like,
   Home,
-  GoBack,
 } from "./Common/Icon";
 import Logo from "./LoadingLogo/Logo";
 import {
@@ -17,14 +16,12 @@ import {
   useLocation,
   createSearchParams,
 } from "react-router-dom";
+import { auth } from "../firebase";
 
 // BottomNav 스타일 정의
 const Wrapper = styled.div`
-  /* position: fixed; */
-  /* z-index: 100; */
   background-color: #000;
 
-  /* top: 100px; */
   @media (min-width: 768px) {
     display: none; // 768px 이상의 화면에서는 숨기기
   }
@@ -59,6 +56,7 @@ const NavItem = styled.div`
     color: #ffffff; // 마우스를 올렸을 때 색상 변화
   }
 `;
+
 const BackNavwrapper = styled.div`
   @media (max-width: 768px) {
     position: fixed;
@@ -80,38 +78,22 @@ const BackNavwrapper = styled.div`
 const LogoWrapper = styled.div`
   padding-left: 20px;
 `;
-const Backdesc = styled.div`
-  display: flex;
-  align-items: center;
-  width: 70px;
-  height: 100%;
-  cursor: pointer;
-  @media (min-width: 768px) {
-    display: none; // 768px 이상의 화면에서는 숨기기
-  }
-`;
-const BackIcon = styled.div`
-  display: flex;
-  width: 24px;
-  height: 24px;
-  transform: translateX(5px);
-  transform: translateY(2px);
-  align-items: center;
-  margin-left: 10px;
-  svg {
-    path {
-      stroke: ${(props) => props.theme.logoColor};
-    }
-  }
-`;
-const Backtxt = styled.div`
-  font-size: 15px;
-`;
 
 const MobileNav = () => {
   const navigate = useNavigate();
-
   const location = useLocation(); // 현재 URL 정보를 가져옴
+  const [userAdress, setUserAdress] = useState("");
+
+  useEffect(() => {
+    const userEmail = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        setUserAdress(user.email);
+      }
+    };
+    userEmail();
+  }, []);
+
   const renderContent = () => {
     if (location.pathname.includes("activity")) {
       return "활동";
@@ -137,12 +119,6 @@ const MobileNav = () => {
   return (
     <Wrapper>
       <BackNavwrapper>
-        {/* <Backdesc onClick={() => navigate(-1)}>
-          <BackIcon>
-            <GoBack />
-          </BackIcon>
-          <Backtxt>뒤로</Backtxt>
-        </Backdesc> */}
         <LogoWrapper>
           <Link to={"/"}>
             <Logo width={28} />
@@ -168,9 +144,9 @@ const MobileNav = () => {
           onClick={() => {
             navigate({
               pathname: "/profile",
-              // search: `${createSearchParams({
-              //   email: userAdress,
-              // })}`,
+              search: `${createSearchParams({
+                email: userAdress, // 이메일을 쿼리스트링으로 추가
+              })}`,
             });
           }}
         >

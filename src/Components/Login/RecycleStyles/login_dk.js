@@ -208,16 +208,16 @@ export const FooterContainer = styled.div`
   display: flex;
   justify-content: center; /* 수평 가운데 정렬 */
   position: relative; /* 자식 요소가 이 기준으로 위치하도록 설정 */
-  padding-bottom: 20px; /* 하단 여백 추가 */
-  padding-top: ${(props) =>
+  margin-bottom: 20px; /* 하단 여백 추가 */
+  margin-top: ${(props) =>
     props.isSmallScreen ? "150px" : props.isTablet ? "230px" : "230px"};
 `;
 
 export const FooterWrapper = styled.div`
   width: 370px; /* 푸터 너비 설정 */
   margin: 0 auto; /* 수평 가운데 정렬 */
-  padding-bottom: 20px; /* 하단 여백 추가 */
-  padding-top: ${(props) =>
+  margin-bottom: 20px; /* 하단 여백 추가 */
+  margin-top: ${(props) =>
     props.isSmallScreen ? "12px" : props.isTablet ? "12px" : "0"};
 `;
 
