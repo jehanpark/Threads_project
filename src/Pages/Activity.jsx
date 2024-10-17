@@ -19,6 +19,7 @@ const Contain = styled.div`
 `;
 
 const BoederWrapper = styled.div`
+  width: 680px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -71,10 +72,13 @@ const ButtonGroup = styled.div`
   width: 100%;
   justify-content: center;
   align-content: center;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 20px;
+  margin-top: 100px;
   margin-bottom: 10px;
   transition: all 0.3s ease;
+  @media (max-width: 480px) {
+    gap: 10px;
+  }
 `;
 
 const SelectButton = styled.button`
@@ -144,6 +148,7 @@ const Btnborder = styled.div`
 `;
 
 const ContentsBorder = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -151,7 +156,7 @@ const ContentsBorder = styled.div`
   height: 100%;
   /* max-height: 700px; */
   overflow-y: auto;
-  padding: 0 20px;
+  padding: 0 40px;
   padding-bottom: 20px;
   margin-top: 20px;
   ::-webkit-scrollbar {
@@ -243,7 +248,7 @@ const Activity = () => {
   //필터링된 데이터 바로 업데이트
   useEffect(() => {
     filterList(contentType); // savadata에서 filter된 데이터(내가 선택한 데이터)
-  }, [contentType, savedData]);
+  }, [contentType]);
 
   // 미디어 사이즈 변화시 버튼 종류 변경
   useEffect(() => {
@@ -282,8 +287,8 @@ const Activity = () => {
   }, [currentUser, navigate]);
 
   return (
-    <BoederWrapper>
-      <Contain>
+    <Contain>
+      <BoederWrapper>
         <MenuTitle>활동</MenuTitle>
         {isMobile ? (
           <ButtonGroup>
@@ -330,8 +335,8 @@ const Activity = () => {
             <NotificationList onUpdate={handleDataUpdate} />
           )}
         </ContentsBorder>
-      </Contain>
-    </BoederWrapper>
+      </BoederWrapper>
+    </Contain>
   );
 };
 

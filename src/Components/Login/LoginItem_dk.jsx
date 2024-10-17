@@ -755,10 +755,7 @@ const LoginItemDk = () => {
             {passwordError && <PasswordError>{passwordError}</PasswordError>}
           </InputWrapper>
           <InputWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
-            <StyledInput
-              type="submit"
-              value={isLoading ? "Loading.." : "로그인"}
-            />
+            <StyledInput type="submit" value={isLoading ? "0.." : "로그인"} />
           </InputWrapper>
           <Link to="/create-account">
             <SingnUpText isSmallScreen={isSmallScreen} isTablet={isTablet}>

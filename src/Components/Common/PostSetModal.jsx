@@ -141,7 +141,9 @@ const PostSetModal = ({
           <TopRec></TopRec>
           <Optionwrapper>
             {isAuthor && <Li onClick={onDelete}>삭제</Li>}
-            <Li onClick={() => alert("신고하기 기능은 구현되지 않았습니다.")}>
+            <Li
+              onClick={() => alert("신고하기 기능은 구현되지 않았습니다.ㅎㅎ")}
+            >
               신고하기
             </Li>
             {isAuthor && <Li onClick={onEdit}>수정</Li>}
