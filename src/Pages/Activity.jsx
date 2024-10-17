@@ -31,7 +31,7 @@ const BoederWrapper = styled.div`
   /* left: 50%; */
   /* transform: translate(-50%); */
   /* margin: 0; */
-  width: 35vw;
+  width: 680px;
   height: 100%;
   /* height: 85%; */
   border-radius: 40px 40px 0px 0px;
@@ -70,10 +70,13 @@ const ButtonGroup = styled.div`
   width: 100%;
   justify-content: center;
   align-content: center;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 20px;
+  margin-top: 100px;
   margin-bottom: 10px;
   transition: all 0.3s ease;
+  @media (max-width: 480px) {
+    gap: 10px;
+  }
 `;
 
 const SelectButton = styled.button`
@@ -143,6 +146,7 @@ const Btnborder = styled.div`
 `;
 
 const ContentsBorder = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -242,7 +246,7 @@ const Activity = () => {
   //필터링된 데이터 바로 업데이트
   useEffect(() => {
     filterList(contentType); // savadata에서 filter된 데이터(내가 선택한 데이터)
-  }, [contentType, savedData]);
+  }, [contentType]);
 
   // 미디어 사이즈 변화시 버튼 종류 변경
   useEffect(() => {

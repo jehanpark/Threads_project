@@ -98,7 +98,6 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
           <Post key={post.id} {...post} />
         ))}
       </div>
-      
     </>
   );
 };

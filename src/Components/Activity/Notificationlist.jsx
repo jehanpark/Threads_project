@@ -63,6 +63,7 @@ const NotificationList = ({ onUpdate }) => {
 
           return {
             id: docSnapshot.id,
+
             username: docData.userEmail || "siro@ezen.com",
             // createdAt,
             isRead: false,
@@ -83,13 +84,12 @@ const NotificationList = ({ onUpdate }) => {
         setNotifications(limitedData);
 
         if (typeof onUpdate === "function") {
-          onUpdate(limitedData);
+          onUpdate(initialData);
         }
       } catch (error) {
         console.error("오류 발생:", error);
       }
     };
-
     fetchData();
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
@@ -127,7 +127,6 @@ const NotificationList = ({ onUpdate }) => {
           key={notification.id}
           {...notification}
           onClick={() => {
-            console.log("click");
             markAsRead(notification.id);
           }}
           onDelete={() => handleDelete(notification.id)}

@@ -104,48 +104,6 @@ const UserContex = styled.div`
   gap: 5px;
 `;
 
-const User = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 5px;
-`;
-
-const UserName = styled.p`
-  font-size: 14px;
-  font-weight: 700;
-  margin: 0;
-
-  @media (max-width: 768px) {
-    font-size: 10px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 10px;
-  }
-`;
-
-const UserInfo = styled.p`
-  font-size: 14px;
-
-  margin: 0;
-
-  @media (max-width: 768px) {
-    font-size: 10px;
-    word-wrap: break-word;
-    word-break: break-all;
-    white-space: normal;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 10px;
-    word-wrap: break-word;
-    word-break: break-all;
-    white-space: normal;
-  }
-`;
-
 const UserDate = styled.p`
   font-size: 12px;
 
@@ -156,6 +114,14 @@ const UserDate = styled.p`
   @media (max-width: 480px) {
     font-size: 10px;
   }
+`;
+
+const User = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
 `;
 
 const NotificationItem = ({
@@ -230,9 +196,9 @@ const NotificationItem = ({
         </UserWrapper>
         <UserContex>
           <User>
-            {type === "friend" && <UserInfo>친한친구</UserInfo>}
-            <UserName>{username}</UserName>
-            <UserInfo>{message}</UserInfo>
+            {type === "friend" && "친한친구 "}
+            {username}
+            {message}
           </User>
           <UserDate>{renderTimeAgo()}</UserDate>
           {isRead && <UserDate>읽음</UserDate>}

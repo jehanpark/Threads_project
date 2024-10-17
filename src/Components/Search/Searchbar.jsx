@@ -6,6 +6,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import styled from "styled-components";
 import { MicIcon, RecoderIcon } from "../Common/Icon";
+import Micspinner from "./Micspinner";
 
 const SearchWrapper = styled.div`
   width: 500px;
@@ -139,7 +140,7 @@ const Searchbar = ({ addSearch }) => {
         placeholder="검색"
       />
       <MicButton onClick={toggleListening}>
-        {listening ? <RecoderIcon width={20} /> : <MicIcon width={20} />}
+        {listening ? <Micspinner /> : <MicIcon width={20} />}
       </MicButton>
     </SearchWrapper>
   );
