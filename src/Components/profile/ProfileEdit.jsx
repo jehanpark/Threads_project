@@ -40,10 +40,16 @@ const PofileModalBox = styled.div`
   position: relative;
   flex-direction: column;
   @media screen and (max-width: 768px) {
+    border: 1px solid #f00;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
     width: 100%;
     height: 100%;
     background: ${(props) => props.theme.headerBg};
     padding: 40% 20px;
+    border-radius: 0;
   }
 `;
 
@@ -426,7 +432,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
             <Checkinner>
               <SubTitle>비공개 프로필</SubTitle>
               <Switch
-                data-isOn={isOn2}
+                data-ison={isOn2}
                 onClick={toggleSwitch2}
                 htmlFor="isProfilePublic"
               >

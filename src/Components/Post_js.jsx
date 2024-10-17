@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { auth, db, storage } from "../firebase";
+import { useAuth } from "../Contexts/AuthContext";
 import {
   deleteDoc,
   doc,
@@ -31,7 +32,6 @@ import fetchUserProfileImage from "../Utils/fetchProfile";
 import PostCommentModal from "../Pages/PostComment";
 import CoModal from "./post/CoModal";
 import ImageModal from "./post/ImageModal";
-import { useAuth } from "../Contexts/AuthContext";
 
 const Wrapper = styled.div`
   position: relative;
@@ -235,9 +235,7 @@ const Post = ({
       try {
         const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
         setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
-      } catch (error) {
-        console.error("Error fetching profile image:", error);
-      }
+      } catch (error) {}
     };
 
     // userId가 있을 때만 프로필 이미지 가져오기
@@ -292,7 +290,6 @@ const Post = ({
 
   useEffect(() => {
     if (!id) {
-      console.error("ID is not available for this post");
       return; // id가 유효하지 않으면 바로 return
     }
 
@@ -326,9 +323,7 @@ const Post = ({
         );
         const commentsSnapshot = await getDocs(commentsCollectionRef);
         setCommentsCount(commentsSnapshot.size); // 댓글 개수를 상태로 설정
-      } catch (error) {
-        console.error("Error fetching post and comments data:", error);
-      }
+      } catch (error) {}
     };
 
     fetchPostAndCommentsData();
@@ -362,9 +357,7 @@ const Post = ({
           const photoRef = ref(storage, `contents/${user.uid}/${id}`);
           await deleteObject(photoRef);
         }
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     } else {
       alert("삭제할 권한이 없습니다.");
     }
@@ -414,9 +407,7 @@ const Post = ({
       // 스냅샷에서 댓글 수 가져와 상태 업데이트
       const newCommentsCount = commentsSnapshot.size;
       setCommentsCount(newCommentsCount); // 댓글 수 상태 업데이트
-    } catch (error) {
-      console.error("댓글 수를 불러오는 중 오류가 발생했습니다:", error);
-    }
+    } catch (error) {}
   };
   const handleCommentSubmitSuccess = async () => {
     try {
@@ -424,11 +415,10 @@ const Post = ({
       const commentsSnapshot = await getDocs(commentsRef);
       setCommentsCount(commentsSnapshot.size); // 새로운 댓글 수를 상태로 업데이트
       setCommentModalOpen(false); // 댓글 추가 후 모달 닫기
-    } catch (error) {
-      console.error("댓글 수를 불러오는 중 오류가 발생했습니다:", error);
-    }
+    } catch (error) {}
   };
   const PostCommentClick = () => {
+    alert("hd");
     navigate("/PostComment/${id}", {
       state: {
         postId: id,
@@ -465,9 +455,7 @@ const Post = ({
         // 복사 완료 상태와 알림 표시
         setIsCopied(true);
         alert("링크가 복사되었습니다.");
-      } catch (err) {
-        console.error("링크 복사 실패:", err);
-      }
+      } catch (err) {}
     } else {
       // 이미 복사된 경우 알림 표시
       alert("이미 링크가 복사되었습니다.");
@@ -495,9 +483,7 @@ const Post = ({
         const commentsRef = collection(db, "contents", id, "comments");
         const commentsSnapshot = await getDocs(commentsRef);
         setCommentsCount(commentsSnapshot.size); // 댓글 개수를 설정
-      } catch (error) {
-        console.error("댓글 수를 불러오는 중 오류가 발생했습니다:", error);
-      }
+      } catch (error) {}
     };
 
     fetchCommentsCount(); // 컴포넌트가 마운트될 때 댓글 수를 가져옴

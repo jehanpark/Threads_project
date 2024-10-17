@@ -74,6 +74,27 @@ export const StyledInput = styled.input`
 
   &:focus + label,
   // 다은 추가 스타일링 
+
+  /* display: flex;
+  align-items: center;
+  justify-content: end;
+  position: absolute;
+  margin-top: -88px;
+  margin-left: 12px;
+  background-color: black;
+  border-radius: 10px;
+  padding: 2px 6px;
+  ::after {
+    display: block;
+    width: 5px;
+    height: 5px;
+    background-color: black;
+    position: absolute;
+    top: 17px;
+    left: 10px;
+    transform: rotate(45deg);
+    content: "";
+  } */
   &:not(:placeholder-shown) + label {
     display: flex;
     align-items: center;
@@ -83,8 +104,9 @@ export const StyledInput = styled.input`
     margin-left: 12px;
     background-color: black;
     border-radius: 10px;
-    padding: 2px 6px;
-
+    padding: 5px 10px;
+    font-size: 10px;
+    color: #fff;
     /* 삼각형 */
     &::after {
       content: "";
@@ -94,9 +116,9 @@ export const StyledInput = styled.input`
       width: 0;
       height: 0;
       border-radius: 3px;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-top: 7px solid black;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid black;
     }
   }
   &:focus {

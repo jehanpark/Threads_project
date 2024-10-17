@@ -532,9 +532,10 @@ const EyeIconWrapper = styled.div`
     width: 28px;
     height: 28px;
     transition: fill 0.2s, stroke 0.2s; /* 부드러운 전환 효과 */
+    fill: ${(props) => props.theme.activeBorder};
   }
   &:hover svg {
-    fill: #000; /* 호버 시 색상 */
+    fill: ${(props) => props.theme.activeBorder}; /* 호버 시 색상 */
   }
 `;
 
@@ -741,9 +742,9 @@ const LoginItemDk = () => {
             {/* Eye 아이콘: 비밀번호가 보이는 경우 EyeCloseIcon, 보이지 않는 경우 EyeOpenIcon */}
             <EyeIconWrapper onClick={togglePasswordVisibility}>
               {isPasswordVisible ? (
-                <EyeCloseIcon width="28px" />
+                <EyeCloseIcon width={28} />
               ) : (
-                <EyeOpenIcon width="28px" />
+                <EyeOpenIcon width={28} />
               )}
             </EyeIconWrapper>
             {/* CapsLock 경고 메시지 */}
