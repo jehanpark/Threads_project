@@ -60,10 +60,10 @@ const PostlistWrapper = styled.div`
       transform: translateY(0px);
     }
     50% {
-      transform: translateY(20px); /* 살짝 위로 올렸다가 */
+      transform: translateY(20px);
     }
     100% {
-      transform: translateY(0px); /* 원래 자리로 돌아오기 */
+      transform: translateY(0px);
     }
   }
 
@@ -112,7 +112,7 @@ const Home = () => {
 
   return (
     <Wrapper>
-      <ComentModal />
+      {/* <ComentModal /> */}
       <BoederWrapper>
         <PostlistWrapper
           ref={wrapperRef}

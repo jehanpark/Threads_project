@@ -190,6 +190,16 @@ const DeleteButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
 `;
+const CharacterCount = styled.div`
+  text-align: right;
+  font-weight: 500;
+  font-size: 12px;
+  ${(props) => props.theme.fontcolor};
+  opacity: 0.6;
+  margin-right: 10px;
+  margin-bottom: 10px;
+`;
+
 const EtcModal = ({
   onSave,
   post,
@@ -241,6 +251,13 @@ const EtcModal = ({
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
+  const [charCount, setCharCount] = useState(post.length || 0); // 글자 수 상태 관리
+  const handleContentChange = (e) => {
+    const content = e.target.value;
+    setNewContent(content);
+    setCharCount(content.length); // 글자 수 업데이트
+  };
+
   return (
     <AllWrapp>
       {/* 어두운 배경을 클릭하면 모달이 닫히도록 설정 */}
@@ -248,9 +265,15 @@ const EtcModal = ({
         {/* ModalWrapper는 ModalOverlay 안에 위치하여 화면 중앙에 배치됩니다 */}
         <ModalWrapper onClick={(e) => e.stopPropagation()}>
           <TextAreaWrapper>
+            <CharacterCount>{charCount}자 입력중..</CharacterCount>{" "}
+            {/* 글자 수 표시 */}
             <TextArea
-              value={newContent}
-              onChange={(e) => setNewContent(e.target.value)}
+              value={newContent || ""} // newContent가 undefined일 때 빈 문자열로 처리
+              onChange={(e) => {
+                const content = e.target.value;
+                setNewContent(content); // 입력된 내용을 업데이트
+                setCharCount(content.length); // 글자 수 업데이트
+              }}
               placeholder="내용을 입력하세요 ..."
             />
           </TextAreaWrapper>
