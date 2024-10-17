@@ -226,6 +226,7 @@ const NavItem = styled.div`
   }
   svg {
     path {
+      stroke-width: 2px;
       stroke: ${(props) =>
         props.active ? props.theme.logoColor : props.theme.navIconColor};
       /* fill: ${(props) =>

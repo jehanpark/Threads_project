@@ -8,6 +8,7 @@ export const Wrapper = styled.div`
   margin: 0 auto;
   z-index: -1;
   color: ${(props) => props.theme.fontcolor};
+  background-color: ${(props) => props.theme.bodyBg};
 `;
 
 export const BgImg = styled.img`
