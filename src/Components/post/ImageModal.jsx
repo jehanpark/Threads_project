@@ -47,6 +47,8 @@ const CloseButton = styled.button`
 const FullImage = styled.img`
   max-width: 100%;
   max-height: 80vh;
+  min-height: 600px;
+  min-width: 600px;
   object-fit: contain;
   border-radius: 30px;
 `;

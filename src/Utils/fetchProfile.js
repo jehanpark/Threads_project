@@ -11,7 +11,7 @@ export default async function fetchUserProfileImage(userId) {
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0]; // 첫 번째 문서를 가져옴
       const profileImg = userDoc.data().img; // img 필드를 가져옴
-      console.log("Profile image URL:", profileImg);
+
       return profileImg || null; // 이미지가 없으면 null 반환
     } else {
       console.log("해당 유저가 존재하지 않습니다.");

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import TimeLine from "../Components/post/TimeLine";
 import EtcModal from "../Components/post/EtcModal";
-import ComentModal from "../Components/post/ComentModal";
 
 const Wrapper = styled.div`
   /* width: 100%; */
@@ -112,7 +111,6 @@ const Home = () => {
 
   return (
     <Wrapper>
-      {/* <ComentModal /> */}
       <BoederWrapper>
         <PostlistWrapper
           ref={wrapperRef}
