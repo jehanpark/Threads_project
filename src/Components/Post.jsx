@@ -65,7 +65,7 @@ const Column = styled.div`
 const Photo = styled.img`
   width: 160px;
   height: 160px;
-  object-fit: cover/contain;
+  object-fit: cover;
   margin-left: 0px;
   border-radius: 8px;
   @media (max-width: 768px) {
@@ -416,7 +416,7 @@ const Post = ({
     }
   };
   const PostCommentClick = () => {
-    navigate(`/PostComment/${id}`, {
+    navigate("/PostComment/${id}", {
       state: {
         postId: id,
         postContent: post,
@@ -435,11 +435,6 @@ const Post = ({
 
   // DM 상태가 변경될 때 Firebase에 업데이트
   const handleDmClick = async () => {
-    // id가 없는 경우 함수 실행 중지
-    if (!id) {
-      console.error("게시글 ID가 존재하지 않습니다.");
-      return;
-    }
     const postRef = doc(db, "contents", id);
 
     // 최초 클릭 시 DM 카운트 증가 및 Firebase 업데이트
@@ -447,22 +442,22 @@ const Post = ({
       setDms((prevDms) => prevDms + 1);
       await updateDoc(postRef, { dms: dms + 1 });
 
-      // 게시글의 링크를 동적으로 생성
-      const postUrl = `http://localhost:5174/PostComment/${id}`; // 여기에 게시글의 고유한 URL을 생성
+      // URL 복사 처리
+      const pageUrl = window.location.href;
 
       try {
         // 클립보드에 URL 복사
-        await navigator.clipboard.writeText(postUrl);
+        await navigator.clipboard.writeText(pageUrl);
 
         // 복사 완료 상태와 알림 표시
         setIsCopied(true);
-        alert(`게시글 링크가 복사되었습니다: ${postUrl}`);
+        alert("링크가 복사되었습니다.");
       } catch (err) {
         console.error("링크 복사 실패:", err);
       }
     } else {
       // 이미 복사된 경우 알림 표시
-      alert("이미 게시글 링크가 복사되었습니다.");
+      alert("이미 링크가 복사되었습니다.");
     }
   };
 
@@ -556,6 +551,7 @@ const Post = ({
             />
           )}
         </Header>
+
         <Column onClick={PostCommentClick}>
           {isEditing ? (
             <EditPostFormTextArea
@@ -599,6 +595,7 @@ const Post = ({
           )}
         </ColumnWrapper>
         <AudioMessage audioURL={audioURL} />
+
         <Icons>
           <IconWrapper onClick={handleLike}>
             <HeartIcon width={20} /> {likes}

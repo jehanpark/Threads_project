@@ -63,7 +63,7 @@ const Button = styled.button`
   padding: 16px; /* 인풋 창과 같은 높이로 설정 */
   background: #181818;
   color: #dfdfdf;
-  border: none;
+  border: 1px solid #fff;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s; /* 호버 애니메이션 부여 */
@@ -71,16 +71,18 @@ const Button = styled.button`
   margin-top: 20px;
   &:hover {
     color: #fff;
+    border: 1px solid #fff;
   }
   &:focus {
     color: #fff;
+    border: 1px solid #fff;
   }
 `;
 const DelButton = styled.button`
   padding: 16px; /* 인풋 창과 같은 높이로 설정 */
   background: ${(props) => props.theme.modalfont};
   color: #fff;
-  border: none;
+  border: 1px solid #fff;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s; /* 호버 애니메이션 부여 */
@@ -88,9 +90,11 @@ const DelButton = styled.button`
   margin-top: 10px;
   &:hover {
     color: #181818;
+    border: 1px solid #fff;
   }
   &:focus {
     color: #181818;
+    border: 1px solid #fff;
   }
 `;
 
