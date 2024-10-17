@@ -145,7 +145,7 @@ const CreateAccountItemDk = () => {
           <InputWrapper>
             <StyledInput
               type="submit"
-              value={isLoading ? "Loading.." : "회원가입 하기"}
+              value={isLoading ? "z" : "회원가입 하기"}
             />
           </InputWrapper>
         </Form>

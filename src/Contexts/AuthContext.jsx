@@ -2,38 +2,26 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { auth } from "../firebase";
+import { Home } from "../Components/Common/Icon";
+import {}
 
-// AuthContext 생성
-const AuthContext = createContext();
-
-// Custom hook
-export const useAuth = () => useContext(AuthContext);
-
-// Provider 컴포넌트
-const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true); // 상태 초기화
+const App = () => {
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false); // 사용자 상태를 확인한 후 로딩 완료
-    });
-
-    // 컴포넌트가 언마운트되면 구독 해제
-    return () => unsubscribe();
+    // 예를 들어, 데이터를 비동기로 가져오는 부분
+    setTimeout(() => {
+      setLoading(false); // 일정 시간이 지난 후 로딩 상태 해제
+    }, 2000); // 2초 후에 로딩 상태를 false로 설정 (예시)
   }, []);
 
-  // 로딩이 완료되기 전까지 로딩 상태 유지
+  // 로딩 중일 때
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  return (
-    <AuthContext.Provider value={{ currentUser }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  // 로딩이 끝나면 Home 컴포넌트로 이동
+  return <Home />;
 };
 
-export default AuthProvider;
+export default App;

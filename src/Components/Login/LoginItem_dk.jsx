@@ -309,10 +309,7 @@ const LoginItemDk = () => {
             {passwordError && <PasswordError>{passwordError}</PasswordError>}
           </InputWrapper>
           <InputWrapper>
-            <StyledInput
-              type="submit"
-              value={isLoading ? "Loading.." : "로그인"}
-            />
+            <StyledInput type="submit" value={isLoading ? "ㅋ.." : "로그인"} />
           </InputWrapper>
           <Link to="/create-account">
             <SingnUpText>회원가입</SingnUpText>

@@ -531,7 +531,7 @@ const ReportModal = ({
                     />
                   </label>
                   <SubmitAreaBtn type="submit" disabled={uploading}>
-                    {uploading ? "제출 중..." : "제출"}
+                    {uploading ? "ㅋ" : "제출"}
                   </SubmitAreaBtn>
                 </SubmitArea>
               </TextAreaForm>
