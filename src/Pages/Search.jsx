@@ -18,6 +18,11 @@ const Wrapper = styled.div`
   }
 `;
 const BoederWrapper = styled.div`
+  background: ${(props) => props.theme.borderColor};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   /* position: fixed; */
   bottom: 0;
   /* left: 50%; */
@@ -27,8 +32,6 @@ const BoederWrapper = styled.div`
   height: 100%;
   /* height: 85%; */
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
-  box-shadow: ${(props) => props.theme.bordershadow};
   /* overflow: hidden; */
   @media (max-width: 768px) {
     position: absolute;
@@ -42,24 +45,14 @@ const BoederWrapper = styled.div`
   }
 `;
 
-const Contain = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  @media (max-width: 480px) {
-    width: 100%;
-    height: 100%;
-  }
-`;
-
 const MenuTitle = styled.p`
   font-weight: 800;
   font-size: 20px;
-  margin-top: 40px;
-  margin-bottom: 40px;
+
   color: ${(props) => props.theme.fontcolor};
+  padding-top: 40px;
+  padding-bottom: 20px;
+  text-align: center;
   transition: all 0.3s;
   @media (max-width: 768px) {
     display: none;
@@ -69,28 +62,8 @@ const MenuTitle = styled.p`
   }
 `;
 
-const Border = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* margin: 0 auto; */
-  /* padding: 20px; */
-  height: 600px;
-  border-radius: 40px 40px 0px 0px;
-  background-color: ${(props) => props.theme.borderColor};
-  @media (max-width: 768px) {
-    width: 100%;
-    height: 100vh;
-    border-radius: 20px 20px 0px 0px;
-  }
-  @media (max-width: 480px) {
-    width: 100%;
-    /* margin: 0 auto; */
-  }
-`;
-
 const ButtonGroup = styled(motion.div)`
-  padding-left: 100px;
+  padding-left: 80px;
   display: flex;
   width: 100%;
   gap: 12px;
@@ -103,11 +76,13 @@ const SelectButton = styled(motion.button)`
   display: flex;
   flex: 0 0 auto;
   width: 110px;
+  border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px 20px;
-  background: ${(props) => props.theme.buttonbackground};
-  border: 1px solid ${(props) => props.theme.searchButton};
-  color: ${(props) => props.theme.buttonText};
+  background: ${(props) =>
+    props.selected ? props.theme.buttonText : props.theme.buttonbackground};
+  color: ${(props) =>
+    props.selected ? props.theme.borderColor : props.theme.buttonText};
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
@@ -130,7 +105,6 @@ const ButtonGroupPC = styled.div`
   justify-content: space-evenly;
   align-items: center;
   gap: 20px;
-
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
     display: none;
@@ -140,11 +114,16 @@ const ButtonGroupPC = styled.div`
 `;
 
 const SelectButtonPC = styled.button`
+  background: transparent;
   flex: 0 0 auto;
   width: 106px;
   padding: 10px 20px;
   border: none;
   font-weight: bold;
+  color: ${(props) =>
+    props.selected ? props.theme.selectedbtn : props.theme.notSelectbtn};
+  border-bottom: ${(props) =>
+    props.selected ? `1px solid ${props.theme.selectedbtn}` : "none"};
   cursor: pointer;
   transition: all 0.3s;
 `;
@@ -168,9 +147,7 @@ const ContentsBorder = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-content: center;
   height: 100%;
-  /* max-height: 700px; */
   overflow-y: auto;
   padding: 0 20px;
   padding-bottom: 20px;
@@ -240,29 +217,6 @@ const Search = () => {
     };
   }, []);
 
-  // 버튼 스타일 동적 처리
-  const getButtonStyle = (type) => ({
-    backgroundColor: contentType === type ? "#000" : "#fff",
-    color: contentType === type ? "#fff" : "#000",
-  });
-
-  // 버튼 스타일 동적 적용
-  const getPCButtonStyle = (type, isNightMode) => ({
-    background: "transparent",
-    color:
-      contentType === type
-        ? isNightMode
-          ? "#FFF"
-          : "#000"
-        : isNightMode
-        ? "rgba(255, 255, 255, 0.8)"
-        : "rgba(204, 204, 204, 0.8)",
-    borderBottom:
-      contentType === type
-        ? `1.5px solid ${isNightMode ? "#fff" : "#000"}`
-        : "none",
-  });
-
   const buttons = [
     { label: "인기", type: "popular" },
     { label: "최신", type: "recent" },
@@ -272,9 +226,9 @@ const Search = () => {
   ];
 
   return (
-    <Contain>
-      <MenuTitle>{searchTerm || "검색"}</MenuTitle>
-      <Border>
+    <Wrapper>
+      <BoederWrapper>
+        <MenuTitle>{searchTerm || "검색"}</MenuTitle>
         <SearchBox>
           {showSearchBar ? (
             <Searchbar addSearch={handleSearch} />
@@ -284,12 +238,12 @@ const Search = () => {
               whileTap="click"
               drag="x"
               dragMomentum={false}
-              dragConstraints={{ left: -100, right: 0 }}
+              dragConstraints={{ left: -70, right: 0 }}
             >
               {buttons.map((button) => (
                 <SelectButton
                   key={button.type}
-                  style={getButtonStyle(button.type)}
+                  selected={contentType === button.type}
                   onClick={() => handleButtonClick(button.type)}
                 >
                   {button.label}
@@ -301,7 +255,7 @@ const Search = () => {
               {buttons.map((button) => (
                 <SelectButtonPC
                   key={button.type}
-                  style={getPCButtonStyle(button.type)}
+                  selected={contentType === button.type}
                   onClick={() => handleButtonClick(button.type)}
                 >
                   {button.label}
@@ -324,6 +278,7 @@ const Search = () => {
               searchTerm={searchTerm}
               contentType={contentType}
               onDataEmpty={(isEmpty) => setDisplaysEmpty(isEmpty)}
+              postNum="2"
             />
           )}
 
@@ -342,8 +297,8 @@ const Search = () => {
               <NoResults>게시글 및 프로필이 존재하지 않습니다.</NoResults>
             )}
         </ContentsBorder>
-      </Border>
-    </Contain>
+      </BoederWrapper>
+    </Wrapper>
   );
 };
 export default Search;

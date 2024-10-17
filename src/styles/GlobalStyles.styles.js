@@ -1,6 +1,5 @@
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
-
 export const lightTheme = {
   logoColor: "#000",
   nomalIconColor: "#BABABA",
@@ -22,26 +21,26 @@ export const lightTheme = {
   searchColor: "#000",
   themeIconBackground: "#F3F3F3",
   themeIconBorder: "#E4E4E4",
-  searchButton: "#e9e9e9",
+  searchButton: "#E9E9E9",
   buttonbackground: "#fff",
   buttonText: "#000",
+  comentBouttomLine: "#cccccc66",
   navIconColor: undefined,
-  activityBG: "linear-gradient(145deg, #ffffff, #e6e6e6)",
+  activityBG: "linear-gradient(145deg, #FFFFFF, #E6E6E6)",
   activitySH:
     "5px 5px 10px rgba(0, 0, 0, 0.1), -5px -5px 10px rgba(255, 255, 255, 0.5) ",
   activityhover:
     "5px 5px 15px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.7)",
-  ImgBG: "linear-gradient(145deg, #ffffff, #e6e6e6)",
+  ImgBG: "linear-gradient(145deg, #FFFFFF, #E6E6E6)",
   ImgSH: "linear-gradient(145deg, #333, #444)",
-  readBG: "linear-gradient(145deg, #dcdcdc, #c0c0c0)",
+  readBG: "linear-gradient(145deg, #DCDCDC, #C0C0C0)",
   readTextColor: "#949494",
   btnbottom: "1px solid rgba(204, 204, 204, 0.4)",
   // 다은 새로 추가(설정부분)
   activeBorder: "#181818",
-  modalfont: "#999999",
-  modalhoverbg: "#f6f6f6",
+  selectedbtn: "#000",
+  notSelectbtn: "#ccc",
 };
-
 export const darkTheme = {
   logoColor: "#fff",
   nomalIconColor: "#4D4D4D",
@@ -59,13 +58,14 @@ export const darkTheme = {
   loginInputSelectColor: "#488EE3",
   searchBar: "#BABABA",
   userIcon: "#737373",
-  followerfont: "#bababa",
+  followerfont: "#BABABA",
   searchColor: "#1D1D1D",
   themeIconBackground: "#363636",
   themeIconBorder: "#363636",
   navIconColor: undefined,
   buttonbackground: "#000",
   buttonText: "#fff",
+  comentBouttomLine: "#2d2d2d",
   activityBG: "linear-gradient(145deg, #333, #444)",
   activitySH:
     "5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(0, 0, 0, 0.2)",
@@ -80,14 +80,12 @@ export const darkTheme = {
   // 다은 새로 추가(설정부분)
   activeBorder: "#fff",
   modalfont: "#999999",
-  modalhoverbg: "#f6f6f6",
+  selectedbtn: "#fff",
+  notSelectbtn: "#737373",
 };
-
 const GlobalStyles = createGlobalStyle`
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
-
 ${reset};
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -97,90 +95,81 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video, input {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-
-	@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
-	font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-
-	box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  box-sizing: border-box;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
-	display: block;
+  display: block;
 }
 body {
-	background-color: ${(props) => props.theme.bodyBg};
-
-	color: ${(props) => props.theme.fontcolor};
-
-	color: ${(props) => props.theme.bodyColor};
-
-	line-height: 1;
+  background-color: ${(props) => props.theme.bodyBg};
+  color: ${(props) => props.theme.fontcolor};
+  color: ${(props) => props.theme.bodyColor};
+  line-height: 1;
   overflow-y: scroll;
   transition: background-color 0.4s ease, color 0.2s ease;
-	/* background-color: #F2F2F2; */
-
+  /* background-color: #F2F2F2; */
 }
 ol, ul ,li {
-	list-style: none;
+  list-style: none;
 }
 a {
   text-decoration: none;
   color: inherit;
 }
 blockquote, q {
-	quotes: none;
+  quotes: none;
 }
 blockquote:before, blockquote:after,
 q:before, q:after {
-	content: '';
-	content: none;
+  content: '';
+  content: none;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
-
 :root {
-	//light
-	--tag-color: #0396f6;
-	--caution-color: #ff3040;
-	--L-bg : #f2f2f2;
-	--L-borderwrapper: #F5F5F5;
+  //light
+  --tag-color: #0396F6;
+  --caution-color: #FF3040;
+  --L-bg : #F2F2F2;
+  --L-borderwrapper: #F5F5F5;
  --L-boreder: #fff;
-	--L-font-color: : #000;
-	--L-subfont:  #9a9a9a;
-	--L-icon: #bababa;
-	--L-selecticon : #000; 
-	--L-strock : #e9e9e9
+  --L-font-color: : #000;
+  --L-subfont:  #9A9A9A;
+  --L-icon: #BABABA;
+  --L-selecticon : #000;
+  --L-strock : #E9E9E9
 //dark
-	--D-bg : #000;
-	--D-borderwrapper : #252525;
-	--D-border: #181818;
-	--D-font-color: #f1f3f5;
-	--D-subfont: #9a9a9a;
-	--D-icon: #bababa;
-	--D-selecticon : #f3f5f7;
-	--D-strock: #343535;
+  --D-bg : #000;
+  --D-borderwrapper : #252525;
+  --D-border: #181818;
+  --D-font-color: #F1F3F5;
+  --D-subfont: #9A9A9A;
+  --D-icon: #BABABA;
+  --D-selecticon : #F3F5F7;
+  --D-strock: #343535;
 //font
-	--font-24px : 24px;
+  --font-24px : 24px;
   --font-15px : 15px;
   --font-13px : 13px;
   --font-bold: 700;
   --font-medium: 500;
 }
 `;
-
 // export { lightTheme, darkTheme };
-
 export default GlobalStyles;

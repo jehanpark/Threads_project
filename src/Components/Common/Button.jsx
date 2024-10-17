@@ -46,7 +46,7 @@ const ButtonItem = styled.button`
   ${({ type }) =>
     type === "edit" &&
     `
-      width: 585px;
+      width: 100%;
       height: 39px;
       color: #000;
       font-size: 15px;

@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { lightTheme } from "../../styles/GlobalStyles.styles";
-import { useMediaQuery } from "react-responsive";
 // import LogoImg from "../../images/insta.png";
 // import RightArrow from "../../images/rightarrow.svg";
 console.log(lightTheme);
@@ -67,6 +66,7 @@ const BorderItem = styled.div`
     height: ${(props) => (props.isSmallScreen ? "100%" : "137px")};
     background: ${(props) => props.theme.borderColor};
     margin-top: 20px;
+    margin-bottom: ${(props) => (props.isSmallScreen ? "" : "20px")};
     padding: ${(props) => (props.isSmallScreen ? "0" : "20px")};
     border: none;
     border-radius: 20px;

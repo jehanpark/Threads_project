@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { collection, getDocs, doc, updateDoc, query } from "firebase/firestore";
 import { db } from "../../firebase";
+import { getAuth } from "firebase/auth";
 import NotificationItem from "./NotificationItem";
 
 // 최대 알림 개수
@@ -33,6 +34,8 @@ const getTypeLabel = (message) => {
 
 const NotificationList = ({ onUpdate }) => {
   const [notifications, setNotifications] = useState([]);
+  const auth = getAuth();
+  const currentUser = auth.currentUser; // 로그인 정보
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,9 +46,9 @@ const NotificationList = ({ onUpdate }) => {
         );
         const querySnapshot = await getDocs(DesQuery);
 
-        const initialData = querySnapshot.docs.map((docSnapshot) => {
+        let initialData = querySnapshot.docs.map((docSnapshot) => {
           const docData = docSnapshot.data();
-          console.log(docData);
+
           // const createdAt =
           //   docData.createdAt && docData.createdAt.toDate
           //     ? docData.createdAt.toDate()
@@ -68,6 +71,13 @@ const NotificationList = ({ onUpdate }) => {
           };
         });
 
+        // 로그인 회원 정보와 이메일 정보 동일
+        if (currentUser && currentUser.email) {
+          initialData = initialData.filter(
+            (notification) => notification.username !== currentUser.email
+          );
+        }
+
         // 가져온 데이터를 최대 알림 개수까지 제한
         const limitedData = initialData.slice(0, MAX_NOTIFICATIONS);
         setNotifications(limitedData);
@@ -81,9 +91,9 @@ const NotificationList = ({ onUpdate }) => {
     };
 
     fetchData();
-  }, []); // 빈 배열로 의존성을 설정하여 컴포넌트 마운트 시 한 번만 실행
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
 
-  // 알림 읽음 처리 함수
+  // 알림 읽음
   const markAsRead = async (id) => {
     try {
       const notificationRef = doc(db, "profile", id);

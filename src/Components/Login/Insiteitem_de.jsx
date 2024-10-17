@@ -4,8 +4,6 @@ import styled from "styled-components";
 import BorderItem from "../Common/Border_de";
 import { IconWrapper, InformationIcon, FollowerIcon } from "../Common/Icon";
 
-// 스타일 정의
-
 const BorderWrapper = styled.div`
   display: flex;
   flex-direction: ${(props) =>
@@ -20,7 +18,7 @@ const BorderWrapper = styled.div`
   gap: ${(props) =>
     props.isSmallScreen ? "0" : props.isTablet ? "20px" : "40px"};
   box-sizing: border-box;
-  /* overflow-x: hidden; */
+  overflow-x: hidden;
 `;
 
 const InsitesWrapper = styled.div`
@@ -29,6 +27,7 @@ const InsitesWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  /* height: 100vh; */
   padding: ${(props) =>
     props.isSmallScreen ? "0px" : props.isTablet ? "0 20px" : "0px"};
   max-width: ${(props) =>
@@ -50,7 +49,7 @@ const InsitesWrapper = styled.div`
 
 const InsitesTitle = styled.div`
   margin-top: ${(props) =>
-    props.isSmallScreen ? "20px" : props.isTablet ? "20px" : "10px"};
+    props.isSmallScreen ? "0" : props.isTablet ? "20px" : "10px"};
   font-size: ${(props) =>
     props.isSmallScreen ? "16px" : props.isTablet ? "16px" : "18px"};
   font-weight: 500;
@@ -142,6 +141,12 @@ const FollowerInner = styled.div`
     props.isSmallScreen ? "40px" : props.isTablet ? "0" : "0"};
 `;
 
+const InsiteInner2 = styled.div`
+  background: #f5f5f5;
+  padding: 12px 12px;
+  border-radius: 8px;
+`;
+
 const FollowerInfo = styled.div`
   width: ${(props) =>
     props.isSmallScreen ? "200px" : props.isTablet ? "100%" : "436px"};
@@ -196,15 +201,9 @@ const items = [
 ];
 
 // 컴포넌트
-const Insiteitem_de = () => {
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
-  const isTablet = useMediaQuery({
-    query: "(min-width: 769px) and (max-width: 1024px)",
-  });
-
+const Insiteitem_de = ({ isSmallScreen, isTablet }) => {
   return (
     <BorderWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
-      {/* 1번째 인사이트 박스 */}
       <InsitesWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
         {items.map((item) => (
           <BorderItem
@@ -231,32 +230,6 @@ const Insiteitem_de = () => {
             </Info>
           </BorderItem>
         ))}
-      </InsitesWrapper>
-      <Line />
-      {/* 2번째 인사이트 */}
-      <InsitesWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
-        <FollowerTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
-          팔로워
-        </FollowerTitle>
-        <FollowerWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
-          <FollowerInner isSmallScreen={isSmallScreen} isTablet={isTablet}>
-            <TotalInfo isSmallScreen={isSmallScreen} isTablet={isTablet}>
-              <TotalNum isSmallScreen={isSmallScreen} isTablet={isTablet}>
-                1
-              </TotalNum>
-              <TotalFollow isSmallScreen={isSmallScreen} isTablet={isTablet}>
-                총 팔로워
-              </TotalFollow>
-            </TotalInfo>
-            <FollowerIcon /> <Line />
-            <Info>
-              <BorderItemInfo isSmallScreen={isSmallScreen} isTablet={isTablet}>
-                팔로워가 100명 이상이 되면 어떤 사람들이 회원님의 콘텐츠를
-                조회했는지에 관한 정보를 더 확인할 수 있습니다.
-              </BorderItemInfo>
-            </Info>
-          </FollowerInner>
-        </FollowerWrapper>
       </InsitesWrapper>
     </BorderWrapper>
   );

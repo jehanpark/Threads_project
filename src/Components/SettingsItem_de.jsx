@@ -9,7 +9,7 @@ import MentionModal from "./Common/MentionModal";
 import HiddenWordModal from "./Common/HiddenWordModal";
 import OnlineStatusModal from "./Common/OnlineStatusModal";
 import AccountSettingModal from "./Common/AccountSettingModal";
-import DeactivateModal from "./Common/deactivateModal";
+import DeactivateModal from "./Common/DeactivateModal";
 
 import {
   LockIcon,

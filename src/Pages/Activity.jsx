@@ -6,22 +6,55 @@ import { useAuth } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Contain = styled.div`
-  width: 100%;
+  /* width: 100%; */
+  /* height: calc(100vh - 120px); */
+  height: 100vh;
+  /* margin-top: 120px; */
+  /* overflow: hidden; */
+  /* z-index: -1; */
+  @media (max-width: 768px) {
+    height: 100vh;
+    width: 100%;
+  }
+`;
+
+const BoederWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  @media (max-width: 480px) {
+  background: ${(props) => props.theme.borderColor};
+
+  /* position: fixed; */
+  bottom: 0;
+  /* left: 50%; */
+  /* transform: translate(-50%); */
+  /* margin: 0; */
+  width: 680px;
+  height: 100%;
+  /* height: 85%; */
+  border-radius: 40px 40px 0px 0px;
+  /* overflow: hidden; */
+  @media (max-width: 768px) {
+    position: absolute;
     width: 100%;
+    /* bottom: 0; */
+    border-radius: 0;
+    /* height: 100vh; */
+    /* height: calc(100% - 70px); */
+    box-shadow: none;
+    border-radius: 0px 0px 0px 0px;
   }
 `;
 
 const MenuTitle = styled.p`
   font-weight: 800;
   font-size: 20px;
-  margin-top: 40px;
-  margin-bottom: 40px;
+
   color: ${(props) => props.theme.fontcolor};
+  padding-top: 40px;
+  padding-bottom: 20px;
+  text-align: center;
   transition: all 0.3s;
   @media (max-width: 768px) {
     display: none;
@@ -36,9 +69,9 @@ const ButtonGroup = styled.div`
   width: 100%;
   justify-content: center;
   align-content: center;
-  gap: 20px;
+  gap: 10px;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   transition: all 0.3s ease;
 `;
 
@@ -46,11 +79,14 @@ const SelectButton = styled.button`
   display: flex;
   flex: 0 0 auto;
   width: 110px;
+  border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px 20px;
-  background: ${(props) => props.theme.buttonbackground};
-  border: 1px solid ${(props) => props.theme.searchButton};
-  color: ${(props) => props.theme.buttonText};
+  color: ${(props) =>
+    props.selected ? props.theme.borderColor : props.theme.buttonText};
+  font-weight: 700;
+  background: ${(props) =>
+    props.selected ? props.theme.buttonText : props.theme.buttonbackground};
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
@@ -69,25 +105,40 @@ const SelectButton = styled.button`
 `;
 
 const ButtonGroupPC = styled.div`
-  width: 84%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  gap: 10px;
+  gap: 40px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
     display: none;
   }
+  @media (max-width: 480px) {
+  }
 `;
 
 const SelectButtonPC = styled.button`
+  background: transparent;
   flex: 0 0 auto;
-  width: 140px;
+  width: 106px;
   padding: 10px 20px;
   border: none;
   font-weight: bold;
+  color: ${(props) =>
+    props.selected ? props.theme.selectedbtn : props.theme.notSelectbtn};
+  border-bottom: ${(props) =>
+    props.selected ? `1px solid ${props.theme.selectedbtn}` : "none"};
   cursor: pointer;
   transition: all 0.3s;
+`;
+
+const Btnborder = styled.div`
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 `;
 
 const ContentsBorder = styled.div`
@@ -96,7 +147,7 @@ const ContentsBorder = styled.div`
   justify-content: flex-start;
   align-content: center;
   height: 100%;
-  max-height: 700px;
+  /* max-height: 700px; */
   overflow-y: auto;
   padding: 0 20px;
   padding-bottom: 20px;
@@ -115,28 +166,6 @@ const ContentsBorder = styled.div`
   @media (max-width: 480px) {
     width: 100%;
     max-height: 100%;
-  }
-`;
-
-const BoederWrapper = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%);
-  margin: 0 auto;
-  width: 680px;
-  height: 85%;
-  border-radius: 40px 40px 0px 0px;
-  background-color: ${(props) => props.theme.borderColor};
-  box-shadow: ${(props) => props.theme.bordershadow};
-  @media (max-width: 768px) {
-    position: fixed;
-    border-radius: 0;
-    width: 100%;
-    height: calc(100% - 140px);
-    bottom: 70px;
-    box-shadow: none;
-    border-radius: 0px 0px 0px 0px;
   }
 `;
 
@@ -171,9 +200,11 @@ const Activity = () => {
           : notification
       );
 
-      setFilteredData(updatedData);
+      const updatedFilteredData = updatedData.filter(
+        (item) => contentType === "all" || item.type === contentType
+      );
 
-      console.log("업데이트된 데이터:", updatedData);
+      setFilteredData(updatedFilteredData); // 업데이트 필터데이터
 
       return updatedData;
     });
@@ -207,9 +238,10 @@ const Activity = () => {
     setContentType(type);
   };
 
+  //필터링된 데이터 바로 업데이트
   useEffect(() => {
-    filterList(contentType);
-  }, [contentType]);
+    filterList(contentType); // savadata에서 filter된 데이터(내가 선택한 데이터)
+  }, [contentType, savedData]);
 
   // 미디어 사이즈 변화시 버튼 종류 변경
   useEffect(() => {
@@ -224,29 +256,6 @@ const Activity = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  // 버튼 스타일 동적 처리
-  const getButtonStyle = (type) => ({
-    backgroundColor: contentType === type ? "#000" : "#fff",
-    color: contentType === type ? "#fff" : "#000",
-  });
-
-  // 버튼 스타일 동적 적용
-  const getPCButtonStyle = (type, isNightMode) => ({
-    background: "transparent",
-    color:
-      contentType === type
-        ? isNightMode
-          ? "#FFF"
-          : "#000"
-        : isNightMode
-        ? "rgba(255, 255, 255, 0.8)"
-        : "rgba(204, 204, 204, 0.8)",
-    borderBottom:
-      contentType === type
-        ? `1.5px solid ${isNightMode ? "#fff" : "#000"}`
-        : "none",
-  });
 
   const buttons = [
     { label: "모두", type: "all" },
@@ -279,7 +288,7 @@ const Activity = () => {
             {buttons.map((button) => (
               <SelectButton
                 key={button.type}
-                style={getButtonStyle(button.type)}
+                selected={contentType === button.type}
                 onClick={() => handleButtonClick(button.type)}
               >
                 {button.label}
@@ -287,17 +296,19 @@ const Activity = () => {
             ))}
           </ButtonGroup>
         ) : (
-          <ButtonGroupPC className="desktop-buttons">
-            {buttons.map((button) => (
-              <SelectButtonPC
-                key={button.type}
-                style={getPCButtonStyle(button.type)}
-                onClick={() => handleButtonClick(button.type)}
-              >
-                {button.label}
-              </SelectButtonPC>
-            ))}
-          </ButtonGroupPC>
+          <Btnborder>
+            <ButtonGroupPC className="desktop-buttons">
+              {buttons.map((button) => (
+                <SelectButtonPC
+                  key={button.type}
+                  selected={contentType === button.type}
+                  onClick={() => handleButtonClick(button.type)}
+                >
+                  {button.label}
+                </SelectButtonPC>
+              ))}
+            </ButtonGroupPC>
+          </Btnborder>
         )}
         <ContentsBorder>
           {filteredData.length > 0 ? (

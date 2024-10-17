@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useState } from "react";
-import { useMediaQuery } from "@mui/material";
+import { useMediaQuery } from "react-responsive";
 
 // StyledSvg 스타일링
 const StyledSvg = styled.svg`

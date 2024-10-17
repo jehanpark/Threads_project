@@ -3,9 +3,9 @@ import styled, { keyframes } from "styled-components";
 import { ThemeContext } from "../Contexts/ThemeContext";
 import { auth } from "../firebase";
 import { useAuth } from "../Contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 import ReportModal from "./Login/ReportModal";
-
+import { AddPageContext } from "../Contexts/AddPageContext";
+import { useNavigate, useLocation } from "react-router-dom"; // useLocation 추가
 import {
   ArrowIcon,
   EtcIcon,
@@ -231,17 +231,28 @@ const Sidebar = () => {
   const [isBackClick, setIsBackClick] = useState(false); // 뒤로 가기 애니메이션 상태
   const modalRef = useRef(null);
   const { currentUser } = useAuth(); // 현재 로그인된 사용자 정보 가져오기
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false); // Pin 버튼 클릭 시 모달 상태 관리
+
+  const { addPage } = useContext(AddPageContext); // addPage 함수 가져오기
 
   // modal showing
   const [showing, setShowing] = useState(false);
   const toggleShowing = () => setShowing((prev) => !prev);
 
   const navigate = useNavigate();
+  const location = useLocation(); // 현재 경로 가져오기
+  const isHomePage = location.pathname === "/";
   const openModal = () => {
     setIsOpen(true);
     setIsThemeModalOpen(false);
     setIsBackClick(false); // 모달이 열릴 때는 기본 상태로 초기화
   };
+
+  // PinBtn 클릭 시 모달 열기
+  const openPinModal = () => {
+    setIsPinModalOpen(true);
+  };
+  // 모달 닫기
 
   // 페이지 로드 시 로컬 스토리지에서 테마 상태를 불러와 clicked 상태와 동기화
   useEffect(() => {
@@ -262,6 +273,10 @@ const Sidebar = () => {
   const closeModal = () => {
     setIsOpen(false);
     setIsThemeModalOpen(false);
+  };
+
+  const closePinModal = () => {
+    setIsPinModalOpen(false);
   };
 
   const handleBackClick = () => {
@@ -289,6 +304,7 @@ const Sidebar = () => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         closeModal();
+        closePinModal();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -302,18 +318,21 @@ const Sidebar = () => {
     ? ["디자인", "인사이트", "설정", "문제신고", "로그아웃"]
     : ["디자인", , "문제신고", "로그인"];
 
+  const PinModalLists = ["Profile", "Activity", "Settings"];
+
   return (
     <>
       <Aside>
         <BtnWrapper>
-          <PinBtn>
-            <FixIcon fill={"#bababa"} />
-          </PinBtn>
+          {isHomePage && ( // 홈 페이지에서만 PinBtn 렌더링
+            <PinBtn onClick={openPinModal}>
+              <FixIcon fill={"#bababa"} />
+            </PinBtn>
+          )}
           <SetBtn onClick={openModal}>
             <EtcIcon fill={"#bababa"} />
           </SetBtn>
         </BtnWrapper>
-
         {isOpen && !isThemeModalOpen && (
           <ModalContainer ref={modalRef} isThemeModal={false}>
             {/* <Ul>
@@ -376,6 +395,33 @@ const Sidebar = () => {
           </ModalContainer>
         )}
 
+        {isPinModalOpen && (
+          <ModalContainer ref={modalRef}>
+            <Ul>
+              {PinModalLists.map((modalList, index) => (
+                <Li
+                  key={index}
+                  onClick={() => {
+                    if (modalList === "Profile") {
+                      addPage(modalList); // 선택된 페이지를 전역 상태로 설정
+                      closePinModal();
+                    } else if (modalList === "Activity") {
+                      addPage(modalList); // 선택된 페이지를 전역 상태로 설정
+                      closePinModal();
+                    } else if (modalList === "Settings") {
+                      addPage(modalList); // 선택된 페이지를 전역 상태로 설정
+                      closePinModal();
+                    } else {
+                      closePinModal();
+                    }
+                  }}
+                >
+                  {modalList}
+                </Li>
+              ))}
+            </Ul>
+          </ModalContainer>
+        )}
         {/* 테마 변경 모달 */}
         {isThemeModalOpen && (
           <ModalContainer

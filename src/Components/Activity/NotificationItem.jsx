@@ -63,7 +63,6 @@ const DeleteLabel = styled(motion.p)`
 const Wrapper = styled.div`
   color: ${(props) =>
     props.isRead ? props.theme.borderstroke : props.theme.fontcolor};
-
   display: flex;
   gap: 20px;
   align-items: center;

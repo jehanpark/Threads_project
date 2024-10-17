@@ -10,8 +10,8 @@ const draw = keyframes`
 
 // 스타일 컴포넌트 정의
 const LoadingContainer = styled.div`
-  width: 680px;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   position: absolute;
   left: 50%;
   bottom: 0;
