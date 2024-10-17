@@ -90,7 +90,7 @@ const Border = styled.div`
 `;
 
 const ButtonGroup = styled(motion.div)`
-  padding-left: 100px;
+  padding-left: 80px;
   display: flex;
   width: 100%;
   gap: 12px;
@@ -103,11 +103,13 @@ const SelectButton = styled(motion.button)`
   display: flex;
   flex: 0 0 auto;
   width: 110px;
+  border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px 20px;
-  background: ${(props) => props.theme.buttonbackground};
-  border: 1px solid ${(props) => props.theme.searchButton};
-  color: ${(props) => props.theme.buttonText};
+  background: ${(props) =>
+    props.selected ? props.theme.buttonText : props.theme.buttonbackground};
+  color: ${(props) =>
+    props.selected ? props.theme.borderColor : props.theme.buttonText};
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
@@ -130,7 +132,6 @@ const ButtonGroupPC = styled.div`
   justify-content: space-evenly;
   align-items: center;
   gap: 20px;
-
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
     display: none;
@@ -140,11 +141,16 @@ const ButtonGroupPC = styled.div`
 `;
 
 const SelectButtonPC = styled.button`
+  background: transparent;
   flex: 0 0 auto;
   width: 106px;
   padding: 10px 20px;
   border: none;
   font-weight: bold;
+  color: ${(props) =>
+    props.selected ? props.theme.selectedbtn : props.theme.notSelectbtn};
+  border-bottom: ${(props) =>
+    props.selected ? `1px solid ${props.theme.selectedbtn}` : "none"};
   cursor: pointer;
   transition: all 0.3s;
 `;
@@ -240,29 +246,6 @@ const Search = () => {
     };
   }, []);
 
-  // 버튼 스타일 동적 처리
-  const getButtonStyle = (type) => ({
-    backgroundColor: contentType === type ? "#000" : "#fff",
-    color: contentType === type ? "#fff" : "#000",
-  });
-
-  // 버튼 스타일 동적 적용
-  const getPCButtonStyle = (type, isNightMode) => ({
-    background: "transparent",
-    color:
-      contentType === type
-        ? isNightMode
-          ? "#FFF"
-          : "#000"
-        : isNightMode
-        ? "rgba(255, 255, 255, 0.8)"
-        : "rgba(204, 204, 204, 0.8)",
-    borderBottom:
-      contentType === type
-        ? `1.5px solid ${isNightMode ? "#fff" : "#000"}`
-        : "none",
-  });
-
   const buttons = [
     { label: "인기", type: "popular" },
     { label: "최신", type: "recent" },
@@ -272,52 +255,53 @@ const Search = () => {
   ];
 
   return (
-    <Contain>
-      <MenuTitle>{searchTerm || "검색"}</MenuTitle>
-      <Border>
-        <SearchBox>
-          {showSearchBar ? (
-            <Searchbar addSearch={handleSearch} />
-          ) : isMobile ? (
-            <ButtonGroup
-              className="mobile-buttons"
-              whileTap="click"
-              drag="x"
-              dragMomentum={false}
-              dragConstraints={{ left: -100, right: 0 }}
-            >
-              {buttons.map((button) => (
-                <SelectButton
-                  key={button.type}
-                  style={getButtonStyle(button.type)}
-                  onClick={() => handleButtonClick(button.type)}
-                >
-                  {button.label}
-                </SelectButton>
-              ))}
-            </ButtonGroup>
-          ) : (
-            <ButtonGroupPC className="desktop-buttons">
-              {buttons.map((button) => (
-                <SelectButtonPC
-                  key={button.type}
-                  style={getPCButtonStyle(button.type)}
-                  onClick={() => handleButtonClick(button.type)}
-                >
-                  {button.label}
-                </SelectButtonPC>
-              ))}
-            </ButtonGroupPC>
-          )}
-        </SearchBox>
-        <ContentsBorder>
-          {contentType !== "picture" && contentType !== "video" && (
-            <FollowersList
-              searchTerm={searchTerm}
-              contentType={contentType}
-              onDataEmpty={(isEmpty) => setFollowersEmpty(isEmpty)}
-            />
-          )}
+    <BoederWrapper>
+      <Contain>
+        <MenuTitle>{searchTerm || "검색"}</MenuTitle>
+        <Border>
+          <SearchBox>
+            {showSearchBar ? (
+              <Searchbar addSearch={handleSearch} />
+            ) : isMobile ? (
+              <ButtonGroup
+                className="mobile-buttons"
+                whileTap="click"
+                drag="x"
+                dragMomentum={false}
+                dragConstraints={{ left: -100, right: 0 }}
+              >
+                {buttons.map((button) => (
+                  <SelectButton
+                    key={button.type}
+                    style={getButtonStyle(button.type)}
+                    onClick={() => handleButtonClick(button.type)}
+                  >
+                    {button.label}
+                  </SelectButton>
+                ))}
+              </ButtonGroup>
+            ) : (
+              <ButtonGroupPC className="desktop-buttons">
+                {buttons.map((button) => (
+                  <SelectButtonPC
+                    key={button.type}
+                    style={getPCButtonStyle(button.type)}
+                    onClick={() => handleButtonClick(button.type)}
+                  >
+                    {button.label}
+                  </SelectButtonPC>
+                ))}
+              </ButtonGroupPC>
+            )}
+          </SearchBox>
+          <ContentsBorder>
+            {contentType !== "picture" && contentType !== "video" && (
+              <FollowersList
+                searchTerm={searchTerm}
+                contentType={contentType}
+                onDataEmpty={(isEmpty) => setFollowersEmpty(isEmpty)}
+              />
+            )}
 
           {contentType !== "profile" && (
             <TimeLine
