@@ -20,7 +20,7 @@ export const Overlay = styled.div`
 
 export const ModalContainer = styled.div`
   width: 420px;
-  height: 520px;
+  height: 620px;
   background-color: ${(props) => props.theme.borderColor};
   border: 1px solid ${(props) => props.theme.borderstroke};
   border-radius: 8px;
@@ -62,7 +62,7 @@ export const Info = styled.div`
 const Button = styled.button`
   padding: 16px; /* 인풋 창과 같은 높이로 설정 */
   background: #181818;
-  color: ${(props) => props.theme.modalfont};
+  color: #dfdfdf;
   border: none;
   border-radius: 8px;
   cursor: pointer;
