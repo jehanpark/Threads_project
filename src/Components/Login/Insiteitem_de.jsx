@@ -85,13 +85,14 @@ const BorderItemTitle = styled.div`
 const Info = styled.div`
   width: 100%; /* 부모 요소의 너비를 따름 */
   display: flex;
-  flex-wrap: wrap; /* 요소가 화면에 맞게 줄바꿈됨 */
+  flex-wrap: ${(props) =>
+    props.isSmallScreen ? "none" : props.isTablet ? "none" : "wrap"};
   align-items: center;
-  /* width: ${(props) =>
+  width: ${(props) =>
     props.isSmallScreen ? "100%" : props.isTablet ? "auto" : "auto"};
   display: flex;
-  gap: 20px; */
-  padding: 0 20px;
+  padding: ${(props) =>
+    props.isSmallScreen ? "0" : props.isTablet ? "auto" : "0 20px"};
 `;
 
 const BorderItemInfo = styled.div`
@@ -214,9 +215,6 @@ const Insiteitem_de = () => {
     <BorderWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
       {/* 1번째 인사이트 박스 */}
       <InsitesWrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
-        <InsitesTitle isSmallScreen={isSmallScreen} isTablet={isTablet}>
-          인사이트
-        </InsitesTitle>{" "}
         {items.map((item) => (
           <BorderItem
             key={item.title}
