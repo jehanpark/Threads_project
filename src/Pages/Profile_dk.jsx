@@ -20,23 +20,52 @@ import {
   UserIcon2,
 } from "../Components/Common/Icon";
 import FollowModal from "../Components/profile/FollowModal";
+import LinkPluse from "../Components/profile/LinkPluse";
 import ProfileEdit from "../Components/profile/ProfileEdit";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OtherBtnModal from "../Components/profile/OtherBtnModal";
-import { useAuth } from "../Contexts/AuthContext";
+import { useLocation } from "react-router-dom";
+
 const Wrapper = styled.div`
   /* width: 100%; */
   /* height: calc(100vh - 120px); */
-  height: 100vh;
-  /* margin-top: 120px; */
   /* overflow: hidden; */
-  z-index: 10;
+
+  height: 100vh;
+  margin-top: 120px;
   @media (max-width: 768px) {
     height: 100vh;
-    width: 100%;
   }
 `;
 
+// const BoederWrapper = styled.div`
+//   /* position: fixed; */
+//   /* position: fixed; */
+//   /* bottom: 0; */
+//   /* left: 50%; */
+//   /* transform: translate(-50%); */
+//   /* bottom: 0;
+//   left: 50%; */
+//   /* transform: translate(-50%); */
+//   /* margin: 0 auto; */
+//   /* height: 85%; */
+//   width: 680px;
+//   height: 100%;
+//   border-radius: 40px 40px 0px 0px;
+//   background: ${(props) => props.theme.headerBg};
+//   box-shadow: ${(props) => props.theme.bordershadow};
+//   /* overflow: hidden; */
+//   @media (max-width: 768px) {
+//     position: static;
+//     margin: 0;
+//     width: 100vw;
+//     height: calc(100% - 140px);
+//     box-shadow: none;
+//     border-radius: 0px;
+//     background: ${(props) => props.theme.borderColor};
+//     transform: translate(0%);
+//   }
+// `;
 const BoederWrapper = styled.div`
   /* position: fixed; */
   bottom: 0;
@@ -47,19 +76,18 @@ const BoederWrapper = styled.div`
   height: 100%;
   /* height: 85%; */
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.headerBg};
+  background: ${(props) => props.theme.borderWrapper};
   box-shadow: ${(props) => props.theme.bordershadow};
   /* overflow: hidden; */
-
   @media (max-width: 768px) {
-    position: static;
-    margin: 0;
-    width: 100vw;
+    /* position: absolute; */
+    width: 100%;
+    bottom: 0;
+    border-radius: 0;
+    width: 100%;
     height: calc(100% - 70px);
     box-shadow: none;
-    border-radius: 0px;
-    background: ${(props) => props.theme.borderColor};
-    transform: translate(0%);
+    border-radius: 0px 0px 0px 0px;
   }
 `;
 
@@ -298,6 +326,9 @@ const Profile = () => {
   const [posts, setPosts] = useState([]); //데이터베이스에 객체형태로 정의된 데이터들
   const [editbtn, setEditbtn] = useState(true);
   const [searchParams] = useSearchParams();
+  //emailAdress
+  // const [emailAdress, setEmailAdress] = useState("");
+  // const adress = searchParams.get("email");
   const emailAdress = searchParams.get("email");
   const [followModal, setFollowModal] = useState(false);
   const [linkmodal, setLinkModal] = useState(false);
@@ -323,20 +354,14 @@ const Profile = () => {
   // NotificationList에서 데이터를 받아옴
   const [isBouncing, setIsBouncing] = useState(false);
   const [comments, setComments] = useState([]);
-  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
 
-  useEffect(() => {
-    if (!currentUser) {
-      const confirmLogin = window.confirm("로그인 하시겠습니까?");
-      if (confirmLogin) {
-        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
-      } else {
-        navigate("/");
-      }
-    }
-  }, [currentUser, navigate]);
-
-  // const location = useLocation();
+  // const PickProfile = ()=>{
+  //   if(!프롭스 == "") {
+  //     setEmailAdress(프롭스)
+  //   } else {
+  //     setEmailAdress(adress)
+  //   }
+  // }
 
   const handleDataUpdate = (listData) => {
     if (listData.length > 0) {
@@ -589,19 +614,18 @@ const Profile = () => {
     { label: "사진", type: "photos" },
     { label: "동영상", type: "videos" },
   ];
-
   return (
-    <>
+    <div>
       {followModal ? (
         <FollowModal open={true} close={onfollow} profile={profile} />
       ) : (
         <FollowModal open={false} close={onfollow} profile={profile} />
       )}
-      {/* {linkmodal ? (
+      {linkmodal ? (
         <LinkPluse open={true} close={onLinkPlus} />
       ) : (
         <LinkPluse open={false} close={onLinkPlus} />
-      )} */}
+      )}
       {editmodal ? (
         <ProfileEdit
           open={true}
@@ -707,7 +731,7 @@ const Profile = () => {
           </PostlistWrapper>
         </BoederWrapper>
       </Wrapper>
-    </>
+    </div>
   );
 };
 

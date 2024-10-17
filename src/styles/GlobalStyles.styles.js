@@ -25,6 +25,7 @@ export const lightTheme = {
   searchButton: "#e9e9e9",
   buttonbackground: "#fff",
   buttonText: "#000",
+  comentBouttomLine: "#cccccc66",
   navIconColor: undefined,
   activityBG: "linear-gradient(145deg, #ffffff, #e6e6e6)",
   activitySH:
@@ -38,6 +39,8 @@ export const lightTheme = {
   btnbottom: "1px solid rgba(204, 204, 204, 0.4)",
   // 다은 새로 추가(설정부분)
   activeBorder: "#181818",
+  modalfont: "#999999",
+  modalhoverbg: "#f6f6f6",
 };
 
 export const darkTheme = {
@@ -64,6 +67,7 @@ export const darkTheme = {
   navIconColor: undefined,
   buttonbackground: "#000",
   buttonText: "#fff",
+  comentBouttomLine: "#2d2d2d",
   activityBG: "linear-gradient(145deg, #333, #444)",
   activitySH:
     "5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(0, 0, 0, 0.2)",
@@ -75,9 +79,10 @@ export const darkTheme = {
   readBG: "linear-gradient(145deg, #555, #666)",
   readTextColor: "#bbb",
   btnbottom: "1px solid #fff",
-    // 다은 새로 추가(설정부분)
-    activeBorder: "#fff",
-    modalfont: "#999999",
+  // 다은 새로 추가(설정부분)
+  activeBorder: "#fff",
+  modalfont: "#999999",
+  modalhoverbg: "#f6f6f6",
 };
 
 const GlobalStyles = createGlobalStyle`

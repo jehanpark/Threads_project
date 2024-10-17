@@ -1,46 +1,36 @@
 import styled from "styled-components";
 import { UserIcon2 } from "../Common/Icon";
-
 const FollowerContain = styled.div`
-  width: 640px;
+  position: relative;
+  width: 590px;
+  max-width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   padding: 20px;
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
-
   cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-3px);
-  }
 
   @media (max-width: 768px) {
     width: 100%;
-    padding: 15px 10px;
   }
-
   @media (max-width: 480px) {
-    padding: 10px 15px;
+    width: 100%;
+    padding: 10px 10px;
   }
 `;
-
 const Wrapper = styled.div`
   display: flex;
   gap: 20px;
   align-items: center;
-
   @media (max-width: 768px) {
     gap: 15px;
   }
-
   @media (max-width: 480px) {
     gap: 10px;
   }
 `;
-
 const UserWrapper = styled.div`
   width: 50px;
   height: 50px;
@@ -51,54 +41,45 @@ const UserWrapper = styled.div`
   background: ${(props) => props.theme.ImgBG};
   box-shadow: ${(props) => props.theme.ImgSH};
   overflow: hidden;
-
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-
   path {
     fill: ${(props) => props.theme.searchColor};
   }
 `;
-
 const UserContex = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 7px;
 `;
-
 const UserName = styled.p`
   font-size: 14px;
   font-weight: 700;
   color: ${(props) =>
     props.isRead ? props.theme.readTextColor : props.theme.buttonText};
   margin: 0;
-
   @media (max-width: 768px) {
     font-size: 10px;
   }
-
   @media (max-width: 480px) {
     font-size: 10px;
   }
 `;
-
 const UserInfo = styled.p`
   font-size: 12px;
   color: ${(props) =>
     props.isRead ? props.theme.readTextColor : props.theme.followerfont};
   margin: 0;
-
   @media (max-width: 768px) {
     font-size: 10px;
     word-wrap: break-word;
     word-break: break-all;
     white-space: normal;
   }
-
   @media (max-width: 480px) {
     font-size: 10px;
     word-wrap: break-word;
@@ -106,20 +87,16 @@ const UserInfo = styled.p`
     white-space: normal;
   }
 `;
-
 const UserFollowerNum = styled.p`
   font-size: 12px;
   color: ${(props) => props.theme.fontcolor};
-
   @media (max-width: 768px) {
     font-size: 11px;
   }
-
   @media (max-width: 480px) {
     font-size: 10px;
   }
 `;
-
 const FollowerButton = styled.button`
   flex: 0 0 auto;
   width: 110px;
@@ -127,31 +104,25 @@ const FollowerButton = styled.button`
   padding: 10px 20px;
   background: ${(props) => (props.isFollowing ? "#000" : "#fff")};
   color: ${(props) => (props.isFollowing ? "#fff" : "#000")};
-
   border: 1px solid ${(props) => props.theme.searchButton};
   font-weight: 700;
   cursor: pointer;
-
   transition: background-color 0.3s ease, color 0.3s ease;
-
   &:hover {
-    background-color: ${(props) => (props.isFollowing ? "#333" : "#f0f0f0")};
+    background-color: ${(props) => (props.isFollowing ? "#333" : "#F0F0F0")};
     color: ${(props) => (props.isFollowing ? "#fff" : "#000")};
   }
-
   @media (max-width: 768px) {
     width: 90px;
     padding: 8px 15px;
   }
-
   @media (max-width: 480px) {
     width: 80px;
     padding: 6px 10px;
   }
 `;
-
 const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
-  const { ProfileImg, email, bio, followNum, isFollowing } = follower;
+  const { ProfileImg, userEmail, bio, followNum, isFollowing } = follower;
 
   return (
     <FollowerContain onClick={onProfileClick}>
@@ -164,9 +135,9 @@ const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
           )}
         </UserWrapper>
         <UserContex>
-          <UserName>{email || "daljag@gmail.com"}</UserName>
+          <UserName>{userEmail || "zang@ezen.com"}</UserName>
           <UserInfo>{bio || "노래하는 고양이"}</UserInfo>
-          <UserFollowerNum>{`팔로워 ${followNum || 7}명`}</UserFollowerNum>
+          <UserFollowerNum>{`팔로워 ${followNum}명`}</UserFollowerNum>
         </UserContex>
       </Wrapper>
       <FollowerButton
@@ -182,5 +153,4 @@ const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
     </FollowerContain>
   );
 };
-
 export default FollowerItem;

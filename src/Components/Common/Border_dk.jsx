@@ -92,7 +92,10 @@ import React from "react";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import LogoImg from "../../images/insta.png";
-import RightArrow from "../../images/rightarrow.svg";
+// import RightArrow from "../../images/arrowiconnew.svg";
+import RightArrow from "../../images/doublearrowright.svg";
+// import { RightNewArrowIcon } from "../Common/Icon";
+import InstaImg from "../Login/RecycleStyles/instagram.png";
 
 const BorderItem = styled.div`
   ${({ type }) =>
@@ -154,7 +157,7 @@ const BorderTextItem = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  gap: 35px;
+  gap: 25px;
 
   /* 텍스트 색상 수정 부분 */
   color: ${({ type, theme }) =>
@@ -162,13 +165,23 @@ const BorderTextItem = styled.div`
 `;
 
 const ArrowImage = styled.img`
-  width: 16px; /* 화살표 이미지 크기 설정 */
-  height: 16px;
+  width: 26px;
+  height: 26px;
+  transition: transform 0.3s ease; /* 애니메이션 설정 */
+  overflow: hidden;
+  &:hover {
+    transform: translateX(8px); /* 호버 시 오른쪽으로 이동 */
+  }
 `;
 
 // 이미지 스타일 컴포넌트 추가
 const LogoImage = styled.img`
-  width: 40px; /* 원하는 크기로 이미지 조정 */
+  width: 30px; /* 원하는 크기로 이미지 조정 */
+  height: 30px;
+`;
+
+const Img = styled.img`
+  width: 40px;
   height: 40px;
 `;
 
@@ -177,8 +190,15 @@ const BorderDk = ({ type, text }) => {
   return (
     <BorderItem type={type} $isSmallScreen={isSmallScreen}>
       <BorderTextItem type={type}>
-        <LogoImage src={LogoImg} alt="Instagram Logo" />
+        {/* <LogoImage src={LogoImg} alt="Instagram Logo" /> */}
+        <Img
+          // src={InstaImg}
+          src={LogoImg}
+          alt="Instagram Icon"
+          className="xz74otr x1vqgdyp x100vrsf"
+        />
         {text}
+
         <ArrowImage src={RightArrow} alt="Right Arrow" />
       </BorderTextItem>
     </BorderItem>

@@ -114,14 +114,15 @@ const TextArea = styled.textarea`
 `;
 
 const Icons = styled.div`
+  border-top: 1px solid rgba(204, 204, 204, 0.4);
   display: flex;
   align-items: center;
-  margin: 20px 0;
-  margin-left: 20px;
+  padding-top: 20px;
+  padding-left: 20px;
   gap: 20px;
   @media (max-width: 768px) {
     margin: 0;
-    margin-left: 20px;
+    margin-left: 0px;
   }
 `;
 
@@ -150,6 +151,7 @@ const Buttons = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     gap: 10px;
+    margin: 0;
   }
 `;
 
@@ -164,16 +166,17 @@ const DeleteButton = styled.button`
   cursor: pointer;
 `;
 const OpenButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 300px;
-  height: 80px;
+  height: 60px;
   background: #d6d6d6;
-  border: none;
+  border-radius: 16px;
   color: #000;
   font-size: 15px;
-  text-align: center;
-  line-height: 5.5;
   font-weight: bold;
-  border-radius: 30px;
+  border-radius: 16px;
   transition: all 0.3s;
   &:hover {
     background: #eaeaea;
@@ -185,12 +188,12 @@ const OpenButton = styled.div`
 `;
 const SubmitBtn = styled.input`
   width: 300px;
-  height: 80px;
+  height: 60px;
   background: #1c1c1c;
   color: #fff;
   font-size: 15px;
   font-weight: bold;
-  border-radius: 30px;
+  border-radius: 16px;
   transition: all 0.3s;
   &:hover {
     background: #fff;
@@ -198,6 +201,7 @@ const SubmitBtn = styled.input`
   }
   @media (max-width: 768px) {
     width: 100%;
+    height: 60px;
   }
 `;
 
@@ -208,18 +212,27 @@ const IconBtn = styled.div`
   cursor: pointer;
 `;
 
+const CharacterCount = styled.div`
+  text-align: right;
+  font-weight: 500;
+  font-size: 12px;
+  ${(props) => props.theme.fontcolor};
+  opacity: 0.6;
+  margin-right: 10px;
+  margin-bottom: 10px;
+`;
+
 const PostForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState("");
+  const [charCount, setCharCount] = useState(0); // 글자 수 상태 추가
   const [files, setFiles] = useState([]);
   const [opendForm, setOpenForm] = useState(false);
   const [selectedText, setSelectedText] = useState("팔로워에게만 허용");
-
   const [audioBlob, setAudioBlob] = useState(null); // 녹음 파일 상태
   const [isRecording, setIsRecording] = useState(false); // 녹음 중 상태
   const mediaRecorderRef = useRef(null); // MediaRecorder 참조
   const [audioURL, setAudioURL] = useState(null); // 녹음 파일 미리보기 URL 상태
-
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
   const navigate = useNavigate();
 
@@ -404,19 +417,33 @@ const PostForm = () => {
   const handleSelect = (text) => {
     setSelectedText(text);
   };
+
+  const handleContentChange = (e) => {
+    const content = e.target.value;
+    setPost(content); // 입력된 내용을 업데이트
+    setCharCount(content.length); // 글자 수 업데이트
+  };
   return (
     <Wrapper>
       <BoederWrapper>
         <Form onSubmit={handleSubmit}>
           {isLoading ? <Loading /> : null}
           <TextArea
-            onChange={handlePostChange}
+            onChange={handleContentChange} // 또는 handleContentChange로 변경
             value={post}
             name="contents"
             id="contents"
             placeholder="내용을 작성하세요.."
             required
           />
+
+          {/* 글자 수 표시 */}
+          <CharacterCount
+            style={{ textAlign: "right", marginRight: "20px", color: "#999" }}
+          >
+            {charCount}자 입력중..
+          </CharacterCount>
+
           <PlusImage>
             {files.map((file, index) => (
               <div key={index} style={{ position: "relative", margin: "5px" }}>
@@ -448,9 +475,9 @@ const PostForm = () => {
                     controls
                     src={URL.createObjectURL(file)}
                     style={{
-                      width: "140px", // 오디오 컨트롤러의 너비를 이미지/비디오와 맞춤
-                      height: "40px", // 오디오 컨트롤러의 높이 설정
-                      borderRadius: "10px", // 일관성을 위해 오디오에도 경계 반경 적용
+                      width: "140px",
+                      height: "40px",
+                      borderRadius: "10px",
                       objectFit: "contain",
                     }}
                   >
@@ -461,6 +488,7 @@ const PostForm = () => {
               </div>
             ))}
           </PlusImage>
+
           <Icons>
             <CameraButton htmlFor="camera">
               <CameraIcon width={36} />
@@ -480,8 +508,8 @@ const PostForm = () => {
                 accept="video/*, image/*"
               />
             </PictureButton>
-            {/* 녹음 기능 */}
 
+            {/* 녹음 기능 */}
             {!isRecording ? (
               <IconBtn onClick={startRecording}>
                 <MicIcon width={24} />
@@ -493,16 +521,18 @@ const PostForm = () => {
             )}
             <HashtagIcon width={24} />
           </Icons>
+
           <Buttons>
             <OpenButton onClick={openFormModal}>{selectedText}</OpenButton>
             <SubmitBtn
               text="스레드 업로드"
               type="submit"
-              value={isLoading ? "Posting..." : "Post"}
+              value={isLoading ? "게시중..." : "스레드 업로드"}
             />
           </Buttons>
         </Form>
       </BoederWrapper>
+
       {opendForm && (
         <PostForm_Modal onClose={closeFormModal} onSelect={handleSelect} />
       )}

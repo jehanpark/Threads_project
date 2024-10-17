@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 // 스타일 정의
-// 스타일 정의
-const Overlay = styled.div`
+export const Overlay = styled.div`
   position: fixed; // 모달을 화면에 고정
   top: 45%; // 세로 중앙 정렬 기준
   left: 50%; // 가로 중앙 정렬 기준
@@ -18,7 +17,7 @@ const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.7); // 반투명 배경 (필요 시 조정)
 `;
 
-const ModalContainer = styled.div`
+export const ModalContainer = styled.div`
   width: 420px;
   height: 320px;
   background-color: ${(props) => props.theme.borderColor};
@@ -27,7 +26,7 @@ const ModalContainer = styled.div`
   padding: 24px;
 `;
 
-const Title = styled.h2`
+export const Title = styled.h2`
   margin-bottom: 16px;
   display: flex;
   justify-content: center;
@@ -35,51 +34,44 @@ const Title = styled.h2`
   font-weight: 500;
 `;
 
-const Info = styled.div`
+export const Info = styled.div`
   color: ${(props) => props.theme.modalfont};
   font-size: 12px;
   font-weight: normal;
-  background: #f5f5f5;
+  background: ${(props) => props.theme.borderstroke};
   border-radius: 8px;
   line-height: 20px;
   padding: 12px;
 `;
 
-const OptionList = styled.ul`
+export const OptionList = styled.ul`
   list-style-type: none;
   padding-top: 12px;
 `;
 
-const OptionItem = styled.li`
+export const OptionItem = styled.li`
   cursor: pointer;
   padding: 8px 10px;
   display: flex;
   align-items: center;
+  justify-content: space-between; // 추가: 양쪽 끝으로 정렬
   font-size: 14px;
   position: relative; /* Positioning for the ::after element */
   color: ${(props) => props.theme.fontcolor};
+  background-color: transparent; /* 초기 배경색 설정 */
+  border-radius: 8px;
 
-  // ::after 가상 요소로 보더 생성
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: 0; /* Bottom 위치 */
-    left: -50%; /* 가운데에서 시작 */
-    width: 100%; /* 가로 길이 */
-    height: 2px; /* 보더 두께 */
-    background-color: ${(props) => props.theme.mouseHoverBg}; /* 보더 색상 */
-    transform: translateX(-0%) scaleX(0); /* 가운데서 시작하며 초기 상태에서 보더가 보이지 않음 */
-    transition: transform 0.5s ease; /* 슬라이드 애니메이션 */
-  }
-
-  // 호버 시 효과
-  &:hover::after {
-    transform: translateX(50%) scaleX(0.96); /* 호버 시 보더가 오른쪽으로 확장됨 */
+  // 호버 시 배경색 변경
+  &:hover {
+    color: #181818;
+    background-color: ${(props) =>
+      props.theme.modalhoverbg}; /* 호버 시 백그라운드 색상 */
+    transition: background-color 0.3s ease; /* 배경색 변화 애니메이션 */
   }
 `;
 
 // 체크박스 스타일 컴포넌트 추가
-const Checkbox = styled.input`
+export const Checkbox = styled.input`
   width: 20px;
   height: 20px;
   appearance: none;
@@ -117,7 +109,8 @@ const MentionModal = ({ onClose, onSelectOption }) => {
   const handleOptionClick = (option) => {
     setActiveOption(option);
     setIsOptionSelected(true);
-    onSelectOption(option);
+    onSelectOption(option); // 부모 컴포넌트에 선택된 옵션 전달
+    onClose(); // 모달 닫기
   };
 
   // 모달 외부 클릭 시 닫히는 함수
@@ -146,12 +139,12 @@ const MentionModal = ({ onClose, onSelectOption }) => {
                 onClick={() => handleOptionClick(option)}
               >
                 {/* 체크박스 추가 */}
+                {option}
                 <Checkbox
                   type="radio" // 라디오 버튼으로 설정
                   checked={activeOption === option} // 현재 선택된 옵션과 비교하여 체크 상태 설정
                   readOnly // 사용자가 직접 체크할 수 없도록 설정
                 />
-                {option}
               </OptionItem>
             )
           )}

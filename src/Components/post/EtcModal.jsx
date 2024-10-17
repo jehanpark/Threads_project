@@ -7,17 +7,27 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const AllWrapp = styled.div`
   /* position: relative;  */
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-content: center;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   z-index: 900;
+  @media (max-width: 768px) {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+  }
 `;
 
 const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
@@ -25,6 +35,13 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 999;
+  @media (max-width: 768px) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+  }
 `;
 
 const ModalWrapper = styled.div`
@@ -173,6 +190,16 @@ const DeleteButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
 `;
+const CharacterCount = styled.div`
+  text-align: right;
+  font-weight: 500;
+  font-size: 12px;
+  ${(props) => props.theme.fontcolor};
+  opacity: 0.6;
+  margin-right: 10px;
+  margin-bottom: 10px;
+`;
+
 const EtcModal = ({
   onSave,
   post,
@@ -205,7 +232,7 @@ const EtcModal = ({
         photos: newFileUrls.length > 0 ? newFileUrls : photos, // 새로운 사진이 있으면 업데이트
       });
 
-      onSave(newContent); // 부모 컴포넌트로 수정된 내용을 전달
+      onSave(newContent);
       setIsEtcModalOpen(false); // 모달 닫기
     } catch (error) {
       console.error("Error updating post:", error);
@@ -224,16 +251,29 @@ const EtcModal = ({
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
+  const [charCount, setCharCount] = useState(post.length || 0); // 글자 수 상태 관리
+  const handleContentChange = (e) => {
+    const content = e.target.value;
+    setNewContent(content);
+    setCharCount(content.length); // 글자 수 업데이트
+  };
+
   return (
     <AllWrapp>
       {/* 어두운 배경을 클릭하면 모달이 닫히도록 설정 */}
-      <ModalOverlay onClick={() => setIsEtcModalOpen(false)}>
+      <ModalOverlay>
         {/* ModalWrapper는 ModalOverlay 안에 위치하여 화면 중앙에 배치됩니다 */}
         <ModalWrapper onClick={(e) => e.stopPropagation()}>
           <TextAreaWrapper>
+            <CharacterCount>{charCount}자 입력중..</CharacterCount>{" "}
+            {/* 글자 수 표시 */}
             <TextArea
-              value={newContent}
-              onChange={(e) => setNewContent(e.target.value)}
+              value={newContent || ""} // newContent가 undefined일 때 빈 문자열로 처리
+              onChange={(e) => {
+                const content = e.target.value;
+                setNewContent(content); // 입력된 내용을 업데이트
+                setCharCount(content.length); // 글자 수 업데이트
+              }}
               placeholder="내용을 입력하세요 ..."
             />
           </TextAreaWrapper>
