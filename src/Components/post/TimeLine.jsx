@@ -9,8 +9,9 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { db } from "../../firebase";
 import Post from "../Post";
+import Post2 from "../Post2";
 
-const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
+const TimeLine = ({ searchTerm, contentType, onDataEmpty, postNum }) => {
   const [posts, setPosts] = useState([]);
   const [isBouncing, setIsBouncing] = useState(false);
   const wrapperRef = useRef(null);
@@ -28,7 +29,9 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
           id: doc.id,
           ...doc.data(),
         }));
+
         let filteredPosts = livePosts;
+
         // 검색어 필터링
         if (searchTerm && searchTerm.trim() !== "") {
           const searchLower = searchTerm.toLowerCase();
@@ -74,6 +77,7 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
       if (unsubscribe) unsubscribe();
     };
   }, [searchTerm, contentType]);
+
   const handleScroll = () => {
     const element = wrapperRef.current;
     if (element.scrollTop === 0) {
@@ -83,6 +87,7 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
       }, 500);
     }
   };
+
   return (
     <>
       <div
@@ -94,7 +99,6 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty }) => {
           <Post key={post.id} {...post} />
         ))}
       </div>
-      
     </>
   );
 };

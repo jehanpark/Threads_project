@@ -220,23 +220,20 @@ const PostForm = () => {
   const mediaRecorderRef = useRef(null); // MediaRecorder 참조
   const [audioURL, setAudioURL] = useState(null); // 녹음 파일 미리보기 URL 상태
 
-  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
-  const navigate = useNavigate();
-
   const generateCustomId = () => {
     const timestamp = Date.now().toString();
     const randomNum = Math.floor(Math.random() * 1000000).toString();
     return timestamp + randomNum; // 두 값을 조합하여 고유 식별자 생성
   };
 
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (!currentUser) {
-      const confirmLogin = window.confirm("로그인 하시겠습니까?");
-      if (confirmLogin) {
-        navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
-      } else {
-        navigate("/");
-      }
+      navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+    } else {
+      // navigate("/"); // "예"를 누르면 로그인 페이지로 이동
     }
   }, [currentUser, navigate]);
 
@@ -389,7 +386,6 @@ const PostForm = () => {
       setAudioBlob(null);
       navigate("/");
     } catch (error) {
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -498,7 +494,7 @@ const PostForm = () => {
             <SubmitBtn
               text="스레드 업로드"
               type="submit"
-              value={isLoading ? "Posting..." : "Post"}
+              value={isLoading ? "Posㅋting..." : "Post"}
             />
           </Buttons>
         </Form>

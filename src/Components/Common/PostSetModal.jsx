@@ -1,7 +1,7 @@
 import React from "react";
 import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
-import { color } from "framer-motion";
+
 const ContentsAll = styled.div`
   @media (max-width: 768px) {
   }
@@ -32,6 +32,7 @@ const Wrapper = styled.div`
     border-radius: 30px 30px 0 0;
   }
 `;
+
 const Contentswrapper = styled.div`
   @media (max-width: 768px) {
     bottom: 0;
@@ -67,6 +68,9 @@ const Optionwrapper = styled.div`
   }
 `;
 const Li = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 18px;
   width: 100%;
   text-align: center;
@@ -86,7 +90,8 @@ const Li = styled.div`
     color: #0396f6;
   }
   @media (max-width: 768px) {
-    width: 90%;
+    width: 80%;
+    height: 40px;
     padding: 18px;
     text-align: center;
     font-weight: bold;
@@ -103,7 +108,7 @@ const UpLoadButton = styled.button`
     justify-content: center;
     align-items: center;
     margin-bottom: 40px;
-    width: 300px;
+    width: 80%;
     height: 70px;
     background: ${(props) => props.theme.fontcolor};
     color: ${(props) => props.theme.borderColor};
@@ -113,8 +118,8 @@ const UpLoadButton = styled.button`
     border: none;
     transition: all 0.3s;
     &:hover {
-      background: #fff;
-      color: #1c1c1c;
+      background: ${(props) => props.theme.mouseHoverBg};
+      color: ${(props) => props.theme.mouseHoverFontcolor};
     }
   }
 `;
@@ -137,7 +142,9 @@ const PostSetModal = ({
           <TopRec></TopRec>
           <Optionwrapper>
             {isAuthor && <Li onClick={onDelete}>삭제</Li>}
-            <Li onClick={() => alert("신고하기 기능은 구현되지 않았습니다.")}>
+            <Li
+              onClick={() => alert("신고하기 기능은 구현되지 않았습니다.ㅎㅎ")}
+            >
               신고하기
             </Li>
             {isAuthor && <Li onClick={onEdit}>수정</Li>}

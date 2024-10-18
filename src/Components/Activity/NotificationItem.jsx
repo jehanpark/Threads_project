@@ -8,7 +8,7 @@ const Contain = styled.div``;
 
 const NotificationContain = styled(motion.div)`
   position: relative;
-  width: 590px;
+  width: 680px;
   max-width: 100%;
   display: flex;
   justify-content: space-between;
@@ -63,7 +63,6 @@ const DeleteLabel = styled(motion.p)`
 const Wrapper = styled.div`
   color: ${(props) =>
     props.isRead ? props.theme.borderstroke : props.theme.fontcolor};
-
   display: flex;
   gap: 20px;
   align-items: center;
@@ -84,8 +83,7 @@ const UserWrapper = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  background: ${(props) => props.theme.ImgBG};
-  box-shadow: ${(props) => props.theme.ImgSH};
+
   overflow: hidden;
 
   img {
@@ -106,48 +104,6 @@ const UserContex = styled.div`
   gap: 5px;
 `;
 
-const User = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 5px;
-`;
-
-const UserName = styled.p`
-  font-size: 14px;
-  font-weight: 700;
-  margin: 0;
-
-  @media (max-width: 768px) {
-    font-size: 10px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 10px;
-  }
-`;
-
-const UserInfo = styled.p`
-  font-size: 14px;
-
-  margin: 0;
-
-  @media (max-width: 768px) {
-    font-size: 10px;
-    word-wrap: break-word;
-    word-break: break-all;
-    white-space: normal;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 10px;
-    word-wrap: break-word;
-    word-break: break-all;
-    white-space: normal;
-  }
-`;
-
 const UserDate = styled.p`
   font-size: 12px;
 
@@ -160,8 +116,17 @@ const UserDate = styled.p`
   }
 `;
 
+const User = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+`;
+
 const NotificationItem = ({
-  profileImg,
+  img,
   username,
   createdAt,
   onClick,
@@ -170,16 +135,15 @@ const NotificationItem = ({
   type,
   onDelete,
 }) => {
-  //날짜 포맷 함수
+  // 날짜 포맷 함수
+  console.log(img);
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
     return formatDistanceToNow(date, { addSuffix: true });
   };
 
-  useEffect(() => {
-    console.log("읽음 상태 변경:", isRead);
-  }, [isRead]);
+  useEffect(() => {}, [isRead]);
 
   // 삭제 관련 상태 및 애니메이션 처리
   const [isDeleteShow, setIsDeleteShow] = useState(false);
@@ -213,51 +177,49 @@ const NotificationItem = ({
   };
 
   return (
-    <Contain>
-      <NotificationContain
-        drag="x"
-        dragElastic={0.5}
-        dragMomentum={false}
-        dragConstraints={{ left: DELETE_THRESHOLD, right: 0 }} // 드래그 제한 범위 설정
-        style={{ x: itemX }}
-        onDragEnd={handleDelete} // 드래그 종료 시 삭제 처리
-        ref={animateRef}
+    <NotificationContain
+      drag="x"
+      dragElastic={0.5}
+      dragMomentum={false}
+      dragConstraints={{ left: DELETE_THRESHOLD, right: 0 }} // 드래그 제한 범위 설정
+      style={{ x: itemX }}
+      onDragEnd={handleDelete} // 드래그 종료 시 삭제 처리
+      ref={animateRef}
+    >
+      <Wrapper onClick={handleClick} isRead={isRead}>
+        <UserWrapper>
+          {img ? (
+            <img src={img} alt="User profile" />
+          ) : (
+            <UserIcon2 width={50} />
+          )}
+        </UserWrapper>
+        <UserContex>
+          <User>
+            {type === "friend" && "친한친구 "}
+            {username}
+            {message}
+          </User>
+          <UserDate>{renderTimeAgo()}</UserDate>
+          {isRead && <UserDate>읽음</UserDate>}
+        </UserContex>
+      </Wrapper>
+      <DeleteButton
+        initial="disappear"
+        animate={deleteAnimateState}
+        variants={{ appear: { opacity: 1 }, disappear: { opacity: 0 } }}
+        onClick={handleDelete} // 삭제 버튼 클릭 시 삭제
       >
-        <Wrapper onClick={handleClick} isRead={isRead}>
-          <UserWrapper>
-            {profileImg ? (
-              <img src={profileImg} alt="User profile" />
-            ) : (
-              <UserIcon2 width={50} />
-            )}
-          </UserWrapper>
-          <UserContex>
-            <User>
-              {type === "friend" && <UserInfo>친한친구</UserInfo>}
-              <UserName>{username}</UserName>
-              <UserInfo>{message}</UserInfo>
-            </User>
-            <UserDate>{renderTimeAgo()}</UserDate>
-            {isRead && <UserDate>읽음</UserDate>}
-          </UserContex>
-        </Wrapper>
-        <DeleteButton
-          initial="disappear"
-          animate={deleteAnimateState}
-          variants={{ appear: { opacity: 1 }, disappear: { opacity: 0 } }}
-          onClick={handleDelete} // 삭제 버튼 클릭 시 삭제
+        <DeleteLabel
+          variants={{
+            appear: { scale: 1 },
+            disappear: { scale: 0 },
+          }}
         >
-          <DeleteLabel
-            variants={{
-              appear: { scale: 1 },
-              disappear: { scale: 0 },
-            }}
-          >
-            삭제
-          </DeleteLabel>
-        </DeleteButton>
-      </NotificationContain>
-    </Contain>
+          삭제
+        </DeleteLabel>
+      </DeleteButton>
+    </NotificationContain>
   );
 };
 

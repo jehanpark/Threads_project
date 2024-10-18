@@ -6,6 +6,13 @@ import BorderItem from "../Components/Common/Border_de";
 import { ShareIconNew } from "../Components/Common/Icon";
 import Toggle from "./Common/Toggle";
 import MentionModal from "./Common/MentionModal";
+import HiddenWordModal from "./Common/HiddenWordModal";
+import OnlineStatusModal from "./Common/OnlineStatusModal";
+import AccountSettingModal from "./Common/AccountSettingModal";
+import DeactivateModal from "./Common/DeactivateModal";
+import { auth } from "../firebase";
+import { useAuth } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 import {
   LockIcon,
@@ -22,18 +29,27 @@ import {
   FamilyIcon,
   SecurityIcon,
   AccountStatusIcon,
+  OnlineStatusIcon,
 } from "../Components/Common/Icon";
 
 // import { Line } from "../Components/Login/Insiteitem_de";
 
 const Wrapper = styled.div`
+  width: ${(props) =>
+    props.isSmallScreen ? "100%" : props.isTablet ? "100%" : "620px"};
+  padding: ${(props) =>
+    props.isSmallScreen ? "0" : props.isTablet ? "0 40px" : "0"};
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 768px) {
+    padding: 20px 0;
+  }
 `;
 
 const SettingsInner = styled.div`
-  width: 558.67px; // 수정!
+  width: ${(props) =>
+    props.isSmallScreen ? "100%" : props.isTablet ? "100%" : "620px"}; // 수정!
   height: 100%;
   padding: 20px 0;
   background: ${(props) => props.theme.borderColor};
@@ -180,9 +196,8 @@ const AccountContents = styled.div`
   text-align: center;
   width: 100%;
   gap: 20px;
-  @media (max-width: 768px) {
-    width: 360px;
-  }
+  width: ${(props) =>
+    props.isSmallScreen ? "330px" : props.isTablet ? "100%" : "100%"};
 `;
 const AccountTitle = styled.span`
   font-size: 14px;
@@ -203,14 +218,15 @@ const HelpTitle = styled.span`
 
 // 아이콘 정렬
 
-const ContentAutoLayout = styled.div`
+export const ContentAutoLayout = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  @media (max-width: 768px) {
-    padding-right: 28px;
-  }
+  padding-right: ${(props) =>
+    props.isSmallScreen ? "0" : props.isTablet ? "0" : "28px"};
+  gap: ${(props) =>
+    props.isSmallScreen ? "20px" : props.isTablet ? "0" : "0"};
 `;
 const Icon = styled.div`
   height: 20px;
@@ -263,7 +279,7 @@ const IconRadius = styled.div`
 `;
 
 // 줄
-const Line = styled.hr`
+export const Line = styled.hr`
   width: 98%;
   display: flex;
   justify-content: start;
@@ -297,13 +313,20 @@ const SelectedText = styled.span`
   color: ${(props) => props.theme.modalfont};
 `;
 
-const SelectLayout = styled.div`
+export const SelectLayout = styled.div`
   display: flex;
   gap: 14px;
 `;
 
+const SelectDirection = styled.div`
+  display: flex;
+  flex-direction: ${({ isMobile }) =>
+    isMobile ? "column" : "row"}; /* 'none'에서 'row'로 변경 */
+  gap: ${({ isMobile }) => (isMobile ? "6px" : "6px")};
+`;
+
 // 아이콘 눌렀을 때 링크로 이동
-const IconLink = styled.a`
+export const IconLink = styled.a`
   height: 20px;
   text-align: end;
   /* padding-right: 10px; */
@@ -311,6 +334,9 @@ const IconLink = styled.a`
 
 const SettingsItem_de = () => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+  const isTablet = useMediaQuery({
+    query: "(min-width: 769px) and (max-width: 1024px)",
+  });
   const [activeTab, setActiveTab] = useState("privacy");
   const [borderPosition, setBorderPosition] = useState({ left: 0, width: 0 });
 
@@ -323,14 +349,105 @@ const SettingsItem_de = () => {
       setBorderPosition({ left: offsetLeft, width: offsetWidth }); // border 위치 및 너비 업데이트
     }
   };
-  // 모달 창 구현
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOption, setSelectedOption] =
-    useState("내가 팔로우하는 프로필");
+  // 언급 모달 (MentionModal)
+  // 언급 모달 상태
+  const [isMentionModalOpen, setMentionModalOpen] = useState(false);
+  const openMentionModal = () => {
+    setMentionModalOpen(true);
+    setHiddenWordModalOpen(false);
+  };
+  const [selectedOption, setSelectedOption] = useState("모든 사람"); // selectedOption 상태 추가
 
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
-  const handleSelectOption = (option) => setSelectedOption(option);
+  // 숨겨진 단어 모달 상태
+  const [isHiddenWordModalOpen, setHiddenWordModalOpen] = useState(false);
+  const [selectedOption1, setSelectedOption1] = useState("가려진 섹션 설정");
+  const [selectedOption2, setSelectedOption2] = useState("맞춤 단어 설정");
+  const [isOption1Selected, setIsOption1Selected] = useState(false);
+  const [isOption2Selected, setIsOption2Selected] = useState(false);
+
+  const openHiddenWordModal = () => {
+    setHiddenWordModalOpen(true);
+    // 모달 열 때 선택 상태 초기화
+    setIsOption1Selected(false);
+    setIsOption2Selected(false);
+  };
+
+  const closeHiddenWordModal = () => {
+    // 두 옵션이 모두 선택된 경우에만 모달 닫기
+    if (isOption1Selected && isOption2Selected) {
+      setHiddenWordModalOpen(false);
+    }
+  };
+
+  const handleSelectOption = (option) => {
+    // 선택된 옵션에 따라 상태 업데이트
+    if (option === "가려진 섹션 설정" || option === "가려진 섹션 해제") {
+      setSelectedOption1(option);
+      setIsOption1Selected(true); // 첫 번째 옵션 선택됨
+    } else {
+      setSelectedOption2(option);
+      setIsOption2Selected(true); // 두 번째 옵션 선택됨
+    }
+
+    // 두 옵션이 모두 선택된 경우 모달 닫기
+    closeHiddenWordModal(); // 선택 후 항상 닫기 함수 호출
+  };
+
+  const closeModals = () => {
+    setMentionModalOpen(false);
+    setHiddenWordModalOpen(false); // 숨겨진 단어 모달도 닫기
+  };
+
+  // 온라인 상태 모달
+  const [isOnlineStatusModalOpen, setOnlineStatusModalOpen] = useState(false);
+  const [selectedOption3, setSelectedOption3] = useState("모든 사람");
+
+  const openOnlineStatusModal = () => {
+    setOnlineStatusModalOpen(true);
+  };
+
+  const closeOnlineStatusModal = () => {
+    setOnlineStatusModalOpen(false);
+  };
+
+  const handleSelectOption3 = (option) => {
+    setSelectedOption3(option);
+  };
+
+  // 웹사이트 권한 모달
+  const [isAccountSettingModalOpen, setAccountSettingModalOpen] =
+    useState(false);
+
+  const openAccountSettingModal = () => {
+    setAccountSettingModalOpen(true);
+  };
+
+  const closeAccountSettingModal = () => {
+    setAccountSettingModalOpen(false);
+  };
+
+  // 프로필 비활성화 모달
+  const [isDeactivateModalOpen, setDeactivateModalOpen] = useState(false);
+
+  const openDeactivateModal = () => {
+    setDeactivateModalOpen(true);
+  };
+
+  const closeDeactivateModal = () => {
+    setDeactivateModalOpen(false);
+  };
+
+  const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/login"); // "예"를 누르면 로그인 페이지로 이동
+    } else {
+      // navigate("/"); // "예"를 누르면 로그인 페이지로 이동
+    }
+  }, [currentUser, navigate]);
+
   // 모달 끝
   useEffect(() => {
     // 초기 상태에 대한 border 위치 설정
@@ -341,10 +458,12 @@ const SettingsItem_de = () => {
     }
   }, []);
   const [isDarkMode, setIsDarkMode] = useState(false); // 기본값은 라이트 모드
-
+  const isMobile = useMediaQuery({
+    query: "(max-width: 768px)", // 닫는 괄호 추가
+  });
   return (
-    <Wrapper>
-      <SettingsInner>
+    <Wrapper isSmallScreen={isSmallScreen} isTablet={isTablet}>
+      <SettingsInner isSmallScreen={isSmallScreen} isTablet={isTablet}>
         <SettingMenu>
           <SettingMove>
             <SettingTitle
@@ -394,7 +513,21 @@ const SettingsItem_de = () => {
                 <PrivacyTitle>언급</PrivacyTitle>
                 <SelectLayout>
                   <SelectedText>{selectedOption}</SelectedText>
-                  <IconStroke onClick={handleOpenModal}>
+                  <IconStroke onClick={openMentionModal}>
+                    <RightArrowIcon fill={"gray"} width={"12px"} />
+                  </IconStroke>
+                </SelectLayout>
+              </PrivacyAutoLayout>
+            </PrivacyProfile>
+            <PrivacyProfile>
+              <Icon>
+                <OnlineStatusIcon width={"20px"} fill={"black"} />
+              </Icon>
+              <PrivacyAutoLayout>
+                <PrivacyTitle>온라인 상태</PrivacyTitle>
+                <SelectLayout>
+                  <SelectedText>{selectedOption3}</SelectedText>
+                  <IconStroke onClick={openOnlineStatusModal}>
                     <RightArrowIcon fill={"gray"} width={"12px"} />
                   </IconStroke>
                 </SelectLayout>
@@ -406,9 +539,15 @@ const SettingsItem_de = () => {
               </Icon>
               <PrivacyAutoLayout>
                 <PrivacyTitle>숨겨진 단어</PrivacyTitle>
-                <IconStroke>
-                  <RightArrowIcon fill={"gray"} width={"12px"} />
-                </IconStroke>
+                <SelectLayout>
+                  <SelectDirection isMobile={isMobile}>
+                    <SelectedText>{selectedOption1}</SelectedText>
+                    <SelectedText>{selectedOption2}</SelectedText>
+                  </SelectDirection>
+                  <IconStroke onClick={openHiddenWordModal}>
+                    <RightArrowIcon fill={"gray"} width={"12px"} />
+                  </IconStroke>
+                </SelectLayout>
               </PrivacyAutoLayout>
             </PrivacyProfile>
             <Line />
@@ -469,14 +608,22 @@ const SettingsItem_de = () => {
           <OutherPrivacy isSmallScreen={isSmallScreen}>
             {/* 계정 탭의 내용 */}
             <AccountSettings>
-              <AccountContents>
+              <AccountContents
+                isSmallScreen={isSmallScreen}
+                isTablet={isTablet}
+              >
                 <PrivacyProfile>
                   <IconStroke>
                     <CloseLockIcon width={"20px"} fill={"black"} />
                   </IconStroke>
-                  <ContentAutoLayout>
+                  <ContentAutoLayout
+                    isSmallScreen={isSmallScreen}
+                    isTablet={isTablet}
+                  >
                     <AccountTitle>웹 사이트 권한</AccountTitle>
-                    <IconStroke>
+                    <IconStroke
+                      onClick={() => setAccountSettingModalOpen(true)}
+                    >
                       <RightArrowIcon fill={"gray"} width={"12px"} />
                     </IconStroke>
                   </ContentAutoLayout>
@@ -485,9 +632,12 @@ const SettingsItem_de = () => {
                   <Icon>
                     <DeleteProfileIcon width={"22px"} fill={"black"} />
                   </Icon>
-                  <ContentAutoLayout>
+                  <ContentAutoLayout
+                    isSmallScreen={isSmallScreen}
+                    isTablet={isTablet}
+                  >
                     <AccountTitle>프로필 비활성화 또는 삭제</AccountTitle>
-                    <IconStroke>
+                    <IconStroke onClick={() => setDeactivateModalOpen(true)}>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
                     </IconStroke>
                   </ContentAutoLayout>
@@ -496,7 +646,10 @@ const SettingsItem_de = () => {
                   <IconRadius>
                     <EalthIcon width={"22px"} />
                   </IconRadius>
-                  <ContentAutoLayout>
+                  <ContentAutoLayout
+                    isSmallScreen={isSmallScreen}
+                    isTablet={isTablet}
+                  >
                     <AccountTitle>페비더스 공유</AccountTitle>
                     <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
@@ -644,7 +797,10 @@ const SettingsItem_de = () => {
             <AccountSettings>
               <AccountContents>
                 <PrivacyProfile>
-                  <ContentAutoLayout>
+                  <ContentAutoLayout
+                    isSmallScreen={isSmallScreen}
+                    isTablet={isTablet}
+                  >
                     <HelpTitle>개인정보 보호 및 보안 도움말</HelpTitle>
                     <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
@@ -652,7 +808,10 @@ const SettingsItem_de = () => {
                   </ContentAutoLayout>
                 </PrivacyProfile>
                 <PrivacyProfile>
-                  <ContentAutoLayout>
+                  <ContentAutoLayout
+                    isSmallScreen={isSmallScreen}
+                    isTablet={isTablet}
+                  >
                     <HelpTitle>지원 요청</HelpTitle>
                     <IconStroke>
                       <RightArrowIcon fill={"gray"} width={"12px"} />
@@ -719,7 +878,7 @@ const SettingsItem_de = () => {
                       rel="noopener noreferrer"
                     >
                       <ShareIconNew
-                        width={"14px"}
+                        width={"18px"}
                         stroke="#999"
                         strokeWidth="2"
                       />
@@ -780,11 +939,37 @@ const SettingsItem_de = () => {
         )}
       </SettingsInner>
       {/* 모달은 PrivacyProfile 바깥에 위치 */}
-      {isModalOpen && (
+      {isMentionModalOpen && (
         <MentionModal
-          onClose={handleCloseModal}
-          onSelectOption={handleSelectOption}
+          onClose={closeModals}
+          onSelectOption={(option) => {
+            setSelectedOption(option); // 선택된 옵션 값을 상태에 설정
+            closeModals(); // 모달 닫기
+          }}
         />
+      )}
+      {isHiddenWordModalOpen && (
+        <HiddenWordModal
+          onClose={closeHiddenWordModal} // 올바른 함수 전달
+          onSelectOption={handleSelectOption}
+          selectedOption1={selectedOption1}
+          selectedOption2={selectedOption2}
+        />
+      )}
+      {isOnlineStatusModalOpen && (
+        <OnlineStatusModal
+          onClose={closeOnlineStatusModal}
+          selectedOption3={selectedOption3}
+          onSelectOption3={handleSelectOption3}
+        />
+      )}
+      {isAccountSettingModalOpen && (
+        <AccountSettingModal
+          onClose={() => setAccountSettingModalOpen(false)}
+        />
+      )}
+      {isDeactivateModalOpen && (
+        <DeactivateModal onClose={() => setDeactivateModalOpen(false)} />
       )}
     </Wrapper>
   );

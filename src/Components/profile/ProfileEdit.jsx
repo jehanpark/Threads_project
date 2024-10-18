@@ -27,23 +27,28 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 1100;
 `;
 
 const PofileModalBox = styled.div`
   width: 450px;
   height: 530px;
   border-radius: 12px;
-  background: ${(props) => props.theme.headerBg};
+  background: ${(props) => props.theme.borderColor};
   padding: 64px 11px 0 11px;
   color: ${(props) => props.theme.fontcolor};
   position: relative;
   flex-direction: column;
   @media screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
     width: 100%;
     height: 100%;
     background: ${(props) => props.theme.headerBg};
     padding: 40% 20px;
+    border-radius: 0;
   }
 `;
 
@@ -56,6 +61,9 @@ const CloseButton = styled.button`
   color: ${(props) => props.theme.fontcolor};
   font-size: 18px;
   cursor: pointer;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const Box = styled.div`
@@ -65,7 +73,7 @@ const Box = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 15px;
-  background: ${(props) => props.theme.borderColor};
+  background: ${(props) => props.theme.headerBg};
   margin-bottom: 10px;
   &.mobile {
     display: none;
@@ -105,6 +113,16 @@ const NameInput = styled.input`
   }
 `;
 
+const BioWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  p {
+    color: ${(props) => props.theme.nomalIconColor};
+    font-weight: 300;
+    font-size: 14px;
+  }
+`;
+
 const Full = styled.div`
   width: 100%;
   height: 100%;
@@ -130,7 +148,7 @@ const Switch = styled(motion.label)`
   padding: 3px;
   border: 2px solid ${(props) => props.theme.borderstroke};
   cursor: pointer;
-  &[data-isOn="true"] {
+  &[data-ison="true"] {
     justify-content: flex-end;
     background-color: ${(props) => props.theme.searchBar};
   }
@@ -170,8 +188,34 @@ const ImgInput = styled.input`
 const ButtonWrap = styled.div`
   button {
     color: ${(props) => props.theme.fontcolor};
-    background-color: ${(props) => props.theme.borderColor};
+    background-color: ${(props) => props.theme.headerBg};
     border: 2px solid ${(props) => props.theme.borderstroke};
+  }
+`;
+
+const InputBtn = styled.button`
+  width: 100%;
+  height: 40px;
+  border: 1px solid;
+  color: ${(props) => props.theme.fontcolor};
+  background-color: ${(props) => props.theme.headerBg};
+  border: 2px solid ${(props) => props.theme.borderstroke};
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 4px 15px;
+
+  &:hover {
+    background: ${(props) => props.theme.searchBar};
+    color: ${(props) => props.theme.btnBgColor};
+  }
+  @media screen and (max-width: 768px) {
+    display: block;
+    text-align: center;
+    background: ${(props) => props.theme.borderstroke};
+    &:hover {
+      background: ${(props) => props.theme.followerfont};
+      color: ${(props) => props.theme.btnBgColor};
+    }
   }
 `;
 
@@ -180,23 +224,19 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
   const [inputData, setInputDate] = useState({}); //>> 인풋 값을 받을 state
   const user = auth.currentUser; //유저 계정 내용 ( displayName , email , photoURL  , uid)
   const [avatar, setAvarta] = useState(user?.photoURL || ""); // 유저의 이미지를 변경할 state
-  const [followNum, setFollowNum] = useState(Math.floor(Math.random() * 10));
+  const [textNum, setTextNum] = useState(); //텍스트 숫자
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      complete();
-    } else if (e.key === "Escape") {
-      close();
-    }
-  };
+  // isOn 값
+  const [isOn, setIsOn] = useState(true);
+  const [isOn2, setIsOn2] = useState(true);
 
   useEffect(() => {
-    if (open) {
-      window.addEventListener("keydown", handleKeyDown);
+    if (profileData.isLinkPublic === false) {
+      setIsOn(false);
     }
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    if (profileData.isProfilePublic === false) {
+      setIsOn2(false);
+    }
   }, [open]);
 
   useEffect(() => {
@@ -216,6 +256,20 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
         ...prev,
         [name]: checked,
       }));
+    } else {
+      setProfileData((prev) => ({
+        ...prev,
+        [name]: newValue,
+      }));
+    }
+    if (name === "bio") {
+      let num = e.target.value.length;
+      if (num < 10) {
+        let num1 = String(num.toString().padStart(2, "0"));
+        setTextNum(num1);
+      } else {
+        setTextNum(num);
+      }
     }
   };
 
@@ -236,7 +290,11 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
     } else return;
   };
 
-  const complete = async () => {
+  const toggleSwitch = () => setIsOn(!isOn);
+  const toggleSwitch2 = () => setIsOn2(!isOn2);
+
+  const complete = async (e) => {
+    e.preventDefault();
     if (!user) return;
     try {
       const nameToSave =
@@ -245,7 +303,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
       const imgToSave = avatar || "";
       const profileQuery = query(
         collection(db, "profile"),
-        where("userId", "==", user.uid)
+        where("userEmail", "==", user.email)
       );
 
       const querySnapshot = await getDocs(profileQuery);
@@ -260,7 +318,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           isProfilePublic: profileData.isProfilePublic,
           img: imgToSave,
           isFollowing: profile.isFollowing,
-          followNum: followNum,
+          followNum: profile.followNum,
         });
         await updateDoc(newDocRef, { postId: newDocRef.id });
       } else {
@@ -275,7 +333,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           isProfilePublic: profileData.isProfilePublic,
           img: imgToSave,
           isFollowing: profile.isFollowing,
-          followNum: docRef.followNum,
+          followNum: profile.followNum,
         });
       }
       // auth 정보 수정
@@ -302,17 +360,13 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
     }
   };
 
-  const [isOn, setIsOn] = useState(profileData.isLinkPublic);
-  const [isOn2, setIsOn2] = useState(profileData.isProfilePublic);
-  const toggleSwitch = () => setIsOn(!isOn);
-  const toggleSwitch2 = () => setIsOn2(!isOn2);
   const spring = {
     type: "spring",
     stiffness: 700,
     damping: 30,
   };
   if (!open) return null;
-  console.log(avatar);
+
   return (
     <>
       <ModalOverlay onClick={close}>
@@ -324,7 +378,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
               <NameInput
                 name="username"
                 placeholder={user.displayName || user.email}
-                onKeyUp={handleInputChange}
+                onChange={handleInputChange}
               />
             </Left>
             <ImgBox htmlFor="profileImg">
@@ -343,11 +397,15 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
           </Box>
           <Box style={{ height: "100px" }}>
             <Full>
-              <SubTitle>자기소개</SubTitle>
+              <SubTitle>
+                <BioWrap>
+                  자기소개<p>{textNum || "00"}</p>
+                </BioWrap>
+              </SubTitle>
               <NameInput
                 name="bio"
                 placeholder={profileData.bio || "자기소개를 입력하세요"}
-                onKeyUp={handleInputChange}
+                onChange={handleInputChange}
                 maxlength="120"
               />
             </Full>
@@ -356,7 +414,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
             <Checkinner>
               <SubTitle>연동 링크 공개</SubTitle>
               <Switch
-                data-isOn={isOn}
+                data-ison={isOn}
                 onClick={toggleSwitch}
                 htmlFor="isLinkPublic"
               >
@@ -376,7 +434,7 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
             <Checkinner>
               <SubTitle>비공개 프로필</SubTitle>
               <Switch
-                data-isOn={isOn2}
+                data-ison={isOn2}
                 onClick={toggleSwitch2}
                 htmlFor="isProfilePublic"
               >
@@ -390,25 +448,10 @@ const ProfileEdit = React.memo(({ open, close, profile, onProfileChange }) => {
                 checked={profileData.isProfilePublic}
                 onChange={handleInputChange}
               />
-              {/* <Switch data-isOn={isOn} onClick={toggleSwitch}>
-                <Handle layout transition={spring} />
-              </Switch>
-              <input
-                type="checkbox"
-                name="isProfilePublic"
-                checked={profileData.isProfilePublic}
-                onChange={handleInputChange}
-              /> */}
             </Checkinner>
           </Box>
           <ButtonWrap>
-            <Button
-              text={"완료"}
-              width={"100%"}
-              heith={"40px"}
-              type="edit"
-              onClick={complete}
-            />
+            <InputBtn onClick={complete}>완료</InputBtn>
           </ButtonWrap>
           <Box className="mobile" onClick={close}>
             모달 닫기

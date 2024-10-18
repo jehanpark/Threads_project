@@ -56,7 +56,7 @@ const LoginItemInstaDk = () => {
   const handleAccountClick = async (account) => {
     // 기존 계정으로 로그인 처리 로직
     // 계정 클릭 시 로그인 시도
-    console.log("로그인 시도", account.email);
+
     try {
       setIsLoading(true);
       // Firebase Authentication에 해당 계정으로 로그인 시도 (비밀번호는 미리 설정된 값으로 처리해야 함)
@@ -64,7 +64,6 @@ const LoginItemInstaDk = () => {
 
       navigate("/");
     } catch (e) {
-      console.error("로그인 실패", e);
     } finally {
       setIsLoading(false);
     }
@@ -92,7 +91,6 @@ const LoginItemInstaDk = () => {
       if (e instanceof FirebaseError) {
         setError(e.message);
       }
-      console.log(e);
     } finally {
       setIsLoading(false);
     }
@@ -168,7 +166,7 @@ const LoginItemInstaDk = () => {
               <StyledInput
                 className="insta-btn"
                 type="submit"
-                value={isLoading ? "Loading.." : "로그인"}
+                value={isLoading ? "0.." : "로그인"}
               />
             </InputWrapper>
             {/* 

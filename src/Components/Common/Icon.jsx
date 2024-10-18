@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
 // StyledSvg 스타일링
 const StyledSvg = styled.svg`
@@ -16,25 +17,23 @@ export const EyeOpenIcon = ({ width, fill }) => {
     <StyledSvg
       width={width || "24px"}
       height={height}
-      defaultWidth="24px"
-      defaultHeight="24px"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
         stroke={fill || "currentColor"}
         fill="none"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
       />
       <path
         stroke={fill || "currentColor"}
         fill="none"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
       />
     </StyledSvg>
@@ -252,7 +251,10 @@ export const HeartIcon = ({ width, initialFill }) => {
       height={height}
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ cursor: "pointer", transition: "fill 0.2s ease, stroke 0.2s ease" }} // 부드러운 전환 추가
+      style={{
+        cursor: "pointer",
+        transition: "fill 0.2s ease, stroke 0.2s ease",
+      }} // 부드러운 전환 추가
     >
       <path
         d="M20.8401 4.60999C20.3294 4.099 19.7229 3.69364 19.0555 3.41708C18.388 3.14052 17.6726 2.99817 16.9501 2.99817C16.2276 2.99817 15.5122 3.14052 14.8448 3.41708C14.1773 3.69364 13.5709 4.099 13.0601 4.60999L12.0001 5.66999L10.9401 4.60999C9.90843 3.5783 8.50915 2.9987 7.05012 2.9987C5.59109 2.9987 4.19181 3.5783 3.16012 4.60999C2.12843 5.64169 1.54883 7.04096 1.54883 8.49999C1.54883 9.95903 2.12843 11.3583 3.16012 12.39L4.22012 13.45L12.0001 21.23L19.7801 13.45L20.8401 12.39C21.3511 11.8792 21.7565 11.2728 22.033 10.6053C22.3096 9.93789 22.4519 9.22248 22.4519 8.49999C22.4519 7.77751 22.3096 7.0621 22.033 6.39464C21.7565 5.72718 21.3511 5.12075 20.8401 4.60999Z"
@@ -266,7 +268,6 @@ export const HeartIcon = ({ width, initialFill }) => {
     </StyledSvg>
   );
 };
-
 
 //coment
 export const Coment = ({ width, fill }) => {
@@ -1413,133 +1414,91 @@ export const IconWrapper = styled.div`
   padding: ${(props) => props.wrapperPadding || "5px"};
   background: ${(props) => props.background || "#f5f5f5"};
   border-radius: ${(props) => props.borderRadius || "50%"};
-  z-index: ${(props) => props.zIndex || "1"};
+  z-index: ${(props) => props.zIndex || ""};
 `;
 // 팔로워 아이콘
-export const FollowerIcon = ({ width }) => {
-  const height = (width / 86) * 17.411;
+
+export const FollowerIcon = ({ width = 436 }) => {
+  const isTablet = useMediaQuery("(max-width: 1024px)");
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  // 모바일, 태블릿 화면에 맞춰 크기 조정 (최소 크기 제한)
+  const adjustedWidth = isMobile
+    ? Math.max(width * 0.8, 300)
+    : isTablet
+    ? Math.max(width * 0.9, 350)
+    : width;
+  const height = (adjustedWidth / 430) * 280;
+  const strokeWidth = adjustedWidth / 100;
 
   return (
-    <svg width="436" height="280">
+    <svg
+      width="100%" // 부모 컨테이너에 맞게 꽉 채우기
+      height="100%"
+      viewBox="0 0 436 280"
+      preserveAspectRatio="xMidYMid meet" // 비율 유지하면서 중앙 정렬
+    >
       <g transform="translate(60, 20)">
+        {/* 아래 축 */}
         <g
           transform="translate(0, 225)"
           fill="none"
-          fontSize="10"
-          fontFamily="sans-serif"
           textAnchor="middle"
-        >
-          <g className="tick" opacity="1" transform="translate(0.5,0)">
-            <line stroke="gray" y2="6"></line>
-            <text
-              fill="black"
-              y="20"
-              dy="0.71em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            ></text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(346.5,0)">
-            <line stroke="gray" y2="6"></line>
-            <text
-              fill="black"
-              y="20"
-              dy="0.71em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            ></text>
-          </g>
-        </g>
-        <g
-          fill="none"
           fontSize="10"
-          fontFamily="Arial, sans-serif"
-          textAnchor="end"
         >
-          <g className="tick" opacity="1" transform="translate(0,225.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
+          {["0.5", "346.5"].map((x, idx) => (
+            <g
+              key={idx}
+              className="tick"
+              opacity="1"
+              transform={`translate(${x},0)`}
             >
-              0
-            </text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(0,180.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            >
-              20
-            </text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(0,135.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            >
-              40
-            </text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(0,90.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            >
-              60
-            </text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(0,45.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            >
-              80
-            </text>
-          </g>
-          <g className="tick" opacity="1" transform="translate(0,0.5)">
-            <line stroke="gray" x2="346"></line>
-            <text
-              fill="black"
-              x="-15"
-              dy="0.32em"
-              fontFamily="Arial, sans-serif"
-              fontSize="13px"
-            >
-              100
-            </text>
-          </g>
+              <line stroke="gray" y2="6" />
+              <text
+                y="20"
+                dy="0.71em"
+                fontFamily="Arial, sans-serif"
+                fontSize="13px"
+              />
+            </g>
+          ))}
         </g>
+
+        {/* 왼쪽 축 */}
+        <g fill="none" textAnchor="end">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <g
+              key={i}
+              className="tick"
+              opacity="1"
+              transform={`translate(0, ${225 - i * 45}.5)`}
+            >
+              <line stroke="gray" x2="346" />
+              <text
+                x="-15"
+                dy="0.32em"
+                fontFamily="Arial, sans-serif"
+                fontSize="13px"
+              >
+                {i * 20}
+              </text>
+            </g>
+          ))}
+        </g>
+
+        {/* 축의 경계선 */}
         <path
           fill="none"
           stroke="gray"
           strokeLinecap="round"
-          strokeWidth="3"
+          strokeWidth={strokeWidth}
           d="M0,222.75L346,222.75"
-        ></path>
+        />
       </g>
     </svg>
   );
 };
+
 // 공유 아이템 수정
 export const ShareIconNew = ({
   width,
@@ -1599,6 +1558,28 @@ export const RightArrowIcon = ({ width, fill }) => {
     </svg>
   );
 };
+
+export const RightNewArrowIcon = ({ width = "21px", fill = "#000000" }) => {
+  const height = (parseInt(width) / 21) * 12; // width에 따라 height 계산
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 23 30"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+    >
+      <path
+        d="M1 1L10.5 10.5L1 20"
+        stroke={fill}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 // 권한
 export const CloseLockIcon = ({ width }) => {
   const height = width ? (width * 23) / 19 : "22px";
@@ -1643,7 +1624,6 @@ export const EalthIcon = (props) => {
       <circle
         cx="12"
         cy="12"
-        // r="9"
         stroke="#000000"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1710,10 +1690,10 @@ export const SecurityIcon = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20px" // 원하는 아이콘의 크기로 조정
+      width="20px"
       height="20px"
       viewBox="0 0 1024 1024"
-      fill="#000000" // 아이콘 색상 설정
+      fill="#000000"
       {...props}
     >
       <path d="M908.008473 139.713707L529.299213 3.059374a51.005609 51.005609 0 0 0-17.397182-3.059374c-5.950311 0-11.855934 1.03125-17.534682 3.090312L117.015902 139.744645c-20.394681 7.397498-34.704989 26.774679-34.70499 48.472173v323.781463c0 72.287165 23.299368 144.584643 67.763417 214.87806 34.082802 53.875921 81.520288 106.71028 140.256832 157.045577 98.209345 84.156849 195.655565 132.70121 199.749627 134.725896a51.957797 51.957797 0 0 0 22.96593 5.352186c7.717185 0 15.485933-1.732499 22.608431-5.197498 4.094061-1.993749 101.495594-49.78186 199.797752-133.605272 58.794982-50.132485 105.520905-102.966844 139.627769-157.031827 44.446861-70.444666 66.601542-143.171831 66.601543-216.167122V188.216818c0.003437-21.731868-13.230933-41.133112-33.67374-48.503111zM164.810887 511.757656V226.768368c0-10.848747 6.648123-20.539056 16.847183-24.237805l320.759902-116.692777c2.859999-1.034687 6.142811-1.797812 9.580309-1.797812v427.961745h349.631456c0.020625 0 0.044687 0.464062 0.044688 0.759687-0.06875 93.255909-47.038736 185.679943-139.58652 275.670228-72.273415 70.279666-154.384953 120.436213-196.621503 144.096519-3.915311 2.196562-10.027184 3.231249-13.464683 3.231249V511.867656l-347.190832-0.11z" />
@@ -1738,7 +1718,7 @@ export const AccountStatusIcon = ({
     >
       <path
         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
-        fill={fill} // props로 전달받은 fill 사용
+        fill={fill}
       />
     </svg>
   );
@@ -1764,11 +1744,158 @@ export const FamilyIcon = ({
         fillRule="evenodd"
         clipRule="evenodd"
         d="M16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8ZM9.25 3.75C9.25 4.44036 8.69036 5 8 5C7.30964 5 6.75 4.44036 6.75 3.75C6.75 3.05964 7.30964 2.5 8 2.5C8.69036 2.5 9.25 3.05964 9.25 3.75ZM12 8H9.41901L11.2047 13H9.081L8 9.97321L6.91901 13H4.79528L6.581 8H4V6H12V8Z"
-        fill={fill} // props로 받은 fill 값 사용
+        fill={fill}
       />
     </svg>
   );
 };
+// 경고 아이콘 스타일
+const AttentionNoteContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  position: absolute;
+  margin-top: -88px;
+  margin-left: 12px;
+  background-color: black;
+  border-radius: 10px;
+  padding: 2px 6px;
+  ::after {
+    display: block;
+    width: 5px;
+    height: 5px;
+    background-color: black;
+    position: absolute;
+    top: 17px;
+    left: 10px;
+    transform: rotate(45deg);
+    content: "";
+  }
+`;
+
+// 경고 메시지 창 스타일
+export const AttentionNote = ({ children }) => {
+  return (
+    <AttentionNoteContainer>
+      {/* 경고 아이콘 추가 */}
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect x="2" y="2" width="20" height="20" rx="10" fill="none" />
+        <path
+          d="M12 8v4"
+          stroke="#FFF"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M12 16h.01"
+          stroke="#FFF"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <span style={{ color: "#FFF", fontSize: "10px" }}>{children}</span>
+    </AttentionNoteContainer>
+  );
+};
+export const OnlineStatusIcon = ({ width, fill }) => {
+  const height = width ? `${(width / 24) * 24}px` : "24px";
+
+  return (
+    <svg
+      aria-label="온라인 상태"
+      role="img"
+      width={width || "24px"}
+      height={height}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <title>온라인 상태</title>
+      <circle
+        cx="12"
+        cy="9"
+        fill="none"
+        r="4"
+        stroke={fill || "currentColor"}
+        strokeWidth="2"
+      />
+      <path
+        d="M14.3492 18C14.617 17.2565 15.0288 16.5783 15.5501 16H8.68373C6.7865 16 5.11364 16.9606 4.125 18.422C4.54015 18.986 5.01309 19.5048 5.53508 19.9698C6.10288 18.8036 7.29946 18 8.68373 18H14.3492Z"
+        fill={fill || "currentColor"}
+      />
+      <path
+        d="M20 24C17.8119 24 16 22.1958 16 20C16 17.8119 17.8119 16 20 16C22.1881 16 24 17.8119 24 20C24 22.1804 22.1727 24 20 24Z"
+        fill={fill || "currentColor"}
+      />
+      <path
+        d="M14.5505 22.4944C14.3607 22.0852 13.9218 21.8259 13.4756 21.8919C12.9941 21.9631 12.5013 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 12.5019 21.963 12.9952 21.8916 13.4773C21.8256 13.9234 22.0841 14.3621 22.493 14.5521C23.0427 14.8076 23.7414 14.5629 23.8399 13.9648C23.9452 13.3255 24 12.6692 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24C12.6683 24 13.3239 23.9454 13.9625 23.8403C14.5603 23.742 14.8053 23.044 14.5505 22.4944Z"
+        fill={fill || "currentColor"}
+      />
+    </svg>
+  );
+};
+// 왼쪽 화살표 아이콘
+export const LeftArrowIcon = ({ width = "24px", height = "24px" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={width}
+    height={height}
+    viewBox="0 0 512.006 512.006"
+    fill="currentColor"
+  >
+    <title>left-arrow</title>
+    <desc>Created with Sketch.</desc>
+    <g>
+      <g>
+        <path
+          d="M388.419,475.59L168.834,256.005L388.418,36.421c8.341-8.341,8.341-21.824,0-30.165s-21.824-8.341-30.165,0    
+            L123.586,240.923c-8.341,8.341-8.341,21.824,0,30.165l234.667,234.667c4.16,4.16,9.621,6.251,15.083,6.251    
+            c5.461,0,10.923-2.091,15.083-6.251C396.76,497.414,396.76,483.931,388.419,475.59z"
+        />
+      </g>
+    </g>
+  </svg>
+);
+
+// export const LeftArrowIcon = ({ width = "24px", height = "24px" }) => (
+//   <svg
+//     xmlns="http://www.w3.org/2000/svg"
+//     width={width}
+//     height={height}
+//     viewBox="0 -6.5 38 38"
+//   >
+//     <title>left-arrow</title>
+//     <desc>Created with Sketch.</desc>
+//     <g
+//       id="icons"
+//       stroke="none"
+//       strokeWidth="1"
+//       fill="currentColor"
+//       fillRule="evenodd"
+//     >
+//       <g
+//         id="ui-gambling-website-lined-icnos-casinoshunter"
+//         transform="translate(-1641.000000, -158.000000)"
+//         fillRule="nonzero"
+//       >
+//         <g id="1" transform="translate(1350.000000, 120.000000)">
+//           <path
+//             d="M317.812138,38.5802109 L328.325224,49.0042713 L328.41312,49.0858421 C328.764883,49.4346574 328.96954,49.8946897 329,50.4382227 L328.998248,50.6209428 C328.97273,51.0514917 328.80819,51.4628128 328.48394,51.8313977 L328.36126,51.9580208 L317.812138,62.4197891 C317.031988,63.1934036 315.770571,63.1934036 314.990421,62.4197891 C314.205605,61.6415481 314.205605,60.3762573 314.990358,59.5980789 L322.274264,52.3739093 L292.99947,52.3746291 C291.897068,52.3746291 291,51.4850764 291,50.3835318 C291,49.2819872 291.897068,48.3924345 292.999445,48.3924345 L322.039203,48.3917152 L314.990421,41.4019837 C314.205605,40.6237427 314.205605,39.3584519 314.990421,38.5802109 C315.770571,37.8065964 317.031988,37.8065964 317.812138,38.5802109 Z"
+//             id="left-arrow"
+//             transform="translate(310.000000, 50.500000) scale(-1, 1) translate(-310.000000, -50.500000)"
+//           />
+//         </g>
+//       </g>
+//     </g>
+//   </svg>
+// );
 
 // 도경 => 모바일 메뉴 아이콘 생성
 

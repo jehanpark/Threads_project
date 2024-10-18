@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  orderBy,
-  query,
-} from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, query } from "firebase/firestore";
 import { db } from "../../firebase";
+import { getAuth } from "firebase/auth";
 import NotificationItem from "./NotificationItem";
 
 // 최대 알림 개수
@@ -40,23 +34,25 @@ const getTypeLabel = (message) => {
 
 const NotificationList = ({ onUpdate }) => {
   const [notifications, setNotifications] = useState([]);
+  const auth = getAuth();
+  const currentUser = auth.currentUser; // 로그인 정보
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const DesQuery = query(
-          collection(db, "contents"),
-          orderBy("createdAt", "desc")
+          collection(db, "profile")
+          // orderBy("createdAt", "desc")
         );
         const querySnapshot = await getDocs(DesQuery);
 
-        const initialData = querySnapshot.docs.map((docSnapshot) => {
+        let initialData = querySnapshot.docs.map((docSnapshot) => {
           const docData = docSnapshot.data();
 
-          const createdAt =
-            docData.createdAt && docData.createdAt.toDate
-              ? docData.createdAt.toDate()
-              : new Date();
+          // const createdAt =
+          //   docData.createdAt && docData.createdAt.toDate
+          //     ? docData.createdAt.toDate()
+          //     : new Date();
 
           const message =
             docData.message ||
@@ -67,33 +63,38 @@ const NotificationList = ({ onUpdate }) => {
 
           return {
             id: docSnapshot.id,
-            username: docData.email || "알수없음",
-            createdAt,
+            img: docData.img,
+            username: docData.userEmail || "siro@ezen.com",
+            // createdAt,
             isRead: false,
             message,
             type,
           };
         });
 
+        // 로그인 회원 정보와 이메일 정보 동일
+        if (currentUser && currentUser.email) {
+          initialData = initialData.filter(
+            (notification) => notification.username !== currentUser.email
+          );
+        }
+
         // 가져온 데이터를 최대 알림 개수까지 제한
         const limitedData = initialData.slice(0, MAX_NOTIFICATIONS);
         setNotifications(limitedData);
 
         if (typeof onUpdate === "function") {
-          onUpdate(limitedData);
+          onUpdate(initialData);
         }
-      } catch (error) {
-        console.error("오류 발생:", error);
-      }
+      } catch (error) {}
     };
-
     fetchData();
-  }, []); // 빈 배열로 의존성을 설정하여 컴포넌트 마운트 시 한 번만 실행
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
 
-  // 알림 읽음 처리 함수
+  // 알림 읽음
   const markAsRead = async (id) => {
     try {
-      const notificationRef = doc(db, "contents", id);
+      const notificationRef = doc(db, "profile", id);
       await updateDoc(notificationRef, { isRead: true });
 
       setNotifications((prevNotifications) =>
@@ -103,11 +104,7 @@ const NotificationList = ({ onUpdate }) => {
             : notification
         )
       );
-
-      console.log("업데이트된 알림 상태");
-    } catch (error) {
-      console.error("Firestore 업데이트 중 오류 발생:", error);
-    }
+    } catch (error) {}
   };
 
   //알림 삭제
@@ -124,7 +121,6 @@ const NotificationList = ({ onUpdate }) => {
           key={notification.id}
           {...notification}
           onClick={() => {
-            console.log("click");
             markAsRead(notification.id);
           }}
           onDelete={() => handleDelete(notification.id)}

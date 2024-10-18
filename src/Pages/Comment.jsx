@@ -12,6 +12,7 @@ import {
   PictureIcon,
   MicIcon,
   HashtagIcon,
+  UserIcon2,
 } from "../Components/Common/Icon";
 import { useAuth } from "../Contexts/AuthContext";
 import { addDoc, serverTimestamp, updateDoc, doc } from "firebase/firestore";
@@ -21,6 +22,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Button from "../Components/Common/Button";
 import BackBtn from "../Components/post/BackBtn";
 import Loading from "../Components/LoadingLogo/Loading";
+import fetchUserProfileImage from "../Utils/fetchProfile";
 
 const AllDesc = styled.div``;
 
@@ -294,6 +296,7 @@ const Comment = ({ id }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser } = useAuth(); // 현재 사용자 상태를 가져옴
+  const [profileImg, setProfileImg] = useState("");
 
   const {
     postContent,
@@ -305,8 +308,9 @@ const Comment = ({ id }) => {
     dms: passedDms,
     retweets: passedRetweets,
     postId,
+    userId,
   } = location.state || {};
-  console.log(location.state);
+
   // Firebase에서 전달된 값을 상태로 설정
   useEffect(() => {
     setLikes(passedLikes);
@@ -316,10 +320,23 @@ const Comment = ({ id }) => {
 
   useEffect(() => {
     if (!postId) {
-      console.error("postId가 없습니다. 댓글을 불러올 수 없습니다.");
       return;
     }
   }, [postId]);
+
+  useEffect(() => {
+    const getUserProfileImage = async () => {
+      try {
+        const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
+        setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
+      } catch (error) {}
+    };
+
+    // userId가 있을 때만 프로필 이미지 가져오기
+    if (userId) {
+      getUserProfileImage();
+    }
+  }, [userId]);
 
   // Firestore에서 댓글 데이터를 가져오는 useEffect
   useEffect(() => {
@@ -342,9 +359,7 @@ const Comment = ({ id }) => {
 
         setComments(commentsList); // 댓글 리스트 저장
         setCommentsCount(commentsSnapshot.size); // 댓글 수 저장
-      } catch (error) {
-        console.error("댓글을 불러오는 중 오류가 발생했습니다:", error);
-      }
+      } catch (error) {}
     };
 
     if (postId) fetchComments();
@@ -365,12 +380,11 @@ const Comment = ({ id }) => {
   };
 
   const handleSubmit = async (e) => {
+    const user = auth.currentUser;
     e.preventDefault();
     if (!currentUser || isLoading || !post.trim() || post.length > 180) return;
-
     try {
       setIsLoading(true);
-
       const commentData = {
         comment: post.trim(),
         createdAt: serverTimestamp(),
@@ -378,13 +392,11 @@ const Comment = ({ id }) => {
         userId: currentUser.uid,
         photoUrls: [],
         videoUrls: [],
+        email: user.email,
       };
-
       const commentsRef = collection(db, "contents", postId, "comments");
-
       const photoUrls = [];
       const videoUrls = [];
-
       if (files.length > 0) {
         await Promise.all(
           files.map(async (file) => {
@@ -394,7 +406,6 @@ const Comment = ({ id }) => {
             );
             const snapshot = await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(snapshot.ref);
-
             if (file.type.startsWith("image/")) {
               photoUrls.push(downloadURL);
             } else if (file.type.startsWith("video/")) {
@@ -402,27 +413,21 @@ const Comment = ({ id }) => {
             }
           })
         );
-
         commentData.photoUrls = photoUrls;
         commentData.videoUrls = videoUrls;
       }
-
       await addDoc(commentsRef, commentData);
-
       setPost(""); // 상태 초기화
       setFiles([]); // 업로드 파일 초기화
-
       // 댓글을 추가한 후 즉시 업데이트
       setComments((prevComments) => [...prevComments, commentData]);
       setCommentsCount((prevCount) => prevCount + 1);
       navigate("/");
     } catch (error) {
-      console.error("댓글 추가 중 오류가 발생했습니다:", error);
     } finally {
       setIsLoading(false);
     }
   };
-
   const maxFileSize = 5 * 1024 * 1024; // 5MB
   const maxFilesCount = 3;
 
@@ -457,7 +462,11 @@ const Comment = ({ id }) => {
             <Wrapper>
               <PostWrapper>
                 <Header>
-                  <UserImage src="http://localhost:5173/profile.png"></UserImage>
+                  {profileImg ? (
+                    <UserImage src={profileImg} alt="User Profile"></UserImage>
+                  ) : (
+                    <UserIcon2 />
+                  )}
                   <Username>{username}</Username>
                   <Timer>{renderTimeAgo()}</Timer>
                 </Header>

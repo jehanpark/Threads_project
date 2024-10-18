@@ -4,9 +4,9 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   position: absolute;
-  bottom: 120px;
-  margin-left: 35%;
-  width: 260px;
+  bottom: 90px;
+  margin-left: 34%;
+  width: 280px;
   height: auto;
   padding: 10px 0;
   border-radius: 30px;

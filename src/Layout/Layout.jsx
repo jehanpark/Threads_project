@@ -5,18 +5,36 @@ import Nav from "../Components/Nav";
 import Sidebar from "../Components/Sidebar";
 import BottomNav from "../Components/MobileNav";
 
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../Contexts/AuthContext";
+
 // 레이아웃 스타일
 const LayoutWrapper = styled.div`
   width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   overflow: hidden;
+  /* justify-content: center; */
+  /* background-color: rgba(156, 200, 255, 0.2); */
   /* padding: 20px 20px; */
-  position: relative;
+  /* position: relative; */
   @media screen and (max-width: 768px) {
     padding: 0px;
   }
 `;
 
 const Layout = () => {
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/Login"); // 로그인 페이지로 리다이렉트
+    }
+  }, [currentUser, navigate]);
+
   return (
     <LayoutWrapper>
       <Nav />

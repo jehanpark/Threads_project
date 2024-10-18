@@ -3,6 +3,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout/Layout";
 import Home from "../Pages/Home";
+import HomeDK from "../Pages/Home_dk";
 import Search from "../Pages/Search";
 import Login from "../Pages/Login";
 import LoginInsta from "../Pages/LoginInsta";

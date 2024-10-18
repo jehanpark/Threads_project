@@ -3,87 +3,110 @@ import styled, { useTheme } from "styled-components";
 import { motion } from "framer-motion";
 import Searchbar from "../Components/Search/Searchbar";
 import FollowersList from "../Components/Search/FollowerList";
-import TimeLine from "../Components/post/TimeLine";
+import TimeLine2 from "../Components/Search/TimLine2";
 
-const Contain = styled.div`
-  width: 100%;
+const Wrapper = styled.div`
+  /* width: 100%; */
+  /* height: calc(100vh - 120px); */
+  height: 100vh;
+  /* margin-top: 120px; */
+  /* overflow: hidden; */
+  /* z-index: -1; */
+  @media (max-width: 768px) {
+    height: 100vh;
+    width: 100%;
+  }
+`;
+const BoederWrapper = styled.div`
+  background: ${(props) => props.theme.borderColor};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  @media (max-width: 480px) {
+  width: 680px;
+  /* position: fixed; */
+  bottom: 0;
+  /* left: 50%; */
+  /* transform: translate(-50%); */
+  /* margin: 0; */
+  height: calc(100vh - 120px);
+  /* height: 85%; */
+  border-radius: 40px 40px 0px 0px;
+  /* overflow: hidden; */
+  @media (max-width: 768px) {
     width: 100%;
+    /* bottom: 0; */
+    border-radius: 0;
+    /* height: 100vh; */
+    /* height: calc(100% - 70px); */
+    height: calc(100% - 70px);
+
+    box-shadow: none;
+    border-radius: 0px 0px 0px 0px;
   }
 `;
 
 const MenuTitle = styled.p`
   font-weight: 800;
-  font-size: 22px;
-  margin-top: 40px;
+  font-size: 20px;
+
   color: ${(props) => props.theme.fontcolor};
+  padding-top: 40px;
+  padding-bottom: 20px;
+  text-align: center;
   transition: all 0.3s;
-
   @media (max-width: 768px) {
     display: none;
   }
-
   @media (max-width: 480px) {
     display: none;
-  }
-`;
-
-const Border = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* margin: 0 auto; */
-  /* padding: 20px; */
-  height: 600px;
-  border-radius: 40px 40px 0px 0px;
-  background-color: ${(props) => props.theme.borderColor};
-  @media (max-width: 768px) {
-    width: 100%;
-    border-radius: 20px 20px 0px 0px;
-  }
-  @media (max-width: 480px) {
-    width: 100%;
-    margin: 0 auto;
   }
 `;
 
 const ButtonGroup = styled(motion.div)`
-  padding-left: 100px;
+  padding-left: 40px;
   display: flex;
   width: 100%;
   gap: 12px;
   margin-top: 20px;
   margin-bottom: 20px;
   transition: all 0.3s ease;
+  @media (max-width: 768px) {
+    top: 0;
+    padding-left: 100px;
+  }
+
+  @media (max-width: 480px) {
+    top: 0;
+    padding-left: 140px;
+  }
 `;
 
 const SelectButton = styled(motion.button)`
   display: flex;
   flex: 0 0 auto;
   width: 110px;
+  border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px 20px;
-  background: ${(props) => props.theme.buttonbackground};
-  border: 1px solid ${(props) => props.theme.searchButton};
-  color: ${(props) => props.theme.buttonText};
+  background: ${(props) =>
+    props.selected ? props.theme.buttonText : props.theme.buttonbackground};
+  color: ${(props) =>
+    props.selected ? props.theme.borderColor : props.theme.buttonText};
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
 
   @media (max-width: 768px) {
     display: block;
-    width: 90px;
-    padding: 8px 15px;
+    width: 100px;
+    padding: 10px 0;
   }
 
   @media (max-width: 480px) {
     display: block;
-    width: 80px;
-    padding: 6px 10px;
+    width: 90px;
+    padding: 10px 0;
   }
 `;
 
@@ -92,7 +115,6 @@ const ButtonGroupPC = styled.div`
   justify-content: space-evenly;
   align-items: center;
   gap: 20px;
-
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   @media (max-width: 768px) {
     display: none;
@@ -102,11 +124,16 @@ const ButtonGroupPC = styled.div`
 `;
 
 const SelectButtonPC = styled.button`
+  background: transparent;
   flex: 0 0 auto;
   width: 106px;
   padding: 10px 20px;
   border: none;
   font-weight: bold;
+  color: ${(props) =>
+    props.selected ? props.theme.selectedbtn : props.theme.notSelectbtn};
+  border-bottom: ${(props) =>
+    props.selected ? `1px solid ${props.theme.selectedbtn}` : "none"};
   cursor: pointer;
   transition: all 0.3s;
 `;
@@ -117,29 +144,31 @@ const SearchBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 30px;
 
   @media (max-width: 768px) {
+    margin-top: 60px;
   }
 
   @media (max-width: 480px) {
+    margin-top: 60px;
   }
 `;
 
 const ContentsBorder = styled.div`
-  margin-top: 20px;
+  width: 100%;
+  height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  width: 100%;
-  /* max-height: 600px; */
-  height: calc(100vh - 120px);
 
+  margin-top: 20px;
   overflow-y: auto;
-  padding: 0 20px;
-
+  padding: 0 40px;
   padding-bottom: 20px;
+  box-sizing: border-box;
+
   ::-webkit-scrollbar {
     display: none;
   }
@@ -147,36 +176,18 @@ const ContentsBorder = styled.div`
   scrollbar-width: none;
 
   @media (max-width: 768px) {
-    padding: 20px;
+    padding: 0 20px;
+    width: 100%;
+    height: 1000px;
   }
 
   @media (max-width: 480px) {
-    padding: 0;
-  }
-`;
-
-const BoederWrapper = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%);
-  margin: 0 auto;
-  /* width: 680px; */
-  height: 85%;
-  border-radius: 40px 40px 0px 0px;
-  background-color: ${(props) => props.theme.borderColor};
-  box-shadow: ${(props) => props.theme.bordershadow};
-  @media (max-width: 768px) {
-    position: fixed;
-    border-radius: 0;
+    margin-top: 30px;
+    padding: 0 10px;
     width: 100%;
-    height: calc(100% - 140px);
-    bottom: 70px;
-    box-shadow: none;
-    border-radius: 0px 0px 0px 0px;
+    height: 1000px;
   }
 `;
-
 const NoResults = styled.p`
   font-size: 16px;
   text-align: center;
@@ -225,29 +236,6 @@ const Search = () => {
     };
   }, []);
 
-  // 버튼 스타일 동적 처리
-  const getButtonStyle = (type) => ({
-    backgroundColor: contentType === type ? "#000" : "#fff",
-    color: contentType === type ? "#fff" : "#000",
-  });
-
-  // 버튼 스타일 동적 적용
-  const getPCButtonStyle = (type, isNightMode) => ({
-    background: "transparent",
-    color:
-      contentType === type
-        ? isNightMode
-          ? "#FFF"
-          : "#000"
-        : isNightMode
-        ? "rgba(255, 255, 255, 0.8)"
-        : "rgba(204, 204, 204, 0.8)",
-    borderBottom:
-      contentType === type
-        ? `1.5px solid ${isNightMode ? "#fff" : "#000"}`
-        : "none",
-  });
-
   const buttons = [
     { label: "인기", type: "popular" },
     { label: "최신", type: "recent" },
@@ -257,82 +245,78 @@ const Search = () => {
   ];
 
   return (
-    <BoederWrapper>
-      <Contain>
+    <Wrapper>
+      <BoederWrapper>
         <MenuTitle>{searchTerm || "검색"}</MenuTitle>
-        <Border>
-          <SearchBox>
-            {showSearchBar ? (
-              <Searchbar addSearch={handleSearch} />
-            ) : isMobile ? (
-              <ButtonGroup
-                className="mobile-buttons"
-                whileTap="click"
-                drag="x"
-                dragMomentum={false}
-                dragConstraints={{ left: -100, right: 0 }}
-              >
-                {buttons.map((button) => (
-                  <SelectButton
-                    key={button.type}
-                    style={getButtonStyle(button.type)}
-                    onClick={() => handleButtonClick(button.type)}
-                  >
-                    {button.label}
-                  </SelectButton>
-                ))}
-              </ButtonGroup>
-            ) : (
-              <ButtonGroupPC className="desktop-buttons">
-                {buttons.map((button) => (
-                  <SelectButtonPC
-                    key={button.type}
-                    style={getPCButtonStyle(button.type)}
-                    onClick={() => handleButtonClick(button.type)}
-                  >
-                    {button.label}
-                  </SelectButtonPC>
-                ))}
-              </ButtonGroupPC>
-            )}
-          </SearchBox>
-          <ContentsBorder>
-            {contentType !== "picture" && contentType !== "video" && (
-              <FollowersList
-                searchTerm={searchTerm}
-                contentType={contentType}
-                onDataEmpty={(isEmpty) => setFollowersEmpty(isEmpty)}
-              />
-            )}
+        <SearchBox>
+          {showSearchBar ? (
+            <Searchbar addSearch={handleSearch} />
+          ) : isMobile ? (
+            <ButtonGroup
+              className="mobile-buttons"
+              whileTap="click"
+              drag="x"
+              dragMomentum={false}
+              dragConstraints={{ left: -140, right: 0 }}
+            >
+              {buttons.map((button) => (
+                <SelectButton
+                  key={button.type}
+                  selected={contentType === button.type}
+                  onClick={() => handleButtonClick(button.type)}
+                >
+                  {button.label}
+                </SelectButton>
+              ))}
+            </ButtonGroup>
+          ) : (
+            <ButtonGroupPC className="desktop-buttons">
+              {buttons.map((button) => (
+                <SelectButtonPC
+                  key={button.type}
+                  selected={contentType === button.type}
+                  onClick={() => handleButtonClick(button.type)}
+                >
+                  {button.label}
+                </SelectButtonPC>
+              ))}
+            </ButtonGroupPC>
+          )}
+        </SearchBox>
+        <ContentsBorder>
+          {contentType !== "picture" && contentType !== "video" && (
+            <FollowersList
+              searchTerm={searchTerm}
+              contentType={contentType}
+              onDataEmpty={(isEmpty) => setFollowersEmpty(isEmpty)}
+            />
+          )}
 
-            {contentType !== "profile" && (
-              <TimeLine
-                searchTerm={searchTerm}
-                contentType={contentType}
-                onDataEmpty={(isEmpty) => setDisplaysEmpty(isEmpty)}
-              />
+          {contentType !== "profile" && (
+            <TimeLine2
+              searchTerm={searchTerm}
+              contentType={contentType}
+              onDataEmpty={(isEmpty) => setDisplaysEmpty(isEmpty)}
+            />
+          )}
+
+          {contentType === "profile" && followersEmpty && (
+            <NoResults>프로필이 존재하지 않습니다.</NoResults>
+          )}
+
+          {(contentType === "picture" || contentType === "video") &&
+            displaysEmpty && <NoResults>게시글이 존재하지 않습니다.</NoResults>}
+
+          {contentType !== "profile" &&
+            contentType !== "picture" &&
+            contentType !== "video" &&
+            followersEmpty &&
+            displaysEmpty && (
+              <NoResults>게시글 및 프로필이 존재하지 않습니다.</NoResults>
             )}
-
-            {contentType === "profile" && followersEmpty && (
-              <NoResults>프로필이 존재하지 않습니다.</NoResults>
-            )}
-
-            {(contentType === "picture" || contentType === "video") &&
-              displaysEmpty && (
-                <NoResults>게시글이 존재하지 않습니다.</NoResults>
-              )}
-
-            {contentType !== "profile" &&
-              contentType !== "picture" &&
-              contentType !== "video" &&
-              followersEmpty &&
-              displaysEmpty && (
-                <NoResults>게시글 및 프로필이 존재하지 않습니다.</NoResults>
-              )}
-          </ContentsBorder>
-        </Border>
-      </Contain>
-    </BoederWrapper>
+        </ContentsBorder>
+      </BoederWrapper>
+    </Wrapper>
   );
 };
 export default Search;

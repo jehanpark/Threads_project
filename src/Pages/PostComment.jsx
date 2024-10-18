@@ -9,6 +9,7 @@ import {
   DmIcon,
   RetweetIcon,
   Coment,
+  UserIcon2,
 } from "../Components/Common/Icon";
 import BackBtn from "../Components/post/BackBtn";
 import {
@@ -22,17 +23,18 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../Contexts/AuthContext";
+import fetchUserProfileImage from "../Utils/fetchProfile";
 
 const AllWrap = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 const Backarea = styled.div`
-  width: 760px;
+  display: flex;
+  margin-right: 730px;
 `;
 const BoederWrapper = styled.div`
   position: fixed;
@@ -71,9 +73,10 @@ const PostWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.borderColor};
-  padding: 20px;
+  padding: 40px;
   border-radius: 40px 40px 0 0;
-  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  border-bottom: 1px solid ${(props) => props.theme.comentBouttomLine};
+  z-index: 20;
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
@@ -123,7 +126,7 @@ const Column = styled.div`
 const Photo = styled.img`
   width: 120px;
   height: 120px;
-  object-fit: cover/contain;
+  object-fit: cover;
   margin-left: 0px;
   border-radius: 8px;
   @media (max-width: 768px) {
@@ -150,7 +153,8 @@ const Icons = styled.div`
   justify-content: start;
   align-items: center;
   margin-left: 50px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
+  margin-top: 10px;
   cursor: pointer;
   color: #bababa;
 `;
@@ -187,10 +191,9 @@ const CommentWrapper = styled.div`
   height: auto;
   background: ${(props) => props.theme.borderColor};
   padding: 15px;
-  border-bottom: 1px solid rgba(204, 204, 204, 0.4);
+  border-bottom: 1px solid ${(props) => props.theme.comentBouttomLine};
   display: flex;
   flex-direction: column;
-
   transition: transform 0.3s ease-out;
   @media (max-width: 768px) {
     width: 100%;
@@ -201,39 +204,39 @@ const CommentHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: 20px;
+  margin-left: 40px;
+  @media (max-width: 768px) {
+    margin-left: 14px;
+  }
 `;
 const CommentUserImage = styled.img`
   width: 34px;
   height: 34px;
+  border-radius: 50%;
 `;
 const CommentUsername = styled.span`
   font-size: 14px;
   font-weight: 600;
   color: ${(props) => props.theme.fontcolor};
 `;
-
 const CommentTimer = styled.span`
   font-size: 10px;
   color: #9a9a9a;
   flex: 1;
 `;
+
 const DeletAll = styled.div`
-  height: 100%;
+  height: auto;
   width: auto;
-  padding-top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
-
 const DeletComment = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  line-height: 25px;
   font-size: 18px;
-  margin-right: 4px;
   width: 34px;
   height: 100%;
   border-radius: 50%;
@@ -244,31 +247,37 @@ const DeletComment = styled.div`
   }
 `;
 const DeletIcon = styled.img`
-  opacity: 1;
+  opacity: 0.6;
+  width: 16px;
 `;
-
+const CometdescAll = styled.div`
+  margin: 10px 0 0 8%;
+  border-left: 2px solid ${(props) => props.theme.borderstroke};
+  padding: 10px 0;
+  @media (max-width: 768px) {
+    margin: 10px 0 0 8%;
+  }
+`;
 const CommentContent = styled.div`
   font-size: 14px;
   color: ${(props) => props.theme.fontcolor};
-  margin-left: 70px;
+  margin-left: 30px;
 `;
-
 const CommentImage = styled.img`
   width: 120px;
   height: 120px;
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
-  margin-left: 70px;
+  margin-left: 30px;
 `;
-
 const CommentVideo = styled.video`
   width: 120px;
   height: 120px;
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
-  margin-left: 70px;
+  margin-left: 30px;
 `;
 const NotComment = styled.div`
   display: flex;
@@ -290,6 +299,8 @@ const PostComment = () => {
   const [files, setFiles] = useState([]);
   const [postOwnerId, setPostOwnerId] = useState("");
   const { currentUser } = useAuth();
+  const [profileImg, setProfileImg] = useState("");
+  const [profileImages, setProfileImages] = useState({}); // 댓글
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -306,6 +317,20 @@ const PostComment = () => {
     dms: passedDms,
     retweets: passedRetweets,
   } = location.state || {};
+
+  useEffect(() => {
+    const getUserProfileImage = async () => {
+      try {
+        const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
+        setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
+      } catch (error) {}
+    };
+
+    // userId가 있을 때만 프로필 이미지 가져오기
+    if (userId) {
+      getUserProfileImage();
+    }
+  }, [userId]);
 
   useEffect(() => {
     if (userId) {
@@ -339,10 +364,14 @@ const PostComment = () => {
         }));
 
         setComments(commentsList); // 댓글 리스트 저장
-        setCommentsCount(commentsList.length); // 댓글 수 저장 (이 부분을 수정)
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
+        setCommentsCount(commentsList.length);
+        const profileImagesMap = {};
+        for (let comment of commentsList) {
+          const profileImg = await fetchUserProfileImage(comment.userId);
+          profileImagesMap[comment.userId] = profileImg || ""; // 프로필 이미지가 없으면 빈 문자열
+        }
+        setProfileImages(profileImagesMap);
+      } catch (error) {}
     };
 
     fetchComments();
@@ -375,7 +404,6 @@ const PostComment = () => {
     const fetchPostOwner = async () => {
       try {
         if (!id) {
-          console.error("포스트 ID가 없습니다.");
           return;
         }
 
@@ -384,22 +412,14 @@ const PostComment = () => {
         const postSnapshot = await getDoc(postRef);
         if (postSnapshot.exists()) {
           const postData = postSnapshot.data();
-          console.log("포스트 데이터:", postData);
 
           if (postData.userId) {
             setPostOwnerId(postData.userId); // userId를 상태로 저장
           } else {
-            console.error("userId 필드가 문서에 없습니다.");
           }
         } else {
-          console.error("해당 포스트가 Firestore에 존재하지 않습니다.");
         }
-      } catch (error) {
-        console.error(
-          "포스트 작성자 정보를 가져오는 중 오류가 발생했습니다:",
-          error
-        );
-      }
+      } catch (error) {}
     };
 
     fetchPostOwner(); // 포스트 작성자의 ID 가져오기
@@ -413,9 +433,7 @@ const PostComment = () => {
         prevComments.filter((comment) => comment.id !== commentId)
       ); // UI에서 삭제된 댓글 제거
       setCommentsCount((prevCount) => prevCount - 1); // 댓글 수 감소
-    } catch (error) {
-      console.error("댓글 삭제 중 오류 발생:", error);
-    }
+    } catch (error) {}
   };
 
   return (
@@ -427,7 +445,11 @@ const PostComment = () => {
         <BoederWrapper>
           <PostWrapper>
             <Header>
-              <UserImage src="http://localhost:5173/profile.png"></UserImage>
+              {profileImg ? (
+                <UserImage src={profileImg} alt="User Profile"></UserImage>
+              ) : (
+                <UserIcon2 />
+              )}
               <Username>{username}</Username>
               <Timer>{renderTimeAgo()}</Timer>
             </Header>
@@ -476,7 +498,10 @@ const PostComment = () => {
                   <CommentsList>
                     <CommentWrapper key={comment.id}>
                       <CommentHeader>
-                        <CommentUserImage src="http://localhost:5173/profile.png"></CommentUserImage>
+                        <CommentUserImage
+                          src={profileImages[comment.userId]}
+                          alt="User Profile"
+                        ></CommentUserImage>
                         <CommentUsername>{comment.username}</CommentUsername>
                         <CommentTimer>
                           {formatDistanceToNow(
@@ -497,40 +522,42 @@ const PostComment = () => {
                           </DeletAll>
                         )}
                       </CommentHeader>
-                      <CommentContent>
-                        {typeof comment.comment === "string"
-                          ? comment.comment
-                          : JSON.stringify(comment.comment)}
-                      </CommentContent>
+                      <CometdescAll>
+                        <CommentContent>
+                          {typeof comment.comment === "string"
+                            ? comment.comment
+                            : JSON.stringify(comment.comment)}
+                        </CommentContent>
 
-                      {/* 댓글에 이미지가 있을 경우 */}
-                      {comment.photoUrls && comment.photoUrls.length > 0 && (
-                        <div>
-                          {comment.photoUrls.map((photoUrl, index) => (
-                            <CommentImage
-                              key={index}
-                              src={photoUrl}
-                              alt={`Comment Image ${index + 1}`}
-                            />
-                          ))}
-                        </div>
-                      )}
+                        {/* 댓글에 이미지가 있을 경우 */}
+                        {comment.photoUrls && comment.photoUrls.length > 0 && (
+                          <div>
+                            {comment.photoUrls.map((photoUrl, index) => (
+                              <CommentImage
+                                key={index}
+                                src={photoUrl}
+                                alt={`Comment Image ${index + 1}`}
+                              />
+                            ))}
+                          </div>
+                        )}
 
-                      {/* 댓글에 비디오가 있을 경우 */}
-                      {comment.videoUrls && comment.videoUrls.length > 0 && (
-                        <div>
-                          {comment.videoUrls.map((videoUrl, index) => (
-                            <CommentVideo
-                              key={index}
-                              controls
-                              autoPlay
-                              loop
-                              muted
-                              src={videoUrl}
-                            />
-                          ))}
-                        </div>
-                      )}
+                        {/* 댓글에 비디오가 있을 경우 */}
+                        {comment.videoUrls && comment.videoUrls.length > 0 && (
+                          <div>
+                            {comment.videoUrls.map((videoUrl, index) => (
+                              <CommentVideo
+                                key={index}
+                                controls
+                                autoPlay
+                                loop
+                                muted
+                                src={videoUrl}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </CometdescAll>
                     </CommentWrapper>
                   </CommentsList>
                 </ScrollWrapper>
