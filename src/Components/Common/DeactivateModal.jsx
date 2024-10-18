@@ -65,38 +65,44 @@ const Button = styled.button`
   padding: 16px; /* 인풋 창과 같은 높이로 설정 */
   background: #181818;
   color: #dfdfdf;
-  border: 1px solid #fff;
+  border: 1px solid #dfdfdf;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s; /* 호버 애니메이션 부여 */
   font-size: 16px;
   margin-top: 20px;
   &:hover {
-    color: #fff;
-    border: 1px solid #fff;
+    color: dodgerblue;
+    border: 1px solid dodgerblue;
+    font-weight: 600;
   }
   &:focus {
+    background: dodgerblue;
     color: #fff;
     border: 1px solid #fff;
+    font-weight: 600;
   }
 `;
 const DelButton = styled.button`
   padding: 16px; /* 인풋 창과 같은 높이로 설정 */
   background: ${(props) => props.theme.modalfont};
   color: #fff;
-  border: 1px solid #fff;
+  border: 1px solid transparent;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s; /* 호버 애니메이션 부여 */
   font-size: 16px;
   margin-top: 10px;
   &:hover {
-    color: #181818;
-    border: 1px solid #fff;
+    color: crimson;
+    border: 1px solid #f00;
+    font-weight: 600;
   }
   &:focus {
-    color: #181818;
+    background: crimson;
+    color: #fff;
     border: 1px solid #fff;
+    font-weight: 600;
   }
 `;
 
@@ -120,7 +126,7 @@ const BackButton = styled.button`
 
   &:hover,
   &:active {
-    color: #181818; // 호버 또는 클릭 시 색상 변경
+    color: ${(props) => props.theme.fontcolor}; // 호버 또는 클릭 시 색상 변경
   }
 `;
 
@@ -149,7 +155,13 @@ const DeactivateModal = ({ onClose, onSelectOption }) => {
 
   const handleConfirmDelete = () => {
     // 홈으로 리디렉션하는 로직 (예: useHistory를 사용하는 경우)
-    window.location.href = "/"; // 404 페이지 대신 홈으로 리디렉션
+    window.location.href = "/login"; // 로그인페이지로 이동
+  };
+
+  const handleLogoutAndRedirect = () => {
+    // 로그아웃 처리와 동시에 로그인 페이지로 이동
+    auth.signOut(); // Firebase 인증 로그아웃 예시
+    window.location.href = "/login"; // 로그인 페이지로 리디렉션
   };
 
   // 프로필 비활성화 모달
@@ -158,8 +170,7 @@ const DeactivateModal = ({ onClose, onSelectOption }) => {
   };
 
   const handleConfirm = () => {
-    // 홈으로 리디렉션하는 로직 (예: useHistory를 사용하는 경우)
-    window.location.href = "/"; // 404 페이지 대신 홈으로 리디렉션
+    window.location.href = "/login"; // 홈으로 이동
   };
 
   // 모달 외부 클릭 시 닫히는 함수
@@ -204,13 +215,15 @@ const DeactivateModal = ({ onClose, onSelectOption }) => {
       {isDeleteConfirmVisible && ( // 삭제 확인 모달 표시
         <ConfirmDeleteModal
           onClose={() => setIsDeleteConfirmVisible(false)} // 모달 닫기
-          onConfirm={handleConfirmDelete} // 확인 클릭 시 홈으로 이동
+          onConfirm={handleConfirmDelete}
+          onClick={handleLogoutAndRedirect} // 확인 클릭 시 홈으로 이동
         />
       )}
       {isConfirmVisible && ( // 삭제 확인 모달 표시
         <ConfirmDeactivateModal
           onClose={() => setIsConfirmVisible(false)} // 모달 닫기
-          onConfirm={handleConfirm} // 확인 클릭 시 홈으로 이동
+          onConfirm={handleConfirm}
+          onClick={handleLogoutAndRedirect} // 확인 클릭 시 홈으로 이동
         />
       )}
     </>

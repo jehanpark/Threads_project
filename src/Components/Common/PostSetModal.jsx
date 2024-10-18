@@ -32,6 +32,7 @@ const Wrapper = styled.div`
     border-radius: 30px 30px 0 0;
   }
 `;
+
 const Contentswrapper = styled.div`
   @media (max-width: 768px) {
     bottom: 0;

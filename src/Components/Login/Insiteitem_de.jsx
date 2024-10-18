@@ -11,10 +11,9 @@ const BorderWrapper = styled.div`
   align-items: flex-start;
   justify-content: center;
   width: ${(props) =>
-    props.isSmallScreen ? "100vw" : props.isTablet ? "800px" : "1200px"};
-  height: auto;
+    props.isSmallScreen ? "100%" : props.isTablet ? "100%" : "620px"};
   padding: ${(props) =>
-    props.isSmallScreen ? "0" : props.isTablet ? "0 30px" : "0px"};
+    props.isSmallScreen ? "0" : props.isTablet ? "0 40px" : "0"};
   gap: ${(props) =>
     props.isSmallScreen ? "0" : props.isTablet ? "20px" : "40px"};
   box-sizing: border-box;
@@ -28,6 +27,7 @@ const InsitesWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+
   /* height: 100vh; */
   padding: ${(props) =>
     props.isSmallScreen ? "0px" : props.isTablet ? "0 20px" : "0px"};
@@ -81,6 +81,7 @@ const BorderItemTitle = styled.div`
   padding: 0 20px;
   font-weight: bold;
   margin: 0 0 20px;
+  /* color: ${(props) => props.theme.fontColor}; */
   color: ${(props) => props.theme.fontColor};
 `;
 
@@ -143,7 +144,7 @@ const FollowerInner = styled.div`
 `;
 
 const InsiteInner2 = styled.div`
-  background: #f5f5f5;
+  background: ${(props) => props.theme.borderColor};
   padding: 12px 12px;
   border-radius: 8px;
   margin-top: 20px;

@@ -126,7 +126,7 @@ const Column = styled.div`
 const Photo = styled.img`
   width: 120px;
   height: 120px;
-  object-fit: cover/contain;
+  object-fit: cover;
   margin-left: 0px;
   border-radius: 8px;
   @media (max-width: 768px) {

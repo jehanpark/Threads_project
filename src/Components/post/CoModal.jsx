@@ -367,7 +367,7 @@ const Buttons = styled.div`
   border-top: ${(props) => props.theme.borderstroke};
   padding: 10px;
   @media (max-width: 768px) {
-    width: 100%;
+    /* width: 100%; */
     gap: 10px;
   }
 `;
@@ -386,9 +386,12 @@ const IconsBtnwrapper = styled.div`
     gap: 0px;
   }
 `;
+
 const SubmitBtn = styled.input`
-  background: ${(props) => props.theme.btnBgColor};
-  color: ${(props) => props.theme.logoColor};
+  /* background: ${(props) => props.theme.btnBgColor};
+  color: ${(props) => props.theme.logoColor}; */
+  background: ${(props) => props.theme.selecticoncolor};
+  color: ${(props) => props.theme.btnBgColor};
   border: 1px solid ${(props) => props.theme.borderstroke};
   padding: 10px 20px;
   border-radius: 12px;
@@ -584,9 +587,9 @@ const CoModal = ({
 
   return (
     <AllWrapp>
-      <ModalOverlay>
+      <ModalOverlay onClick={commentCancle}>
         <Title>댓글</Title>
-        <PostComentWrapper>
+        <PostComentWrapper onClick={(e) => e.stopPropagation()}>
           <CenBtn onClick={commentCancle}>취소</CenBtn>
           <PostAll>
             <PostArea>

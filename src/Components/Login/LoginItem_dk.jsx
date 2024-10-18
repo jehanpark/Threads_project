@@ -532,9 +532,10 @@ const EyeIconWrapper = styled.div`
     width: 28px;
     height: 28px;
     transition: fill 0.2s, stroke 0.2s; /* 부드러운 전환 효과 */
+    fill: ${(props) => props.theme.activeBorder};
   }
   &:hover svg {
-    fill: #000; /* 호버 시 색상 */
+    fill: ${(props) => props.theme.activeBorder}; /* 호버 시 색상 */
   }
 `;
 

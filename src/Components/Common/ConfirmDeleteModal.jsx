@@ -1,7 +1,9 @@
 // src/components/ConfirmDeleteModal.jsx
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { LeftArrowIcon } from "./Icon";
+import ProfileDelModal from "./ProfileDelModal";
 
 const Overlay = styled.div`
   position: fixed;
@@ -74,18 +76,38 @@ const NoButton = styled.button`
     border: 1px solid #fff;
   }
 `;
+const ConfirmDeleteModal = ({ onClose }) => {
+  const [showProfileDelModal, setShowProfileDelModal] = useState(false);
+  const navigate = useNavigate();
 
-const ConfirmDeleteModal = ({ onClose, onConfirm }) => {
+  const handleConfirm = () => {
+    setShowProfileDelModal(true);
+  };
+
+  const handleLogoutAndRedirect = async () => {
+    try {
+      await auth.signOut();
+      navigate("/login");
+    } catch (error) {
+      console.error("로그아웃 실패:", error);
+    }
+  };
+
   return (
-    <Overlay onClick={onClose}>
-      <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <Title>프로필을 삭제하시겠습니까?</Title>
-        <ButtonLayout>
-          <YesButton onClick={onConfirm}>네</YesButton>
-          <NoButton onClick={onClose}>아니오</NoButton>
-        </ButtonLayout>
-      </ModalContainer>
-    </Overlay>
+    <>
+      <Overlay onClick={onClose}>
+        <ModalContainer onClick={(e) => e.stopPropagation()}>
+          <Title>프로필을 삭제하시겠습니까?</Title>
+          <ButtonLayout>
+            <YesButton onClick={handleConfirm}>네</YesButton>
+            <NoButton onClick={onClose}>아니오</NoButton>
+          </ButtonLayout>
+        </ModalContainer>
+      </Overlay>
+      {showProfileDelModal && (
+        <ProfileDelModal onClose={handleLogoutAndRedirect} />
+      )}
+    </>
   );
 };
 

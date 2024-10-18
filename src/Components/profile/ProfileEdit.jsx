@@ -40,7 +40,6 @@ const PofileModalBox = styled.div`
   position: relative;
   flex-direction: column;
   @media screen and (max-width: 768px) {
-    border: 1px solid #f00;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -62,6 +61,9 @@ const CloseButton = styled.button`
   color: ${(props) => props.theme.fontcolor};
   font-size: 18px;
   cursor: pointer;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const Box = styled.div`

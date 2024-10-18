@@ -41,24 +41,25 @@ const Button = styled.button`
     background: #333;
   }
 `;
-const DeactivateSuccessModal = ({ onClose }) => {
-  const handleLogoutAndRedirect = async () => {
-    try {
-      await auth.signOut(); // Firebase 로그아웃 처리
-      window.location.href = "/login"; // 로그인 페이지로 리디렉션
-    } catch (error) {
-      console.error("로그아웃 실패:", error); // 에러 처리
-    }
+const ProfileDelModal = () => {
+  const handleLogoutAndRedirect = () => {
+    // 로그아웃 처리와 동시에 로그인 페이지로 이동
+    auth.signOut(); // Firebase 인증 로그아웃 예시
+    window.location.href = "/login"; // 로그인 페이지로 리디렉션
   };
 
   return (
-    <Overlay onClick={onClose}>
+    <Overlay>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <Title>프로필을 비활성화 하였습니다.</Title>
-        <Button onClick={handleLogoutAndRedirect}>확인</Button>
+        <Title>계정을 완전히 삭제하였습니다.</Title>
+        <Button
+          onClick={handleLogoutAndRedirect} // 확인 클릭 시 홈으로 이동
+        >
+          확인
+        </Button>
       </ModalContainer>
     </Overlay>
   );
 };
 
-export default DeactivateSuccessModal;
+export default ProfileDelModal;

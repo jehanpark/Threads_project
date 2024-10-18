@@ -39,6 +39,7 @@ const OtherModalBox = styled.div`
     height: 100%;
     background: ${(props) => props.theme.headerBg};
     padding: 40% 20px;
+    border-radius: 0px;
   }
 `;
 

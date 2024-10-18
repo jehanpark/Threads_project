@@ -116,19 +116,20 @@ const OptionItem = styled.li`
   justify-content: space-between; // 추가: 양쪽 끝으로 정렬
   font-size: 14px;
   position: relative; /* Positioning for the ::after element */
-  color: ${(props) => props.theme.fontcolor};
+  color: ${(props) => props.theme.modalfont};
   background-color: transparent; /* 초기 배경색 설정 */
   border-radius: 6px;
 
   // 호버 시 배경색 변경
   &:hover {
-    color: #000;
+    color: ${(props) => props.theme.fontcolor};
     background-color: ${(props) =>
       props.theme.modalhoverbg}; /* 호버 시 백그라운드 색상 */
     transition: background-color 0.3s ease; /* 배경색 변화 애니메이션 */
   }
 `;
-// 체크박스 스타일 컴포넌트 추가
+
+// 체크박스 스타일
 const Checkbox = styled.input`
   width: 20px;
   height: 20px;
@@ -140,13 +141,13 @@ const Checkbox = styled.input`
   position: relative;
   margin-right: 10px;
 
-  // 체크된 상태의 스타일
+  // 체크된 상태
   &:checked {
-    background-color: #181818;
-    border: 2px solid #181818;
+    background-color: ${(props) => props.theme.activeBorder};
+    border: 2px solid ${(props) => props.theme.activeBorder};
   }
 
-  // 체크 표시 추가
+  // 체크 표시
   &:checked::after {
     content: "";
     position: absolute;
@@ -154,7 +155,7 @@ const Checkbox = styled.input`
     left: 50%;
     width: 10px;
     height: 10px;
-    background-color: white;
+    background-color: ${(props) => props.theme.buttonbackground};
     border-radius: 50%;
     transform: translate(-50%, -50%);
   }
