@@ -1,6 +1,6 @@
 import React from "react";
 import GlobalStyles from "../../styles/GlobalStyles.styles";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { color } from "framer-motion";
 const ContentsAll = styled.div`
   @media (max-width: 768px) {
@@ -30,6 +30,15 @@ const Wrapper = styled.div`
     right: 0;
     top: auto;
     border-radius: 30px 30px 0 0;
+    animation: ${slideUp} 0.5s ease-out;
+  }
+`;
+const slideUp = keyframes`
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
   }
 `;
 const Contentswrapper = styled.div`

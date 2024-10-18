@@ -27,6 +27,17 @@ const FollowModalBox = styled.div`
   color: ${(props) => props.theme.fontcolor};
   position: relative;
   display: ${({ isSmallScreen }) => (isSmallScreen ? "none" : "block")};
+  @media screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    width: 100%;
+    height: 100%;
+    background: ${(props) => props.theme.headerBg};
+    padding: 40% 20px;
+    border-radius: 0;
+  }
 `;
 
 const CloseButton = styled.button`
@@ -38,6 +49,9 @@ const CloseButton = styled.button`
   color: ${(props) => props.theme.fontcolor};
   font-size: 18px;
   cursor: pointer;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const ContentsBorder = styled.div`
@@ -46,7 +60,7 @@ const ContentsBorder = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  height: 100%;
+  height: calc(100% - 30px);
   padding: 0 10px;
   overflow-y: auto;
   box-sizing: border-box;
@@ -69,6 +83,30 @@ const ContentsBorder = styled.div`
   }
 `;
 
+const Box = styled.div`
+  width: 100%;
+  border: 2px solid ${(props) => props.theme.borderstroke};
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: ${(props) => props.theme.headerBg};
+  margin-bottom: 10px;
+  &.mobile {
+    display: none;
+    margin-top: 8px;
+    @media screen and (max-width: 768px) {
+      display: block;
+      text-align: center;
+      background: ${(props) => props.theme.borderstroke};
+      &:hover {
+        background: ${(props) => props.theme.followerfont};
+        color: ${(props) => props.theme.btnBgColor};
+      }
+    }
+  }
+`;
+
 // const FollowersList =
 
 const FollowModal = ({ open, close, profile }) => {
@@ -87,6 +125,9 @@ const FollowModal = ({ open, close, profile }) => {
           <ContentsBorder>
             <FollowersList />
           </ContentsBorder>
+          <Box className="mobile" onClick={close}>
+            모달 닫기
+          </Box>
         </FollowModalBox>
       </ModalOverlay>
     </>

@@ -150,6 +150,7 @@ const IconWrapper = styled.div`
   align-items: center;
   gap: 6px;
   transition: all 0.2s;
+
   &:nth-child(1) {
     margin-left: 0;
   }
@@ -507,23 +508,22 @@ const Post = ({
     <>
       <Wrapper>
         <Header>
-          {profileImg ? (
-            <UserImage
-              onClick={() => {
-                navigate({
-                  pathname: "/profile",
-                  search: `${createSearchParams({
-                    email: email,
-                  })}`,
-                });
-              }}
-              src={profileImg}
-              alt="User Profile"
-            ></UserImage>
-          ) : (
-            <UserIcon2 width={40} />
-          )}
-
+          <div
+            onClick={() => {
+              navigate({
+                pathname: "/profile",
+                search: `${createSearchParams({
+                  email: email,
+                })}`,
+              });
+            }}
+          >
+            {profileImg ? (
+              <UserImage src={profileImg} alt="User Profile"></UserImage>
+            ) : (
+              <UserIcon2 width={40} />
+            )}
+          </div>
           <Username
             onClick={() => {
               navigate({
