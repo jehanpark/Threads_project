@@ -70,10 +70,7 @@ const LoginItem = () => {
             <StyledLabel htmlFor="password">비밀번호</StyledLabel>
           </InputWrapper>
           <InputWrapper>
-            <StyledInput
-              type="submit"
-              value={isLoading ? "Loading.." : "Login!"}
-            />
+            <StyledInput type="submit" value={isLoading ? "ㅋ" : "Login!"} />
           </InputWrapper>
           {/* 회원가입 링크 설정 */}
           <Link to="/createaccount">

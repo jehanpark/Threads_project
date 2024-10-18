@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { UserIcon2 } from "../Common/Icon";
+
 const FollowerContain = styled.div`
   position: relative;
-  width: 590px;
+  width: 680px;
   max-width: 100%;
   display: flex;
   justify-content: space-between;
@@ -14,10 +15,10 @@ const FollowerContain = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
+    padding: 20px 10px;
   }
   @media (max-width: 480px) {
     width: 100%;
-    padding: 10px 10px;
   }
 `;
 const Wrapper = styled.div`
@@ -71,8 +72,6 @@ const UserName = styled.p`
 `;
 const UserInfo = styled.p`
   font-size: 12px;
-  color: ${(props) =>
-    props.isRead ? props.theme.readTextColor : props.theme.followerfont};
   margin: 0;
   @media (max-width: 768px) {
     font-size: 10px;
@@ -136,14 +135,13 @@ const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
         </UserWrapper>
         <UserContex>
           <UserName>{userEmail || "zang@ezen.com"}</UserName>
-          <UserInfo>{bio || "노래하는 고양이"}</UserInfo>
+          <UserInfo>{bio}</UserInfo>
           <UserFollowerNum>{`팔로워 ${followNum}명`}</UserFollowerNum>
         </UserContex>
       </Wrapper>
       <FollowerButton
         isFollowing={isFollowing}
         onClick={(e) => {
-          console.log("click");
           e.stopPropagation(); // 상위 이벤트 전달 x
           toggleFollow();
         }}

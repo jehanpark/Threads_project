@@ -6,12 +6,10 @@ import {
   query,
 } from "firebase/firestore";
 import { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
 import { db } from "../../firebase";
-import Post from "../Post";
 import Post2 from "../Post2";
 
-const TimeLine = ({ searchTerm, contentType, onDataEmpty, postNum }) => {
+const TimeLine2 = ({ searchTerm, contentType, onDataEmpty, postNum }) => {
   const [posts, setPosts] = useState([]);
   const [isBouncing, setIsBouncing] = useState(false);
   const wrapperRef = useRef(null);
@@ -96,10 +94,10 @@ const TimeLine = ({ searchTerm, contentType, onDataEmpty, postNum }) => {
         onScroll={handleScroll}
       >
         {posts.map((post) => (
-          <Post key={post.id} {...post} />
+          <Post2 key={post.id} {...post} />
         ))}
       </div>
     </>
   );
 };
-export default TimeLine;
+export default TimeLine2;

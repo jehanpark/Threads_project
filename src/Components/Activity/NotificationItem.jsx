@@ -8,7 +8,7 @@ const Contain = styled.div``;
 
 const NotificationContain = styled(motion.div)`
   position: relative;
-  width: 590px;
+  width: 680px;
   max-width: 100%;
   display: flex;
   justify-content: space-between;
@@ -63,7 +63,6 @@ const DeleteLabel = styled(motion.p)`
 const Wrapper = styled.div`
   color: ${(props) =>
     props.isRead ? props.theme.borderstroke : props.theme.fontcolor};
-
   display: flex;
   gap: 20px;
   align-items: center;
@@ -105,48 +104,6 @@ const UserContex = styled.div`
   gap: 5px;
 `;
 
-const User = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 5px;
-`;
-
-const UserName = styled.p`
-  font-size: 14px;
-  font-weight: 700;
-  margin: 0;
-
-  @media (max-width: 768px) {
-    font-size: 10px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 10px;
-  }
-`;
-
-const UserInfo = styled.p`
-  font-size: 14px;
-
-  margin: 0;
-
-  @media (max-width: 768px) {
-    font-size: 10px;
-    word-wrap: break-word;
-    word-break: break-all;
-    white-space: normal;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 10px;
-    word-wrap: break-word;
-    word-break: break-all;
-    white-space: normal;
-  }
-`;
-
 const UserDate = styled.p`
   font-size: 12px;
 
@@ -159,6 +116,15 @@ const UserDate = styled.p`
   }
 `;
 
+const User = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+`;
+
 const NotificationItem = ({
   profileImg,
   username,
@@ -169,16 +135,14 @@ const NotificationItem = ({
   type,
   onDelete,
 }) => {
-  //날짜 포맷 함수
+  // 날짜 포맷 함수
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
     return formatDistanceToNow(date, { addSuffix: true });
   };
 
-  useEffect(() => {
-    console.log("읽음 상태 변경:", isRead);
-  }, [isRead]);
+  useEffect(() => {}, [isRead]);
 
   // 삭제 관련 상태 및 애니메이션 처리
   const [isDeleteShow, setIsDeleteShow] = useState(false);
@@ -231,9 +195,9 @@ const NotificationItem = ({
         </UserWrapper>
         <UserContex>
           <User>
-            {type === "friend" && <UserInfo>친한친구</UserInfo>}
-            <UserName>{username}</UserName>
-            <UserInfo>{message}</UserInfo>
+            {type === "friend" && "친한친구 "}
+            {username}
+            {message}
           </User>
           <UserDate>{renderTimeAgo()}</UserDate>
           {isRead && <UserDate>읽음</UserDate>}

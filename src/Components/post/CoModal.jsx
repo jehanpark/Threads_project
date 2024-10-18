@@ -78,6 +78,7 @@ const PostAll = styled.div`
   }
 `;
 const PostArea = styled.div`
+  padding: 10px;
   margin: 10px;
   display: grid;
   flex: 2;
@@ -366,7 +367,7 @@ const Buttons = styled.div`
   border-top: ${(props) => props.theme.borderstroke};
   padding: 10px;
   @media (max-width: 768px) {
-    width: 100%;
+    /* width: 100%; */
     gap: 10px;
   }
 `;
@@ -385,9 +386,12 @@ const IconsBtnwrapper = styled.div`
     gap: 0px;
   }
 `;
+
 const SubmitBtn = styled.input`
-  background: ${(props) => props.theme.btnBgColor};
-  color: ${(props) => props.theme.logoColor};
+  /* background: ${(props) => props.theme.btnBgColor};
+  color: ${(props) => props.theme.logoColor}; */
+  background: ${(props) => props.theme.selecticoncolor};
+  color: ${(props) => props.theme.btnBgColor};
   border: 1px solid ${(props) => props.theme.borderstroke};
   padding: 10px 20px;
   border-radius: 12px;
@@ -406,8 +410,13 @@ const CenBtn = styled.div`
   border-bottom: 1px solid rgba(204, 204, 204, 0.4);
   border-radius: 40px 40px 0 0;
   cursor: pointer;
+  @media (max-width: 768px) {
+    padding: 18px;
+    gap: 0px;
+  }
 `;
 const CoModal = ({
+  userId,
   postId,
   postContent,
   photos,
@@ -434,7 +443,6 @@ const CoModal = ({
   const maxFileSize = 5 * 1024 * 1024; // 5MB
   const maxFilesCount = 3;
 
-  const { userId } = location.state || {};
   // Firebase에서 전달된 값을 상태로 설정
   useEffect(() => {
     if (passedLikes) setLikes(passedLikes);
@@ -446,17 +454,14 @@ const CoModal = ({
     const getUserProfileImage = async () => {
       try {
         const imgUrl = await fetchUserProfileImage(userId); // 프로필 이미지 가져오기
-        console.log(imgUrl, "야호");
+
         setProfileImg(imgUrl || ""); // 이미지가 없으면 빈 값
-      } catch (error) {
-        console.error("Error fetching profile image:", error);
-      }
+      } catch (error) {}
     };
 
     // userId가 있을 때만 프로필 이미지 가져오기
     if (userId) {
       getUserProfileImage();
-      console.log(userId);
     }
   }, [userId]);
 
@@ -480,9 +485,7 @@ const CoModal = ({
         }));
 
         setCommentsCount(commentsSnapshot.size); // 댓글 수 저장
-      } catch (error) {
-        console.error("댓글을 불러오는 중 오류가 발생했습니다:", error);
-      }
+      } catch (error) {}
     };
 
     if (postId) fetchComments();
@@ -566,7 +569,6 @@ const CoModal = ({
       setCommentsCount((prevCount) => prevCount + 1);
       onClose();
     } catch (error) {
-      console.error("댓글 추가 중 오류가 발생했습니다:", error);
     } finally {
       setIsLoading(false);
     }
@@ -585,9 +587,9 @@ const CoModal = ({
 
   return (
     <AllWrapp>
-      <ModalOverlay>
+      <ModalOverlay onClick={commentCancle}>
         <Title>댓글</Title>
-        <PostComentWrapper>
+        <PostComentWrapper onClick={(e) => e.stopPropagation()}>
           <CenBtn onClick={commentCancle}>취소</CenBtn>
           <PostAll>
             <PostArea>
@@ -675,8 +677,8 @@ const CoModal = ({
                         src={URL.createObjectURL(file)}
                         alt={`Uploaded Preview ${index + 1}`}
                         style={{
-                          width: "160px",
-                          height: "160px",
+                          width: "120px",
+                          height: "120px",
                           borderRadius: "10px",
                           objectFit: "cover",
                         }}
@@ -686,8 +688,8 @@ const CoModal = ({
                         controls
                         muted
                         style={{
-                          width: "160px",
-                          height: "160px",
+                          width: "120px",
+                          height: "120px",
                           borderRadius: "10px",
                           objectFit: "cover",
                         }}

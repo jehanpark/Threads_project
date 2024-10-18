@@ -1,7 +1,7 @@
 import React from "react";
 import GlobalStyles from "../../styles/GlobalStyles.styles";
 import styled from "styled-components";
-import { color } from "framer-motion";
+
 const ContentsAll = styled.div`
   @media (max-width: 768px) {
   }
@@ -32,6 +32,7 @@ const Wrapper = styled.div`
     border-radius: 30px 30px 0 0;
   }
 `;
+
 const Contentswrapper = styled.div`
   @media (max-width: 768px) {
     bottom: 0;
@@ -141,7 +142,9 @@ const PostSetModal = ({
           <TopRec></TopRec>
           <Optionwrapper>
             {isAuthor && <Li onClick={onDelete}>삭제</Li>}
-            <Li onClick={() => alert("신고하기 기능은 구현되지 않았습니다.")}>
+            <Li
+              onClick={() => alert("신고하기 기능은 구현되지 않았습니다.ㅎㅎ")}
+            >
               신고하기
             </Li>
             {isAuthor && <Li onClick={onEdit}>수정</Li>}

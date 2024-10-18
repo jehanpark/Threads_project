@@ -9,7 +9,7 @@ const CommentBox = ({ username }) => {
 
   const handleSubmit = () => {
     // 제출 로직 작성
-    console.log(comment);
+
     setComment("");
   };
 

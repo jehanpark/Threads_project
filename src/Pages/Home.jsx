@@ -1,8 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import styled from "styled-components";
 import TimeLine from "../Components/post/TimeLine";
 import EtcModal from "../Components/post/EtcModal";
+import { AddPageContext } from "../Contexts/AddPageContext"; // AddPageContext 가져오기
+import { auth } from "../firebase";
 
+// 모든 페이지들
+import Activity from "./Activity";
+import Profile from "./Profile";
+
+const DIV = styled.div`
+  display: flex;
+  gap: 60px;
+`;
+
+const AddPages = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  @media (max-width: 1390px) {
+  }
+`;
 const Wrapper = styled.div`
   /* width: 100%; */
   /* height: calc(100vh - 120px); */
@@ -15,21 +33,26 @@ const Wrapper = styled.div`
     width: 100%;
   }
 `;
+
 const BoederWrapper = styled.div`
   bottom: 0;
   width: 680px;
+
   height: 100%;
   padding: 10px;
   border-radius: 40px 40px 0px 0px;
-  background: ${(props) => props.theme.borderWrapper};
+  background: ${(props) => props.theme.borderColor};
   box-shadow: ${(props) => props.theme.bordershadow};
   /* overflow: hidden; */
   @media (max-width: 768px) {
     position: absolute;
     width: 100%;
     bottom: 0;
+    left: 0;
     padding: 0;
+    left: 0px;
     border-radius: 0;
+    background: ${(props) => props.theme.borderColor};
     height: calc(100% - 70px);
     box-shadow: none;
     border-radius: 0px 0px 0px 0px;
@@ -79,7 +102,7 @@ const PostlistWrapper = styled.div`
 const Home = () => {
   const wrapperRef = useRef(null); // DOM 요소 접근을 위한 useRef
   const [isBouncing, setIsBouncing] = useState(false); // 바운스 상태 관리
-
+  const { addPages } = useContext(AddPageContext); // AddPageContext에서 addPages 가져오기
   const handleScroll = () => {
     const element = wrapperRef.current;
 
@@ -110,16 +133,25 @@ const Home = () => {
   }, []);
 
   return (
-    <Wrapper>
-      <BoederWrapper>
-        <PostlistWrapper
-          ref={wrapperRef}
-          className={isBouncing ? "bounce" : ""}
-        >
-          <TimeLine />
-        </PostlistWrapper>
-      </BoederWrapper>
-    </Wrapper>
+    <DIV>
+      <Wrapper>
+        <BoederWrapper>
+          <PostlistWrapper
+            ref={wrapperRef}
+            className={isBouncing ? "bounce" : ""}
+          >
+            <TimeLine />
+          </PostlistWrapper>
+        </BoederWrapper>
+      </Wrapper>
+
+      {addPages.map((page, index) => (
+        <div key={index}>
+          {page === "Profile" && <Profile />}
+          {page === "Activity" && <Activity />}
+        </div>
+      ))}
+    </DIV>
   );
 };
 

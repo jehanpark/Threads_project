@@ -2,9 +2,13 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   width: 100%;
-  height: calc(100vh - 15%);
+  /* height: calc(100vh - 15%); */
+  height: 100vh; // 뷰포트 전체를 차지
+  overflow: hidden; // 키보드 때문에 스크롤 안 생기도록 설정
   margin: 0 auto;
+  z-index: -1;
   color: ${(props) => props.theme.fontcolor};
+  background-color: ${(props) => props.theme.bodyBg};
 `;
 
 export const BgImg = styled.img`
@@ -52,7 +56,8 @@ export const Form = styled.form`
 export const InputWrapper = styled.div`
   position: relative;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: ${(props) =>
+    props.isSmallScreen ? "12px" : props.isTablet ? "20px" : "20px"};
 `;
 
 export const StyledInput = styled.input`
@@ -61,15 +66,60 @@ export const StyledInput = styled.input`
   height: 54px;
   border: none;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
   color: #7e7e7e;
   box-shadow: 0 0 0 0 ${(props) => props.theme.loginInputSelectColor};
   transition: all 0.2s ease-in-out;
 
   &:focus + label,
+  // 다은 추가 스타일링 
+
+  /* display: flex;
+  align-items: center;
+  justify-content: end;
+  position: absolute;
+  margin-top: -88px;
+  margin-left: 12px;
+  background-color: black;
+  border-radius: 10px;
+  padding: 2px 6px;
+  ::after {
+    display: block;
+    width: 5px;
+    height: 5px;
+    background-color: black;
+    position: absolute;
+    top: 17px;
+    left: 10px;
+    transform: rotate(45deg);
+    content: "";
+  } */
   &:not(:placeholder-shown) + label {
-    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    position: absolute;
+    margin-top: -32px;
+    margin-left: 12px;
+    background-color: black;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 10px;
+    color: #fff;
+    /* 삼각형 */
+    &::after {
+      content: "";
+      position: absolute;
+      top: 90%;
+      left: 10px;
+      width: 0;
+      height: 0;
+      border-radius: 3px;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid black;
+    }
   }
   &:focus {
     outline: none;
@@ -112,7 +162,8 @@ export const SingnUpText = styled.p`
   display: flex;
   justify-content: center;
   font-size: 14px;
-  margin-bottom: 13px;
+  margin-bottom: ${(props) =>
+    props.isSmallScreen ? "6px" : props.isTablet ? "13px" : "13px"};
 `;
 
 export const ForgotPasswordText = styled.p`
@@ -120,6 +171,7 @@ export const ForgotPasswordText = styled.p`
   align-items: center;
   justify-content: center;
   font-size: 14px;
+  margin-bottom: 20px;
 `;
 
 export const Error = styled.span`
@@ -165,12 +217,15 @@ export const Linebreak = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 41.5px;
-  margin-bottom: 46px;
+  margin-top: ${(props) =>
+    props.isSmallScreen ? "20px" : props.isTablet ? "41.5x" : "41.5px"};
+  margin-bottom: ${(props) =>
+    props.isSmallScreen ? "20px" : props.isTablet ? "46px" : "46px"};
 `;
 
 export const StyledSpan = styled.span`
   font-size: ${(props) => (props.$isSmallScreen ? "14px" : "16px")};
+  font-weight: bold;
   color: ${(props) => props.theme.fontcolor};
   display: ${(props) => (props.$isSmallScreen ? "block" : "inline")};
   text-align: center;
@@ -196,15 +251,29 @@ export const LoginInstaLi = styled.li`
   }
 `;
 
-export const FooterMenuUl = styled.ul`
-  width: 370px;
+export const FooterContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 30px;
+  justify-content: center; /* 수평 가운데 정렬 */
+  position: relative; /* 자식 요소가 이 기준으로 위치하도록 설정 */
+  margin-bottom: 20px; /* 하단 여백 추가 */
+  margin-top: ${(props) =>
+    props.isSmallScreen ? "170px" : props.isTablet ? "230px" : "230px"};
 `;
+
+export const FooterWrapper = styled.div`
+  width: 370px; /* 푸터 너비 설정 */
+  margin: 0 auto; /* 수평 가운데 정렬 */
+  margin-bottom: 20px; /* 하단 여백 추가 */
+  margin-top: ${(props) =>
+    props.isSmallScreen ? "12px" : props.isTablet ? "12px" : "0"};
+`;
+
+export const FooterMenuUl = styled.ul`
+  display: flex;
+  justify-content: space-between; /* 메뉴 아이템 간격 */
+  width: 100%; /* 부모 너비에 맞춤 */
+`;
+
 // 다은 © 2024만 안눌리도록 따로 스타일 줌
 export const FooterMenubasic = styled.li`
   cursor: pointer;
@@ -218,7 +287,7 @@ export const FooterMenuLi = styled.li`
   color: ${(props) => props.theme.nomalIconColor};
   transition: all 0.3s;
   &:hover {
-    color: #181818;
+    color: ${(props) => props.theme.fontcolor};
     font-weight: 500;
   }
 `;

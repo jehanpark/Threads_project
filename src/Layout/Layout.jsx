@@ -5,6 +5,9 @@ import Nav from "../Components/Nav";
 import Sidebar from "../Components/Sidebar";
 import BottomNav from "../Components/MobileNav";
 
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../Contexts/AuthContext";
+
 // 레이아웃 스타일
 const LayoutWrapper = styled.div`
   width: 100%;
@@ -23,6 +26,15 @@ const LayoutWrapper = styled.div`
 `;
 
 const Layout = () => {
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/Login"); // 로그인 페이지로 리다이렉트
+    }
+  }, [currentUser, navigate]);
+
   return (
     <LayoutWrapper>
       <Nav />

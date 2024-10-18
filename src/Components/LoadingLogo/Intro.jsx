@@ -24,6 +24,7 @@ const fadeOut = keyframes`
 
 // 배경을 담당하는 Styled 컴포넌트 정의
 const Background = styled.div`
+  z-index: 999999999 !important;
   position: fixed;
   top: 0;
   left: 0;
@@ -74,7 +75,6 @@ const MetaLogo = styled.img`
 `;
 
 const Intro = () => {
-
   return (
     <Background>
       <Svg viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">

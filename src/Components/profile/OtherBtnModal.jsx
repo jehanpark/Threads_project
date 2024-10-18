@@ -39,6 +39,7 @@ const OtherModalBox = styled.div`
     height: 100%;
     background: ${(props) => props.theme.headerBg};
     padding: 40% 20px;
+    border-radius: 0px;
   }
 `;
 
@@ -159,10 +160,7 @@ const OtherBtnModal = ({ open, close, profile, onProfileChange }) => {
         isFollowing: newFollowState,
       };
       onProfileChange(updatedProfile); // 상위 컴포넌트로 변경된 프로필 전달
-      console.log(profile);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
 
   return (

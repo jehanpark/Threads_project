@@ -4,8 +4,9 @@ import styled from "styled-components";
 import { RightArrowIcon } from "../../Components/Common/Icon";
 import { Line } from "../../Components/SettingsItem_de";
 import { useMediaQuery } from "react-responsive";
+import AddWordsModal from "./AddWordModal";
+import { LeftArrowIcon } from "./Icon";
 
-// 스타일 정의
 // 스타일 정의
 const Overlay = styled.div`
   position: fixed; // 모달을 화면에 고정
@@ -25,7 +26,7 @@ const Overlay = styled.div`
 
 const ModalContainer = styled.div`
   width: ${({ isMobile }) => (isMobile ? "100%" : "420px")};
-  height: ${({ isMobile }) => (isMobile ? "100%" : "620px")};
+  height: ${({ isMobile }) => (isMobile ? "100%" : "640px")};
   background-color: ${(props) => props.theme.borderColor};
   border: 1px solid ${(props) => props.theme.borderstroke};
   border-radius: ${({ isMobile }) => (isMobile ? "none" : "8px")};
@@ -33,6 +34,9 @@ const ModalContainer = styled.div`
 `;
 
 const HeadTitle = styled.h1`
+  margin-top: 10px;
+  margin-left: 120px;
+  font-weight: 600;
   margin-bottom: 14px;
   display: flex;
   justify-content: start;
@@ -42,12 +46,41 @@ const HeadTitle = styled.h1`
 `;
 
 const Title = styled.h2`
+  color: ${(props) => props.theme.modalfont};
   margin: 14px 0;
   display: flex;
   justify-content: start;
   align-items: center;
   font-size: ${({ isMobile }) => (isMobile ? "14px" : "")};
   font-weight: 500;
+`;
+
+const SmallTitle = styled.div`
+  color: ${(props) => props.theme.modalfont};
+  font-size: 12px;
+  font-weight: normal;
+  margin-right: 12px;
+  transition: all 0.3s;
+  &:hover {
+    color: ${(props) => props.theme.fontcolor};
+    font-weight: 500;
+  }
+`;
+
+const OutherTitle = styled.div`
+  display: flex;
+  color: ${(props) => props.theme.modalfont};
+  justify-content: space-between; // 양쪽 끝으로 정렬
+  align-items: center; // 수직 중앙 정렬
+  width: 100%; // 전체 너비 사용
+  font-size: ${({ isMobile }) => (isMobile ? "14px" : "")};
+  font-weight: 500;
+`;
+
+const ContentAutoLayout = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 const Info = styled.div`
@@ -67,17 +100,6 @@ const OptionList = styled.ul`
   padding-top: ${({ isMobile }) => (isMobile ? "8px" : "12px")};
 `;
 
-const AutoLayout = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding-right: 18px;
-  @media (max-width: 768px) {
-    padding-right: 20px;
-  }
-`;
-
 const OptionItem = styled.li`
   cursor: pointer;
   padding: 8px 10px;
@@ -86,19 +108,19 @@ const OptionItem = styled.li`
   justify-content: space-between; // 추가: 양쪽 끝으로 정렬
   font-size: 14px;
   position: relative; /* Positioning for the ::after element */
-  color: ${(props) => props.theme.fontcolor};
+  color: ${(props) => props.theme.modalfont};
   background-color: transparent; /* 초기 배경색 설정 */
   border-radius: 6px;
 
   // 호버 시 배경색 변경
   &:hover {
-    color: #000;
+    color: ${(props) => props.theme.fontcolor};
     background-color: ${(props) =>
       props.theme.modalhoverbg}; /* 호버 시 백그라운드 색상 */
     transition: background-color 0.3s ease; /* 배경색 변화 애니메이션 */
   }
 `;
-// 체크박스 스타일 컴포넌트 추가
+// 체크박스 스타일
 const Checkbox = styled.input`
   width: 20px;
   height: 20px;
@@ -110,13 +132,13 @@ const Checkbox = styled.input`
   position: relative;
   margin-right: 10px;
 
-  // 체크된 상태의 스타일
+  // 체크된 상태
   &:checked {
-    background-color: #181818;
-    border: 2px solid #181818;
+    background-color: ${(props) => props.theme.activeBorder};
+    border: 2px solid ${(props) => props.theme.activeBorder};
   }
 
-  // 체크 표시 추가
+  // 체크 표시
   &:checked::after {
     content: "";
     position: absolute;
@@ -124,9 +146,33 @@ const Checkbox = styled.input`
     left: 50%;
     width: 10px;
     height: 10px;
-    background-color: white;
+    background-color: ${(props) => props.theme.buttonbackground};
     border-radius: 50%;
     transform: translate(-50%, -50%);
+  }
+`;
+
+const TitleLayout = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+const BackButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+
+  color: gray; // 초기 색상 설정
+  transition: color 0.3s ease; // 색상 전환 효과
+
+  &:hover,
+  &:active {
+    color: #181818; // 호버 또는 클릭 시 색상 변경
   }
 `;
 
@@ -138,7 +184,7 @@ const HiddenWordModal = ({
 }) => {
   const [activeOption1, setActiveOption1] = useState(selectedOption1); // 첫 번째 옵션 상태
   const [activeOption2, setActiveOption2] = useState(selectedOption2); // 두 번째 옵션 상태
-
+  const [showAddWordsModal, setShowAddWordsModal] = useState(false); // 새로운 모달 상태 추가
   const handleOptionClick = (option, listIndex) => {
     if (listIndex === 1) {
       setActiveOption1(option);
@@ -157,7 +203,18 @@ const HiddenWordModal = ({
   return (
     <Overlay onClick={handleOverlayClick} isMobile={isMobile}>
       <ModalContainer onClick={(e) => e.stopPropagation()} isMobile={isMobile}>
-        <HeadTitle isMobile={isMobile}>숨겨진 단어</HeadTitle>
+        <TitleLayout>
+          <BackButton
+            onClick={(e) => {
+              e.stopPropagation();
+
+              onClose && onClose(); // 함수가 존재할 때만 호출
+            }}
+          >
+            <LeftArrowIcon size={32} />
+          </BackButton>
+          <HeadTitle isMobile={isMobile}>숨겨진 단어</HeadTitle>
+        </TitleLayout>
         <Info>Instagram에서 받은 댓글에도 이 설정이 적용됩니다.</Info>
         <Line />
         <Title isMobile={isMobile}>불쾌한 단어 및 문구</Title>
@@ -204,10 +261,24 @@ const HiddenWordModal = ({
           ))}
         </OptionList>
         <Line />
-        <AutoLayout>
-          <Title isMobile={isMobile}>맞춤 단어 및 문구 관리</Title>
-          <RightArrowIcon fill={"gray"} width={"12px"} />
-        </AutoLayout>
+        <ContentAutoLayout>
+          <OutherTitle isMobile={isMobile}>
+            맞춤 단어 및 문구 관리
+            <a
+              onClick={() => setShowAddWordsModal(true)} // "설정하기" 클릭 시 새로운 모달 열기
+              style={{
+                cursor: "pointer",
+                textDecoration: "none",
+                color: "inherit",
+              }}
+            >
+              <SmallTitle>설정하기</SmallTitle>
+            </a>
+          </OutherTitle>
+        </ContentAutoLayout>
+        {showAddWordsModal && (
+          <AddWordsModal onClose={() => setShowAddWordsModal(false)} /> // 새로운 모달 닫기 함수
+        )}
       </ModalContainer>
     </Overlay>
   );
