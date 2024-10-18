@@ -1,9 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { useMediaQuery } from "react-responsive";
-import Searchbar from "../Search/Searchbar";
 import FollowersList from "../Search/FollowerList";
-import FollowerItem from "../Search/FollowerItem";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -16,6 +13,15 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1100;
+  @media (max-width: 768px) {
+    position: fixed;
+    width: 100%;
+    height: 40%;
+    bottom: calc(0px + 70px);
+    right: 0;
+    top: auto;
+    border-radius: 30px 30px 0 0;
+  }
 `;
 
 const FollowModalBox = styled.div`
@@ -26,7 +32,10 @@ const FollowModalBox = styled.div`
   padding: 64px 11px 0 11px;
   color: ${(props) => props.theme.fontcolor};
   position: relative;
-  display: ${({ isSmallScreen }) => (isSmallScreen ? "none" : "block")};
+  @media (max-width: 768px) {
+    background: ${(props) => props.theme.borderColor};
+    box-shadow: ${(props) => props.theme.bordershadow};
+  }
 `;
 
 const CloseButton = styled.button`
@@ -71,18 +80,13 @@ const ContentsBorder = styled.div`
 
 // const FollowersList =
 
-const FollowModal = ({ open, close, profile }) => {
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
-
+const FollowModal = ({ open, close }) => {
   if (!open) return null;
 
   return (
     <>
       <ModalOverlay onClick={close}>
-        <FollowModalBox
-          isSmallScreen={isSmallScreen}
-          onClick={(e) => e.stopPropagation()}
-        >
+        <FollowModalBox onClick={(e) => e.stopPropagation()}>
           <CloseButton onClick={close}>X</CloseButton>
           <ContentsBorder>
             <FollowersList />
