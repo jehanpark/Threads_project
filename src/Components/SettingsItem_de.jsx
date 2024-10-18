@@ -197,7 +197,7 @@ const AccountContents = styled.div`
   width: 100%;
   gap: 20px;
   width: ${(props) =>
-    props.isSmallScreen ? "400px" : props.isTablet ? "100%" : "100%"};
+    props.isSmallScreen ? "330px" : props.isTablet ? "100%" : "100%"};
 `;
 const AccountTitle = styled.span`
   font-size: 14px;

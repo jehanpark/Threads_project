@@ -121,14 +121,14 @@ const FollowerButton = styled.button`
   }
 `;
 const FollowerItem = ({ follower, toggleFollow, onProfileClick }) => {
-  const { ProfileImg, userEmail, bio, followNum, isFollowing } = follower;
+  const { img, userEmail, bio, followNum, isFollowing } = follower;
 
   return (
     <FollowerContain onClick={onProfileClick}>
       <Wrapper>
         <UserWrapper>
-          {ProfileImg ? (
-            <img src={ProfileImg} alt="User profile" />
+          {img ? (
+            <img src={img} alt="User profile" />
           ) : (
             <UserIcon2 width={50} height={50} />
           )}

@@ -126,7 +126,7 @@ const User = styled.div`
 `;
 
 const NotificationItem = ({
-  profileImg,
+  img,
   username,
   createdAt,
   onClick,
@@ -136,6 +136,7 @@ const NotificationItem = ({
   onDelete,
 }) => {
   // 날짜 포맷 함수
+  console.log(img);
   const renderTimeAgo = () => {
     if (!createdAt || !createdAt.seconds) return "방금 전";
     const date = new Date(createdAt.seconds * 1000);
@@ -187,8 +188,8 @@ const NotificationItem = ({
     >
       <Wrapper onClick={handleClick} isRead={isRead}>
         <UserWrapper>
-          {profileImg ? (
-            <img src={profileImg} alt="User profile" />
+          {img ? (
+            <img src={img} alt="User profile" />
           ) : (
             <UserIcon2 width={50} />
           )}
